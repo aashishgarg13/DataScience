@@ -1,0 +1,2386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning: Complete Educational Guide</title>
+    <style>
+@font-face {
+  font-family: 'FKGroteskNeue';
+  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'FKGroteskNeue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #1a2332;
+  color: #a9b4c2;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.guide-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.toc-sidebar {
+  width: 280px;
+  background: #0b0f14;
+  border-right: 1px solid #2a3544;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.toc-header {
+  padding: 32px 24px;
+  border-bottom: 1px solid #2a3544;
+}
+
+.toc-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #e8eef6;
+  margin-bottom: 8px;
+}
+
+.toc-subtitle {
+  font-size: 14px;
+  color: #7ef0d4;
+}
+
+.toc-nav {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toc-link {
+  display: block;
+  padding: 12px 16px;
+  color: #a9b4c2;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.toc-link:hover {
+  background: #2a3544;
+  color: #e8eef6;
+}
+
+.toc-link.active {
+  background: #6aa9ff;
+  color: #0b0f14;
+  font-weight: 600;
+}
+
+/* Main Content */
+.content-main {
+  margin-left: 280px;
+  flex: 1;
+  padding: 48px 64px;
+  max-width: 1400px;
+}
+
+.content-header {
+  margin-bottom: 48px;
+}
+
+.content-header h1 {
+  font-size: 42px;
+  font-weight: 700;
+  color: #e8eef6;
+  margin-bottom: 16px;
+}
+
+.content-header p {
+  font-size: 18px;
+  color: #7ef0d4;
+}
+
+/* Sections */
+.section {
+  background: #111823;
+  border: 1px solid #2a3544;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+  cursor: pointer;
+  background: #111823;
+  border-bottom: 1px solid #2a3544;
+  transition: background 0.2s;
+}
+
+.section-header:hover {
+  background: #1a2332;
+}
+
+.section-header h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #e8eef6;
+}
+
+.section-toggle {
+  background: none;
+  border: none;
+  color: #6aa9ff;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s;
+  padding: 8px;
+}
+
+.section-toggle.collapsed {
+  transform: rotate(-90deg);
+}
+
+.section-body {
+  padding: 32px;
+  display: none;
+}
+
+.section-body.expanded {
+  display: block;
+}
+
+.section-body p {
+  margin-bottom: 16px;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.section-body h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #e8eef6;
+  margin: 32px 0 16px 0;
+}
+
+.section-body ul {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.section-body li {
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.section-body ol {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.section-body ol li {
+  margin-bottom: 16px;
+}
+
+/* Info Cards */
+.info-card {
+  background: #2a3544;
+  border: 1px solid #3a4554;
+  border-radius: 10px;
+  padding: 24px;
+  margin: 24px 0;
+}
+
+.info-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #7ef0d4;
+  margin-bottom: 16px;
+}
+
+.info-card-list {
+  list-style: none;
+  padding: 0;
+}
+
+.info-card-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid #3a4554;
+  color: #a9b4c2;
+}
+
+.info-card-list li:last-child {
+  border-bottom: none;
+}
+
+.info-card-list li:before {
+  content: "✓ ";
+  color: #7ef0d4;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+/* Formulas */
+.formula {
+  background: #0b0f14;
+  border: 1px solid #2a3544;
+  border-left: 4px solid #6aa9ff;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 24px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  color: #e8eef6;
+  overflow-x: auto;
+}
+
+.formula strong {
+  display: block;
+  color: #7ef0d4;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.formula small {
+  display: block;
+  color: #a9b4c2;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+/* Callouts */
+.callout {
+  border-radius: 10px;
+  padding: 20px;
+  margin: 24px 0;
+  border-left: 4px solid;
+}
+
+.callout.info {
+  background: rgba(106, 169, 255, 0.1);
+  border-left-color: #6aa9ff;
+}
+
+.callout.warning {
+  background: rgba(255, 140, 106, 0.1);
+  border-left-color: #ff8c6a;
+}
+
+.callout.success {
+  background: rgba(126, 240, 212, 0.1);
+  border-left-color: #7ef0d4;
+}
+
+.callout-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e8eef6;
+  margin-bottom: 12px;
+}
+
+.callout-content {
+  color: #a9b4c2;
+  line-height: 1.6;
+}
+
+/* Figures */
+.figure {
+  margin: 32px 0;
+}
+
+.figure-placeholder {
+  background: #0b0f14;
+  border: 1px solid #2a3544;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.figure-caption {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #7ef0d4;
+  text-align: center;
+}
+
+/* Controls */
+.controls {
+  background: #2a3544;
+  border-radius: 10px;
+  padding: 24px;
+  margin: 24px 0;
+}
+
+.control-group {
+  margin-bottom: 20px;
+}
+
+.control-group:last-child {
+  margin-bottom: 0;
+}
+
+.control-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e8eef6;
+  margin-bottom: 12px;
+}
+
+input[type="range"] {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #1a2332;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #6aa9ff;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #6aa9ff;
+  cursor: pointer;
+  border: none;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: #6aa9ff;
+  color: #0b0f14;
+}
+
+.btn-primary:hover {
+  background: #5a99ef;
+}
+
+.btn-secondary {
+  background: #2a3544;
+  color: #e8eef6;
+}
+
+.btn-secondary:hover {
+  background: #3a4554;
+}
+
+/* Tables */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #2a3544;
+}
+
+.data-table th {
+  background: #2a3544;
+  color: #e8eef6;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.data-table td {
+  color: #a9b4c2;
+}
+
+.data-table tbody tr:hover {
+  background: rgba(106, 169, 255, 0.05);
+}
+
+/* Canvas */
+canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #2a3544;
+  color: #7ef0d4;
+  margin-right: 8px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .toc-sidebar {
+    width: 240px;
+  }
+  
+  .content-main {
+    margin-left: 240px;
+    padding: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .toc-sidebar {
+    width: 100%;
+    position: relative;
+    height: auto;
+  }
+  
+  .content-main {
+    margin-left: 0;
+    padding: 24px 16px;
+  }
+}
+    </style>
+</head>
+<body>
+    <div class="guide-container">
+        <!-- Left Sidebar - Table of Contents -->
+        <aside class="toc-sidebar">
+            <div class="toc-header">
+                <h1>Machine Learning</h1>
+                <p class="toc-subtitle">Complete Learning Guide</p>
+            </div>
+            <nav class="toc-nav">
+                <a href="#intro" class="toc-link">1. Introduction to ML</a>
+                <a href="#linear-regression" class="toc-link">2. Linear Regression</a>
+                <a href="#gradient-descent" class="toc-link">3. Gradient Descent</a>
+                <a href="#logistic-regression" class="toc-link">4. Logistic Regression</a>
+                <a href="#svm" class="toc-link">5. Support Vector Machines</a>
+                <a href="#knn" class="toc-link">6. K-Nearest Neighbors</a>
+                <a href="#model-evaluation" class="toc-link">7. Model Evaluation</a>
+                <a href="#regularization" class="toc-link">8. Regularization</a>
+                <a href="#bias-variance" class="toc-link">9. Bias-Variance Tradeoff</a>
+                <a href="#cross-validation" class="toc-link">10. Cross-Validation</a>
+                <a href="#preprocessing" class="toc-link">11. Data Preprocessing</a>
+                <a href="#loss-functions" class="toc-link">12. Loss Functions</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-main">
+            <div class="content-header">
+                <h1>Machine Learning: Complete Educational Guide</h1>
+                <p>A comprehensive learning resource for students - from fundamentals to advanced concepts</p>
+            </div>
+
+            <!-- Section 1: Introduction to Machine Learning -->
+            <div class="section" id="intro">
+                <div class="section-header">
+                    <h2>1. Introduction to Machine Learning</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Machine Learning is teaching computers to learn from experience, just like humans do. Instead of programming every rule, we let the computer discover patterns in data and make decisions on its own.</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Learning from data instead of explicit programming</li>
+                            <li>Three types: Supervised, Unsupervised, Reinforcement</li>
+                            <li>Powers Netflix recommendations, Face ID, and more</li>
+                            <li>Requires: Data, Algorithm, and Computing Power</li>
+                        </ul>
+                    </div>
+
+                    <h3>Understanding Machine Learning</h3>
+                    <p>Imagine teaching a child to recognize animals. You show them pictures of cats and dogs, telling them which is which. After seeing many examples, the child learns to identify new animals they've never seen before. Machine Learning works the same way!</p>
+
+                    <p><strong>The Three Types of Learning:</strong></p>
+                    <ol>
+                        <li><strong>Supervised Learning:</strong> Learning with a teacher. You provide labeled examples (like "this is a cat", "this is a dog"), and the model learns to predict labels for new data.</li>
+                        <li><strong>Unsupervised Learning:</strong> Learning without labels. The model finds hidden patterns on its own, like grouping similar customers together.</li>
+                        <li><strong>Reinforcement Learning:</strong> Learning by trial and error. The model tries actions and learns from rewards/punishments, like teaching a robot to walk.</li>
+                    </ol>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 Key Insight</div>
+                        <div class="callout-content">
+                            ML is not magic! It's mathematics + statistics + computer science working together to find patterns in data.
+                        </div>
+                    </div>
+
+                    <h3>Real-World Applications</h3>
+                    <ul>
+                        <li><strong>Netflix:</strong> Recommends shows based on what you've watched</li>
+                        <li><strong>Face ID:</strong> Recognizes your face to unlock your phone</li>
+                        <li><strong>Gmail:</strong> Filters spam emails automatically</li>
+                        <li><strong>Google Maps:</strong> Predicts traffic and suggests fastest routes</li>
+                        <li><strong>Voice Assistants:</strong> Understands and responds to your speech</li>
+                    </ul>
+
+                    <div class="callout success">
+                        <div class="callout-title">✓ Why ML Matters Today</div>
+                        <div class="callout-content">
+                            We generate 2.5 quintillion bytes of data every day! ML helps make sense of this massive data to solve problems that were impossible before.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Linear Regression -->
+            <div class="section" id="linear-regression">
+                <div class="section-header">
+                    <h2>2. Linear Regression</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Linear Regression is one of the simplest and most powerful techniques for predicting continuous values. It finds the "best fit line" through data points.</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Predicts continuous values (prices, temperatures, etc.)</li>
+                            <li>Finds the straight line that best fits the data</li>
+                            <li>Uses equation: y = mx + c</li>
+                            <li>Minimizes prediction errors</li>
+                        </ul>
+                    </div>
+
+                    <h3>Understanding Linear Regression</h3>
+                    <p>Think of it like this: You want to predict house prices based on size. If you plot size vs. price on a graph, you'll see points scattered around. Linear regression draws the "best" line through these points that you can use to predict prices for houses of any size.</p>
+
+                    <div class="formula">
+                        <strong>The Linear Equation:</strong>
+                        y = mx + c
+                        <br><small>where:<br>y = predicted value (output)<br>x = input feature<br>m = slope (how steep the line is)<br>c = intercept (where line crosses y-axis)</small>
+                    </div>
+
+                    <h3>Example: Predicting Salary from Experience</h3>
+                    <p>Let's say we have data about employees' years of experience and their salaries:</p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Experience (years)</th>
+                                <th>Salary ($k)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>39.8</td></tr>
+                            <tr><td>2</td><td>48.9</td></tr>
+                            <tr><td>3</td><td>57.0</td></tr>
+                            <tr><td>4</td><td>68.3</td></tr>
+                            <tr><td>5</td><td>77.9</td></tr>
+                            <tr><td>6</td><td>85.0</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p>We can find a line (y = 7.5x + 32) that predicts: Someone with 7 years experience will earn approximately $84.5k.</p>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="lr-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 1:</strong> Scatter plot showing experience vs. salary with the best fit line</p>
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Adjust Slope (m): <span id="slope-val">7.5</span></label>
+                            <input type="range" id="slope-slider" min="0" max="15" step="0.5" value="7.5">
+                        </div>
+                        <div class="control-group">
+                            <label>Adjust Intercept (c): <span id="intercept-val">32</span></label>
+                            <input type="range" id="intercept-slider" min="0" max="60" step="1" value="32">
+                        </div>
+                    </div>
+
+                    <div class="formula">
+                        <strong>Cost Function (Mean Squared Error):</strong>
+                        MSE = Σ(y_actual - y_predicted)² / n
+                        <br><small>This measures how wrong our predictions are. Lower MSE = better fit!</small>
+                    </div>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 Key Insight</div>
+                        <div class="callout-content">
+                            The "best fit line" is the one that minimizes the total error between actual points and predicted points. We square the errors so positive and negative errors don't cancel out.
+                        </div>
+                    </div>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Common Mistake</div>
+                        <div class="callout-content">
+                            Linear regression assumes a straight-line relationship. If your data curves, you need polynomial regression or other techniques!
+                        </div>
+                    </div>
+
+                    <h3>Step-by-Step Process</h3>
+                    <ol>
+                        <li>Collect data with input (x) and output (y) pairs</li>
+                        <li>Plot the points on a graph</li>
+                        <li>Find values of m and c that minimize prediction errors</li>
+                        <li>Use the equation y = mx + c to predict new values</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Section 3: Gradient Descent -->
+            <div class="section" id="gradient-descent">
+                <div class="section-header">
+                    <h2>3. Gradient Descent</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Gradient Descent is the optimization algorithm that helps us find the best values for our model parameters (like m and c in linear regression). Think of it as rolling a ball downhill to find the lowest point.</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Optimization algorithm to minimize loss function</li>
+                            <li>Takes small steps in the direction of steepest descent</li>
+                            <li>Learning rate controls step size</li>
+                            <li>Stops when it reaches the minimum (convergence)</li>
+                        </ul>
+                    </div>
+
+                    <h3>Understanding Gradient Descent</h3>
+                    <p>Imagine you're hiking down a mountain in thick fog. You can't see the bottom, but you can feel the slope under your feet. The smart strategy? Always step in the steepest downward direction. That's exactly what gradient descent does with mathematical functions!</p>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 The Mountain Analogy</div>
+                        <div class="callout-content">
+                            Your position on the mountain = current parameter values (m, c)<br>
+                            Your altitude = loss/error<br>
+                            Goal = reach the valley (minimum loss)<br>
+                            Gradient = tells you which direction is steepest
+                        </div>
+                    </div>
+
+                    <div class="formula">
+                        <strong>Gradient Descent Update Rule:</strong>
+                        θ_new = θ_old - α × ∇J(θ)
+                        <br><small>where:<br>θ = parameters (m, c)<br>α = learning rate (step size)<br>∇J(θ) = gradient (direction and steepness)</small>
+                    </div>
+
+                    <h3>The Learning Rate (α)</h3>
+                    <p>The learning rate is like your step size when walking down the mountain:</p>
+                    <ul>
+                        <li><strong>Too small:</strong> You take tiny steps and it takes forever to reach the bottom</li>
+                        <li><strong>Too large:</strong> You take huge leaps and might jump over the valley or even go uphill!</li>
+                        <li><strong>Just right:</strong> You make steady progress toward the minimum</li>
+                    </ul>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="gd-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 2:</strong> Loss surface showing gradient descent path to minimum</p>
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Learning Rate: <span id="lr-val">0.1</span></label>
+                            <input type="range" id="lr-slider" min="0.01" max="1" step="0.01" value="0.1">
+                        </div>
+                        <div class="control-group">
+                            <button class="btn btn-primary" id="run-gd">Run Gradient Descent</button>
+                            <button class="btn btn-secondary" id="reset-gd">Reset</button>
+                        </div>
+                    </div>
+
+                    <div class="formula">
+                        <strong>Gradients for Linear Regression:</strong>
+                        ∂MSE/∂m = (2/n) × Σ(ŷ - y) × x<br>
+                        ∂MSE/∂c = (2/n) × Σ(ŷ - y)
+                        <br><small>These tell us how much to adjust m and c</small>
+                    </div>
+
+                    <h3>Types of Gradient Descent</h3>
+                    <ol>
+                        <li><strong>Batch Gradient Descent:</strong> Uses all data points for each update. Accurate but slow for large datasets.</li>
+                        <li><strong>Stochastic Gradient Descent (SGD):</strong> Uses one random data point per update. Fast but noisy.</li>
+                        <li><strong>Mini-batch Gradient Descent:</strong> Uses small batches (e.g., 32 points). Best of both worlds!</li>
+                    </ol>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Watch Out!</div>
+                        <div class="callout-content">
+                            Gradient descent can get stuck in local minima (small valleys) instead of finding the global minimum (deepest valley). This is more common with complex, non-convex loss functions.
+                        </div>
+                    </div>
+
+                    <h3>Convergence Criteria</h3>
+                    <p>How do we know when to stop? We stop when:</p>
+                    <ul>
+                        <li>Loss stops decreasing significantly (e.g., change &lt; 0.0001)</li>
+                        <li>Gradients become very small (near zero)</li>
+                        <li>We reach maximum iterations (e.g., 1000 steps)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Section 4: Logistic Regression -->
+            <div class="section" id="logistic-regression">
+                <div class="section-header">
+                    <h2>4. Logistic Regression</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Logistic Regression is used for binary classification - when you want to predict categories (yes/no, spam/not spam, disease/healthy) not numbers. Despite its name, it's a classification algorithm!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Binary classification (2 classes: 0 or 1)</li>
+                            <li>Uses sigmoid function to output probabilities</li>
+                            <li>Output is always between 0 and 1</li>
+                            <li>Uses log loss (cross-entropy) instead of MSE</li>
+                        </ul>
+                    </div>
+
+                    <h3>Why Not Linear Regression?</h3>
+                    <p>Imagine using linear regression (y = mx + c) for classification. The problems:</p>
+                    <ul>
+                        <li>Can predict values &lt; 0 or &gt; 1 (not valid probabilities!)</li>
+                        <li>Sensitive to outliers pulling the line</li>
+                        <li>No natural threshold for decision making</li>
+                    </ul>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ The Problem</div>
+                        <div class="callout-content">
+                            Linear regression: ŷ = mx + c can give ANY value (-∞ to +∞)<br>
+                            Classification needs: probability between 0 and 1
+                        </div>
+                    </div>
+
+                    <h3>Enter the Sigmoid Function</h3>
+                    <p>The sigmoid function σ(z) squashes any input into the range [0, 1], making it perfect for probabilities!</p>
+
+                    <div class="formula">
+                        <strong>Sigmoid Function:</strong>
+                        σ(z) = 1 / (1 + e^(-z))
+                        <br><small>where:<br>z = w·x + b (linear combination)<br>σ(z) = probability (always between 0 and 1)<br>e ≈ 2.718 (Euler's number)</small>
+                    </div>
+
+                    <h4>Sigmoid Properties:</h4>
+                    <ul>
+                        <li><strong>Input:</strong> Any real number (-∞ to +∞)</li>
+                        <li><strong>Output:</strong> Always between 0 and 1</li>
+                        <li><strong>Shape:</strong> S-shaped curve</li>
+                        <li><strong>At z=0:</strong> σ(0) = 0.5 (middle point)</li>
+                        <li><strong>As z→∞:</strong> σ(z) → 1</li>
+                        <li><strong>As z→-∞:</strong> σ(z) → 0</li>
+                    </ul>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 350px">
+                            <canvas id="sigmoid-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Sigmoid function transforms linear input to probability</p>
+                    </div>
+
+                    <h3>Logistic Regression Formula</h3>
+                    <div class="formula">
+                        <strong>Complete Process:</strong>
+                        1. Linear combination: z = w·x + b<br>
+                        2. Sigmoid transformation: p = σ(z) = 1/(1 + e^(-z))<br>
+                        3. Decision: if p ≥ 0.5 → Class 1, else → Class 0
+                    </div>
+
+                    <h3>Example: Height Classification</h3>
+                    <p>Let's classify people as "Tall" (1) or "Not Tall" (0) based on height:</p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Height (cm)</th>
+                                <th>Label</th>
+                                <th>Probability</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>150</td><td>0 (Not Tall)</td><td>0.2</td></tr>
+                            <tr><td>160</td><td>0</td><td>0.35</td></tr>
+                            <tr><td>170</td><td>0</td><td>0.5</td></tr>
+                            <tr><td>180</td><td>1 (Tall)</td><td>0.65</td></tr>
+                            <tr><td>190</td><td>1</td><td>0.8</td></tr>
+                            <tr><td>200</td><td>1</td><td>0.9</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="logistic-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Logistic regression with decision boundary at 0.5</p>
+                    </div>
+
+                    <h3>Log Loss (Cross-Entropy)</h3>
+                    <p>We can't use MSE for logistic regression because it creates a non-convex optimization surface (multiple local minima). Instead, we use log loss:</p>
+
+                    <div class="formula">
+                        <strong>Log Loss for Single Sample:</strong>
+                        L(y, p) = -[y·log(p) + (1-y)·log(1-p)]
+                        <br><small>where:<br>y = actual label (0 or 1)<br>p = predicted probability</small>
+                    </div>
+
+                    <h4>Understanding Log Loss:</h4>
+                    <p><strong>Case 1:</strong> Actual y=1, Predicted p=0.9</p>
+                    <p>Loss = -[1·log(0.9) + 0·log(0.1)] = -log(0.9) = 0.105 <span style="color: #7ef0d4;">✓ Low loss (good!)</span></p>
+
+                    <p><strong>Case 2:</strong> Actual y=1, Predicted p=0.1</p>
+                    <p>Loss = -[1·log(0.1) + 0·log(0.9)] = -log(0.1) = 2.303 <span style="color: #ff8c6a;">✗ High loss (bad!)</span></p>
+
+                    <p><strong>Case 3:</strong> Actual y=0, Predicted p=0.1</p>
+                    <p>Loss = -[0·log(0.1) + 1·log(0.9)] = -log(0.9) = 0.105 <span style="color: #7ef0d4;">✓ Low loss (good!)</span></p>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 Why Log Loss Works</div>
+                        <div class="callout-content">
+                            Log loss heavily penalizes confident wrong predictions! If you predict 0.99 but the answer is 0, you get a huge penalty. This encourages the model to be accurate AND calibrated.
+                        </div>
+                    </div>
+
+                    <h3>Training with Gradient Descent</h3>
+                    <p>Just like linear regression, we use gradient descent to optimize weights:</p>
+
+                    <div class="formula">
+                        <strong>Gradient for Logistic Regression:</strong>
+                        ∂Loss/∂w = (p - y)·x<br>
+                        ∂Loss/∂b = (p - y)
+                        <br><small>Update: w = w - α·∂Loss/∂w</small>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Key Takeaway</div>
+                        <div class="callout-content">
+                            Logistic regression = Linear regression + Sigmoid function + Log loss. It's called "regression" for historical reasons, but it's actually for classification!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Support Vector Machines (COMPREHENSIVE UPDATE) -->
+            <div class="section" id="svm">
+                <div class="section-header">
+                    <h2>5. Support Vector Machines (SVM)</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <!-- 1. Introduction -->
+                    <h3>What is SVM?</h3>
+                    <p>Support Vector Machine (SVM) is a powerful supervised machine learning algorithm used for both classification and regression tasks. Unlike logistic regression which just needs any line that separates the classes, SVM finds the BEST decision boundary - the one with the maximum margin between classes.</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Finds the best decision boundary with maximum margin</li>
+                            <li>Support vectors are critical points that define the margin</li>
+                            <li>Score is proportional to distance from boundary</li>
+                            <li>Only support vectors matter - other points don't affect boundary</li>
+                        </ul>
+                    </div>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 Key Insight</div>
+                        <div class="callout-content">
+                            SVM doesn't just want w·x + b &gt; 0, it wants every point to be confidently far from the boundary. The score is directly proportional to the distance from the decision boundary!
+                        </div>
+                    </div>
+
+                    <!-- 2. Dataset and Example -->
+                    <h3>Dataset and Example</h3>
+                    <p>Let's work with a simple 2D dataset to understand SVM:</p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Point</th>
+                                <th>X₁</th>
+                                <th>X₂</th>
+                                <th>Class</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>A</strong></td><td>2</td><td>7</td><td>+1</td></tr>
+                            <tr><td><strong>B</strong></td><td>3</td><td>8</td><td>+1</td></tr>
+                            <tr><td><strong>C</strong></td><td>4</td><td>7</td><td>+1</td></tr>
+                            <tr><td><strong>D</strong></td><td>6</td><td>2</td><td>-1</td></tr>
+                            <tr><td><strong>E</strong></td><td>7</td><td>3</td><td>-1</td></tr>
+                            <tr><td><strong>F</strong></td><td>8</td><td>2</td><td>-1</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Initial parameters:</strong> w₁ = 1, w₂ = 1, b = -10</p>
+
+                    <!-- 3. Decision Boundary -->
+                    <h3>Decision Boundary</h3>
+                    <p>The decision boundary is a line (or hyperplane in higher dimensions) that separates the two classes. It's defined by the equation:</p>
+
+                    <div class="formula">
+                        <strong>Decision Boundary Equation:</strong>
+                        w·x + b = 0
+                        <br><small>where:<br>w = [w₁, w₂] is the weight vector<br>x = [x₁, x₂] is the data point<br>b is the bias term</small>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Interpretation</div>
+                        <ul class="info-card-list">
+                            <li><strong>w·x + b &gt; 0</strong> → point above line → class +1</li>
+                            <li><strong>w·x + b &lt; 0</strong> → point below line → class -1</li>
+                            <li><strong>w·x + b = 0</strong> → exactly on boundary</li>
+                        </ul>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="svm-basic-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 3:</strong> SVM decision boundary with 6 data points. Hover to see scores.</p>
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Adjust w₁: <span id="svm-w1-val">1.0</span></label>
+                            <input type="range" id="svm-w1-slider" min="-2" max="2" step="0.1" value="1">
+                        </div>
+                        <div class="control-group">
+                            <label>Adjust w₂: <span id="svm-w2-val">1.0</span></label>
+                            <input type="range" id="svm-w2-slider" min="-2" max="2" step="0.1" value="1">
+                        </div>
+                        <div class="control-group">
+                            <label>Adjust b: <span id="svm-b-val">-10</span></label>
+                            <input type="range" id="svm-b-slider" min="-15" max="5" step="0.5" value="-10">
+                        </div>
+                    </div>
+
+                    <!-- 4. Margin and Support Vectors -->
+                    <h3>Margin and Support Vectors</h3>
+                    
+                    <div class="callout success">
+                        <div class="callout-title">📏 Understanding Margin</div>
+                        <div class="callout-content">
+                            The <strong>margin</strong> is the distance between the decision boundary and the closest points from each class. <strong>Support vectors</strong> are the points exactly at the margin (with score = ±1). These are the points with "lowest acceptable confidence" and they're the only ones that matter for defining the boundary!
+                        </div>
+                    </div>
+
+                    <div class="formula">
+                        <strong>Margin Constraints:</strong>
+                        For positive points (yᵢ = +1): w·xᵢ + b ≥ +1<br>
+                        For negative points (yᵢ = -1): w·xᵢ + b ≤ -1<br>
+                        <br>
+                        <strong>Combined:</strong> yᵢ(w·xᵢ + b) ≥ 1<br>
+                        <br>
+                        <strong>Margin Width:</strong> 2/||w||
+                        <br><small>To maximize margin → minimize ||w||</small>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="svm-margin-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 4:</strong> Decision boundary with margin lines and support vectors highlighted in cyan</p>
+                    </div>
+
+                    <!-- 5. Hard Margin vs Soft Margin -->
+                    <h3>Hard Margin vs Soft Margin</h3>
+
+                    <h4>Hard Margin SVM</h4>
+                    <p>Hard margin SVM requires perfect separation - no points can violate the margin. It works only when data is linearly separable.</p>
+
+                    <div class="formula">
+                        <strong>Hard Margin Optimization:</strong>
+                        minimize (1/2)||w||²<br>
+                        subject to: yᵢ(w·xᵢ + b) ≥ 1 for all i
+                    </div>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Hard Margin Limitation</div>
+                        <div class="callout-content">
+                            Hard margin can lead to overfitting if we force perfect separation on noisy data! Real-world data often has outliers and noise.
+                        </div>
+                    </div>
+
+                    <h4>Soft Margin SVM</h4>
+                    <p>Soft margin SVM allows some margin violations, making it more practical for real-world data. It balances margin maximization with allowing some misclassifications.</p>
+
+                    <div class="formula">
+                        <strong>Soft Margin Cost Function:</strong>
+                        Cost = (1/2)||w||² + C·Σ max(0, 1 - yᵢ(w·xᵢ + b))<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+                        Maximize margin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hinge Loss<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(penalize violations)
+                    </div>
+
+                    <!-- 6. The C Parameter -->
+                    <h3>The C Parameter</h3>
+                    <p>The C parameter controls the trade-off between maximizing the margin and minimizing classification errors. It acts like regularization in other ML algorithms.</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Effects of C Parameter</div>
+                        <ul class="info-card-list">
+                            <li><strong>Small C (0.1 or 1):</strong> Wider margin, more violations allowed, better generalization, use when data is noisy</li>
+                            <li><strong>Large C (1000):</strong> Narrower margin, fewer violations, classify everything correctly, risk of overfitting, use when data is clean</li>
+                        </ul>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="svm-c-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 5:</strong> Effect of C parameter on margin and violations</p>
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>C Parameter: <span id="svm-c-val">1</span></label>
+                            <input type="range" id="svm-c-slider" min="-1" max="3" step="0.1" value="0">
+                            <p style="font-size: 12px; color: #7ef0d4; margin-top: 8px;">Slide to see: 0.1 → 1 → 10 → 1000</p>
+                        </div>
+                        <div style="display: flex; gap: 16px; margin-top: 12px;">
+                            <div style="flex: 1; padding: 12px; background: rgba(106, 169, 255, 0.1); border-radius: 8px;">
+                                <div style="font-size: 12px; color: #a9b4c2;">Margin Width</div>
+                                <div style="font-size: 20px; color: #6aa9ff; font-weight: 600;" id="margin-width">2.00</div>
+                            </div>
+                            <div style="flex: 1; padding: 12px; background: rgba(255, 140, 106, 0.1); border-radius: 8px;">
+                                <div style="font-size: 12px; color: #a9b4c2;">Violations</div>
+                                <div style="font-size: 20px; color: #ff8c6a; font-weight: 600;" id="violations-count">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7. Training Algorithm -->
+                    <h3>Training Algorithm</h3>
+                    <p>SVM can be trained using gradient descent. For each training sample (xᵢ, yᵢ), we check if it violates the margin and update weights accordingly.</p>
+
+                    <div class="formula">
+                        <strong>Update Rules:</strong><br>
+                        <br>
+                        <strong>Case 1: No violation</strong> (yᵢ(w·xᵢ + b) ≥ 1)<br>
+                        &nbsp;&nbsp;w = w - η·w&nbsp;&nbsp;(just regularization)<br>
+                        &nbsp;&nbsp;b = b<br>
+                        <br>
+                        <strong>Case 2: Violation</strong> (yᵢ(w·xᵢ + b) &lt; 1)<br>
+                        &nbsp;&nbsp;w = w - η(w - C·yᵢ·xᵢ)<br>
+                        &nbsp;&nbsp;b = b + η·C·yᵢ<br>
+                        <br>
+                        <small>where η = learning rate (e.g., 0.01)</small>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="svm-train-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 6:</strong> SVM training visualization - step through each point</p>
+                    </div>
+
+                    <div class="controls">
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                            <button class="btn btn-primary" id="svm-train-btn">Start Training</button>
+                            <button class="btn btn-secondary" id="svm-step-btn">Next Step</button>
+                            <button class="btn btn-secondary" id="svm-reset-btn">Reset</button>
+                        </div>
+                        <div id="svm-train-info" style="padding: 16px; background: #2a3544; border-radius: 8px; font-family: monospace; font-size: 14px;">
+                            <div>Step: <span id="train-step">0</span> / 6</div>
+                            <div>Current Point: <span id="train-point">-</span></div>
+                            <div>w = [<span id="train-w">0.00, 0.00</span>]</div>
+                            <div>b = <span id="train-b">0.00</span></div>
+                            <div>Violation: <span id="train-violation" style="color: #7ef0d4;">-</span></div>
+                        </div>
+                    </div>
+
+                    <div class="callout info">
+                        <div class="callout-title">📝 Example Calculation (Point A)</div>
+                        <div class="callout-content">
+                            <strong>A = (2, 7), y = +1</strong><br><br>
+                            Check: y(w·x + b) = 1(0 + 0 + 0) = 0 &lt; 1 ❌ Violation!<br><br>
+                            Update:<br>
+                            w<sub>new</sub> = [0, 0] - 0.01(0 - 1·1·[2, 7])<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= [0.02, 0.07]<br><br>
+                            b<sub>new</sub> = 0 + 0.01·1·1 = 0.01
+                        </div>
+                    </div>
+
+                    <!-- 8. SVM Kernels -->
+                    <h3>SVM Kernels (Advanced)</h3>
+                    <p>Real-world data is often not linearly separable. Kernels transform data to higher dimensions where a linear boundary exists, which appears non-linear in the original space!</p>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 The Kernel Trick</div>
+                        <div class="callout-content">
+                            Kernels let us solve non-linear problems without explicitly computing high-dimensional features! They compute similarity between points in transformed space efficiently.
+                        </div>
+                    </div>
+
+                    <div class="formula">
+                        <strong>Three Main Kernels:</strong><br>
+                        <br>
+                        <strong>1. Linear Kernel</strong><br>
+                        K(x₁, x₂) = x₁·x₂<br>
+                        Use case: Linearly separable data<br>
+                        <br>
+                        <strong>2. Polynomial Kernel (degree 2)</strong><br>
+                        K(x₁, x₂) = (x₁·x₂ + 1)²<br>
+                        Use case: Curved boundaries, circular patterns<br>
+                        <br>
+                        <strong>3. RBF / Gaussian Kernel</strong><br>
+                        K(x₁, x₂) = e^(-γ||x₁-x₂||²)<br>
+                        Use case: Complex non-linear patterns<br>
+                        Most popular in practice!
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 500px">
+                            <canvas id="svm-kernel-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 7:</strong> Kernel comparison on non-linear data</p>
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Select Kernel:</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="kernel" value="linear" checked> Linear</label>
+                                <label><input type="radio" name="kernel" value="polynomial"> Polynomial</label>
+                                <label><input type="radio" name="kernel" value="rbf"> RBF</label>
+                            </div>
+                        </div>
+                        <div class="control-group" id="kernel-param-group" style="display: none;">
+                            <label>Kernel Parameter (γ or degree): <span id="kernel-param-val">1</span></label>
+                            <input type="range" id="kernel-param-slider" min="0.1" max="5" step="0.1" value="1">
+                        </div>
+                    </div>
+
+                    <!-- 9. Key Formulas Summary -->
+                    <h3>Key Formulas Summary</h3>
+                    
+                    <div class="formula">
+                        <strong>Essential SVM Formulas:</strong><br>
+                        <br>
+                        1. Decision Boundary: w·x + b = 0<br>
+                        <br>
+                        2. Classification Rule: sign(w·x + b)<br>
+                        <br>
+                        3. Margin Width: 2/||w||<br>
+                        <br>
+                        4. Hard Margin Optimization:<br>
+                        &nbsp;&nbsp;&nbsp;minimize (1/2)||w||²<br>
+                        &nbsp;&nbsp;&nbsp;subject to yᵢ(w·xᵢ + b) ≥ 1<br>
+                        <br>
+                        5. Soft Margin Cost:<br>
+                        &nbsp;&nbsp;&nbsp;(1/2)||w||² + C·Σ max(0, 1 - yᵢ(w·xᵢ + b))<br>
+                        <br>
+                        6. Hinge Loss: max(0, 1 - yᵢ(w·xᵢ + b))<br>
+                        <br>
+                        7. Update Rules (if violation):<br>
+                        &nbsp;&nbsp;&nbsp;w = w - η(w - C·yᵢ·xᵢ)<br>
+                        &nbsp;&nbsp;&nbsp;b = b + η·C·yᵢ<br>
+                        <br>
+                        8. Kernel Functions:<br>
+                        &nbsp;&nbsp;&nbsp;Linear: K(x₁, x₂) = x₁·x₂<br>
+                        &nbsp;&nbsp;&nbsp;Polynomial: K(x₁, x₂) = (x₁·x₂ + 1)^d<br>
+                        &nbsp;&nbsp;&nbsp;RBF: K(x₁, x₂) = e^(-γ||x₁-x₂||²)
+                    </div>
+
+                    <!-- 10. Practical Insights -->
+                    <h3>Practical Insights</h3>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Why SVM is Powerful</div>
+                        <div class="callout-content">
+                            SVM only cares about support vectors - the points closest to the boundary. Other points don't affect the decision boundary at all! This makes it memory efficient and robust.
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-card-title">When to Use SVM</div>
+                        <ul class="info-card-list">
+                            <li>Small to medium datasets (works great up to ~10,000 samples)</li>
+                            <li>High-dimensional data (even more features than samples!)</li>
+                            <li>Clear margin of separation exists between classes</li>
+                            <li>Need interpretable decision boundary</li>
+                        </ul>
+                    </div>
+
+                    <h4>Advantages</h4>
+                    <ul>
+                        <li><strong>Effective in high dimensions:</strong> Works well even when features &gt; samples</li>
+                        <li><strong>Memory efficient:</strong> Only stores support vectors, not entire dataset</li>
+                        <li><strong>Versatile:</strong> Different kernels for different data patterns</li>
+                        <li><strong>Robust:</strong> Works well with clear margin of separation</li>
+                    </ul>
+
+                    <h4>Disadvantages</h4>
+                    <ul>
+                        <li><strong>Slow on large datasets:</strong> Training time grows quickly with &gt;10k samples</li>
+                        <li><strong>No probability estimates:</strong> Doesn't directly provide confidence scores</li>
+                        <li><strong>Kernel choice:</strong> Requires expertise to select right kernel</li>
+                        <li><strong>Feature scaling:</strong> Very sensitive to feature scales</li>
+                    </ul>
+
+                    <!-- 11. Real-World Example -->
+                    <h3>Real-World Example: Email Spam Classification</h3>
+                    
+                    <div class="info-card">
+                        <div class="info-card-title">📧 Email Spam Detection</div>
+                        <p style="margin: 12px 0; line-height: 1.6;">Imagine we have emails with two features:</p>
+                        <ul class="info-card-list">
+                            <li>x₁ = number of promotional words ("free", "buy", "limited")</li>
+                            <li>x₂ = number of capital letters</li>
+                        </ul>
+                        <p style="margin: 12px 0; line-height: 1.6;">
+                            SVM finds the widest "road" between spam and non-spam emails. Support vectors are the emails closest to this road - they're the trickiest cases that define our boundary! An email far from the boundary is clearly spam or clearly legitimate.
+                        </p>
+                    </div>
+
+                    <div class="callout warning">
+                        <div class="callout-title">🎯 Key Takeaway</div>
+                        <div class="callout-content">
+                            Unlike other algorithms that try to classify all points correctly, SVM focuses on the decision boundary. It asks: "What's the safest road I can build between these two groups?" The answer: Make it as wide as possible!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 6: K-Nearest Neighbors -->
+            <div class="section" id="knn">
+                <div class="section-header">
+                    <h2>6. K-Nearest Neighbors (KNN)</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>K-Nearest Neighbors is the simplest machine learning algorithm! To classify a new point, just look at its K nearest neighbors and take a majority vote. No training required!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Lazy learning: No training phase, just memorize data</li>
+                            <li>K = number of neighbors to consider</li>
+                            <li>Uses distance metrics (Euclidean, Manhattan)</li>
+                            <li>Classification: majority vote | Regression: average</li>
+                        </ul>
+                    </div>
+
+                    <h3>How KNN Works</h3>
+                    <ol>
+                        <li><strong>Choose K:</strong> Decide how many neighbors (e.g., K=3)</li>
+                        <li><strong>Calculate distance:</strong> Find distance from new point to all training points</li>
+                        <li><strong>Find K nearest:</strong> Select K points with smallest distances</li>
+                        <li><strong>Vote:</strong> Majority class wins (or take average for regression)</li>
+                    </ol>
+
+                    <h3>Distance Metrics</h3>
+                    
+                    <div class="formula">
+                        <strong>Euclidean Distance (straight line):</strong>
+                        d = √[(x₁-x₂)² + (y₁-y₂)²]
+                        <br><small>Like measuring with a ruler - shortest path</small>
+                    </div>
+
+                    <div class="formula">
+                        <strong>Manhattan Distance (city blocks):</strong>
+                        d = |x₁-x₂| + |y₁-y₂|
+                        <br><small>Like walking on city grid - only horizontal/vertical</small>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="knn-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> KNN classification - drag the test point to see predictions</p>
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>K Value: <span id="knn-k-val">3</span></label>
+                            <input type="range" id="knn-k-slider" min="1" max="7" step="2" value="3">
+                        </div>
+                        <div class="control-group">
+                            <label>Distance Metric:</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="knn-distance" value="euclidean" checked> Euclidean</label>
+                                <label><input type="radio" name="knn-distance" value="manhattan"> Manhattan</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Worked Example</h3>
+                    <p><strong>Test point at (2.5, 2.5), K=3:</strong></p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Point</th><th>Position</th><th>Class</th><th>Distance</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>A</td><td>(1.0, 2.0)</td><td>Orange</td><td>1.80</td></tr>
+                            <tr><td>B</td><td>(0.9, 1.7)</td><td>Orange</td><td>2.00</td></tr>
+                            <tr style="background: rgba(126, 240, 212, 0.1);"><td><strong>C</strong></td><td>(1.5, 2.5)</td><td>Orange</td><td><strong>1.00 ← nearest!</strong></td></tr>
+                            <tr><td>D</td><td>(4.0, 5.0)</td><td>Yellow</td><td>3.35</td></tr>
+                            <tr><td>E</td><td>(4.2, 4.8)</td><td>Yellow</td><td>3.15</td></tr>
+                            <tr><td>F</td><td>(3.8, 5.2)</td><td>Yellow</td><td>3.12</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>3-Nearest Neighbors:</strong> C (orange), A (orange), B (orange)</p>
+                    <p><strong>Vote:</strong> 3 orange, 0 yellow → <strong>Prediction: Orange</strong> 🟠</p>
+
+                    <h3>Choosing K</h3>
+                    <ul>
+                        <li><strong>K=1:</strong> Very sensitive to noise, overfits</li>
+                        <li><strong>Small K (3,5):</strong> Flexible boundaries, can capture local patterns</li>
+                        <li><strong>Large K (&gt;10):</strong> Smoother boundaries, more stable but might underfit</li>
+                        <li><strong>Odd K:</strong> Avoids ties in binary classification</li>
+                        <li><strong>Rule of thumb:</strong> K = √n (where n = number of training samples)</li>
+                    </ul>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Critical: Feature Scaling!</div>
+                        <div class="callout-content">
+                            Always scale features before using KNN! If one feature has range [0, 1000] and another [0, 1], the large feature dominates distance calculations. Use StandardScaler or MinMaxScaler.
+                        </div>
+                    </div>
+
+                    <h3>Advantages</h3>
+                    <ul>
+                        <li>✓ Simple to understand and implement</li>
+                        <li>✓ No training time (just stores data)</li>
+                        <li>✓ Works with any number of classes</li>
+                        <li>✓ Can learn complex decision boundaries</li>
+                        <li>✓ Naturally handles multi-class problems</li>
+                    </ul>
+
+                    <h3>Disadvantages</h3>
+                    <ul>
+                        <li>✗ Slow prediction (compares to ALL training points)</li>
+                        <li>✗ High memory usage (stores entire dataset)</li>
+                        <li>✗ Sensitive to feature scaling</li>
+                        <li>✗ Curse of dimensionality (struggles with many features)</li>
+                        <li>✗ Sensitive to irrelevant features</li>
+                    </ul>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 When to Use KNN</div>
+                        <div class="callout-content">
+                            KNN works best with small to medium datasets (&lt;10,000 samples) with few features (&lt;20). Great for recommendation systems, pattern recognition, and as a baseline to compare other models!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="model-evaluation">
+                <div class="section-header">
+                    <h2>7. Model Evaluation</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>How do we know if our model is good? Model evaluation provides metrics to measure performance and identify problems!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Metrics</div>
+                        <ul class="info-card-list">
+                            <li>Confusion Matrix: Shows all prediction outcomes</li>
+                            <li>Accuracy, Precision, Recall, F1-Score</li>
+                            <li>ROC Curve &amp; AUC: Performance across thresholds</li>
+                            <li>R² Score: For regression problems</li>
+                        </ul>
+                    </div>
+
+                    <h3>Confusion Matrix</h3>
+                    <p>The confusion matrix shows all possible outcomes of binary classification:</p>
+
+                    <div class="formula">
+                        <strong>Confusion Matrix Structure:</strong>
+                        <pre style="background: none; border: none; padding: 0;">
+                Predicted
+                Pos    Neg
+Actual  Pos     TP     FN
+        Neg     FP     TN</pre>
+                    </div>
+
+                    <h4>Definitions:</h4>
+                    <ul>
+                        <li><strong>True Positive (TP):</strong> Correctly predicted positive</li>
+                        <li><strong>True Negative (TN):</strong> Correctly predicted negative</li>
+                        <li><strong>False Positive (FP):</strong> Wrongly predicted positive (Type I error)</li>
+                        <li><strong>False Negative (FN):</strong> Wrongly predicted negative (Type II error)</li>
+                    </ul>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 300px">
+                            <canvas id="confusion-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Confusion matrix for spam detection (TP=600, FP=100, FN=300, TN=900)</p>
+                    </div>
+
+                    <h3>Classification Metrics</h3>
+
+                    <div class="formula">
+                        <strong>Accuracy:</strong>
+                        Accuracy = (TP + TN) / (TP + TN + FP + FN)
+                        <br><small>Percentage of correct predictions overall</small>
+                    </div>
+
+                    <p><strong>Example:</strong> (600 + 900) / (600 + 900 + 100 + 300) = 1500/1900 = <strong>0.789 (78.9%)</strong></p>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Accuracy Paradox</div>
+                        <div class="callout-content">
+                            Accuracy misleads on imbalanced data! If 99% emails are not spam, a model that always predicts "not spam" gets 99% accuracy but is useless!
+                        </div>
+                    </div>
+
+                    <div class="formula">
+                        <strong>Precision:</strong>
+                        Precision = TP / (TP + FP)
+                        <br><small>"Of all predicted positives, how many are actually positive?"</small>
+                    </div>
+
+                    <p><strong>Example:</strong> 600 / (600 + 100) = 600/700 = <strong>0.857 (85.7%)</strong></p>
+                    <p><strong>Use when:</strong> False positives are costly (e.g., spam filter - don't want to block legitimate emails)</p>
+
+                    <div class="formula">
+                        <strong>Recall (Sensitivity, TPR):</strong>
+                        Recall = TP / (TP + FN)
+                        <br><small>"Of all actual positives, how many did we catch?"</small>
+                    </div>
+
+                    <p><strong>Example:</strong> 600 / (600 + 300) = 600/900 = <strong>0.667 (66.7%)</strong></p>
+                    <p><strong>Use when:</strong> False negatives are costly (e.g., disease detection - can't miss sick patients)</p>
+
+                    <div class="formula">
+                        <strong>F1-Score:</strong>
+                        F1 = 2 × (Precision × Recall) / (Precision + Recall)
+                        <br><small>Harmonic mean - balances precision and recall</small>
+                    </div>
+
+                    <p><strong>Example:</strong> 2 × (0.857 × 0.667) / (0.857 + 0.667) = <strong>0.750 (75.0%)</strong></p>
+
+                    <h3>ROC Curve &amp; AUC</h3>
+                    <p>The ROC (Receiver Operating Characteristic) curve shows model performance across ALL possible thresholds!</p>
+
+                    <div class="formula">
+                        <strong>ROC Components:</strong>
+                        TPR (True Positive Rate) = TP / (TP + FN) = Recall<br>
+                        FPR (False Positive Rate) = FP / (FP + TN)
+                        <br><small>Plot: FPR (x-axis) vs TPR (y-axis)</small>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="roc-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> ROC curve - slide threshold to see trade-off</p>
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Classification Threshold: <span id="roc-threshold-val">0.5</span></label>
+                            <input type="range" id="roc-threshold-slider" min="0" max="1" step="0.1" value="0.5">
+                        </div>
+                    </div>
+
+                    <h4>Understanding ROC:</h4>
+                    <ul>
+                        <li><strong>Top-left corner (0, 1):</strong> Perfect classifier</li>
+                        <li><strong>Diagonal line:</strong> Random guessing</li>
+                        <li><strong>Above diagonal:</strong> Better than random</li>
+                        <li><strong>Below diagonal:</strong> Worse than random (invert predictions!)</li>
+                    </ul>
+
+                    <div class="formula">
+                        <strong>AUC (Area Under Curve):</strong>
+                        AUC = Area under ROC curve
+                        <br><small>AUC = 1.0: Perfect | AUC = 0.5: Random | AUC &gt; 0.8: Good</small>
+                    </div>
+
+                    <h3>Regression Metrics: R² Score</h3>
+                    <p>For regression problems, R² (coefficient of determination) measures how well the model explains variance:</p>
+
+                    <div class="formula">
+                        <strong>R² Formula:</strong>
+                        R² = 1 - (SS_res / SS_tot)<br>
+                        <br>
+                        SS_res = Σ(y - ŷ)² (sum of squared residuals)<br>
+                        SS_tot = Σ(y - ȳ)² (total sum of squares)<br>
+                        <br><small>ȳ = mean of actual values</small>
+                    </div>
+
+                    <h4>Interpreting R²:</h4>
+                    <ul>
+                        <li><strong>R² = 1.0:</strong> Perfect fit (model explains 100% of variance)</li>
+                        <li><strong>R² = 0.7:</strong> Model explains 70% of variance (pretty good!)</li>
+                        <li><strong>R² = 0.0:</strong> Model no better than just using the mean</li>
+                        <li><strong>R² &lt; 0:</strong> Model worse than mean (something's very wrong!)</li>
+                    </ul>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 350px">
+                            <canvas id="r2-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> R² calculation on height-weight regression</p>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Choosing the Right Metric</div>
+                        <div class="callout-content">
+                            <strong>Balanced data:</strong> Use accuracy<br>
+                            <strong>Imbalanced data:</strong> Use F1-score, precision, or recall<br>
+                            <strong>Medical diagnosis:</strong> Prioritize recall (catch all diseases)<br>
+                            <strong>Spam filter:</strong> Prioritize precision (don't block legitimate emails)<br>
+                            <strong>Regression:</strong> Use R², RMSE, or MAE
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="regularization">
+                <div class="section-header">
+                    <h2>8. Regularization</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Regularization prevents overfitting by penalizing complex models. It adds a "simplicity constraint" to force the model to generalize better!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Prevents overfitting by penalizing large coefficients</li>
+                            <li>L1 (Lasso): Drives coefficients to zero, feature selection</li>
+                            <li>L2 (Ridge): Shrinks coefficients proportionally</li>
+                            <li>λ controls penalty strength</li>
+                        </ul>
+                    </div>
+
+                    <h3>The Overfitting Problem</h3>
+                    <p>Without regularization, models can learn training data TOO well:</p>
+                    <ul>
+                        <li>Captures noise instead of patterns</li>
+                        <li>High training accuracy, poor test accuracy</li>
+                        <li>Large coefficient values</li>
+                        <li>Model too complex for the problem</li>
+                    </ul>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Overfitting Example</div>
+                        <div class="callout-content">
+                            Imagine fitting a 10th-degree polynomial to 12 data points. It perfectly fits training data (even noise) but fails on new data. Regularization prevents this!
+                        </div>
+                    </div>
+
+                    <h3>The Regularization Solution</h3>
+                    <p>Instead of minimizing just the loss, we minimize: <strong>Loss + Penalty</strong></p>
+
+                    <div class="formula">
+                        <strong>Regularized Cost Function:</strong>
+                        Cost = Loss + λ × Penalty(θ)
+                        <br><small>where:<br>θ = model parameters (weights)<br>λ = regularization strength<br>Penalty = function of parameter magnitudes</small>
+                    </div>
+
+                    <h3>L1 Regularization (Lasso)</h3>
+                    <div class="formula">
+                        <strong>L1 Penalty:</strong>
+                        Cost = MSE + λ × Σ|θᵢ|
+                        <br><small>Sum of absolute values of coefficients</small>
+                    </div>
+
+                    <h4>L1 Effects:</h4>
+                    <ul>
+                        <li><strong>Feature selection:</strong> Drives coefficients to exactly 0</li>
+                        <li><strong>Sparse models:</strong> Only important features remain</li>
+                        <li><strong>Interpretable:</strong> Easy to see which features matter</li>
+                        <li><strong>Use when:</strong> Many features, few are important</li>
+                    </ul>
+
+                    <h3>L2 Regularization (Ridge)</h3>
+                    <div class="formula">
+                        <strong>L2 Penalty:</strong>
+                        Cost = MSE + λ × Σθᵢ²
+                        <br><small>Sum of squared coefficients</small>
+                    </div>
+
+                    <h4>L2 Effects:</h4>
+                    <ul>
+                        <li><strong>Shrinks coefficients:</strong> Makes them smaller, not zero</li>
+                        <li><strong>Keeps all features:</strong> No automatic selection</li>
+                        <li><strong>Smooth predictions:</strong> Less sensitive to individual features</li>
+                        <li><strong>Use when:</strong> Many correlated features (multicollinearity)</li>
+                    </ul>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="regularization-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Comparing vanilla, L1, and L2 regularization effects</p>
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Lambda (λ): <span id="reg-lambda-val">0.1</span></label>
+                            <input type="range" id="reg-lambda-slider" min="0" max="2" step="0.1" value="0.1">
+                        </div>
+                    </div>
+
+                    <h3>The Lambda (λ) Parameter</h3>
+                    <ul>
+                        <li><strong>λ = 0:</strong> No regularization (original model, risk of overfitting)</li>
+                        <li><strong>Small λ (0.01):</strong> Weak penalty, slight regularization</li>
+                        <li><strong>Medium λ (1):</strong> Balanced, good generalization</li>
+                        <li><strong>Large λ (100):</strong> Strong penalty, risk of underfitting</li>
+                    </ul>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 L1 vs L2: Quick Guide</div>
+                        <div class="callout-content">
+                            <strong>Use L1 when:</strong><br>
+                            • You suspect many features are irrelevant<br>
+                            • You want automatic feature selection<br>
+                            • You need interpretability<br>
+                            <br>
+                            <strong>Use L2 when:</strong><br>
+                            • All features might be useful<br>
+                            • Features are highly correlated<br>
+                            • You want smooth, stable predictions<br>
+                            <br>
+                            <strong>Elastic Net:</strong> Combines both L1 and L2!
+                        </div>
+                    </div>
+
+                    <h3>Practical Example</h3>
+                    <p>Predicting house prices with 10 features (size, bedrooms, age, etc.):</p>
+
+                    <p><strong>Without regularization:</strong> All features have large, varying coefficients. Model overfits noise.</p>
+
+                    <p><strong>With L1:</strong> Only 4 features remain (size, location, bedrooms, age). Others set to 0. Simpler, more interpretable!</p>
+
+                    <p><strong>With L2:</strong> All features kept but coefficients shrunk. More stable predictions, handles correlated features well.</p>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Key Takeaway</div>
+                        <div class="callout-content">
+                            Regularization is like adding a "simplicity tax" to your model. Complex models pay more tax, encouraging simpler solutions that generalize better!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="bias-variance">
+                <div class="section-header">
+                    <h2>9. Bias-Variance Tradeoff</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Every model makes two types of errors: bias and variance. The bias-variance tradeoff is the fundamental challenge in machine learning - we must balance them!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Bias = systematic error (underfitting)</li>
+                            <li>Variance = sensitivity to training data (overfitting)</li>
+                            <li>Can't minimize both simultaneously</li>
+                            <li>Goal: Find the sweet spot</li>
+                        </ul>
+                    </div>
+
+                    <h3>Understanding Bias</h3>
+                    <p><strong>Bias</strong> is the error from overly simplistic assumptions. High bias causes <strong>underfitting</strong>.</p>
+
+                    <h4>Characteristics of High Bias:</h4>
+                    <ul>
+                        <li>Model too simple for the problem</li>
+                        <li>High error on training data</li>
+                        <li>High error on test data</li>
+                        <li>Can't capture underlying patterns</li>
+                        <li>Example: Using a straight line for curved data</li>
+                    </ul>
+
+                    <div class="callout warning">
+                        <div class="callout-title">🎯 High Bias Example</div>
+                        <div class="callout-content">
+                            Trying to fit a parabola with a straight line. No matter how much training data you have, a line can't capture the curve. That's bias!
+                        </div>
+                    </div>
+
+                    <h3>Understanding Variance</h3>
+                    <p><strong>Variance</strong> is the error from sensitivity to small fluctuations in training data. High variance causes <strong>overfitting</strong>.</p>
+
+                    <h4>Characteristics of High Variance:</h4>
+                    <ul>
+                        <li>Model too complex for the problem</li>
+                        <li>Very low error on training data</li>
+                        <li>High error on test data</li>
+                        <li>Captures noise as if it were pattern</li>
+                        <li>Example: Using 10th-degree polynomial for simple data</li>
+                    </ul>
+
+                    <div class="callout warning">
+                        <div class="callout-title">📊 High Variance Example</div>
+                        <div class="callout-content">
+                            A wiggly curve that passes through every training point perfectly, including outliers. Change one data point and the entire curve changes dramatically. That's variance!
+                        </div>
+                    </div>
+
+                    <h3>The Tradeoff</h3>
+                    <div class="formula">
+                        <strong>Total Error Decomposition:</strong>
+                        Total Error = Bias² + Variance + Irreducible Error
+                        <br><small>Irreducible error = noise in data (can't be eliminated)</small>
+                    </div>
+
+                    <p><strong>The tradeoff:</strong></p>
+                    <ul>
+                        <li>Decrease bias → Increase variance (more complex model)</li>
+                        <li>Decrease variance → Increase bias (simpler model)</li>
+                        <li>Goal: Minimize total error by balancing both</li>
+                    </ul>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="bias-variance-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Three models showing underfitting, good fit, and overfitting</p>
+                    </div>
+
+                    <h3>The Driving Test Analogy</h3>
+                    <p>Think of learning to drive:</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Driving Test Analogy</div>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 12px; border: none; margin-bottom: 8px; background: rgba(255, 140, 106, 0.1); border-radius: 6px;">
+                                <strong style="color: #ff8c6a;">High Bias (Underfitting):</strong><br>
+                                Failed practice tests, failed real test<br>
+                                → Can't learn to drive at all
+                            </li>
+                            <li style="padding: 12px; border: none; margin-bottom: 8px; background: rgba(126, 240, 212, 0.1); border-radius: 6px;">
+                                <strong style="color: #7ef0d4;">Good Balance:</strong><br>
+                                Passed practice tests, passed real test<br>
+                                → Actually learned to drive!
+                            </li>
+                            <li style="padding: 12px; border: none; margin-bottom: 8px; background: rgba(255, 140, 106, 0.1); border-radius: 6px;">
+                                <strong style="color: #ff8c6a;">High Variance (Overfitting):</strong><br>
+                                Perfect on practice tests, failed real test<br>
+                                → Memorized practice, didn't truly learn
+                            </li>
+                        </ul>
+                    </div>
+
+                    <h3>How to Find the Balance</h3>
+
+                    <h4>Reduce Bias (if underfitting):</h4>
+                    <ul>
+                        <li>Use more complex model (more features, higher degree polynomial)</li>
+                        <li>Add more features</li>
+                        <li>Reduce regularization</li>
+                        <li>Train longer (more iterations)</li>
+                    </ul>
+
+                    <h4>Reduce Variance (if overfitting):</h4>
+                    <ul>
+                        <li>Use simpler model (fewer features, lower degree)</li>
+                        <li>Get more training data</li>
+                        <li>Add regularization (L1, L2)</li>
+                        <li>Use cross-validation</li>
+                        <li>Feature selection or dimensionality reduction</li>
+                    </ul>
+
+                    <h3>Model Complexity Curve</h3>
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 350px">
+                            <canvas id="complexity-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Error vs model complexity - find the sweet spot</p>
+                    </div>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 Detecting Bias vs Variance</div>
+                        <div class="callout-content">
+                            <strong>High Bias:</strong><br>
+                            Training error: High 🔴<br>
+                            Test error: High 🔴<br>
+                            Gap: Small<br>
+                            <br>
+                            <strong>High Variance:</strong><br>
+                            Training error: Low 🟢<br>
+                            Test error: High 🔴<br>
+                            Gap: Large ⚠️<br>
+                            <br>
+                            <strong>Good Model:</strong><br>
+                            Training error: Low 🟢<br>
+                            Test error: Low 🟢<br>
+                            Gap: Small ✓
+                        </div>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Key Takeaway</div>
+                        <div class="callout-content">
+                            The bias-variance tradeoff is unavoidable. You can't have zero bias AND zero variance. The art of machine learning is finding the sweet spot where total error is minimized!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="cross-validation">
+                <div class="section-header">
+                    <h2>10. Cross-Validation</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Cross-validation gives more reliable performance estimates by testing your model on multiple different splits of the data!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Splits data into K folds</li>
+                            <li>Trains K times, each with different test fold</li>
+                            <li>Averages results for robust estimate</li>
+                            <li>Reduces variance in performance estimate</li>
+                        </ul>
+                    </div>
+
+                    <h3>The Problem with Simple Train-Test Split</h3>
+                    <p>With a single 80-20 split:</p>
+                    <ul>
+                        <li>Performance depends on which data you randomly picked</li>
+                        <li>Might get lucky/unlucky with the split</li>
+                        <li>20% of data wasted (not used for training)</li>
+                        <li>One number doesn't tell you about variance</li>
+                    </ul>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Single Split Problem</div>
+                        <div class="callout-content">
+                            You test once and get 85% accuracy. Is that good? Or did you just get lucky with an easy test set? Without multiple tests, you don't know!
+                        </div>
+                    </div>
+
+                    <h3>K-Fold Cross-Validation</h3>
+                    <p>The solution: Split data into K folds and test K times!</p>
+
+                    <div class="formula">
+                        <strong>K-Fold Algorithm:</strong>
+                        1. Split data into K equal folds<br>
+                        2. For i = 1 to K:<br>
+                        &nbsp;&nbsp;&nbsp;- Use fold i as test set<br>
+                        &nbsp;&nbsp;&nbsp;- Use all other folds as training set<br>
+                        &nbsp;&nbsp;&nbsp;- Train model and record accuracyᵢ<br>
+                        3. Final score = mean(accuracy₁, ..., accuracyₖ)<br>
+                        4. Also report std dev for confidence
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="cv-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> 3-Fold Cross-Validation - each fold serves as test set once</p>
+                    </div>
+
+                    <h3>Example: 3-Fold CV</h3>
+                    <p>Dataset with 12 samples (A through L), split into 3 folds:</p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Fold</th><th>Test Set</th><th>Training Set</th><th>Accuracy</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>A, B, C, D</td>
+                                <td>E, F, G, H, I, J, K, L</td>
+                                <td>0.96</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>E, F, G, H</td>
+                                <td>A, B, C, D, I, J, K, L</td>
+                                <td>0.84</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>I, J, K, L</td>
+                                <td>A, B, C, D, E, F, G, H</td>
+                                <td>0.90</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="formula">
+                        <strong>Final Score:</strong>
+                        Mean = (0.96 + 0.84 + 0.90) / 3 = 0.90 (90%)<br>
+                        Std Dev = 0.049<br>
+                        <br>
+                        <strong>Report:</strong> 90% ± 5%
+                    </div>
+
+                    <h3>Choosing K</h3>
+                    <ul>
+                        <li><strong>K=5:</strong> Most common, good balance</li>
+                        <li><strong>K=10:</strong> More reliable, standard in research</li>
+                        <li><strong>K=n (Leave-One-Out):</strong> Maximum data usage, but expensive</li>
+                        <li><strong>Larger K:</strong> More computation, less bias, more variance</li>
+                        <li><strong>Smaller K:</strong> Less computation, more bias, less variance</li>
+                    </ul>
+
+                    <h3>Stratified K-Fold</h3>
+                    <p>For classification with imbalanced classes, use <strong>stratified</strong> K-fold to maintain class proportions in each fold!</p>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 Example</div>
+                        <div class="callout-content">
+                            Dataset: 80% class 0, 20% class 1<br>
+                            <br>
+                            <strong>Regular K-fold:</strong> One fold might have 90% class 0, another 70%<br>
+                            <strong>Stratified K-fold:</strong> Every fold has 80% class 0, 20% class 1 ✓
+                        </div>
+                    </div>
+
+                    <h3>Leave-One-Out Cross-Validation (LOOCV)</h3>
+                    <p>Special case where K = n (number of samples):</p>
+                    <ul>
+                        <li>Each sample is test set once</li>
+                        <li>Train on n-1 samples, test on 1</li>
+                        <li>Repeat n times</li>
+                        <li>Maximum use of training data</li>
+                        <li>Very expensive for large datasets</li>
+                    </ul>
+
+                    <h3>Benefits of Cross-Validation</h3>
+                    <ul>
+                        <li>✓ More reliable performance estimate</li>
+                        <li>✓ Uses all data for both training and testing</li>
+                        <li>✓ Reduces variance in estimate</li>
+                        <li>✓ Detects overfitting (high variance across folds)</li>
+                        <li>✓ Better for small datasets</li>
+                    </ul>
+
+                    <h3>Drawbacks</h3>
+                    <ul>
+                        <li>✗ Computationally expensive (train K times)</li>
+                        <li>✗ Not suitable for time series (can't shuffle)</li>
+                        <li>✗ Still need final train-test split for final model</li>
+                    </ul>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Best Practice</div>
+                        <div class="callout-content">
+                            1. Use cross-validation to evaluate models and tune hyperparameters<br>
+                            2. Once you pick the best model, train on ALL training data<br>
+                            3. Test once on held-out test set for final unbiased estimate<br>
+                            <br>
+                            <strong>Never</strong> use test set during cross-validation!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="preprocessing">
+                <div class="section-header">
+                    <h2>11. Data Preprocessing</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Raw data is messy! Data preprocessing cleans and transforms data into a format that machine learning algorithms can use effectively.</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Steps</div>
+                        <ul class="info-card-list">
+                            <li>Handle missing values</li>
+                            <li>Encode categorical variables</li>
+                            <li>Scale/normalize features</li>
+                            <li>Split data properly</li>
+                        </ul>
+                    </div>
+
+                    <h3>1. Handling Missing Values</h3>
+                    <p>Real-world data often has missing values. We can't just ignore them!</p>
+
+                    <h4>Strategies:</h4>
+                    <ul>
+                        <li><strong>Drop rows:</strong> If only few values missing (&lt;5%)</li>
+                        <li><strong>Mean imputation:</strong> Replace with column mean (numerical)</li>
+                        <li><strong>Median imputation:</strong> Replace with median (robust to outliers)</li>
+                        <li><strong>Mode imputation:</strong> Replace with most frequent (categorical)</li>
+                        <li><strong>Forward/backward fill:</strong> Use previous/next value (time series)</li>
+                        <li><strong>Predictive imputation:</strong> Train model to predict missing values</li>
+                    </ul>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Warning</div>
+                        <div class="callout-content">
+                            Never drop columns with many missing values without investigation! The missingness itself might be informative (e.g., income not reported might correlate with high income).
+                        </div>
+                    </div>
+
+                    <h3>2. Encoding Categorical Variables</h3>
+                    <p>Most ML algorithms need numerical input. We must convert categories to numbers!</p>
+
+                    <h4>One-Hot Encoding</h4>
+                    <p>Creates binary column for each category. Use for <strong>nominal</strong> data (no order).</p>
+
+                    <div class="formula">
+                        <strong>Example:</strong>
+                        Color: ["Red", "Blue", "Green", "Blue"]<br>
+                        <br>
+                        Becomes three columns:<br>
+                        Red:&nbsp;&nbsp;&nbsp;[1, 0, 0, 0]<br>
+                        Blue:&nbsp;&nbsp;[0, 1, 0, 1]<br>
+                        Green: [0, 0, 1, 0]
+                    </div>
+
+                    <h4>Label Encoding</h4>
+                    <p>Assigns integer to each category. Use for <strong>ordinal</strong> data (has order).</p>
+
+                    <div class="formula">
+                        <strong>Example:</strong>
+                        Size: ["Small", "Large", "Medium", "Small"]<br>
+                        <br>
+                        Becomes: [0, 2, 1, 0]<br>
+                        <small>(Small=0, Medium=1, Large=2)</small>
+                    </div>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Don't Mix Them Up!</div>
+                        <div class="callout-content">
+                            Never use label encoding for nominal data! If you encode ["Red", "Blue", "Green"] as [0, 1, 2], the model thinks Green &gt; Blue &gt; Red, which is meaningless!
+                        </div>
+                    </div>
+
+                    <h3>3. Feature Scaling</h3>
+                    <p>Different features have different scales. Age (0-100) vs Income ($0-$1M). This causes problems!</p>
+
+                    <h4>Why Scale?</h4>
+                    <ul>
+                        <li>Gradient descent converges faster</li>
+                        <li>Distance-based algorithms (KNN, SVM) need it</li>
+                        <li>Regularization treats features equally</li>
+                        <li>Neural networks train better</li>
+                    </ul>
+
+                    <h4>StandardScaler (Z-score normalization)</h4>
+                    <div class="formula">
+                        <strong>Formula:</strong>
+                        z = (x - μ) / σ
+                        <br><small>where:<br>μ = mean of feature<br>σ = standard deviation<br>Result: mean=0, std=1</small>
+                    </div>
+
+                    <p><strong>Example:</strong> [10, 20, 30, 40, 50]</p>
+                    <p>μ = 30, σ = 15.81</p>
+                    <p>Scaled: [-1.26, -0.63, 0, 0.63, 1.26]</p>
+
+                    <h4>MinMaxScaler</h4>
+                    <div class="formula">
+                        <strong>Formula:</strong>
+                        x' = (x - min) / (max - min)
+                        <br><small>Result: range [0, 1]</small>
+                    </div>
+
+                    <p><strong>Example:</strong> [10, 20, 30, 40, 50]</p>
+                    <p>Scaled: [0, 0.25, 0.5, 0.75, 1.0]</p>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 350px">
+                            <canvas id="scaling-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Feature distributions before and after scaling</p>
+                    </div>
+
+                    <h3>Critical: fit_transform vs transform</h3>
+                    <p>This is where many beginners make mistakes!</p>
+
+                    <div class="formula">
+                        <strong>fit_transform():</strong><br>
+                        1. Learns parameters (μ, σ, min, max) from data<br>
+                        2. Transforms the data<br>
+                        <strong>Use on:</strong> Training data ONLY<br>
+                        <br>
+                        <strong>transform():</strong><br>
+                        1. Uses already-learned parameters<br>
+                        2. Transforms the data<br>
+                        <strong>Use on:</strong> Test data, new data
+                    </div>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ DATA LEAKAGE!</div>
+                        <div class="callout-content">
+                            <strong>WRONG:</strong><br>
+                            scaler.fit(test_data) # Learns from test data!<br>
+                            <br>
+                            <strong>CORRECT:</strong><br>
+                            scaler.fit(train_data) # Learn from train only<br>
+                            train_scaled = scaler.transform(train_data)<br>
+                            test_scaled = scaler.transform(test_data)<br>
+                            <br>
+                            If you fit on test data, you're "peeking" at the answers!
+                        </div>
+                    </div>
+
+                    <h3>4. Train-Test Split</h3>
+                    <p>Always split data BEFORE any preprocessing that learns parameters!</p>
+
+                    <div class="formula">
+                        <strong>Correct Order:</strong><br>
+                        1. Split data → train (80%), test (20%)<br>
+                        2. Handle missing values (fit on train)<br>
+                        3. Encode categories (fit on train)<br>
+                        4. Scale features (fit on train)<br>
+                        5. Train model<br>
+                        6. Test model (using same transformations)
+                    </div>
+
+                    <h3>Complete Pipeline Example</h3>
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 300px">
+                            <canvas id="pipeline-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Complete preprocessing pipeline</p>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Golden Rules</div>
+                        <div class="callout-content">
+                            1. <strong>Split first!</strong> Before any preprocessing<br>
+                            2. <strong>Fit on train only!</strong> Never on test<br>
+                            3. <strong>Transform both!</strong> Apply same transformations to test<br>
+                            4. <strong>Pipeline everything!</strong> Use scikit-learn Pipeline to avoid mistakes<br>
+                            5. <strong>Save your scaler!</strong> You'll need it for new predictions
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="loss-functions">
+                <div class="section-header">
+                    <h2>12. Loss Functions</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Loss functions measure how wrong our predictions are. Different problems need different loss functions! The choice dramatically affects what your model learns.</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Loss = how wrong a single prediction is</li>
+                            <li>Cost = average loss over all samples</li>
+                            <li>Regression: MSE, MAE, RMSE</li>
+                            <li>Classification: Log Loss, Hinge Loss</li>
+                        </ul>
+                    </div>
+
+                    <h3>Loss Functions for Regression</h3>
+
+                    <h4>Mean Squared Error (MSE)</h4>
+                    <div class="formula">
+                        <strong>Formula:</strong>
+                        MSE = (1/n) × Σ(y - ŷ)²
+                        <br><small>where:<br>y = actual value<br>ŷ = predicted value<br>n = number of samples</small>
+                    </div>
+
+                    <h5>Characteristics:</h5>
+                    <ul>
+                        <li><strong>Squares errors:</strong> Penalizes large errors heavily</li>
+                        <li><strong>Always positive:</strong> Minimum is 0 (perfect predictions)</li>
+                        <li><strong>Differentiable:</strong> Great for gradient descent</li>
+                        <li><strong>Sensitive to outliers:</strong> One huge error dominates</li>
+                        <li><strong>Units:</strong> Squared units (harder to interpret)</li>
+                    </ul>
+
+                    <p><strong>Example:</strong> Predictions [12, 19, 32], Actual [10, 20, 30]</p>
+                    <p>Errors: [2, -1, 2]</p>
+                    <p>Squared: [4, 1, 4]</p>
+                    <p>MSE = (4 + 1 + 4) / 3 = <strong>3.0</strong></p>
+
+                    <h4>Mean Absolute Error (MAE)</h4>
+                    <div class="formula">
+                        <strong>Formula:</strong>
+                        MAE = (1/n) × Σ|y - ŷ|
+                        <br><small>Absolute value of errors</small>
+                    </div>
+
+                    <h5>Characteristics:</h5>
+                    <ul>
+                        <li><strong>Linear penalty:</strong> All errors weighted equally</li>
+                        <li><strong>Robust to outliers:</strong> One huge error doesn't dominate</li>
+                        <li><strong>Interpretable units:</strong> Same units as target</li>
+                        <li><strong>Not differentiable at 0:</strong> Slightly harder to optimize</li>
+                    </ul>
+
+                    <p><strong>Example:</strong> Predictions [12, 19, 32], Actual [10, 20, 30]</p>
+                    <p>Errors: [2, -1, 2]</p>
+                    <p>Absolute: [2, 1, 2]</p>
+                    <p>MAE = (2 + 1 + 2) / 3 = <strong>1.67</strong></p>
+
+                    <h4>Root Mean Squared Error (RMSE)</h4>
+                    <div class="formula">
+                        <strong>Formula:</strong>
+                        RMSE = √MSE
+                        <br><small>Square root of MSE</small>
+                    </div>
+
+                    <h5>Characteristics:</h5>
+                    <ul>
+                        <li><strong>Same units as target:</strong> More interpretable than MSE</li>
+                        <li><strong>Still sensitive to outliers:</strong> But less than MSE</li>
+                        <li><strong>Common in competitions:</strong> Kaggle, etc.</li>
+                    </ul>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="loss-comparison-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Comparing MSE, MAE, and their response to errors</p>
+                    </div>
+
+                    <h3>Loss Functions for Classification</h3>
+
+                    <h4>Log Loss (Cross-Entropy)</h4>
+                    <div class="formula">
+                        <strong>Binary Cross-Entropy:</strong>
+                        Loss = -(1/n) × Σ[y·log(ŷ) + (1-y)·log(1-ŷ)]
+                        <br><small>where:<br>y ∈ {0, 1} = actual label<br>ŷ ∈ (0, 1) = predicted probability</small>
+                    </div>
+
+                    <h5>Characteristics:</h5>
+                    <ul>
+                        <li><strong>For probabilities:</strong> Output must be [0, 1]</li>
+                        <li><strong>Heavily penalizes confident wrong predictions:</strong> Good!</li>
+                        <li><strong>Convex:</strong> No local minima, easy to optimize</li>
+                        <li><strong>Probabilistic interpretation:</strong> Maximum likelihood</li>
+                    </ul>
+
+                    <p><strong>Example:</strong> y=1 (spam), predicted p=0.9</p>
+                    <p>Loss = -[1·log(0.9) + 0·log(0.1)] = -log(0.9) = <strong>0.105</strong> (low, good!)</p>
+
+                    <p><strong>Example:</strong> y=1 (spam), predicted p=0.1</p>
+                    <p>Loss = -[1·log(0.1) + 0·log(0.9)] = -log(0.1) = <strong>2.303</strong> (high, bad!)</p>
+
+                    <h4>Hinge Loss (for SVM)</h4>
+                    <div class="formula">
+                        <strong>Formula:</strong>
+                        Loss = max(0, 1 - y·score)
+                        <br><small>where:<br>y ∈ {-1, +1}<br>score = w·x + b</small>
+                    </div>
+
+                    <h5>Characteristics:</h5>
+                    <ul>
+                        <li><strong>Margin-based:</strong> Encourages confident predictions</li>
+                        <li><strong>Zero loss for correct &amp; confident:</strong> When y·score ≥ 1</li>
+                        <li><strong>Linear penalty:</strong> For violations</li>
+                        <li><strong>Used in SVM:</strong> Maximizes margin</li>
+                    </ul>
+
+                    <h3>When to Use Which Loss?</h3>
+
+                    <div class="info-card" style="background: rgba(106, 169, 255, 0.1);">
+                        <div class="info-card-title" style="color: #6aa9ff;">Regression Problems</div>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0; border: none;">
+                                <strong>MSE:</strong> Default choice, smooth optimization, use when outliers are errors
+                            </li>
+                            <li style="padding: 8px 0; border: none;">
+                                <strong>MAE:</strong> When you have outliers that are valid data points
+                            </li>
+                            <li style="padding: 8px 0; border: none;">
+                                <strong>RMSE:</strong> When you need interpretable metric in original units
+                            </li>
+                            <li style="padding: 8px 0; border: none;">
+                                <strong>Huber Loss:</strong> Combines MSE and MAE - best of both worlds!
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card" style="background: rgba(126, 240, 212, 0.1); margin-top: 16px;">
+                        <div class="info-card-title" style="color: #7ef0d4;">Classification Problems</div>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0; border: none;">
+                                <strong>Log Loss:</strong> Default for binary/multi-class, when you need probabilities
+                            </li>
+                            <li style="padding: 8px 0; border: none;">
+                                <strong>Hinge Loss:</strong> For SVM, when you want maximum margin
+                            </li>
+                            <li style="padding: 8px 0; border: none;">
+                                <strong>Focal Loss:</strong> For highly imbalanced datasets
+                            </li>
+                        </ul>
+                    </div>
+
+                    <h3>Visualizing Loss Curves</h3>
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 350px">
+                            <canvas id="loss-curves-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> How different losses respond to errors</p>
+                    </div>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 Impact of Outliers</div>
+                        <div class="callout-content">
+                            Imagine predictions [100, 102, 98, 150] for actuals [100, 100, 100, 100]:<br>
+                            <br>
+                            <strong>MSE:</strong> (0 + 4 + 4 + 2500) / 4 = 627 ← Dominated by outlier!<br>
+                            <strong>MAE:</strong> (0 + 2 + 2 + 50) / 4 = 13.5 ← More balanced<br>
+                            <br>
+                            MSE is 48× larger because it squares the huge error!
+                        </div>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Key Takeaways</div>
+                        <div class="callout-content">
+                            1. Loss function choice affects what your model learns<br>
+                            2. MSE penalizes large errors more than MAE<br>
+                            3. Use MAE when outliers are valid, MSE when they're errors<br>
+                            4. Log loss for classification with probabilities<br>
+                            5. Always plot your errors to understand what's happening!<br>
+                            <br>
+                            <strong>The loss function IS your model's objective!</strong>
+                        </div>
+                    </div>
+
+                    <h3>🎉 Congratulations!</h3>
+                    <p style="font-size: 18px; color: #7ef0d4; margin-top: 24px;">
+                        You've completed all 12 machine learning topics! You now understand the fundamentals of ML from linear regression to loss functions. Keep practicing and building projects! 🚀
+                    </p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
