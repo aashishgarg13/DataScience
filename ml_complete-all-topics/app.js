@@ -104,6 +104,9 @@ function initSections() {
         if (section.id === 'cross-validation') initCrossValidation();
         if (section.id === 'preprocessing') initPreprocessing();
         if (section.id === 'loss-functions') initLossFunctions();
+        if (section.id === 'optimal-k') initOptimalK();
+        if (section.id === 'hyperparameter-tuning') initHyperparameterTuning();
+        if (section.id === 'naive-bayes') initNaiveBayes();
       }
     });
   });
@@ -2351,6 +2354,334 @@ function drawLossCurves() {
   ctx.restore();
 }
 
+// Optimal K for KNN
+function initOptimalK() {
+  const canvas = document.getElementById('optimal-k-canvas');
+  if (!canvas || canvas.dataset.initialized) return;
+  canvas.dataset.initialized = 'true';
+  
+  const rangeSlider = document.getElementById('k-range-slider');
+  const foldsSlider = document.getElementById('cv-folds-slider');
+  
+  if (rangeSlider) {
+    rangeSlider.addEventListener('input', (e) => {
+      document.getElementById('k-range-val').textContent = e.target.value;
+      drawOptimalK();
+    });
+  }
+  
+  if (foldsSlider) {
+    foldsSlider.addEventListener('input', (e) => {
+      document.getElementById('cv-folds-val').textContent = e.target.value;
+      drawOptimalK();
+    });
+  }
+  
+  drawOptimalK();
+}
+
+function drawOptimalK() {
+  const canvas = document.getElementById('optimal-k-canvas');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 60;
+  const chartWidth = width - 2 * padding;
+  const chartHeight = height - 2 * padding;
+  
+  // Use provided data
+  const kRange = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+  const accuracies = [0.85, 0.88, 0.92, 0.94, 0.96, 0.97, 0.98, 0.97, 0.96, 0.95, 0.94, 0.93, 0.92, 0.91, 0.90, 0.89, 0.88, 0.87, 0.86, 0.85];
+  const optimalK = 7;
+  
+  const scaleX = (k) => padding + ((k - 1) / 19) * chartWidth;
+  const scaleY = (acc) => height - padding - ((acc - 0.8) / 0.2) * chartHeight;
+  
+  // Draw grid
+  ctx.strokeStyle = 'rgba(42, 53, 68, 0.5)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 10; i++) {
+    const x = padding + (chartWidth / 10) * i;
+    ctx.beginPath();
+    ctx.moveTo(x, padding);
+    ctx.lineTo(x, height - padding);
+    ctx.stroke();
+    
+    const y = padding + (chartHeight / 10) * i;
+    ctx.beginPath();
+    ctx.moveTo(padding, y);
+    ctx.lineTo(width - padding, y);
+    ctx.stroke();
+  }
+  
+  // Draw axes
+  ctx.strokeStyle = '#2a3544';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, height - padding);
+  ctx.lineTo(width - padding, height - padding);
+  ctx.stroke();
+  
+  // Draw line
+  ctx.strokeStyle = '#6aa9ff';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  kRange.forEach((k, i) => {
+    const x = scaleX(k);
+    const y = scaleY(accuracies[i]);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  
+  // Draw points
+  kRange.forEach((k, i) => {
+    const x = scaleX(k);
+    const y = scaleY(accuracies[i]);
+    const isOptimal = k === optimalK;
+    
+    ctx.fillStyle = isOptimal ? '#7ef0d4' : '#6aa9ff';
+    ctx.beginPath();
+    ctx.arc(x, y, isOptimal ? 8 : 5, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    if (isOptimal) {
+      ctx.strokeStyle = '#7ef0d4';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(x, y, 14, 0, 2 * Math.PI);
+      ctx.stroke();
+      
+      // Label
+      ctx.fillStyle = '#7ef0d4';
+      ctx.font = 'bold 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`Optimal K=${optimalK}`, x, y - 25);
+      ctx.fillText(`Accuracy: ${(accuracies[i] * 100).toFixed(1)}%`, x, y - 10);
+    }
+  });
+  
+  // Draw vertical line at optimal K
+  ctx.strokeStyle = 'rgba(126, 240, 212, 0.3)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([5, 5]);
+  ctx.beginPath();
+  ctx.moveTo(scaleX(optimalK), padding);
+  ctx.lineTo(scaleX(optimalK), height - padding);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  // Labels
+  ctx.fillStyle = '#a9b4c2';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('K Value', width / 2, height - 20);
+  ctx.save();
+  ctx.translate(20, height / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Mean Accuracy', 0, 0);
+  ctx.restore();
+  
+  // X-axis labels
+  for (let i = 1; i <= 20; i += 2) {
+    ctx.fillText(i, scaleX(i), height - padding + 20);
+  }
+}
+
+// Hyperparameter Tuning & GridSearch
+function initHyperparameterTuning() {
+  const canvas = document.getElementById('gridsearch-canvas');
+  if (!canvas || canvas.dataset.initialized) return;
+  canvas.dataset.initialized = 'true';
+  drawGridSearch();
+}
+
+function drawGridSearch() {
+  const canvas = document.getElementById('gridsearch-canvas');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 80;
+  const chartWidth = width - 2 * padding;
+  const chartHeight = height - 2 * padding;
+  
+  // Grid data - C vs gamma heatmap
+  const cValues = [0.1, 1, 10, 100];
+  const gammaValues = [0.001, 0.01, 0.1, 1];
+  
+  // Scores (simulated)
+  const scores = [
+    [0.70, 0.75, 0.78, 0.76],
+    [0.82, 0.88, 0.92, 0.85],
+    [0.88, 0.95, 0.93, 0.87],
+    [0.85, 0.90, 0.88, 0.82]
+  ];
+  
+  const cellWidth = chartWidth / cValues.length;
+  const cellHeight = chartHeight / gammaValues.length;
+  
+  // Draw cells
+  cValues.forEach((c, i) => {
+    gammaValues.forEach((g, j) => {
+      const x = padding + i * cellWidth;
+      const y = padding + j * cellHeight;
+      const score = scores[i][j];
+      
+      // Color based on score
+      const intensity = (score - 0.7) / 0.25;
+      const r = Math.floor(255 - intensity * 155);
+      const gb = Math.floor(100 + intensity * 140);
+      ctx.fillStyle = `rgb(${r}, ${gb}, ${Math.floor(gb * 0.9)})`;
+      ctx.fillRect(x, y, cellWidth, cellHeight);
+      
+      // Border
+      ctx.strokeStyle = '#1a2332';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x, y, cellWidth, cellHeight);
+      
+      // Score text
+      ctx.fillStyle = score > 0.88 ? '#1a2332' : '#e8eef6';
+      ctx.font = 'bold 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText((score * 100).toFixed(0) + '%', x + cellWidth / 2, y + cellHeight / 2 + 5);
+      
+      // Highlight best
+      if (score === 0.95) {
+        ctx.strokeStyle = '#7ef0d4';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(x, y, cellWidth, cellHeight);
+        
+        ctx.fillStyle = '#7ef0d4';
+        ctx.font = '12px sans-serif';
+        ctx.fillText('★ Best', x + cellWidth / 2, y + cellHeight / 2 + 22);
+      }
+    });
+  });
+  
+  // Axis labels - C
+  ctx.fillStyle = '#a9b4c2';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  cValues.forEach((c, i) => {
+    const x = padding + i * cellWidth + cellWidth / 2;
+    ctx.fillText(`C=${c}`, x, height - padding + 25);
+  });
+  
+  // Axis labels - gamma
+  ctx.textAlign = 'right';
+  gammaValues.forEach((g, i) => {
+    const y = padding + i * cellHeight + cellHeight / 2;
+    ctx.fillText(`γ=${g}`, padding - 10, y + 5);
+  });
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('GridSearch Heatmap: C vs gamma (RBF kernel)', width / 2, 30);
+  
+  // Legend
+  ctx.font = '12px sans-serif';
+  ctx.fillStyle = '#a9b4c2';
+  ctx.textAlign = 'left';
+  ctx.fillText('Lower accuracy', padding, height - 10);
+  ctx.textAlign = 'right';
+  ctx.fillText('Higher accuracy', width - padding, height - 10);
+}
+
+// Naive Bayes
+function initNaiveBayes() {
+  const canvas = document.getElementById('naive-bayes-canvas');
+  if (!canvas || canvas.dataset.initialized) return;
+  canvas.dataset.initialized = 'true';
+  drawNaiveBayes();
+}
+
+function drawNaiveBayes() {
+  const canvas = document.getElementById('naive-bayes-canvas');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 350;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  // Display calculation flow
+  const steps = [
+    { label: 'Words', value: '["free", "money"]', color: '#6aa9ff' },
+    { label: 'P(free|spam)', value: '0.8', color: '#7ef0d4' },
+    { label: 'P(money|spam)', value: '0.7', color: '#7ef0d4' },
+    { label: 'P(spam)', value: '0.3', color: '#ff8c6a' },
+    { label: 'Likelihood', value: '0.8 × 0.7 = 0.56', color: '#7ef0d4' },
+    { label: 'Posterior', value: '0.56 × 0.3 = 0.168', color: '#7ef0d4' },
+    { label: 'Result', value: 'P(spam) = 0.98 (98%)', color: '#7ef0d4' }
+  ];
+  
+  const boxWidth = 180;
+  const boxHeight = 45;
+  const startY = 40;
+  const gap = 8;
+  
+  steps.forEach((step, i) => {
+    const x = (width - boxWidth) / 2;
+    const y = startY + i * (boxHeight + gap);
+    
+    // Box
+    ctx.fillStyle = '#2a3544';
+    ctx.fillRect(x, y, boxWidth, boxHeight);
+    ctx.strokeStyle = step.color;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, boxWidth, boxHeight);
+    
+    // Text
+    ctx.fillStyle = '#a9b4c2';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(step.label, x + boxWidth / 2, y + boxHeight / 2 - 6);
+    
+    ctx.fillStyle = step.color;
+    ctx.font = 'bold 13px monospace';
+    ctx.fillText(step.value, x + boxWidth / 2, y + boxHeight / 2 + 10);
+    
+    // Arrow
+    if (i < steps.length - 1) {
+      ctx.strokeStyle = '#6aa9ff';
+      ctx.fillStyle = '#6aa9ff';
+      ctx.lineWidth = 2;
+      const arrowY = y + boxHeight + gap / 2;
+      ctx.beginPath();
+      ctx.moveTo(x + boxWidth / 2, arrowY - 3);
+      ctx.lineTo(x + boxWidth / 2, arrowY + 3);
+      ctx.stroke();
+      
+      // Arrowhead
+      ctx.beginPath();
+      ctx.moveTo(x + boxWidth / 2, arrowY + 3);
+      ctx.lineTo(x + boxWidth / 2 - 4, arrowY - 2);
+      ctx.lineTo(x + boxWidth / 2 + 4, arrowY - 2);
+      ctx.fill();
+    }
+  });
+}
+
 // Handle window resize
 let resizeTimer;
 window.addEventListener('resize', () => {
@@ -2377,5 +2708,8 @@ window.addEventListener('resize', () => {
     drawSVMCParameter();
     drawSVMTraining();
     drawSVMKernel();
+    drawOptimalK();
+    drawGridSearch();
+    drawNaiveBayes();
   }, 250);
 });

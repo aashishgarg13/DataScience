@@ -496,6 +496,9 @@ canvas {
                 <a href="#cross-validation" class="toc-link">10. Cross-Validation</a>
                 <a href="#preprocessing" class="toc-link">11. Data Preprocessing</a>
                 <a href="#loss-functions" class="toc-link">12. Loss Functions</a>
+                <a href="#optimal-k" class="toc-link">13. Finding Optimal K for KNN</a>
+                <a href="#hyperparameter-tuning" class="toc-link">14. Hyperparameter Tuning &amp; GridSearch</a>
+                <a href="#naive-bayes" class="toc-link">15. Naive Bayes Classifier</a>
             </nav>
         </aside>
 
@@ -2374,6 +2377,514 @@ Actual  Pos     TP     FN
                     <h3>🎉 Congratulations!</h3>
                     <p style="font-size: 18px; color: #7ef0d4; margin-top: 24px;">
                         You've completed all 12 machine learning topics! You now understand the fundamentals of ML from linear regression to loss functions. Keep practicing and building projects! 🚀
+                    </p>
+                </div>
+            </div>
+
+            <!-- Section 13: Finding Optimal K for KNN -->
+            <div class="section" id="optimal-k">
+                <div class="section-header">
+                    <h2>13. Finding Optimal K for KNN 🎯</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>In KNN, choosing the right K value is crucial! Too small = overfitting, too large = underfitting. How do we find the optimal K? Use cross-validation!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">The Problem</div>
+                        <ul class="info-card-list">
+                            <li>K=1: Overfits (memorizes training data, including noise)</li>
+                            <li>K=too large: Underfits (boundary too smooth, misses patterns)</li>
+                            <li>Need: K that balances bias and variance</li>
+                            <li>K controls model complexity</li>
+                        </ul>
+                    </div>
+
+                    <h3>Why K Matters</h3>
+                    <ul>
+                        <li><strong>K controls model complexity:</strong> Small K = complex boundaries, large K = simple boundaries</li>
+                        <li><strong>Affects decision boundary smoothness:</strong> Directly impacts predictions</li>
+                        <li><strong>Impacts generalization ability:</strong> Wrong K hurts test performance</li>
+                        <li><strong>Must be chosen carefully:</strong> Can't just guess!</li>
+                    </ul>
+
+                    <h3>The Solution: Cross-Validation</h3>
+                    <div class="formula">
+                        <strong>K-Selection Algorithm:</strong>
+                        For K = 1 to 20:<br>
+                        &nbsp;&nbsp;For each fold in K-Fold CV:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Train KNN with this K value<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Test on validation fold<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Record accuracy<br>
+                        &nbsp;&nbsp;Calculate mean accuracy across all folds<br>
+                        &nbsp;&nbsp;Store: (K, mean_accuracy)<br>
+                        <br>
+                        Plot K vs Mean Accuracy<br>
+                        Choose K with highest mean accuracy
+                    </div>
+
+                    <h3>Step-by-Step Process</h3>
+                    <ol>
+                        <li><strong>Define K Range:</strong> Try K = 1, 2, 3, ..., 20 (or use √n as starting point)</li>
+                        <li><strong>Set Up Cross-Validation:</strong> Use k-fold CV (e.g., k=10) to ensure robust evaluation</li>
+                        <li><strong>Train and Evaluate:</strong> For each K value, run k-fold CV, get accuracy for each fold, calculate mean ± std dev</li>
+                        <li><strong>Select Optimal K:</strong> Choose K with highest mean accuracy (or use elbow method)</li>
+                    </ol>
+
+                    <h3>Example Walkthrough</h3>
+                    <p><strong>Dataset:</strong> A, B, C, D, E, F (6 samples), k-fold = 3</p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>K Value</th><th>Fold 1</th><th>Fold 2</th><th>Fold 3</th><th>Mean Accuracy</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>K=1</td><td>100%</td><td>100%</td><td>50%</td><td>83.3%</td></tr>
+                            <tr style="background: rgba(126, 240, 212, 0.1);"><td><strong>K=3</strong></td><td>100%</td><td>100%</td><td>100%</td><td><strong>100% ← Best!</strong></td></tr>
+                            <tr><td>K=5</td><td>100%</td><td>50%</td><td>100%</td><td>83.3%</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="optimal-k-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> K vs Accuracy plot showing optimal K value</p>
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>K Range (max): <span id="k-range-val">20</span></label>
+                            <input type="range" id="k-range-slider" min="10" max="30" step="5" value="20">
+                        </div>
+                        <div class="control-group">
+                            <label>CV Folds: <span id="cv-folds-val">10</span></label>
+                            <input type="range" id="cv-folds-slider" min="3" max="10" step="1" value="10">
+                        </div>
+                    </div>
+
+                    <h3>Elbow Method</h3>
+                    <p>Look for the "elbow point" where accuracy stops improving significantly:</p>
+                    <ul>
+                        <li><strong>Sharp increase:</strong> Significant improvement with larger K</li>
+                        <li><strong>Elbow point:</strong> Diminishing returns begin</li>
+                        <li><strong>Plateau:</strong> Little benefit from larger K</li>
+                        <li><strong>Choose K at/near elbow:</strong> Best trade-off</li>
+                    </ul>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 Odd K Values</div>
+                        <div class="callout-content">
+                            Always prefer odd K values (3, 5, 7, 9) for binary classification! This avoids ties when neighbors vote. For K=4, you might get 2 votes for each class.
+                        </div>
+                    </div>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Don't Use Test Set!</div>
+                        <div class="callout-content">
+                            Never use the test set for K selection! Always use cross-validation on training data only. The test set should remain untouched until final evaluation.
+                        </div>
+                    </div>
+
+                    <h3>Practical Tips</h3>
+                    <ul>
+                        <li><strong>Start with K = √n:</strong> n = training samples (good starting point)</li>
+                        <li><strong>Use odd K:</strong> Avoids ties in binary classification</li>
+                        <li><strong>Consider computational cost:</strong> Large K = more neighbors to check</li>
+                        <li><strong>Visualize decision boundaries:</strong> For different K values</li>
+                        <li><strong>Use stratified k-fold:</strong> For imbalanced data</li>
+                    </ul>
+
+                    <h3>Real-World Example</h3>
+                    <div class="info-card">
+                        <div class="info-card-title">🌸 Iris Flower Classification (150 samples)</div>
+                        <p style="margin: 12px 0; line-height: 1.6;">
+                            <strong>Process:</strong> Try K = 1 to 20, Use 10-fold CV<br>
+                            <strong>Results:</strong><br>
+                            • K=1: 95% accuracy (overfits to noise)<br>
+                            • K=7: 97% accuracy (optimal! ✓)<br>
+                            • K=15: 94% accuracy (underfits, too smooth)<br>
+                            <br>
+                            The optimal K=7 provides the best balance between model complexity and generalization!
+                        </p>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Key Takeaway</div>
+                        <div class="callout-content">
+                            Finding optimal K is not guesswork! Use systematic cross-validation to evaluate multiple K values and choose the one with highest mean accuracy. This ensures your KNN model generalizes well to unseen data.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 14: Hyperparameter Tuning & GridSearch -->
+            <div class="section" id="hyperparameter-tuning">
+                <div class="section-header">
+                    <h2>14. Hyperparameter Tuning &amp; GridSearch ⚙️</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Models have two types of parameters: <strong>learned parameters</strong> (like weights) and <strong>hyperparameters</strong> (like learning rate). We must tune hyperparameters to get the best model!</p>
+
+                    <h3>What Are Hyperparameters?</h3>
+                    <p><strong>Definition:</strong> Parameters that control the learning process but aren't learned from data.</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Parameters vs Hyperparameters</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px;">
+                            <div style="background: rgba(126, 240, 212, 0.1); padding: 12px; border-radius: 6px;">
+                                <strong style="color: #7ef0d4;">Parameters (Learned)</strong>
+                                <ul style="margin-top: 8px; font-size: 14px;">
+                                    <li>Linear Regression: w, b</li>
+                                    <li>Logistic Regression: coefficients</li>
+                                    <li>SVM: support vector positions</li>
+                                    <li>Optimized during training</li>
+                                </ul>
+                            </div>
+                            <div style="background: rgba(106, 169, 255, 0.1); padding: 12px; border-radius: 6px;">
+                                <strong style="color: #6aa9ff;">Hyperparameters (Set Before)</strong>
+                                <ul style="margin-top: 8px; font-size: 14px;">
+                                    <li>Learning rate (α)</li>
+                                    <li>Number of iterations</li>
+                                    <li>SVM: C, gamma, kernel</li>
+                                    <li>KNN: K value</li>
+                                    <li>Must be tuned manually</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Examples Across Algorithms</h3>
+                    
+                    <h4>Linear/Logistic Regression:</h4>
+                    <ul>
+                        <li><strong>Learning rate (α):</strong> 0.001, 0.01, 0.1</li>
+                        <li><strong>Number of iterations:</strong> 100, 1000, 10000</li>
+                        <li><strong>Regularization strength (λ):</strong> 0.01, 0.1, 1, 10</li>
+                    </ul>
+
+                    <h4>SVM:</h4>
+                    <ul>
+                        <li><strong>C (regularization):</strong> 0.1, 1, 10, 100, 1000</li>
+                        <li><strong>gamma (kernel coefficient):</strong> 'scale', 'auto', 0.001, 0.01, 0.1</li>
+                        <li><strong>kernel:</strong> 'linear', 'poly', 'rbf', 'sigmoid'</li>
+                        <li><strong>degree (for poly):</strong> 2, 3, 4, 5</li>
+                    </ul>
+
+                    <h4>KNN:</h4>
+                    <ul>
+                        <li><strong>K (neighbors):</strong> 1, 3, 5, 7, 9, 11</li>
+                        <li><strong>Distance metric:</strong> 'euclidean', 'manhattan', 'minkowski'</li>
+                        <li><strong>Weights:</strong> 'uniform', 'distance'</li>
+                    </ul>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ The Problem with Random Values</div>
+                        <div class="callout-content">
+                            If we just try random hyperparameter values:<br>
+                            • Inefficient (might miss optimal combination)<br>
+                            • No systematic approach<br>
+                            • Hard to reproduce<br>
+                            • Wastes time and resources
+                        </div>
+                    </div>
+
+                    <h3>Solution: GridSearch!</h3>
+                    <p><strong>What is GridSearch?</strong> Systematically try all combinations of hyperparameters and pick the best.</p>
+
+                    <div class="formula">
+                        <strong>GridSearch Algorithm:</strong><br>
+                        1. Define parameter grid:<br>
+                        &nbsp;&nbsp;{ 'C': [0.1, 1, 10, 100],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;'gamma': ['scale', 'auto', 0.001, 0.01],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;'kernel': ['linear', 'rbf', 'poly'] }<br>
+                        <br>
+                        2. Generate all combinations:<br>
+                        &nbsp;&nbsp;Total: 4 × 4 × 3 = 48 combinations<br>
+                        <br>
+                        3. For each combination:<br>
+                        &nbsp;&nbsp;- Train model with these hyperparameters<br>
+                        &nbsp;&nbsp;- Evaluate using cross-validation<br>
+                        &nbsp;&nbsp;- Record mean CV score<br>
+                        <br>
+                        4. Select best combination:<br>
+                        &nbsp;&nbsp;- Highest CV score = best hyperparameters
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="gridsearch-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> GridSearch heatmap showing parameter combinations and their scores</p>
+                    </div>
+
+                    <h3>SVM GridSearch Example</h3>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>#</th><th>C</th><th>gamma</th><th>kernel</th><th>CV Score</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>0.1</td><td>0.001</td><td>linear</td><td>0.85</td></tr>
+                            <tr><td>2</td><td>0.1</td><td>0.001</td><td>rbf</td><td>0.88</td></tr>
+                            <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+                            <tr style="background: rgba(126, 240, 212, 0.1);"><td><strong>32</strong></td><td><strong>10</strong></td><td><strong>0.01</strong></td><td><strong>rbf</strong></td><td><strong>0.95 ← Best!</strong></td></tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Result:</strong> Best parameters found automatically: C=10, gamma=0.01, kernel='rbf'</p>
+
+                    <h3>Computational Cost</h3>
+                    <div class="formula">
+                        <strong>Total Time Formula:</strong><br>
+                        Total Time = n_combinations × cv_folds × training_time<br>
+                        <br>
+                        <strong>Example:</strong><br>
+                        • 48 combinations<br>
+                        • 5-fold CV<br>
+                        • 1 second per training<br>
+                        <strong>Total:</strong> 48 × 5 × 1 = 240 seconds (4 minutes)
+                    </div>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ GridSearch Can Be Slow!</div>
+                        <div class="callout-content">
+                            For large parameter grids, GridSearch can take hours or days! Solutions:<br>
+                            • Use fewer parameter values (coarse then fine grid)<br>
+                            • Use RandomizedSearchCV (samples random combinations)<br>
+                            • Use parallel processing (n_jobs=-1)
+                        </div>
+                    </div>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 Always Use Cross-Validation!</div>
+                        <div class="callout-content">
+                            GridSearch must use cross-validation internally to avoid overfitting to validation set. Never tune hyperparameters on test set!
+                        </div>
+                    </div>
+
+                    <h3>Practical Workflow</h3>
+                    <ol>
+                        <li><strong>Step 1 - Coarse Grid:</strong> Wide range, few values (e.g., C = [0.1, 1, 10, 100, 1000]) to find approximate best region</li>
+                        <li><strong>Step 2 - Fine Grid:</strong> Narrow range, more values (e.g., C = [5, 7, 9, 11, 13]) to refine optimal value</li>
+                        <li><strong>Step 3 - Final Model:</strong> Train on full training set using best hyperparameters, then evaluate on test set</li>
+                    </ol>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Key Takeaway</div>
+                        <div class="callout-content">
+                            GridSearch finds optimal hyperparameters automatically - no manual guessing needed! It's the standard approach for hyperparameter tuning in machine learning. Just be patient with large grids!
+                        </div>
+                    </div>
+
+                    <h3>Advanced: RandomizedSearchCV</h3>
+                    <p>For very large hyperparameter spaces, use <strong>RandomizedSearchCV</strong>:</p>
+                    <ul>
+                        <li>Samples random combinations instead of trying all</li>
+                        <li>Much faster than exhaustive GridSearch</li>
+                        <li>Good for many hyperparameters or continuous ranges</li>
+                        <li>Specify number of iterations (e.g., 100 random combinations)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Section 15: Naive Bayes Classifier -->
+            <div class="section" id="naive-bayes">
+                <div class="section-header">
+                    <h2>15. Naive Bayes Classifier 📊</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Naive Bayes is a probabilistic classifier based on Bayes' Theorem. It's called "naive" because it assumes features are independent (which often isn't true, but it works surprisingly well anyway!)</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Based on Bayes' Theorem and probability</li>
+                            <li>Assumes features are independent ("naive" assumption)</li>
+                            <li>Fast training and prediction</li>
+                            <li>Works well for text classification</li>
+                        </ul>
+                    </div>
+
+                    <h3>Bayes' Theorem</h3>
+                    <div class="formula">
+                        <strong>Bayes' Theorem:</strong><br>
+                        P(A|B) = P(B|A) × P(A) / P(B)<br>
+                        <br>
+                        <strong>In classification context:</strong><br>
+                        P(class|features) = P(features|class) × P(class) / P(features)<br>
+                        <br>
+                        <small>where:<br>
+                        • P(class|features) = Posterior probability (what we want)<br>
+                        • P(features|class) = Likelihood<br>
+                        • P(class) = Prior probability<br>
+                        • P(features) = Evidence (normalizing constant)</small>
+                    </div>
+
+                    <h3>Simple Example: Email Spam Classification</h3>
+                    <p>Email contains words: ["free", "money"]</p>
+                    <p><strong>Calculate:</strong> P(spam|free, money)</p>
+
+                    <h4>Given:</h4>
+                    <ul>
+                        <li>P(spam) = 0.3 (30% emails are spam)</li>
+                        <li>P(not spam) = 0.7</li>
+                        <li>P(free|spam) = 0.8</li>
+                        <li>P(money|spam) = 0.7</li>
+                        <li>P(free|not spam) = 0.1</li>
+                        <li>P(money|not spam) = 0.05</li>
+                    </ul>
+
+                    <h4>Naive Assumption (features are independent):</h4>
+                    <div class="formula">
+                        P(free, money|spam) = P(free|spam) × P(money|spam)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.8 × 0.7 = 0.56<br>
+                        <br>
+                        P(free, money|not spam) = 0.1 × 0.05 = 0.005
+                    </div>
+
+                    <h4>Calculate Posterior:</h4>
+                    <div class="formula">
+                        P(spam|features) = P(free, money|spam) × P(spam)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.56 × 0.3 = 0.168<br>
+                        <br>
+                        P(not spam|features) = 0.005 × 0.7 = 0.0035<br>
+                        <br>
+                        <strong>Normalize:</strong><br>
+                        P(spam|features) = 0.168 / (0.168 + 0.0035) = 0.98<br>
+                        <br>
+                        <strong style="color: #7ef0d4;">Result: 98% probability it's spam! 📧</strong>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 350px">
+                            <canvas id="naive-bayes-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Naive Bayes probability calculations for spam detection</p>
+                    </div>
+
+                    <h3>Types of Naive Bayes</h3>
+
+                    <h4>1. Gaussian Naive Bayes</h4>
+                    <ul>
+                        <li><strong>For:</strong> Continuous features</li>
+                        <li><strong>Assumes:</strong> Normal distribution</li>
+                        <li><strong>Formula:</strong> P(x|class) = (1/√(2πσ²)) × e^(-(x-μ)²/(2σ²))</li>
+                        <li><strong>Use case:</strong> Real-valued features (height, weight, temperature)</li>
+                    </ul>
+
+                    <h4>2. Multinomial Naive Bayes</h4>
+                    <ul>
+                        <li><strong>For:</strong> Count data</li>
+                        <li><strong>Features:</strong> Frequencies (e.g., word counts)</li>
+                        <li><strong>Use case:</strong> Text classification (word counts in documents)</li>
+                    </ul>
+
+                    <h4>3. Bernoulli Naive Bayes</h4>
+                    <ul>
+                        <li><strong>For:</strong> Binary features (0/1, yes/no)</li>
+                        <li><strong>Features:</strong> Presence/absence</li>
+                        <li><strong>Use case:</strong> Document classification (word present or not)</li>
+                    </ul>
+
+                    <h3>Training Algorithm</h3>
+                    <div class="formula">
+                        <strong>Training Process:</strong><br>
+                        For each class:<br>
+                        &nbsp;&nbsp;Calculate P(class) = count(class) / total_samples<br>
+                        &nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;For each feature:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Calculate P(feature|class)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Gaussian: Estimate μ and σ<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Multinomial: Count frequencies<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Bernoulli: Count presence<br>
+                        <br>
+                        <strong>Prediction Process:</strong><br>
+                        For each class:<br>
+                        &nbsp;&nbsp;posterior = P(class) × ∏ P(feature_i|class)<br>
+                        <br>
+                        Choose class with maximum posterior
+                    </div>
+
+                    <h3>Worked Example: Play Tennis Dataset</h3>
+                    <p>Predict: Should we play tennis?</p>
+                    <p><strong>Given:</strong> Sunny, Cool, High humidity, Windy</p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Outlook</th><th>Temp</th><th>Humidity</th><th>Windy</th><th>Play</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Sunny</td><td>Hot</td><td>High</td><td>No</td><td>No</td></tr>
+                            <tr><td>Sunny</td><td>Hot</td><td>High</td><td>Yes</td><td>No</td></tr>
+                            <tr><td>Overcast</td><td>Hot</td><td>High</td><td>No</td><td>Yes</td></tr>
+                            <tr><td>Rain</td><td>Mild</td><td>High</td><td>No</td><td>Yes</td></tr>
+                            <tr><td>Rain</td><td>Cool</td><td>Normal</td><td>No</td><td>Yes</td></tr>
+                            <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p>Calculate P(Yes|features) and P(No|features), then compare!</p>
+
+                    <h3>Advantages</h3>
+                    <ul>
+                        <li>✓ <strong>Fast training and prediction:</strong> Very efficient</li>
+                        <li>✓ <strong>Works well with high dimensions:</strong> Many features</li>
+                        <li>✓ <strong>Requires small training data:</strong> Good for limited data</li>
+                        <li>✓ <strong>Handles missing values well:</strong> Robust</li>
+                        <li>✓ <strong>Probabilistic predictions:</strong> Returns confidence scores</li>
+                        <li>✓ <strong>Good baseline classifier:</strong> Easy to implement</li>
+                    </ul>
+
+                    <h3>Disadvantages</h3>
+                    <ul>
+                        <li>✗ <strong>Independence assumption often wrong:</strong> Features are usually correlated</li>
+                        <li>✗ <strong>Zero probability problem:</strong> Needs Laplace smoothing</li>
+                        <li>✗ <strong>Not great for correlated features:</strong> Performance suffers</li>
+                        <li>✗ <strong>Requires distribution assumption:</strong> For continuous features</li>
+                    </ul>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 Despite "Naive" Assumption</div>
+                        <div class="callout-content">
+                            Despite the naive independence assumption being violated in most real-world datasets, Naive Bayes often works remarkably well in practice! It's especially powerful for text classification tasks.
+                        </div>
+                    </div>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Zero Probability Problem</div>
+                        <div class="callout-content">
+                            If a feature value never occurs with a class in training, P = 0! This makes the entire posterior zero.<br>
+                            <br>
+                            <strong>Solution: Laplace Smoothing</strong><br>
+                            P(feature|class) = (count + α) / (total + α × n_features)<br>
+                            where α = smoothing parameter (usually 1)
+                        </div>
+                    </div>
+
+                    <h3>Applications</h3>
+                    <ul>
+                        <li><strong>Spam filtering:</strong> Email classification (spam/not spam)</li>
+                        <li><strong>Sentiment analysis:</strong> Positive/negative reviews</li>
+                        <li><strong>Document classification:</strong> Topic categorization</li>
+                        <li><strong>Medical diagnosis:</strong> Disease prediction from symptoms</li>
+                        <li><strong>Real-time prediction:</strong> Fast classification needed</li>
+                        <li><strong>Recommendation systems:</strong> User preferences</li>
+                    </ul>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Key Takeaway</div>
+                        <div class="callout-content">
+                            Naive Bayes is simple, fast, and surprisingly effective! Despite its "naive" independence assumption, it's a powerful baseline classifier that works especially well for text classification. Great for when you need quick results with limited data!
+                        </div>
+                    </div>
+
+                    <h3>🎉 Congratulations!</h3>
+                    <p style="font-size: 18px; color: #7ef0d4; margin-top: 24px;">
+                        You've now completed all 15 machine learning topics! From basic concepts to advanced techniques, you've learned linear regression, gradient descent, classification algorithms, model evaluation, regularization, hyperparameter tuning, and probabilistic methods. You're ready to build real ML projects! 🚀
                     </p>
                 </div>
             </div>

@@ -1,0 +1,2296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Statistics Course - Interactive Learning Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <h1 class="course-title">📊 Statistics Mastery</h1>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <h3>Course Content</h3>
+                
+                <div class="module">
+                    <h4 class="module-title">Module 1: Introduction</h4>
+                    <ul class="topic-list">
+                        <li><a href="#topic-1" class="topic-link" data-topic="1">📊 What is Statistics</a></li>
+                        <li><a href="#topic-2" class="topic-link" data-topic="2">👥 Population vs Sample</a></li>
+                        <li><a href="#topic-3" class="topic-link" data-topic="3">📈 Parameters vs Statistics</a></li>
+                        <li><a href="#topic-4" class="topic-link" data-topic="4">🔢 Types of Data</a></li>
+                    </ul>
+                </div>
+
+                <div class="module">
+                    <h4 class="module-title">Module 2: Descriptive Statistics</h4>
+                    <ul class="topic-list">
+                        <li><a href="#topic-5" class="topic-link" data-topic="5">📍 Central Tendency</a></li>
+                        <li><a href="#topic-6" class="topic-link" data-topic="6">⚡ Outliers</a></li>
+                        <li><a href="#topic-7" class="topic-link" data-topic="7">📏 Variance &amp; Std Dev</a></li>
+                        <li><a href="#topic-8" class="topic-link" data-topic="8">🎯 Quartiles &amp; Percentiles</a></li>
+                        <li><a href="#topic-9" class="topic-link" data-topic="9">📦 Interquartile Range</a></li>
+                        <li><a href="#topic-10" class="topic-link" data-topic="10">📉 Skewness</a></li>
+                    </ul>
+                </div>
+
+                <div class="module">
+                    <h4 class="module-title">Module 3: Correlation</h4>
+                    <ul class="topic-list">
+                        <li><a href="#topic-11" class="topic-link" data-topic="11">🔗 Covariance</a></li>
+                        <li><a href="#topic-12" class="topic-link" data-topic="12">💞 Correlation</a></li>
+                        <li><a href="#topic-13" class="topic-link" data-topic="13">💪 Correlation Strength</a></li>
+                    </ul>
+                </div>
+
+                <div class="module">
+                    <h4 class="module-title">Module 4: Probability</h4>
+                    <ul class="topic-list">
+                        <li><a href="#topic-14" class="topic-link" data-topic="14">🎲 Probability Basics</a></li>
+                        <li><a href="#topic-15" class="topic-link" data-topic="15">🔷 Set Theory</a></li>
+                        <li><a href="#topic-16" class="topic-link" data-topic="16">🔀 Conditional Probability</a></li>
+                        <li><a href="#topic-17" class="topic-link" data-topic="17">🎯 Independence</a></li>
+                        <li><a href="#topic-18" class="topic-link" data-topic="18">🧮 Bayes' Theorem</a></li>
+                    </ul>
+                </div>
+
+                <div class="module">
+                    <h4 class="module-title">Module 5: Distributions</h4>
+                    <ul class="topic-list">
+                        <li><a href="#topic-19" class="topic-link" data-topic="19">📊 PMF</a></li>
+                        <li><a href="#topic-20" class="topic-link" data-topic="20">📈 PDF</a></li>
+                        <li><a href="#topic-21" class="topic-link" data-topic="21">📉 CDF</a></li>
+                        <li><a href="#topic-22" class="topic-link" data-topic="22">🪙 Bernoulli Distribution</a></li>
+                        <li><a href="#topic-23" class="topic-link" data-topic="23">🎰 Binomial Distribution</a></li>
+                        <li><a href="#topic-24" class="topic-link" data-topic="24">🔔 Normal Distribution</a></li>
+                    </ul>
+                </div>
+
+                <div class="module">
+                    <h4 class="module-title">Module 6: Hypothesis Testing</h4>
+                    <ul class="topic-list">
+                        <li><a href="#topic-25" class="topic-link" data-topic="25">⚖️ Hypothesis Testing Intro</a></li>
+                        <li><a href="#topic-26" class="topic-link" data-topic="26">🎯 Significance Level α</a></li>
+                        <li><a href="#topic-27" class="topic-link" data-topic="27">📊 Standard Error</a></li>
+                        <li><a href="#topic-28" class="topic-link" data-topic="28">📏 Z-Test</a></li>
+                        <li><a href="#topic-29" class="topic-link" data-topic="29">🎚️ Z-Score &amp; Critical Values</a></li>
+                        <li><a href="#topic-30" class="topic-link" data-topic="30">💯 P-Value</a></li>
+                        <li><a href="#topic-31" class="topic-link" data-topic="31">↔️ One vs Two Tailed</a></li>
+                        <li><a href="#topic-32" class="topic-link" data-topic="32">📐 T-Test</a></li>
+                        <li><a href="#topic-33" class="topic-link" data-topic="33">🔓 Degrees of Freedom</a></li>
+                        <li><a href="#topic-34" class="topic-link" data-topic="34">⚠️ Type I &amp; II Errors</a></li>
+                    </ul>
+                </div>
+
+                <div class="module">
+                    <h4 class="module-title">Module 7: Chi-Squared Tests</h4>
+                    <ul class="topic-list">
+                        <li><a href="#topic-35" class="topic-link" data-topic="35">χ² Chi-Squared Distribution</a></li>
+                        <li><a href="#topic-36" class="topic-link" data-topic="36">✓ Goodness of Fit</a></li>
+                        <li><a href="#topic-37" class="topic-link" data-topic="37">🔗 Test of Independence</a></li>
+                        <li><a href="#topic-38" class="topic-link" data-topic="38">📏 Variance Testing</a></li>
+                    </ul>
+                </div>
+
+                <div class="module">
+                    <h4 class="module-title">Module 8: Confidence Intervals</h4>
+                    <ul class="topic-list">
+                        <li><a href="#topic-39" class="topic-link" data-topic="39">📊 Confidence Intervals</a></li>
+                        <li><a href="#topic-40" class="topic-link" data-topic="40">± Margin of Error</a></li>
+                        <li><a href="#topic-41" class="topic-link" data-topic="41">🔍 Interpreting CIs</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content" id="content">
+            <!-- Topic 1: What is Statistics -->
+            <section class="topic-section" id="topic-1">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 1</span>
+                    <h2>📊 What is Statistics &amp; Why It Matters</h2>
+                    <p class="topic-subtitle">The science of collecting, organizing, analyzing, and interpreting data</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Statistics is a branch of mathematics that deals with data. It provides methods to make sense of numbers and help us make informed decisions based on evidence rather than guesswork.</p>
+                    <p><strong>Why it matters:</strong> From business forecasting to medical research, sports analysis to government policy, statistics powers nearly every decision in our modern world.</p>
+                    <p><strong>When to use it:</strong> Whenever you need to understand patterns, test theories, make predictions, or draw conclusions from data.</p>
+                </div>
+
+                <div class="callout-box insight">
+                    <div class="callout-header">💡 REAL-WORLD EXAMPLE</div>
+                    <p>Imagine Netflix deciding what shows to produce. They analyze viewing statistics: what genres people watch, when they pause, what they finish. Statistics transforms millions of data points into actionable insights like "Create more thriller series" or "Release episodes on Fridays."</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Two Branches of Statistics</h3>
+                    <div class="two-column">
+                        <div class="column">
+                            <h4 style="color: #64ffda;">Descriptive Statistics</h4>
+                            <ul>
+                                <li>Summarizes and describes data</li>
+                                <li>Uses charts, graphs, averages</li>
+                                <li>Example: "Average class score is 85"</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h4 style="color: #ff6b6b;">Inferential Statistics</h4>
+                            <ul>
+                                <li>Makes predictions and inferences</li>
+                                <li>Tests hypotheses</li>
+                                <li>Example: "New teaching method improves scores"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Use Cases &amp; Applications</h3>
+                    <ul class="use-case-list">
+                        <li><strong>Healthcare:</strong> Clinical trials testing new drugs, disease outbreak tracking</li>
+                        <li><strong>Business:</strong> Customer behavior analysis, sales forecasting, A/B testing</li>
+                        <li><strong>Government:</strong> Census data, economic indicators, policy impact assessment</li>
+                        <li><strong>Sports:</strong> Player performance metrics, game strategy optimization</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Statistics transforms raw data into meaningful insights</li>
+                        <li>Two main branches: Descriptive (what happened) and Inferential (what will happen)</li>
+                        <li>Essential for decision-making across all fields</li>
+                        <li>Combines mathematics with real-world problem solving</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 2: Population vs Sample -->
+            <section class="topic-section" id="topic-2">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 2</span>
+                    <h2>👥 Population vs Sample</h2>
+                    <p class="topic-subtitle">Understanding the difference between the entire group and a subset</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> A <em>population</em> includes ALL members of a defined group. A <em>sample</em> is a subset selected from that population.</p>
+                    <p><strong>Why it matters:</strong> It's usually impossible or impractical to study entire populations. Sampling allows us to make inferences about large groups by studying smaller representative groups.</p>
+                    <p><strong>When to use it:</strong> Use populations when you can access all data; use samples when populations are too large, expensive, or time-consuming to study.</p>
+                </div>
+
+                <div class="callout-box insight">
+                    <div class="callout-header">💡 REAL-WORLD ANALOGY</div>
+                    <p>Think of tasting soup. You don't need to eat the entire pot (population) to know if it needs salt. A single spoonful (sample) gives you a good idea—as long as you stirred it well first!</p>
+                </div>
+
+                <div class="interactive-container">
+                    <h3>Interactive Visualization</h3>
+                    <canvas id="populationSampleCanvas" width="800" height="400"></canvas>
+                    <div class="controls">
+                        <button class="btn btn-primary" id="sampleBtn">Take Sample</button>
+                        <button class="btn btn-secondary" id="resetPopBtn">Reset</button>
+                        <div class="slider-group">
+                            <label>Sample Size: <span id="sampleSizeLabel">30</span></label>
+                            <input type="range" id="sampleSizeSlider" min="10" max="100" value="30" class="slider">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Key Differences</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Aspect</th>
+                                <th>Population</th>
+                                <th>Sample</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Size</td>
+                                <td>Entire group (N)</td>
+                                <td>Subset (n)</td>
+                            </tr>
+                            <tr>
+                                <td>Symbol</td>
+                                <td>N (uppercase)</td>
+                                <td>n (lowercase)</td>
+                            </tr>
+                            <tr>
+                                <td>Cost</td>
+                                <td>High</td>
+                                <td>Lower</td>
+                            </tr>
+                            <tr>
+                                <td>Time</td>
+                                <td>Long</td>
+                                <td>Shorter</td>
+                            </tr>
+                            <tr>
+                                <td>Accuracy</td>
+                                <td>100% (if measured correctly)</td>
+                                <td>Has sampling error</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="callout-box warning">
+                    <div class="callout-header">⚠️ COMMON MISTAKE</div>
+                    <p><strong>Biased Sampling:</strong> If your sample doesn't represent the population, your conclusions will be wrong. Example: Surveying only morning shoppers at a store will miss evening customer patterns.</p>
+                </div>
+
+                <div class="callout-box tip">
+                    <div class="callout-header">✅ PRO TIP</div>
+                    <p>For a sample to be representative, use <strong>random sampling</strong>. Every member of the population should have an equal chance of being selected.</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li><strong>Population (N):</strong> All members of a defined group</li>
+                        <li><strong>Sample (n):</strong> A subset selected from the population</li>
+                        <li>Good samples are <em>random</em> and <em>representative</em></li>
+                        <li>Larger samples generally provide better estimates</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 3: Parameters vs Statistics -->
+            <section class="topic-section" id="topic-3">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 3</span>
+                    <h2>📈 Parameters vs Statistics</h2>
+                    <p class="topic-subtitle">Population measures vs sample measures</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> A <em>parameter</em> is a numerical characteristic of a <em>population</em>. A <em>statistic</em> is a numerical characteristic of a <em>sample</em>.</p>
+                    <p><strong>Why it matters:</strong> We usually can't measure parameters directly (populations are too large), so we estimate them using statistics from samples.</p>
+                    <p><strong>When to use it:</strong> Parameters are what we want to know; statistics are what we can calculate.</p>
+                </div>
+
+                <div class="callout-box insight">
+                    <div class="callout-header">💡 REAL-WORLD EXAMPLE</div>
+                    <p>You want to know the average height of all students in your country (parameter). You can't measure everyone, so you measure 1,000 students (sample) and calculate their average height (statistic) to estimate the population parameter.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Common Parameters and Statistics</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Measure</th>
+                                <th>Parameter (Population)</th>
+                                <th>Statistic (Sample)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mean (Average)</td>
+                                <td>μ (mu)</td>
+                                <td>x̄ (x-bar)</td>
+                            </tr>
+                            <tr>
+                                <td>Standard Deviation</td>
+                                <td>σ (sigma)</td>
+                                <td>s</td>
+                            </tr>
+                            <tr>
+                                <td>Variance</td>
+                                <td>σ²</td>
+                                <td>s²</td>
+                            </tr>
+                            <tr>
+                                <td>Proportion</td>
+                                <td>p</td>
+                                <td>p̂ (p-hat)</td>
+                            </tr>
+                            <tr>
+                                <td>Size</td>
+                                <td>N</td>
+                                <td>n</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-card">
+                    <h3>The Relationship</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Key Concept</div>
+                        <p style="text-align: center; font-size: 1.2em; margin: 20px 0;">
+                            <span style="color: #ff6b6b;">Statistic</span> → Estimates → <span style="color: #64ffda;">Parameter</span>
+                        </p>
+                        <p>We use <strong>statistics</strong> (calculated from samples) to <strong>estimate parameters</strong> (unknown population values).</p>
+                    </div>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 EXAMPLE</div>
+                    <div>
+                        <p><strong>Scenario:</strong> A factory wants to know the average weight of cereal boxes.</p>
+                        <ul>
+                            <li><strong>Population:</strong> All cereal boxes produced (millions)</li>
+                            <li><strong>Parameter:</strong> μ = true average weight of ALL boxes (unknown)</li>
+                            <li><strong>Sample:</strong> 100 randomly selected boxes</li>
+                            <li><strong>Statistic:</strong> x̄ = 510 grams (calculated from the 100 boxes)</li>
+                            <li><strong>Inference:</strong> We estimate μ ≈ 510 grams</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="callout-box warning">
+                    <div class="callout-header">⚠️ COMMON MISTAKE</div>
+                    <p>Confusing symbols! Greek letters (μ, σ, ρ) refer to <strong>parameters</strong> (population). Roman letters (x̄, s, r) refer to <strong>statistics</strong> (sample).</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li><strong>Parameter:</strong> Describes a population (usually unknown)</li>
+                        <li><strong>Statistic:</strong> Describes a sample (calculated from data)</li>
+                        <li>Greek letters = population, Roman letters = sample</li>
+                        <li>Statistics are used to estimate parameters</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 4: Types of Data -->
+            <section class="topic-section" id="topic-4">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 4</span>
+                    <h2>🔢 Types of Data</h2>
+                    <p class="topic-subtitle">Categorical, Numerical, Discrete, Continuous, Ordinal, Nominal</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Data comes in different types, and understanding these types determines which statistical methods you can use.</p>
+                    <p><strong>Why it matters:</strong> Using the wrong analysis method for your data type leads to incorrect conclusions. You can't calculate an average of colors!</p>
+                    <p><strong>When to use it:</strong> Before any analysis, identify your data type to choose appropriate statistical techniques.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Data Type Hierarchy</h3>
+                    <div class="data-tree">
+                        <div class="tree-level-1">
+                            <div class="tree-node main">DATA</div>
+                        </div>
+                        <div class="tree-level-2">
+                            <div class="tree-node categorical">CATEGORICAL</div>
+                            <div class="tree-node numerical">NUMERICAL</div>
+                        </div>
+                        <div class="tree-level-3">
+                            <div class="tree-node">Nominal</div>
+                            <div class="tree-node">Ordinal</div>
+                            <div class="tree-node">Discrete</div>
+                            <div class="tree-node">Continuous</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Categorical Data</h3>
+                    <p>Represents categories or groups (qualitative)</p>
+                    
+                    <div class="two-column">
+                        <div class="column">
+                            <h4 style="color: #64ffda;">Nominal</h4>
+                            <p>Categories with NO order</p>
+                            <ul>
+                                <li>Colors: Red, Blue, Green</li>
+                                <li>Gender: Male, Female, Non-binary</li>
+                                <li>Country: USA, India, Japan</li>
+                                <li>Blood Type: A, B, AB, O</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h4 style="color: #ff6b6b;">Ordinal</h4>
+                            <p>Categories WITH meaningful order</p>
+                            <ul>
+                                <li>Education: High School &lt; Bachelor's &lt; Master's</li>
+                                <li>Satisfaction: Poor &lt; Fair &lt; Good &lt; Excellent</li>
+                                <li>Medal: Bronze &lt; Silver &lt; Gold</li>
+                                <li>Size: Small &lt; Medium &lt; Large</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Numerical Data</h3>
+                    <p>Represents quantities (quantitative)</p>
+                    
+                    <div class="two-column">
+                        <div class="column">
+                            <h4 style="color: #64ffda;">Discrete</h4>
+                            <p>Countable, specific values only</p>
+                            <ul>
+                                <li>Number of students: 25, 30, 42</li>
+                                <li>Number of cars: 0, 1, 2, 3...</li>
+                                <li>Dice roll: 1, 2, 3, 4, 5, 6</li>
+                                <li>Number of children: 0, 1, 2, 3...</li>
+                            </ul>
+                            <p><em>Can't have 2.5 students!</em></p>
+                        </div>
+                        <div class="column">
+                            <h4 style="color: #ff6b6b;">Continuous</h4>
+                            <p>Can take any value in a range</p>
+                            <ul>
+                                <li>Height: 165.3 cm, 180.7 cm</li>
+                                <li>Weight: 68.5 kg, 72.3 kg</li>
+                                <li>Temperature: 23.4°C, 24.7°C</li>
+                                <li>Time: 3.25 seconds</li>
+                            </ul>
+                            <p><em>Infinite precision possible</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-box insight">
+                    <div class="callout-header">💡 QUICK TEST</div>
+                    <p><strong>Ask yourself:</strong></p>
+                    <ol>
+                        <li><strong>Is it a label/category?</strong> → Categorical</li>
+                        <li><strong>Is it a number?</strong> → Numerical</li>
+                        <li><strong>Can you count it?</strong> → Discrete</li>
+                        <li><strong>Can you measure it?</strong> → Continuous</li>
+                        <li><strong>Does order matter?</strong> → Ordinal (else Nominal)</li>
+                    </ol>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 EXAMPLES</div>
+                    <table class="data-examples-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Type</th>
+                                <th>Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Zip codes</td>
+                                <td>Categorical (Nominal)</td>
+                                <td>Numbers used as labels, not quantities</td>
+                            </tr>
+                            <tr>
+                                <td>Test scores (A, B, C, D, F)</td>
+                                <td>Categorical (Ordinal)</td>
+                                <td>Categories with clear order</td>
+                            </tr>
+                            <tr>
+                                <td>Number of pages in books</td>
+                                <td>Numerical (Discrete)</td>
+                                <td>Countable whole numbers</td>
+                            </tr>
+                            <tr>
+                                <td>Reaction time in milliseconds</td>
+                                <td>Numerical (Continuous)</td>
+                                <td>Can be measured to any precision</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="callout-box warning">
+                    <div class="callout-header">⚠️ COMMON MISTAKE</div>
+                    <p>Just because something is written as a number doesn't make it numerical! Phone numbers, jersey numbers, and zip codes are <strong>categorical</strong> because they identify categories, not quantities.</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li><strong>Categorical:</strong> Labels/categories (Nominal: no order, Ordinal: has order)</li>
+                        <li><strong>Numerical:</strong> Quantities (Discrete: countable, Continuous: measurable)</li>
+                        <li>Data type determines which statistical methods to use</li>
+                        <li>Always identify data type before analysis</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 5: Measures of Central Tendency -->
+            <section class="topic-section" id="topic-5">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 5</span>
+                    <h2>📍 Measures of Central Tendency</h2>
+                    <p class="topic-subtitle">Mean, Median, Mode - Finding the center of data</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Measures of central tendency are single values that represent the "center" or "typical" value in a dataset.</p>
+                    <p><strong>Why it matters:</strong> Instead of looking at hundreds of numbers, one central value summarizes the data. "Average salary" tells you more than listing every employee's salary.</p>
+                    <p><strong>When to use it:</strong> When you need to summarize data with a single representative value.</p>
+                </div>
+
+                <div class="callout-box insight">
+                    <div class="callout-header">💡 REAL-WORLD ANALOGY</div>
+                    <p>Imagine finding the "center" of a group of people standing on a field. Mean is like finding the balance point where they'd balance on a seesaw. Median is literally the middle person. Mode is where the most people are clustered together.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Mathematical Foundations</h3>
+                    
+                    <div class="formula-card">
+                        <div class="formula-header">Mean (Average)</div>
+                        <div class="formula-main">
+                            <span class="formula-symbol">μ</span> = 
+                            <span class="formula-fraction">
+                                <span class="formula-numerator">Σx</span>
+                                <span class="formula-line"></span>
+                                <span class="formula-denominator">n</span>
+                            </span>
+                        </div>
+                        <p><strong>Where:</strong></p>
+                        <ul>
+                            <li><span class="formula-var">μ</span> (mu) = population mean or <span class="formula-var">x̄</span> (x-bar) = sample mean</li>
+                            <li><span class="formula-var">Σx</span> = sum of all values</li>
+                            <li><span class="formula-var">n</span> = number of values</li>
+                        </ul>
+                        <div class="formula-steps">
+                            <p><strong>Steps:</strong></p>
+                            <ol>
+                                <li>Add all values together</li>
+                                <li>Divide by the count of values</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="formula-card">
+                        <div class="formula-header">Median (Middle Value)</div>
+                        <div class="formula-main">
+                            <p>If <strong>odd</strong> number of values: Middle value</p>
+                            <p>If <strong>even</strong> number of values: Average of two middle values</p>
+                        </div>
+                        <div class="formula-steps">
+                            <p><strong>Steps:</strong></p>
+                            <ol>
+                                <li>Sort values in ascending order</li>
+                                <li>Find the middle position: (n + 1) / 2</li>
+                                <li>If between two values, average them</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="formula-card">
+                        <div class="formula-header">Mode (Most Frequent)</div>
+                        <div class="formula-main">
+                            <p>The value(s) that appear most frequently</p>
+                        </div>
+                        <div class="formula-steps">
+                            <p><strong>Types:</strong></p>
+                            <ul>
+                                <li><strong>Unimodal:</strong> One mode</li>
+                                <li><strong>Bimodal:</strong> Two modes</li>
+                                <li><strong>Multimodal:</strong> More than two modes</li>
+                                <li><strong>No mode:</strong> All values appear equally</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="interactive-container">
+                    <h3>Interactive Calculator</h3>
+                    <canvas id="centralTendencyCanvas" width="800" height="300"></canvas>
+                    <div class="controls">
+                        <div class="input-group">
+                            <label>Enter values (comma-separated):</label>
+                            <input type="text" id="centralTendencyInput" value="10, 20, 30, 40, 50" class="form-control">
+                            <button class="btn btn-primary" id="calculateCentralBtn">Calculate</button>
+                            <button class="btn btn-secondary" id="randomDataBtn">Random Data</button>
+                        </div>
+                        <div class="results" id="centralTendencyResults">
+                            <div class="result-item"><span class="result-label">Mean:</span> <span id="meanResult">30</span></div>
+                            <div class="result-item"><span class="result-label">Median:</span> <span id="medianResult">30</span></div>
+                            <div class="result-item"><span class="result-label">Mode:</span> <span id="modeResult">None</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 WORKED EXAMPLE</div>
+                    <p><strong>Dataset:</strong> Test scores: 65, 70, 75, 80, 85, 90, 95</p>
+                    <div class="example-solution">
+                        <p><strong>Mean:</strong></p>
+                        <p>Sum = 65 + 70 + 75 + 80 + 85 + 90 + 95 = 560</p>
+                        <p>Mean = 560 / 7 = <strong>80</strong></p>
+                        
+                        <p><strong>Median:</strong></p>
+                        <p>Already sorted. Middle position = (7 + 1) / 2 = 4th value</p>
+                        <p>Median = <strong>80</strong></p>
+                        
+                        <p><strong>Mode:</strong></p>
+                        <p>All values appear once. <strong>No mode</strong></p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>When to Use Which?</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <h4 style="color: #64ffda;">Use Mean</h4>
+                            <ul>
+                                <li>Data is symmetrical</li>
+                                <li>No extreme outliers</li>
+                                <li>Numerical data</li>
+                                <li>Need to use all data points</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-item">
+                            <h4 style="color: #ff6b6b;">Use Median</h4>
+                            <ul>
+                                <li>Data has outliers</li>
+                                <li>Data is skewed</li>
+                                <li>Ordinal data</li>
+                                <li>Need robust measure</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-item">
+                            <h4 style="color: #4a90e2;">Use Mode</h4>
+                            <ul>
+                                <li>Categorical data</li>
+                                <li>Finding most common value</li>
+                                <li>Discrete data</li>
+                                <li>Multiple peaks in data</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-box warning">
+                    <div class="callout-header">⚠️ COMMON MISTAKE</div>
+                    <p><strong>Mean is affected by outliers!</strong> In salary data like $30K, $35K, $40K, $45K, $500K, the mean is $130K (misleading!). The median of $40K better represents typical salary.</p>
+                </div>
+
+                <div class="callout-box tip">
+                    <div class="callout-header">✅ PRO TIP</div>
+                    <p>For skewed data (like income, house prices), <strong>always report the median</strong> along with the mean. If they're very different, your data has outliers or is skewed!</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li><strong>Mean:</strong> Sum of all values divided by count (affected by outliers)</li>
+                        <li><strong>Median:</strong> Middle value when sorted (resistant to outliers)</li>
+                        <li><strong>Mode:</strong> Most frequent value (useful for categorical data)</li>
+                        <li>Choose the measure that best represents your data type and distribution</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 6: Outliers -->
+            <section class="topic-section" id="topic-6">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 6</span>
+                    <h2>⚡ Outliers</h2>
+                    <p class="topic-subtitle">Extreme values that don't fit the pattern</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Outliers are data points that are significantly different from other observations in a dataset.</p>
+                    <p><strong>Why it matters:</strong> Outliers can indicate data errors, special cases, or important patterns. They can also severely distort statistical analyses.</p>
+                    <p><strong>When to use it:</strong> Always check for outliers before analyzing data, especially when calculating means and standard deviations.</p>
+                </div>
+
+                <div class="callout-box insight">
+                    <div class="callout-header">💡 REAL-WORLD EXAMPLE</div>
+                    <p>In a salary dataset for entry-level employees: $35K, $38K, $40K, $37K, $250K. The $250K is an outlier—maybe it's a data entry error (someone added an extra zero) or a special case (CEO's child). Either way, it needs investigation!</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Detection Methods</h3>
+                    <div class="two-column">
+                        <div class="column">
+                            <h4 style="color: #64ffda;">IQR Method</h4>
+                            <p>Most common approach:</p>
+                            <ul>
+                                <li>Calculate Q1, Q3, and IQR = Q3 - Q1</li>
+                                <li>Lower fence = Q1 - 1.5 × IQR</li>
+                                <li>Upper fence = Q3 + 1.5 × IQR</li>
+                                <li>Outliers fall outside fences</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h4 style="color: #ff6b6b;">Z-Score Method</h4>
+                            <p>For normal distributions:</p>
+                            <ul>
+                                <li>Calculate z-score for each value</li>
+                                <li>z = (x - μ) / σ</li>
+                                <li>If |z| &gt; 3: definitely outlier</li>
+                                <li>If |z| &gt; 2: possible outlier</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-box warning">
+                    <div class="callout-header">⚠️ COMMON MISTAKE</div>
+                    <p>Never automatically delete outliers! They might be: (1) Valid extreme values, (2) Data entry errors, (3) Important discoveries. Always investigate before removing.</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Outliers are extreme values that differ significantly from other data</li>
+                        <li>Use IQR method (1.5 × IQR rule) or Z-score method to detect</li>
+                        <li>Mean is heavily affected by outliers; median is resistant</li>
+                        <li>Always investigate outliers before deciding to keep or remove</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 7: Variance & Standard Deviation -->
+            <section class="topic-section" id="topic-7">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 7</span>
+                    <h2>📏 Variance &amp; Standard Deviation</h2>
+                    <p class="topic-subtitle">Measuring spread and variability in data</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Variance measures the average squared deviation from the mean. Standard deviation is the square root of variance.</p>
+                    <p><strong>Why it matters:</strong> Shows how spread out data is. Low values mean data is clustered; high values mean data is scattered.</p>
+                    <p><strong>When to use it:</strong> Whenever you need to understand data variability—in finance (risk), manufacturing (quality control), or research (reliability).</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Mathematical Formulas</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Population Variance (σ²)</div>
+                        <div class="formula-main">σ² = Σ(x - μ)² / N</div>
+                        <p>Where N = population size, μ = population mean</p>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-header">Sample Variance (s²)</div>
+                        <div class="formula-main">s² = Σ(x - x̄)² / (n - 1)</div>
+                        <p>Where n = sample size, x̄ = sample mean. We use (n-1) for unbiased estimation.</p>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-header">Standard Deviation</div>
+                        <div class="formula-main">σ = √(variance)</div>
+                        <p>Same units as original data, easier to interpret</p>
+                    </div>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 WORKED EXAMPLE</div>
+                    <p><strong>Dataset:</strong> [4, 8, 6, 5, 3, 7]</p>
+                    <div class="example-solution">
+                        <p><strong>Step 1:</strong> Mean = (4+8+6+5+3+7)/6 = 5.5</p>
+                        <p><strong>Step 2:</strong> Deviations: [-1.5, 2.5, 0.5, -0.5, -2.5, 1.5]</p>
+                        <p><strong>Step 3:</strong> Squared: [2.25, 6.25, 0.25, 0.25, 6.25, 2.25]</p>
+                        <p><strong>Step 4:</strong> Sum = 17.5</p>
+                        <p><strong>Step 5:</strong> Variance = 17.5/(6-1) = 3.5</p>
+                        <p><strong>Step 6:</strong> Std Dev = √3.5 = 1.87</p>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Variance measures average squared deviation from mean</li>
+                        <li>Standard deviation is square root of variance (same units as data)</li>
+                        <li>Use (n-1) for sample variance to avoid bias</li>
+                        <li>Higher values = more spread; lower values = more clustered</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 8: Quartiles & Percentiles -->
+            <section class="topic-section" id="topic-8">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 8</span>
+                    <h2>🎯 Quartiles &amp; Percentiles</h2>
+                    <p class="topic-subtitle">Dividing data into equal parts</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Quartiles divide sorted data into 4 equal parts. Percentiles divide data into 100 equal parts.</p>
+                    <p><strong>Why it matters:</strong> Shows relative position in a dataset. "90th percentile" means you scored better than 90% of people.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>The Five-Number Summary</h3>
+                    <ul>
+                        <li><strong>Minimum:</strong> Smallest value</li>
+                        <li><strong>Q1 (25th percentile):</strong> 25% of data below this</li>
+                        <li><strong>Q2 (50th percentile/Median):</strong> Middle value</li>
+                        <li><strong>Q3 (75th percentile):</strong> 75% of data below this</li>
+                        <li><strong>Maximum:</strong> Largest value</li>
+                    </ul>
+                </div>
+
+                <div class="callout-box insight">
+                    <div class="callout-header">💡 REAL-WORLD EXAMPLE</div>
+                    <p>SAT scores: If you score 1350 and that's the 90th percentile, it means you scored higher than 90% of test-takers. Percentiles are perfect for standardized tests!</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Q1 = 25th percentile, Q2 = median, Q3 = 75th percentile</li>
+                        <li>Percentiles show relative standing in a dataset</li>
+                        <li>Five-number summary: Min, Q1, Q2, Q3, Max</li>
+                        <li>Useful for understanding data distribution</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 9: Interquartile Range -->
+            <section class="topic-section" id="topic-9">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 9</span>
+                    <h2>📦 Interquartile Range (IQR)</h2>
+                    <p class="topic-subtitle">Middle 50% of data and outlier detection</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> IQR = Q3 - Q1. It represents the range of the middle 50% of your data.</p>
+                    <p><strong>Why it matters:</strong> IQR is resistant to outliers and is the foundation of the 1.5×IQR rule for outlier detection.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>The 1.5 × IQR Rule</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Outlier Boundaries</div>
+                        <div class="formula-main">
+                            Lower Fence = Q1 - 1.5 × IQR<br>
+                            Upper Fence = Q3 + 1.5 × IQR
+                        </div>
+                        <p>Any value outside these fences is considered an outlier</p>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>IQR = Q3 - Q1 (range of middle 50% of data)</li>
+                        <li>Resistant to outliers (unlike standard deviation)</li>
+                        <li>1.5×IQR rule: standard method for outlier detection</li>
+                        <li>Box plots visualize IQR and outliers</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 10: Skewness -->
+            <section class="topic-section" id="topic-10">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 10</span>
+                    <h2>📉 Skewness</h2>
+                    <p class="topic-subtitle">Understanding data distribution shape</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Skewness measures the asymmetry of a distribution.</p>
+                    <p><strong>Why it matters:</strong> Indicates whether data leans left or right, affecting which statistical methods to use.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Types of Skewness</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <h4 style="color: #64ffda;">Negative (Left) Skew</h4>
+                            <p>Tail extends to the left</p>
+                            <p>Mean &lt; Median &lt; Mode</p>
+                            <p>Example: Test scores when most students do well</p>
+                        </div>
+                        <div class="comparison-item">
+                            <h4 style="color: #4a90e2;">Symmetric (No Skew)</h4>
+                            <p>Perfectly balanced</p>
+                            <p>Mean = Median = Mode</p>
+                            <p>Example: Normal distribution</p>
+                        </div>
+                        <div class="comparison-item">
+                            <h4 style="color: #ff6b6b;">Positive (Right) Skew</h4>
+                            <p>Tail extends to the right</p>
+                            <p>Mode &lt; Median &lt; Mean</p>
+                            <p>Example: Income data, house prices</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Skewness measures asymmetry in distribution</li>
+                        <li>Negative skew: tail to left, Mean &lt; Median</li>
+                        <li>Positive skew: tail to right, Mean &gt; Median</li>
+                        <li>Symmetric: Mean = Median = Mode</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 11: Covariance -->
+            <section class="topic-section" id="topic-11">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 11</span>
+                    <h2>🔗 Covariance</h2>
+                    <p class="topic-subtitle">How two variables vary together</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Covariance measures how two variables change together.</p>
+                    <p><strong>Why it matters:</strong> Shows if variables have a positive, negative, or no relationship.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Sample Covariance</div>
+                        <div class="formula-main">Cov(X,Y) = Σ(xᵢ - x̄)(yᵢ - ȳ) / (n-1)</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Interpretation</h3>
+                    <ul>
+                        <li><strong>Positive:</strong> Variables increase together</li>
+                        <li><strong>Negative:</strong> One increases as other decreases</li>
+                        <li><strong>Zero:</strong> No linear relationship</li>
+                        <li><strong>Problem:</strong> Scale-dependent, hard to interpret magnitude</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Covariance measures joint variability of two variables</li>
+                        <li>Positive: variables move together; Negative: inverse relationship</li>
+                        <li>Scale-dependent (unlike correlation)</li>
+                        <li>Foundation for correlation calculation</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 12: Correlation -->
+            <section class="topic-section" id="topic-12">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 12</span>
+                    <h2>💞 Correlation</h2>
+                    <p class="topic-subtitle">Standardized measure of relationship strength</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Correlation coefficient (r) is a standardized measure of linear relationship between two variables.</p>
+                    <p><strong>Why it matters:</strong> Always between -1 and +1, making it easy to interpret strength and direction of relationships.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Pearson Correlation Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Correlation Coefficient (r)</div>
+                        <div class="formula-main">r = Cov(X,Y) / (σₓ × σᵧ)</div>
+                        <p>Covariance divided by product of standard deviations</p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Interpretation Guide</h3>
+                    <ul>
+                        <li><strong>r = +1:</strong> Perfect positive correlation</li>
+                        <li><strong>r = 0.7 to 0.9:</strong> Strong positive</li>
+                        <li><strong>r = 0.4 to 0.6:</strong> Moderate positive</li>
+                        <li><strong>r = 0.1 to 0.3:</strong> Weak positive</li>
+                        <li><strong>r = 0:</strong> No correlation</li>
+                        <li><strong>r = -0.1 to -0.3:</strong> Weak negative</li>
+                        <li><strong>r = -0.4 to -0.6:</strong> Moderate negative</li>
+                        <li><strong>r = -0.7 to -0.9:</strong> Strong negative</li>
+                        <li><strong>r = -1:</strong> Perfect negative correlation</li>
+                    </ul>
+                </div>
+
+                <div class="callout-box insight">
+                    <div class="callout-header">💡 REAL-WORLD EXAMPLE</div>
+                    <p>Study hours vs exam scores typically show r = 0.7 (strong positive). More study hours correlate with higher scores.</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>r ranges from -1 to +1</li>
+                        <li>Measures strength AND direction of linear relationship</li>
+                        <li>Scale-independent (unlike covariance)</li>
+                        <li>Only measures LINEAR relationships</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 13: Interpreting Correlation -->
+            <section class="topic-section" id="topic-13">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 13</span>
+                    <h2>💪 Interpreting Correlation</h2>
+                    <p class="topic-subtitle">Correlation vs causation and common pitfalls</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>The Golden Rule</h3>
+                    <div class="callout-box warning">
+                        <div class="callout-header">⚠️ CORRELATION ≠ CAUSATION</div>
+                        <p>Just because two variables are correlated does NOT mean one causes the other!</p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Common Scenarios</h3>
+                    <ul>
+                        <li><strong>Direct Causation:</strong> X causes Y (smoking causes cancer)</li>
+                        <li><strong>Reverse Causation:</strong> Y causes X (not the direction you thought)</li>
+                        <li><strong>Third Variable:</strong> Z causes both X and Y (confounding variable)</li>
+                        <li><strong>Coincidence:</strong> Pure chance with no real relationship</li>
+                    </ul>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 FAMOUS EXAMPLE</div>
+                    <p><strong>Ice cream sales correlate with drowning deaths.</strong></p>
+                    <p>Does ice cream cause drowning? NO! The third variable is summer weather—more people swim in summer (more drownings) and eat ice cream in summer.</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Correlation shows relationship, NOT causation</li>
+                        <li>Always consider third variables (confounders)</li>
+                        <li>Need controlled experiments to prove causation</li>
+                        <li>Be skeptical of correlation claims in media</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 14: Probability Basics -->
+            <section class="topic-section" id="topic-14">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 14</span>
+                    <h2>🎲 Probability Basics</h2>
+                    <p class="topic-subtitle">Foundation of statistical inference</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Probability measures the likelihood of an event occurring, ranging from 0 (impossible) to 1 (certain).</p>
+                    <p><strong>Why it matters:</strong> Foundation for all statistical inference, hypothesis testing, and prediction.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Basic Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Probability of Event E</div>
+                        <div class="formula-main">P(E) = Number of favorable outcomes / Total number of possible outcomes</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Key Rules</h3>
+                    <ul>
+                        <li><strong>Range:</strong> 0 ≤ P(E) ≤ 1</li>
+                        <li><strong>Complement:</strong> P(not E) = 1 - P(E)</li>
+                        <li><strong>Addition (OR):</strong> P(A or B) = P(A) + P(B) - P(A and B)</li>
+                        <li><strong>Multiplication (AND):</strong> P(A and B) = P(A) × P(B) [if independent]</li>
+                    </ul>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 EXAMPLE</div>
+                    <p><strong>Rolling a die:</strong></p>
+                    <p>P(rolling a 4) = 1/6 ≈ 0.167</p>
+                    <p>P(rolling even) = 3/6 = 0.5</p>
+                    <p>P(not rolling a 6) = 5/6 ≈ 0.833</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Probability ranges from 0 to 1</li>
+                        <li>P(E) = favorable outcomes / total outcomes</li>
+                        <li>Complement rule: P(not E) = 1 - P(E)</li>
+                        <li>Foundation for all statistical inference</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 15: Set Theory -->
+            <section class="topic-section" id="topic-15">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 15</span>
+                    <h2>🔷 Set Theory</h2>
+                    <p class="topic-subtitle">Union, intersection, and complement</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Set theory provides a mathematical framework for organizing events and calculating probabilities.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Key Concepts</h3>
+                    <ul>
+                        <li><strong>Union (A ∪ B):</strong> A OR B (either event occurs)</li>
+                        <li><strong>Intersection (A ∩ B):</strong> A AND B (both events occur)</li>
+                        <li><strong>Complement (A'):</strong> NOT A (event doesn't occur)</li>
+                        <li><strong>Mutually Exclusive:</strong> A ∩ B = ∅ (can't both occur)</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Union (∪): OR operation</li>
+                        <li>Intersection (∩): AND operation</li>
+                        <li>Complement ('): NOT operation</li>
+                        <li>Venn diagrams visualize set relationships</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 16: Conditional Probability -->
+            <section class="topic-section" id="topic-16">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 16</span>
+                    <h2>🔀 Conditional Probability</h2>
+                    <p class="topic-subtitle">Probability given that something else happened</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Conditional probability is the probability of event A occurring given that event B has already occurred.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Conditional Probability</div>
+                        <div class="formula-main">P(A|B) = P(A and B) / P(B)</div>
+                        <p>Read as: "Probability of A given B"</p>
+                    </div>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 EXAMPLE</div>
+                    <p>Drawing cards: P(King | Red card) = ?</p>
+                    <p>P(Red card) = 26/52</p>
+                    <p>P(King and Red) = 2/52</p>
+                    <p>P(King | Red) = (2/52) / (26/52) = 2/26 = 1/13</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>P(A|B) = probability of A given B occurred</li>
+                        <li>Formula: P(A|B) = P(A and B) / P(B)</li>
+                        <li>Critical for Bayes' Theorem</li>
+                        <li>Used in machine learning and diagnostics</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 17: Independence -->
+            <section class="topic-section" id="topic-17">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 17</span>
+                    <h2>🎯 Independence</h2>
+                    <p class="topic-subtitle">When events don't affect each other</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Two events are independent if the occurrence of one doesn't affect the probability of the other.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Test for Independence</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Events A and B are independent if:</div>
+                        <div class="formula-main">P(A|B) = P(A)</div>
+                        <p>OR equivalently:</p>
+                        <div class="formula-main">P(A and B) = P(A) × P(B)</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Examples</h3>
+                    <ul>
+                        <li><strong>Independent:</strong> Coin flips, die rolls with replacement</li>
+                        <li><strong>Dependent:</strong> Drawing cards without replacement, weather on consecutive days</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Independent events don't affect each other</li>
+                        <li>Test: P(A and B) = P(A) × P(B)</li>
+                        <li>With replacement → independent</li>
+                        <li>Without replacement → dependent</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 18: Bayes' Theorem -->
+            <section class="topic-section" id="topic-18">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 18</span>
+                    <h2>🧮 Bayes' Theorem</h2>
+                    <p class="topic-subtitle">Updating probabilities with new evidence</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Bayes' Theorem shows how to update probability based on new information.</p>
+                    <p><strong>Why it matters:</strong> Used in medical diagnosis, spam filters, machine learning, and countless applications.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>The Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Bayes' Theorem</div>
+                        <div class="formula-main">P(A|B) = [P(B|A) × P(A)] / P(B)</div>
+                        <ul>
+                            <li>P(A|B) = posterior probability</li>
+                            <li>P(B|A) = likelihood</li>
+                            <li>P(A) = prior probability</li>
+                            <li>P(B) = marginal probability</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 MEDICAL DIAGNOSIS EXAMPLE</div>
+                    <p><strong>Disease affects 1% of population. Test is 95% accurate.</strong></p>
+                    <p>You test positive. What's probability you have disease?</p>
+                    <div class="example-solution">
+                        <p>P(Disease) = 0.01</p>
+                        <p>P(Positive|Disease) = 0.95</p>
+                        <p>P(Positive|No Disease) = 0.05</p>
+                        <p>P(Positive) = 0.01×0.95 + 0.99×0.05 = 0.059</p>
+                        <p>P(Disease|Positive) = (0.95×0.01)/0.059 = 0.161</p>
+                        <p><strong>Only 16.1% chance you have the disease!</strong></p>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Updates probability based on new evidence</li>
+                        <li>P(A|B) = [P(B|A) × P(A)] / P(B)</li>
+                        <li>Critical for medical testing and machine learning</li>
+                        <li>Counter-intuitive results common (base rate matters!)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 19: PMF -->
+            <section class="topic-section" id="topic-19">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 19</span>
+                    <h2>📊 Probability Mass Function (PMF)</h2>
+                    <p class="topic-subtitle">Probabilities for discrete random variables</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> PMF gives the probability that a discrete random variable equals a specific value.</p>
+                    <p><strong>Why it matters:</strong> Used for countable outcomes like dice rolls, coin flips, or number of defects.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Properties</h3>
+                    <ul>
+                        <li>0 ≤ P(X = x) ≤ 1 for all x</li>
+                        <li>Sum of all probabilities = 1</li>
+                        <li>Only defined for discrete variables</li>
+                        <li>Visualized with bar charts</li>
+                    </ul>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 EXAMPLE: Die Roll</div>
+                    <p>P(X = 1) = 1/6</p>
+                    <p>P(X = 2) = 1/6</p>
+                    <p>... and so on</p>
+                    <p>Sum = 6 × (1/6) = 1 ✓</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>PMF is for discrete random variables</li>
+                        <li>Gives P(X = specific value)</li>
+                        <li>All probabilities sum to 1</li>
+                        <li>Visualized with bar charts</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 20: PDF -->
+            <section class="topic-section" id="topic-20">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 20</span>
+                    <h2>📈 Probability Density Function (PDF)</h2>
+                    <p class="topic-subtitle">Probabilities for continuous random variables</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> PDF describes probability for continuous random variables. Probability at exact point is 0; we calculate probability over intervals.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Key Differences from PMF</h3>
+                    <ul>
+                        <li>For continuous (not discrete) variables</li>
+                        <li>P(X = exact value) = 0</li>
+                        <li>Calculate P(a &lt; X &lt; b) = area under curve</li>
+                        <li>Total area under curve = 1</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>PDF is for continuous random variables</li>
+                        <li>Probability = area under curve</li>
+                        <li>P(X = exact point) = 0</li>
+                        <li>Total area under PDF = 1</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 21: CDF -->
+            <section class="topic-section" id="topic-21">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 21</span>
+                    <h2>📉 Cumulative Distribution Function (CDF)</h2>
+                    <p class="topic-subtitle">Probability up to a value</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> CDF gives the probability that X is less than or equal to a specific value.</p>
+                    <p><strong>Formula:</strong> F(x) = P(X ≤ x)</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Properties</h3>
+                    <ul>
+                        <li>Always non-decreasing</li>
+                        <li>F(-∞) = 0</li>
+                        <li>F(+∞) = 1</li>
+                        <li>P(a &lt; X ≤ b) = F(b) - F(a)</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>CDF: F(x) = P(X ≤ x)</li>
+                        <li>Works for both discrete and continuous</li>
+                        <li>Always increases from 0 to 1</li>
+                        <li>Useful for finding percentiles</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 22: Bernoulli Distribution -->
+            <section class="topic-section" id="topic-22">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 22</span>
+                    <h2>🪙 Bernoulli Distribution</h2>
+                    <p class="topic-subtitle">Single trial with two outcomes</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Models a single trial with two outcomes: success (1) or failure (0).</p>
+                    <p><strong>Examples:</strong> Coin flip, pass/fail test, yes/no question</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Bernoulli PMF</div>
+                        <div class="formula-main">P(X = 1) = p</div>
+                        <div class="formula-main">P(X = 0) = 1 - p = q</div>
+                        <p>Mean = p, Variance = p(1-p)</p>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Single trial, two outcomes (0 or 1)</li>
+                        <li>Parameter: p (probability of success)</li>
+                        <li>Mean = p, Variance = p(1-p)</li>
+                        <li>Building block for binomial distribution</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 23: Binomial Distribution -->
+            <section class="topic-section" id="topic-23">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 23</span>
+                    <h2>🎰 Binomial Distribution</h2>
+                    <p class="topic-subtitle">Multiple independent Bernoulli trials</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Models the number of successes in n independent Bernoulli trials.</p>
+                    <p><strong>Requirements:</strong> Fixed n, same p, independent trials, binary outcomes</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Binomial PMF</div>
+                        <div class="formula-main">P(X = k) = C(n,k) × p^k × (1-p)^(n-k)</div>
+                        <p>C(n,k) = n! / (k!(n-k)!)</p>
+                        <p>Mean = np, Variance = np(1-p)</p>
+                    </div>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 EXAMPLE</div>
+                    <p>Flip coin 10 times. P(exactly 6 heads)?</p>
+                    <p>n=10, k=6, p=0.5</p>
+                    <p>P(X=6) = C(10,6) × 0.5^6 × 0.5^4 = 210 × 0.000977 ≈ 0.205</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>n independent trials, probability p each</li>
+                        <li>Counts number of successes</li>
+                        <li>Mean = np, Variance = np(1-p)</li>
+                        <li>Common in quality control and surveys</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 24: Normal Distribution -->
+            <section class="topic-section" id="topic-24">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 24</span>
+                    <h2>🔔 Normal Distribution</h2>
+                    <p class="topic-subtitle">The bell curve and 68-95-99.7 rule</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> The most important continuous probability distribution—symmetric, bell-shaped curve.</p>
+                    <p><strong>Why it matters:</strong> Many natural phenomena follow normal distribution. Foundation of inferential statistics.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Properties</h3>
+                    <ul>
+                        <li>Symmetric around mean μ</li>
+                        <li>Bell-shaped curve</li>
+                        <li>Mean = Median = Mode</li>
+                        <li>Defined by μ (mean) and σ (standard deviation)</li>
+                        <li>Total area under curve = 1</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>The 68-95-99.7 Rule (Empirical Rule)</h3>
+                    <ul>
+                        <li><strong>68%</strong> of data within μ ± 1σ</li>
+                        <li><strong>95%</strong> of data within μ ± 2σ</li>
+                        <li><strong>99.7%</strong> of data within μ ± 3σ</li>
+                    </ul>
+                </div>
+
+                <div class="callout-box insight">
+                    <div class="callout-header">💡 REAL-WORLD EXAMPLE</div>
+                    <p>IQ scores: μ = 100, σ = 15</p>
+                    <p>68% of people have IQ between 85-115</p>
+                    <p>95% have IQ between 70-130</p>
+                    <p>99.7% have IQ between 55-145</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Symmetric bell curve, parameters μ and σ</li>
+                        <li>68-95-99.7 rule for standard deviations</li>
+                        <li>Foundation for hypothesis testing</li>
+                        <li>Central Limit Theorem connects to sampling</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 25: Hypothesis Testing Intro -->
+            <section class="topic-section" id="topic-25">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 25</span>
+                    <h2>⚖️ Hypothesis Testing Introduction</h2>
+                    <p class="topic-subtitle">Making decisions from data</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Statistical method for testing claims about populations using sample data.</p>
+                    <p><strong>Why it matters:</strong> Allows us to make evidence-based decisions and determine if effects are real or due to chance.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>The Two Hypotheses</h3>
+                    <ul>
+                        <li><strong>Null Hypothesis (H₀):</strong> Status quo, no effect, no difference</li>
+                        <li><strong>Alternative Hypothesis (H₁ or Hₐ):</strong> What we're trying to prove</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Decision Process</h3>
+                    <ol>
+                        <li>State hypotheses (H₀ and H₁)</li>
+                        <li>Choose significance level (α)</li>
+                        <li>Collect data and calculate test statistic</li>
+                        <li>Find p-value or critical value</li>
+                        <li>Make decision: Reject H₀ or Fail to reject H₀</li>
+                    </ol>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 EXAMPLE</div>
+                    <p><strong>Claim:</strong> New teaching method improves test scores</p>
+                    <p>H₀: μ = 75 (no improvement)</p>
+                    <p>H₁: μ &gt; 75 (scores improved)</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>H₀ = null hypothesis (status quo)</li>
+                        <li>H₁ = alternative hypothesis (what we test)</li>
+                        <li>We either reject or fail to reject H₀</li>
+                        <li>Never "accept" or "prove" anything</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 26: Significance Level α -->
+            <section class="topic-section" id="topic-26">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 26</span>
+                    <h2>🎯 Significance Level (α)</h2>
+                    <p class="topic-subtitle">Setting your error tolerance</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> α (alpha) is the probability of rejecting H₀ when it's actually true (Type I error rate).</p>
+                    <p><strong>Common values:</strong> 0.05 (5%), 0.01 (1%), 0.10 (10%)</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Interpretation</h3>
+                    <ul>
+                        <li><strong>α = 0.05:</strong> Willing to be wrong 5% of the time</li>
+                        <li><strong>Lower α:</strong> More stringent, harder to reject H₀</li>
+                        <li><strong>Higher α:</strong> More lenient, easier to reject H₀</li>
+                        <li><strong>Confidence level:</strong> 1 - α (e.g., 0.05 → 95% confidence)</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>α = probability of Type I error</li>
+                        <li>Common: α = 0.05 (5% error rate)</li>
+                        <li>Set before collecting data</li>
+                        <li>Trade-off between Type I and Type II errors</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 27: Standard Error -->
+            <section class="topic-section" id="topic-27">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 27</span>
+                    <h2>📊 Standard Error</h2>
+                    <p class="topic-subtitle">Measuring sampling variability</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Standard error (SE) measures how much sample means vary from the true population mean.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Standard Error of Mean</div>
+                        <div class="formula-main">SE = σ / √n</div>
+                        <p>or estimate: SE = s / √n</p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Key Points</h3>
+                    <ul>
+                        <li>Decreases as sample size increases</li>
+                        <li>Measures precision of sample mean</li>
+                        <li>Lower SE = better estimate</li>
+                        <li>Used in confidence intervals and hypothesis tests</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>SE = σ / √n</li>
+                        <li>Measures sampling variability</li>
+                        <li>Larger samples → smaller SE</li>
+                        <li>Critical for inference</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 28: Z-Test -->
+            <section class="topic-section" id="topic-28">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 28</span>
+                    <h2>📏 Z-Test</h2>
+                    <p class="topic-subtitle">Hypothesis test for large samples with known σ</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>When to Use Z-Test</h3>
+                    <ul>
+                        <li>Sample size n ≥ 30 (large sample)</li>
+                        <li>Population standard deviation (σ) known</li>
+                        <li>Testing population mean</li>
+                        <li>Normal distribution or large n</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Z-Test Statistic</div>
+                        <div class="formula-main">z = (x̄ - μ₀) / (σ / √n)</div>
+                        <p>x̄ = sample mean</p>
+                        <p>μ₀ = hypothesized population mean</p>
+                        <p>σ = population standard deviation</p>
+                        <p>n = sample size</p>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Use when n ≥ 30 and σ known</li>
+                        <li>z = (x̄ - μ₀) / SE</li>
+                        <li>Compare z to critical value or find p-value</li>
+                        <li>Large |z| = evidence against H₀</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 29: Z-Score & Critical Values -->
+            <section class="topic-section" id="topic-29">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 29</span>
+                    <h2>🎚️ Z-Score &amp; Critical Values</h2>
+                    <p class="topic-subtitle">Standardization and rejection regions</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Z-Score (Standardization)</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Z-Score Formula</div>
+                        <div class="formula-main">z = (x - μ) / σ</div>
+                        <p>Converts any normal distribution to standard normal (μ=0, σ=1)</p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Critical Values</h3>
+                    <ul>
+                        <li><strong>α = 0.05 (two-tailed):</strong> z = ±1.96</li>
+                        <li><strong>α = 0.05 (one-tailed):</strong> z = 1.645</li>
+                        <li><strong>α = 0.01 (two-tailed):</strong> z = ±2.576</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Z-score standardizes values</li>
+                        <li>Critical values define rejection region</li>
+                        <li>|z| &gt; critical value → reject H₀</li>
+                        <li>Common: ±1.96 for 95% confidence</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 30: P-Value -->
+            <section class="topic-section" id="topic-30">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 30</span>
+                    <h2>💯 P-Value Method</h2>
+                    <p class="topic-subtitle">Probability of observing data if H₀ is true</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> P-value is the probability of getting results as extreme as observed, assuming H₀ is true.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Decision Rule</h3>
+                    <ul>
+                        <li><strong>If p-value ≤ α:</strong> Reject H₀ (statistically significant)</li>
+                        <li><strong>If p-value &gt; α:</strong> Fail to reject H₀ (not significant)</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Interpretation</h3>
+                    <ul>
+                        <li><strong>p &lt; 0.01:</strong> Very strong evidence against H₀</li>
+                        <li><strong>0.01 ≤ p &lt; 0.05:</strong> Strong evidence against H₀</li>
+                        <li><strong>0.05 ≤ p &lt; 0.10:</strong> Weak evidence against H₀</li>
+                        <li><strong>p ≥ 0.10:</strong> Little or no evidence against H₀</li>
+                    </ul>
+                </div>
+
+                <div class="callout-box warning">
+                    <div class="callout-header">⚠️ COMMON MISCONCEPTION</div>
+                    <p>P-value is NOT the probability that H₀ is true! It's the probability of observing your data IF H₀ were true.</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>P-value = P(data | H₀ true)</li>
+                        <li>Reject H₀ if p ≤ α</li>
+                        <li>Smaller p-value = stronger evidence against H₀</li>
+                        <li>Most common approach in modern statistics</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 31: One vs Two Tailed -->
+            <section class="topic-section" id="topic-31">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 31</span>
+                    <h2>↔️ One-Tailed vs Two-Tailed Tests</h2>
+                    <p class="topic-subtitle">Directional vs non-directional hypotheses</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Two-Tailed Test</h3>
+                    <ul>
+                        <li><strong>H₁:</strong> μ ≠ μ₀ (different, could be higher or lower)</li>
+                        <li>Testing for any difference</li>
+                        <li>Rejection regions in both tails</li>
+                        <li>More conservative</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>One-Tailed Test</h3>
+                    <ul>
+                        <li><strong>Right-tailed:</strong> H₁: μ &gt; μ₀</li>
+                        <li><strong>Left-tailed:</strong> H₁: μ &lt; μ₀</li>
+                        <li>Testing for specific direction</li>
+                        <li>Rejection region in one tail</li>
+                        <li>More powerful for directional effects</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Two-tailed: testing for any difference</li>
+                        <li>One-tailed: testing for specific direction</li>
+                        <li>Choose before collecting data</li>
+                        <li>Two-tailed is more conservative</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 32: T-Test -->
+            <section class="topic-section" id="topic-32">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 32</span>
+                    <h2>📐 T-Test</h2>
+                    <p class="topic-subtitle">Hypothesis test for small samples or unknown σ</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>When to Use T-Test</h3>
+                    <ul>
+                        <li>Small sample (n &lt; 30)</li>
+                        <li>Population σ unknown (use sample s)</li>
+                        <li>Population approximately normal</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">T-Test Statistic</div>
+                        <div class="formula-main">t = (x̄ - μ₀) / (s / √n)</div>
+                        <p>Same as z-test but uses s instead of σ</p>
+                        <p>Follows t-distribution with df = n - 1</p>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Use when σ unknown or n &lt; 30</li>
+                        <li>t = (x̄ - μ₀) / (s / √n)</li>
+                        <li>Follows t-distribution</li>
+                        <li>More variable than z-distribution</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 33: Degrees of Freedom -->
+            <section class="topic-section" id="topic-33">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 33</span>
+                    <h2>🔓 Degrees of Freedom</h2>
+                    <p class="topic-subtitle">Independent pieces of information</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Degrees of freedom (df) is the number of independent values that can vary in analysis.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Common Formulas</h3>
+                    <ul>
+                        <li><strong>One-sample t-test:</strong> df = n - 1</li>
+                        <li><strong>Two-sample t-test:</strong> df ≈ n₁ + n₂ - 2</li>
+                        <li><strong>Chi-squared:</strong> df = (rows-1)(cols-1)</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Why It Matters</h3>
+                    <ul>
+                        <li>Determines shape of t-distribution</li>
+                        <li>Higher df → closer to normal distribution</li>
+                        <li>Affects critical values</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>df = number of independent values</li>
+                        <li>For t-test: df = n - 1</li>
+                        <li>Higher df → distribution closer to normal</li>
+                        <li>Critical for finding correct critical values</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 34: Type I & II Errors -->
+            <section class="topic-section" id="topic-34">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 34</span>
+                    <h2>⚠️ Type I &amp; Type II Errors</h2>
+                    <p class="topic-subtitle">False positives and false negatives</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>The Two Types of Errors</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>H₀ True</th>
+                                <th>H₀ False</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Reject H₀</strong></td>
+                                <td style="color: #ff6b6b;">Type I Error (α)</td>
+                                <td style="color: #51cf66;">Correct!</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fail to Reject H₀</strong></td>
+                                <td style="color: #51cf66;">Correct!</td>
+                                <td style="color: #ff6b6b;">Type II Error (β)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-card">
+                    <h3>Definitions</h3>
+                    <ul>
+                        <li><strong>Type I Error (α):</strong> Rejecting true H₀ (false positive)</li>
+                        <li><strong>Type II Error (β):</strong> Failing to reject false H₀ (false negative)</li>
+                        <li><strong>Power = 1 - β:</strong> Probability of correctly rejecting false H₀</li>
+                    </ul>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 MEDICAL ANALOGY</div>
+                    <p><strong>Type I Error:</strong> Telling healthy person they're sick (false alarm)</p>
+                    <p><strong>Type II Error:</strong> Telling sick person they're healthy (missed diagnosis)</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Type I: False positive (α)</li>
+                        <li>Type II: False negative (β)</li>
+                        <li>Trade-off: decreasing one increases the other</li>
+                        <li>Power = 1 - β (ability to detect true effect)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 35: Chi-Squared Distribution -->
+            <section class="topic-section" id="topic-35">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 35</span>
+                    <h2>χ² Chi-Squared Distribution</h2>
+                    <p class="topic-subtitle">Distribution for categorical data analysis</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Chi-squared (χ²) distribution is used for testing hypotheses about categorical data.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Properties</h3>
+                    <ul>
+                        <li>Always positive (ranges from 0 to ∞)</li>
+                        <li>Right-skewed</li>
+                        <li>Shape depends on degrees of freedom</li>
+                        <li>Higher df → more symmetric</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Uses</h3>
+                    <ul>
+                        <li>Goodness of fit test</li>
+                        <li>Test of independence</li>
+                        <li>Testing variance</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Used for categorical data</li>
+                        <li>Always positive, right-skewed</li>
+                        <li>Shape depends on df</li>
+                        <li>Foundation for chi-squared tests</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 36: Goodness of Fit -->
+            <section class="topic-section" id="topic-36">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 36</span>
+                    <h2>✓ Goodness of Fit Test</h2>
+                    <p class="topic-subtitle">Testing if data follows expected distribution</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Tests whether observed frequencies match expected frequencies from a theoretical distribution.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Chi-Squared Test Statistic</div>
+                        <div class="formula-main">χ² = Σ [(O - E)² / E]</div>
+                        <p>O = observed frequency</p>
+                        <p>E = expected frequency</p>
+                        <p>df = k - 1 (k = number of categories)</p>
+                    </div>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 EXAMPLE</div>
+                    <p><strong>Testing if die is fair:</strong></p>
+                    <p>Roll 60 times. Expected: 10 per face</p>
+                    <p>Observed: 8, 12, 11, 9, 10, 10</p>
+                    <p>Calculate χ² and compare to critical value</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Tests if observed matches expected distribution</li>
+                        <li>χ² = Σ(O-E)²/E</li>
+                        <li>Large χ² = poor fit</li>
+                        <li>df = number of categories - 1</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 37: Test of Independence -->
+            <section class="topic-section" id="topic-37">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 37</span>
+                    <h2>🔗 Test of Independence</h2>
+                    <p class="topic-subtitle">Testing relationship between categorical variables</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Tests whether two categorical variables are independent or associated.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Chi-Squared for Independence</div>
+                        <div class="formula-main">χ² = Σ [(O - E)² / E]</div>
+                        <p>E = (row total × column total) / grand total</p>
+                        <p>df = (rows - 1)(columns - 1)</p>
+                    </div>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 EXAMPLE</div>
+                    <p><strong>Are gender and color preference independent?</strong></p>
+                    <p>Create contingency table, calculate expected frequencies, compute χ², and test against critical value.</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Tests independence of two categorical variables</li>
+                        <li>Uses contingency tables</li>
+                        <li>df = (r-1)(c-1)</li>
+                        <li>Large χ² suggests association</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 38: Chi-Squared for Variance -->
+            <section class="topic-section" id="topic-38">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 38</span>
+                    <h2>📏 Chi-Squared Variance Test</h2>
+                    <p class="topic-subtitle">Testing claims about population variance</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Tests hypotheses about population variance or standard deviation.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Chi-Squared for Variance</div>
+                        <div class="formula-main">χ² = (n-1)s² / σ₀²</div>
+                        <p>n = sample size</p>
+                        <p>s² = sample variance</p>
+                        <p>σ₀² = hypothesized population variance</p>
+                        <p>df = n - 1</p>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Tests claims about variance/standard deviation</li>
+                        <li>χ² = (n-1)s²/σ₀²</li>
+                        <li>Requires normal population</li>
+                        <li>Common in quality control</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 39: Confidence Intervals -->
+            <section class="topic-section" id="topic-39">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 39</span>
+                    <h2>📊 Confidence Intervals</h2>
+                    <p class="topic-subtitle">Range of plausible values for parameter</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> A confidence interval provides a range of values that likely contains the true population parameter.</p>
+                    <p><strong>Why it matters:</strong> More informative than point estimates—shows precision and uncertainty.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Confidence Interval for Mean</div>
+                        <div class="formula-main">CI = x̄ ± (critical value × SE)</div>
+                        <p>For z: CI = x̄ ± z* × (σ/√n)</p>
+                        <p>For t: CI = x̄ ± t* × (s/√n)</p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Common Confidence Levels</h3>
+                    <ul>
+                        <li><strong>90% CI:</strong> z* = 1.645</li>
+                        <li><strong>95% CI:</strong> z* = 1.96</li>
+                        <li><strong>99% CI:</strong> z* = 2.576</li>
+                    </ul>
+                </div>
+
+                <div class="callout-box example">
+                    <div class="callout-header">📊 EXAMPLE</div>
+                    <p>Sample: n=100, x̄=50, s=10</p>
+                    <p>95% CI = 50 ± 1.96(10/√100)</p>
+                    <p>95% CI = 50 ± 1.96 = (48.04, 51.96)</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>CI = point estimate ± margin of error</li>
+                        <li>95% CI most common</li>
+                        <li>Wider CI = more uncertainty</li>
+                        <li>Larger sample = narrower CI</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 40: Margin of Error -->
+            <section class="topic-section" id="topic-40">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 40</span>
+                    <h2>± Margin of Error</h2>
+                    <p class="topic-subtitle">Measuring estimate precision</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Introduction</h3>
+                    <p><strong>What is it?</strong> Margin of error (MOE) is the ± part of a confidence interval, showing the precision of an estimate.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Formula</h3>
+                    <div class="formula-card">
+                        <div class="formula-header">Margin of Error</div>
+                        <div class="formula-main">MOE = (critical value) × SE</div>
+                        <p>MOE = z* × (σ/√n) or t* × (s/√n)</p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>Factors Affecting MOE</h3>
+                    <ul>
+                        <li><strong>Sample size:</strong> Larger n → smaller MOE</li>
+                        <li><strong>Confidence level:</strong> Higher confidence → larger MOE</li>
+                        <li><strong>Variability:</strong> Higher σ → larger MOE</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>MOE = critical value × SE</li>
+                        <li>Indicates precision of estimate</li>
+                        <li>Inversely related to sample size</li>
+                        <li>Trade-off between confidence and precision</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Topic 41: Interpreting CIs -->
+            <section class="topic-section" id="topic-41">
+                <div class="topic-header">
+                    <span class="topic-number">Topic 41</span>
+                    <h2>🔍 Interpreting Confidence Intervals</h2>
+                    <p class="topic-subtitle">Common misconceptions and proper interpretation</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>Correct Interpretation</h3>
+                    <p><strong>"We are 95% confident that the true population parameter lies within this interval."</strong></p>
+                    <p>This means: If we repeated this process many times, 95% of the intervals would contain the true parameter.</p>
+                </div>
+
+                <div class="callout-box warning">
+                    <div class="callout-header">⚠️ COMMON MISCONCEPTIONS</div>
+                    <ul>
+                        <li><strong>WRONG:</strong> "There's a 95% probability the parameter is in this interval."</li>
+                        <li><strong>WRONG:</strong> "95% of the data falls in this interval."</li>
+                        <li><strong>WRONG:</strong> "We are 95% sure our sample mean is in this interval."</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Using CIs for Hypothesis Testing</h3>
+                    <ul>
+                        <li>If hypothesized value is INSIDE CI → fail to reject H₀</li>
+                        <li>If hypothesized value is OUTSIDE CI → reject H₀</li>
+                        <li>95% CI corresponds to α = 0.05 test</li>
+                    </ul>
+                </div>
+
+                <div class="callout-box tip">
+                    <div class="callout-header">✅ PRO TIP</div>
+                    <p>Report confidence intervals instead of just p-values! CIs provide more information: effect size AND statistical significance.</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Correct interpretation: confidence in the method, not the specific interval</li>
+                        <li>95% refers to long-run success rate</li>
+                        <li>Can use CIs for hypothesis testing</li>
+                        <li>More informative than p-values alone</li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
