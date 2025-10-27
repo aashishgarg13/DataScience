@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feature Engineering Explorer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app flex">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <h1 class="sidebar__title">🛠️ Feature Engineering</h1>
+      <nav>
+        <ul class="nav__list" id="navList">
+          <li><a href="#intro" class="nav__link">🎯 Introduction</a></li>
+          <li><a href="#missing-data" class="nav__link">🔍 Missing Data</a></li>
+          <li><a href="#outliers" class="nav__link">📊 Outliers</a></li>
+          <li><a href="#scaling" class="nav__link">⚖️ Scaling</a></li>
+          <li><a href="#encoding" class="nav__link">🔢 Encoding</a></li>
+          <li><a href="#feature-selection" class="nav__link">🎯 Feature Selection</a></li>
+          <li><a href="#imbalanced-data" class="nav__link">⚖️ Imbalanced Data</a></li>
+          <li><a href="#eda" class="nav__link">📈 EDA Overview</a></li>
+          <li><a href="#feature-transformation" class="nav__link">🔄 Feature Transformation</a></li>
+          <li><a href="#feature-creation" class="nav__link">🛠️ Feature Creation</a></li>
+          <li><a href="#dimensionality-reduction" class="nav__link">📉 Dimensionality Reduction</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content" id="content">
+      <!-- ============================ 1. INTRO ============================ -->
+      <section id="intro" class="topic-section">
+        <h2>Introduction to Feature Engineering</h2>
+        <p>Feature Engineering is the process of transforming raw data into meaningful inputs that boost machine-learning model performance. A well-crafted feature set can improve accuracy by 10-30% without changing the underlying algorithm.</p>
+
+        <div class="info-card">
+          <strong>Key Idea:</strong> 💡 Thoughtful features provide the model with clearer patterns, like lenses sharpening a blurry picture.
+        </div>
+
+        <!-- Canvas Visual -->
+        <div class="canvas-wrapper">
+          <canvas id="canvas-intro" width="600" height="280"></canvas>
+        </div>
+      </section>
+
+      <!-- ====================== 2. HANDLING MISSING DATA ================== -->
+      <section id="missing-data" class="topic-section">
+        <h2>Handling Missing Data</h2>
+        <p>Missing values come in three flavors: MCAR (Missing Completely At Random), MAR (Missing At Random), and MNAR (Missing Not At Random). Each demands different treatment to avoid bias.</p>
+
+        <!-- Real-world Example -->
+        <div class="info-card">
+          <strong>Real Example:</strong> A hospital's patient records often have absent <em>cholesterol</em> values because certain tests were not ordered for healthy young adults.
+        </div>
+
+        <!-- Controls -->
+        <div class="form-group">
+          <button id="btn-mean-impute" class="btn btn--primary">Mean Imputation</button>
+          <button id="btn-median-impute" class="btn btn--primary">Median Imputation</button>
+          <button id="btn-knn-impute" class="btn btn--primary">KNN Imputation</button>
+        </div>
+
+        <!-- Canvas -->
+        <div class="canvas-wrapper">
+          <canvas id="canvas-missing-data" width="800" height="500"></canvas>
+        </div>
+
+        <!-- Callouts -->
+        <div class="callout callout--insight">💡 Mean/Median work best when data is MCAR or MAR.</div>
+        <div class="callout callout--mistake">⚠️ Using mean imputation on skewed data can distort distributions.</div>
+        <div class="callout callout--tip">✅ Always impute <strong>after</strong> splitting into train and test to avoid leakage.</div>
+      </section>
+
+      <!-- ======================= 3. HANDLING OUTLIERS ===================== -->
+      <section id="outliers" class="topic-section">
+        <h2>Handling Outliers</h2>
+        <p>Outliers are data points that deviate markedly from others. Detecting and treating them prevents skewed models.</p>
+
+        <div class="form-group">
+          <button id="btn-detect-iqr" class="btn btn--primary">IQR Method</button>
+          <button id="btn-detect-zscore" class="btn btn--primary">Z-Score Method</button>
+          <button id="btn-winsorize" class="btn btn--primary">Winsorization</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-outliers" width="600" height="300"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 The IQR method is robust to non-normal data.</div>
+        <div class="callout callout--mistake">⚠️ Removing legitimate extreme values can erase important signals.</div>
+      </section>
+
+      <!-- ========================== 4. SCALING ============================ -->
+      <section id="scaling" class="topic-section">
+        <h2>Feature Scaling</h2>
+        <p>Algorithms that rely on distance, like KNN, demand comparable feature magnitudes.</p>
+
+        <div class="form-group">
+          <button id="btn-minmax" class="btn btn--primary">Min-Max Scaling</button>
+          <button id="btn-standardize" class="btn btn--primary">Standardization</button>
+          <button id="btn-robust" class="btn btn--primary">Robust Scaler</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-scaling" width="600" height="300"></canvas>
+        </div>
+      </section>
+
+      <!-- ========================== 5. ENCODING =========================== -->
+      <section id="encoding" class="topic-section">
+        <h2>Data Encoding</h2>
+        <p>Transform categorical variables into numbers so models can interpret them.</p>
+
+        <div class="form-group">
+          <button id="btn-label-encode" class="btn btn--primary">Label Encoding</button>
+          <button id="btn-onehot-encode" class="btn btn--primary">One-Hot Encoding</button>
+          <button id="btn-target-encode" class="btn btn--primary">Target Encoding</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-encoding" width="600" height="300"></canvas>
+        </div>
+      </section>
+
+      <!-- ===================== 6. FEATURE SELECTION ======================= -->
+      <section id="feature-selection" class="topic-section">
+        <h2>Feature Selection</h2>
+        <p>Pick features that matter, drop those that don't.</p>
+
+        <div class="form-group">
+          <button id="btn-backward-elim" class="btn btn--primary">Backward Elimination</button>
+          <button id="btn-forward-select" class="btn btn--primary">Forward Selection</button>
+          <button id="btn-rfe" class="btn btn--primary">RFE</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-selection" width="600" height="300"></canvas>
+        </div>
+      </section>
+
+      <!-- =================== 7. IMBALANCED DATA =========================== -->
+      <section id="imbalanced-data" class="topic-section">
+        <h2>Handling Imbalanced Data</h2>
+        <p>Class imbalance leads to biased predictions. Balancing techniques can fix this.</p>
+
+        <div class="form-group">
+          <button id="btn-rus" class="btn btn--primary">Random Under-Sampling</button>
+          <button id="btn-ros" class="btn btn--primary">Random Over-Sampling</button>
+          <button id="btn-smote" class="btn btn--primary">SMOTE</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-imbalanced" width="600" height="300"></canvas>
+        </div>
+      </section>
+
+      <!-- ========================== 8. EDA ================================ -->
+      <section id="eda" class="topic-section">
+        <h2>Exploratory Data Analysis (EDA)</h2>
+        <p><strong>Exploratory Data Analysis (EDA)</strong> is a critical step in the machine learning pipeline that comes BEFORE feature engineering. EDA helps you understand your data, discover patterns, identify anomalies, detect outliers, test hypotheses, and check assumptions through summary statistics and graphical representations.</p>
+
+        <div class="info-card">
+          <strong>Key Questions EDA Answers:</strong>
+          <ul>
+            <li>How many columns are numerical vs. categorical?</li>
+            <li>What does the data distribution look like?</li>
+            <li>Are there missing values?</li>
+            <li>Are there outliers?</li>
+            <li>Is the data imbalanced (for classification problems)?</li>
+            <li>What are the correlations between features?</li>
+            <li>Are there any trends or patterns?</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <strong>Real-World Example:</strong> Imagine you're analyzing customer data for a bank to predict loan defaults. EDA helps you understand:
+          <ul>
+            <li>Age distribution of customers (histogram)</li>
+            <li>Income levels (box plot for outliers)</li>
+            <li>Correlation between income and loan amount (scatter plot)</li>
+            <li>Missing values in employment history</li>
+            <li>Class imbalance (5% defaults vs 95% non-defaults)</li>
+          </ul>
+        </div>
+
+        <h3>Two Main Types of EDA</h3>
+
+        <h4>1. Descriptive Statistics</h4>
+        <p><strong>Purpose:</strong> Summarize and visualize what the data looks like</p>
+
+        <div class="info-card">
+          <strong>A. Central Tendency:</strong><br>
+          • <strong>Mean (Average):</strong> μ = Σxᵢ / n<br>
+          &nbsp;&nbsp;Example: Average income = $50,000 (Sensitive to outliers)<br>
+          • <strong>Median:</strong> Middle value when sorted<br>
+          &nbsp;&nbsp;Example: Median income = $45,000 (Robust to outliers)<br>
+          • <strong>Mode:</strong> Most frequent value<br>
+          &nbsp;&nbsp;Example: Most common age = 35 years<br><br>
+
+          <strong>B. Variability (Spread):</strong><br>
+          • <strong>Variance:</strong> σ² = Σ(xᵢ - μ)² / n (Measures how spread out data is)<br>
+          • <strong>Standard Deviation:</strong> σ = √variance<br>
+          &nbsp;&nbsp;68% of data within 1σ, 95% within 2σ, 99.7% within 3σ (for normal distribution)<br>
+          • <strong>Interquartile Range (IQR):</strong> Q3 - Q1<br>
+          &nbsp;&nbsp;Middle 50% of data, robust to outliers<br><br>
+
+          <strong>C. Correlation &amp; Associations:</strong><br>
+          • <strong>Pearson Correlation:</strong> r = Cov(X,Y) / (σₓ × σᵧ)<br>
+          &nbsp;&nbsp;Range: -1 to +1<br>
+          &nbsp;&nbsp;r = +1: Perfect positive correlation<br>
+          &nbsp;&nbsp;r = 0: No linear correlation<br>
+          &nbsp;&nbsp;r = -1: Perfect negative correlation<br>
+          • <strong>Thresholds:</strong> |r| &gt; 0.7: Strong, |r| = 0.5-0.7: Moderate, |r| &lt; 0.3: Weak
+        </div>
+
+        <h4>2. Inferential Statistics</h4>
+        <p><strong>Purpose:</strong> Make inferences or generalizations about the population from the sample</p>
+        <p><strong>Key Question:</strong> Can we claim this effect exists in the larger population, or is it just by chance?</p>
+
+        <div class="info-card">
+          <strong>A. Hypothesis Testing:</strong><br>
+          • <strong>Null Hypothesis (H₀):</strong> No effect exists (e.g., "Mean of Group A = Mean of Group B")<br>
+          • <strong>Alternative Hypothesis (H₁):</strong> Effect exists (e.g., "Mean of Group A ≠ Mean of Group B")<br>
+          • <strong>P-value:</strong> Probability of observing data if H₀ is true<br>
+          &nbsp;&nbsp;p &lt; 0.05: Reject H₀ (effect is statistically significant)<br>
+          &nbsp;&nbsp;p &gt; 0.05: Fail to reject H₀ (not enough evidence)<br><br>
+
+          <strong>Example:</strong><br>
+          • H₀: "There is no difference between positive and negative movie review lengths"<br>
+          • H₁: "Negative reviews are longer than positive reviews"<br>
+          • After t-test: p = 0.003 (&lt; 0.05)<br>
+          • Conclusion: Reject H₀ → Negative reviews ARE significantly longer<br><br>
+
+          <strong>B. Confidence Intervals:</strong><br>
+          • Range where true population parameter likely lies<br>
+          • 95% CI: We're 95% confident the true value is within this range<br>
+          • Example: "Average customer age is 35 ± 2 years (95% CI: [33, 37])"<br><br>
+
+          <strong>C. Effect Size:</strong><br>
+          • Cohen's d = (mean₁ - mean₂) / pooled_std<br>
+          • Small effect: d = 0.2, Medium: d = 0.5, Large: d = 0.8
+        </div>
+
+        <h3>Algorithm Steps for EDA</h3>
+        <div class="info-card">
+          <strong>1. Load and Inspect Data:</strong> df.head(), df.info(), df.describe()<br>
+          <strong>2. Handle Missing Values:</strong> Identify (df.isnull().sum()), Visualize, Decide<br>
+          <strong>3. Analyze Distributions:</strong> Histograms, count plots, box plots<br>
+          <strong>4. Check for Imbalance:</strong> Count target classes, plot distribution<br>
+          <strong>5. Correlation Analysis:</strong> Correlation matrix, heatmap, identify multicollinearity<br>
+          <strong>6. Statistical Testing:</strong> Compare groups (t-test, ANOVA), test assumptions, calculate effect sizes
+        </div>
+
+        <h3>Interactive EDA Dashboard</h3>
+        <div class="form-group">
+          <label for="edaFeature" class="form-label">Select Feature:</label>
+          <select id="edaFeature" class="form-control w-100">
+            <option value="age">Age</option>
+            <option value="income">Income</option>
+            <option value="credit">Credit Score</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="confidenceLevel" class="form-label">Confidence Level: <span id="confidenceValue">95</span>%</label>
+          <input type="range" id="confidenceLevel" min="90" max="99" step="1" value="95" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <button id="btn-histogram" class="btn btn--primary">Show Histogram</button>
+          <button id="btn-boxplot" class="btn btn--primary">Show Box Plot</button>
+          <button id="btn-correlation" class="btn btn--primary">Show Correlation</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-eda" width="800" height="500"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 EDA typically takes 30-40% of total project time. Good EDA reveals which features to engineer.</div>
+        <div class="callout callout--mistake">⚠️ Common Mistakes: Skipping EDA, not checking outliers before scaling, ignoring missing value patterns, overlooking class imbalance, ignoring multicollinearity.</div>
+        <div class="callout callout--tip">✅ Best Practices: ALWAYS start with EDA, visualize EVERY feature, check correlations with target, document insights, use both descriptive and inferential statistics.</div>
+
+        <h3>Use Cases and Applications</h3>
+        <ul>
+          <li><strong>Healthcare:</strong> Analyzing patient data before building disease prediction models</li>
+          <li><strong>Finance:</strong> Understanding customer demographics before credit scoring</li>
+          <li><strong>E-commerce:</strong> Analyzing purchase patterns before recommendation systems</li>
+          <li><strong>Marketing:</strong> Understanding customer segments before targeted campaigns</li>
+          <li><strong>Time Series:</strong> Checking for seasonality and trends in sales data</li>
+        </ul>
+
+        <h3>Summary &amp; Key Takeaways</h3>
+        <p>Exploratory Data Analysis is the foundation of any successful machine learning project. It combines <strong>descriptive statistics</strong> (mean, median, variance, correlation) with <strong>inferential statistics</strong> (hypothesis testing, confidence intervals) to understand data deeply.</p>
+        <p><strong>Descriptive EDA</strong> answers: "What is happening in the dataset?"<br>
+        <strong>Inferential EDA</strong> answers: "Can we claim this effect exists in the larger population?"</p>
+        <p>Remember: <strong>Data → EDA → Feature Engineering → ML → Deployment</strong></p>
+      </section>
+
+      <!-- =================== 9. FEATURE TRANSFORMATION ==================== -->
+      <section id="feature-transformation" class="topic-section">
+        <h2>Feature Transformation</h2>
+        <p>Feature transformation creates new representations of data to capture non-linear patterns. Techniques like polynomial features, binning, and mathematical transformations unlock hidden relationships.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Predicting house prices with polynomial features (adding x² terms) improves model fit for non-linear relationships between square footage and price.
+        </div>
+
+        <h3>Mathematical Foundations</h3>
+        <div class="info-card">
+          <strong>Polynomial Features:</strong> Transform (x₁, x₂) → (1, x₁, x₂, x₁², x₁x₂, x₂²)<br>
+          • Degree 2 example: For features (x, y) → (1, x, y, x², xy, y²)<br>
+          • 2 features with degree=2 creates 6 features total<br><br>
+          <strong>Binning:</strong> Convert continuous → categorical<br>
+          • Equal-width: Divide range into equal intervals<br>
+          • Quantile: Each bin has equal number of samples<br>
+          • Example: Age (0-100) → [0-18], [19-35], [36-60], [61+]<br><br>
+          <strong>Mathematical Transformations:</strong><br>
+          • Square Root: √x (reduces right skew)<br>
+          • Log Transform: log(1 + x)<br>
+          • Box-Cox: λ = 0: log(x), λ ≠ 0: (x^λ - 1)/λ
+        </div>
+
+        <div class="form-group">
+          <button id="btn-polynomial" class="btn btn--primary">Add Polynomial Features</button>
+          <button id="btn-binning" class="btn btn--primary">Apply Binning</button>
+          <button id="btn-log" class="btn btn--primary">Log Transform</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-transformation" width="700" height="350"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Polynomial features capture curve fitting, but degree=3 on 10 features creates 286 features!</div>
+        <div class="callout callout--mistake">⚠️ Always scale features after polynomial transformation to prevent magnitude issues.</div>
+        <div class="callout callout--tip">✅ Start with degree=2 and visualize distributions before/after transformation.</div>
+
+        <h3>Use Cases</h3>
+        <ul>
+          <li>Polynomial features for non-linear house price prediction</li>
+          <li>Binning age into groups for marketing segmentation</li>
+          <li>Log transformation for right-skewed income data</li>
+        </ul>
+      </section>
+
+      <!-- =================== 10. FEATURE CREATION ========================= -->
+      <section id="feature-creation" class="topic-section">
+        <h2>Feature Creation</h2>
+        <p>Creating new features from existing ones based on domain knowledge. Interaction terms, ratios, and domain-specific calculations enhance model performance.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> E-commerce revenue = price × quantity. Profit margin = (selling_price - cost_price) / cost_price. These derived features often have stronger predictive power than raw features.
+        </div>
+
+        <h3>Mathematical Foundations</h3>
+        <div class="info-card">
+          <strong>Interaction Terms:</strong> feature₁ × feature₂<br>
+          • Example: advertising_budget × seasonality → total_impact<br>
+          • Why: Captures how one feature's effect depends on another<br><br>
+          <strong>Ratio Features:</strong> feature₁ / feature₂<br>
+          • Example: price/sqft, income/age<br><br>
+          <strong>Domain-Specific Features:</strong><br>
+          • BMI = weight(kg) / height²(m²)<br>
+          • Speed = distance / time<br>
+          • Profit margin = (revenue - cost) / cost<br><br>
+          <strong>Time-Based Features:</strong><br>
+          • Extract: year, month, day, weekday, hour<br>
+          • Create: is_weekend, is_holiday, season
+        </div>
+
+        <div class="form-group">
+          <button id="btn-interaction" class="btn btn--primary">Create Interaction</button>
+          <button id="btn-ratio" class="btn btn--primary">Create Ratio</button>
+          <button id="btn-bmi" class="btn btn--primary">Calculate BMI</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-creation" width="700" height="350"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Interaction terms are especially powerful in linear models - neural networks learn them automatically.</div>
+        <div class="callout callout--mistake">⚠️ Creating features without domain knowledge leads to meaningless combinations.</div>
+        <div class="callout callout--tip">✅ Always check correlation between new and existing features to avoid redundancy.</div>
+
+        <h3>Use Cases</h3>
+        <ul>
+          <li>BMI from height and weight in healthcare prediction</li>
+          <li>Click-through rate = clicks / impressions in digital marketing</li>
+          <li>Revenue = price × quantity in retail analytics</li>
+        </ul>
+      </section>
+
+      <!-- ================ 11. DIMENSIONALITY REDUCTION ==================== -->
+      <section id="dimensionality-reduction" class="topic-section">
+        <h2>Dimensionality Reduction</h2>
+        <p>Reducing the number of features while preserving information. PCA (Principal Component Analysis) projects high-dimensional data onto lower dimensions by finding directions of maximum variance.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Image compression and genome analysis with thousands of genes benefit from PCA. First 2-3 principal components often capture 80%+ of variance.
+        </div>
+
+        <h3>PCA Mathematical Foundations</h3>
+        <div class="info-card">
+          <strong>Algorithm Steps:</strong><br>
+          1. Standardize data: X_scaled = (X - μ) / σ<br>
+          2. Compute covariance matrix: Cov = (1/n) X^T X<br>
+          3. Calculate eigenvalues and eigenvectors<br>
+          4. Sort eigenvectors by eigenvalues (descending)<br>
+          5. Select top k eigenvectors (principal components)<br>
+          6. Transform: X_new = X × PC_matrix<br><br>
+          <strong>Explained Variance:</strong> λᵢ / Σλⱼ<br>
+          <strong>Cumulative Variance:</strong> Shows total information preserved<br><br>
+          <strong>Why PCA Works:</strong><br>
+          • Removes correlated features<br>
+          • Captures maximum variance in fewer dimensions<br>
+          • Components are orthogonal (no correlation)
+        </div>
+
+        <div class="form-group">
+          <label for="slider-components" class="form-label">Number of Components: <span id="pcaValue">2</span></label>
+          <input type="range" id="slider-components" min="1" max="3" step="1" value="2" class="form-control" />
+        </div>
+
+        <button id="btn-pca-apply" class="btn btn--primary">Apply PCA</button>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-pca" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 PCA is unsupervised - it doesn't use the target variable. First PC always captures most variance.</div>
+        <div class="callout callout--mistake">⚠️ Not standardizing before PCA is a critical error - features with large scales will dominate.</div>
+        <div class="callout callout--tip">✅ Aim for 95% cumulative explained variance when choosing number of components.</div>
+
+        <h3>Use Cases</h3>
+        <ul>
+          <li>Image compression (reduce pixel dimensions)</li>
+          <li>Genomics (thousands of genes → few principal components)</li>
+          <li>Visualization (project high-D data to 2D for plotting)</li>
+          <li>Speed up training (fewer features = faster models)</li>
+        </ul>
+
+        <h3>Common Mistakes</h3>
+        <ul>
+          <li>⚠️ Applying PCA before train-test split (data leakage)</li>
+          <li>⚠️ Using PCA with categorical features (PCA is for numerical data)</li>
+          <li>⚠️ Losing interpretability (PCs are linear combinations)</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
