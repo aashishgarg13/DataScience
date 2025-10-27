@@ -1,6 +1,6 @@
 # 📊 DataScience Learning Hub
 
-Welcome to an interactive collection of educational web projects for learning statistics and machine learning! This repository contains two main interactive courses that you can access directly through your browser.
+Welcome to a comprehensive collection of educational web projects for learning data science! This repository contains multiple interactive courses and resources covering statistics, machine learning, visualization, mathematics, and feature engineering.
 
 ## 🎯 Live Demos
 
@@ -8,6 +8,9 @@ Visit our courses directly in your browser:
 
 - [📈 Interactive Statistics Course](https://aashishgarg13.github.io/DataScience/complete-statistics/)
 - [🤖 Machine Learning Guide](https://aashishgarg13.github.io/DataScience/ml_complete-all-topics/)
+- [📊 Data Visualization](https://aashishgarg13.github.io/DataScience/Visualization/)
+- [🔢 Mathematics for Data Science](https://aashishgarg13.github.io/DataScience/math-ds-complete/)
+- [⚙️ Feature Engineering Guide](https://aashishgarg13.github.io/DataScience/feature-engineering/)
 
 ## 📚 Contents
 
@@ -28,6 +31,30 @@ Visit our courses directly in your browser:
   - Interactive Demonstrations
   - Visual Learning Aids
   - Step-by-Step Explanations
+
+### 📊 Data Visualization
+- **Location:** `Visualization/`
+- **Features:**
+  - Interactive Data Visualization Examples
+  - Chart Types and Best Practices
+  - Dynamic Visualization Techniques
+  - Data Presentation Guidelines
+
+### 🔢 Mathematics for Data Science
+- **Location:** `math-ds-complete/`
+- **Features:**
+  - Linear Algebra Fundamentals
+  - Calculus for Machine Learning
+  - Statistical Mathematics
+  - Optimization Theory
+
+### ⚙️ Feature Engineering Guide
+- **Location:** `feature-engineering/`
+- **Features:**
+  - Data Preprocessing Techniques
+  - Feature Selection Methods
+  - Feature Transformation
+  - Dimensionality Reduction
 
 > 💡 Both projects are pure static websites - no server needed! Open directly in your browser or use a simple static server.
 
@@ -83,6 +110,30 @@ ml_complete-all-topics/
 ├── index.html  # Main guide interface
 ├── style.css   # Guide styling
 └── app.js      # Interactive components
+```
+
+### Data Visualization
+```
+Visualization/
+├── index.html  # Visualization examples
+├── style.css   # Visualization styling
+└── app.js      # Interactive charts
+```
+
+### Mathematics for Data Science
+```
+math-ds-complete/
+├── index.html  # Mathematics course interface
+├── style.css   # Course styling
+└── app.js      # Interactive math demonstrations
+```
+
+### Feature Engineering Guide
+```
+feature-engineering/
+├── index.html  # Feature engineering guide
+├── style.css   # Guide styling
+└── app.js      # Interactive examples
 ```
 
 ## Notes about repository cleanup
