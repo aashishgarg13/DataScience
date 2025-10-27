@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feature Engineering Explorer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app flex">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <h1 class="sidebar__title">🛠️ Feature Engineering</h1>
+      <nav>
+        <ul class="nav__list" id="navList">
+          <li><a href="#intro" class="nav__link">🎯 Introduction</a></li>
+          <li><a href="#missing-data" class="nav__link">🔍 Missing Data</a></li>
+          <li><a href="#outliers" class="nav__link">📊 Outliers</a></li>
+          <li><a href="#scaling" class="nav__link">⚖️ Scaling</a></li>
+          <li><a href="#encoding" class="nav__link">🔢 Encoding</a></li>
+          <li><a href="#feature-selection" class="nav__link">🎯 Feature Selection</a></li>
+          <li><a href="#imbalanced-data" class="nav__link">⚖️ Imbalanced Data</a></li>
+          <li><a href="#eda" class="nav__link">📈 EDA Overview</a></li>
+          <li><a href="#feature-transformation" class="nav__link">🔄 Feature Transformation</a></li>
+          <li><a href="#feature-creation" class="nav__link">🛠️ Feature Creation</a></li>
+          <li><a href="#dimensionality-reduction" class="nav__link">📉 Dimensionality Reduction</a></li>
+        </ul>
+        <h3 class="sidebar__section">NumPy Fundamentals</h3>
+        <ul class="nav__list">
+          <li><a href="#numpy-intro" class="nav__link">🔢 Introduction to NumPy</a></li>
+          <li><a href="#numpy-operations" class="nav__link">⚡ NumPy Operations</a></li>
+          <li><a href="#numpy-indexing" class="nav__link">🎯 Array Indexing</a></li>
+          <li><a href="#numpy-math" class="nav__link">📐 Mathematical Operations</a></li>
+        </ul>
+        <h3 class="sidebar__section">Pandas Data Manipulation</h3>
+        <ul class="nav__list">
+          <li><a href="#pandas-intro" class="nav__link">🐼 Introduction to Pandas</a></li>
+          <li><a href="#pandas-operations" class="nav__link">📊 DataFrame Operations</a></li>
+          <li><a href="#pandas-selection" class="nav__link">🔍 Data Selection</a></li>
+          <li><a href="#pandas-groupby" class="nav__link">📈 GroupBy &amp; Aggregation</a></li>
+        </ul>
+        <h3 class="sidebar__section">Data Visualization</h3>
+        <ul class="nav__list">
+          <li><a href="#matplotlib-basics" class="nav__link">📉 Matplotlib Basics</a></li>
+          <li><a href="#seaborn-plots" class="nav__link">📊 Seaborn Plots</a></li>
+          <li><a href="#advanced-viz" class="nav__link">🎨 Advanced Visualizations</a></li>
+          <li><a href="#custom-plots" class="nav__link">🖌️ Customizing Plots</a></li>
+        </ul>
+        <h3 class="sidebar__section">Interactive Visualization</h3>
+        <ul class="nav__list">
+          <li><a href="#plotly-basics" class="nav__link">📈 Plotly Basics</a></li>
+          <li><a href="#plotly-dash" class="nav__link">🎛️ Plotly Dash</a></li>
+        </ul>
+        <h3 class="sidebar__section">Git Version Control</h3>
+        <ul class="nav__list">
+          <li><a href="#git-basics" class="nav__link">📁 Git Basics</a></li>
+          <li><a href="#github-remote" class="nav__link">🌐 GitHub &amp; Remote</a></li>
+          <li><a href="#git-branching" class="nav__link">🌿 Branching</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content" id="content">
+      <!-- ============================ 1. INTRO ============================ -->
+      <section id="intro" class="topic-section">
+        <h2>Introduction to Feature Engineering</h2>
+        <p>Feature Engineering is the process of transforming raw data into meaningful inputs that boost machine-learning model performance. A well-crafted feature set can improve accuracy by 10-30% without changing the underlying algorithm.</p>
+
+        <div class="info-card">
+          <strong>Key Idea:</strong> 💡 Thoughtful features provide the model with clearer patterns, like lenses sharpening a blurry picture.
+        </div>
+
+        <!-- Canvas Visual -->
+        <div class="canvas-wrapper">
+          <canvas id="canvas-intro" width="600" height="280"></canvas>
+        </div>
+      </section>
+
+      <!-- ====================== 2. HANDLING MISSING DATA ================== -->
+      <section id="missing-data" class="topic-section">
+        <h2>Handling Missing Data</h2>
+        <p>Missing values come in three flavors: MCAR (Missing Completely At Random), MAR (Missing At Random), and MNAR (Missing Not At Random). Each demands different treatment to avoid bias.</p>
+
+        <!-- Real-world Example -->
+        <div class="info-card">
+          <strong>Real Example:</strong> A hospital's patient records often have absent <em>cholesterol</em> values because certain tests were not ordered for healthy young adults.
+        </div>
+
+        <!-- Controls -->
+        <div class="form-group">
+          <button id="btn-mean-impute" class="btn btn--primary">Mean Imputation</button>
+          <button id="btn-median-impute" class="btn btn--primary">Median Imputation</button>
+          <button id="btn-knn-impute" class="btn btn--primary">KNN Imputation</button>
+        </div>
+
+        <!-- Canvas -->
+        <div class="canvas-wrapper">
+          <canvas id="canvas-missing-data" width="800" height="500"></canvas>
+        </div>
+
+        <!-- Callouts -->
+        <div class="callout callout--insight">💡 Mean/Median work best when data is MCAR or MAR.</div>
+        <div class="callout callout--mistake">⚠️ Using mean imputation on skewed data can distort distributions.</div>
+        <div class="callout callout--tip">✅ Always impute <strong>after</strong> splitting into train and test to avoid leakage.</div>
+      </section>
+
+      <!-- ======================= 3. HANDLING OUTLIERS ===================== -->
+      <section id="outliers" class="topic-section">
+        <h2>Handling Outliers</h2>
+        <p>Outliers are data points that deviate markedly from others. Detecting and treating them prevents skewed models.</p>
+
+        <div class="form-group">
+          <button id="btn-detect-iqr" class="btn btn--primary">IQR Method</button>
+          <button id="btn-detect-zscore" class="btn btn--primary">Z-Score Method</button>
+          <button id="btn-winsorize" class="btn btn--primary">Winsorization</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-outliers" width="600" height="300"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 The IQR method is robust to non-normal data.</div>
+        <div class="callout callout--mistake">⚠️ Removing legitimate extreme values can erase important signals.</div>
+      </section>
+
+      <!-- ========================== 4. SCALING ============================ -->
+      <section id="scaling" class="topic-section">
+        <h2>Feature Scaling</h2>
+        <p>Algorithms that rely on distance, like KNN, demand comparable feature magnitudes.</p>
+
+        <div class="form-group">
+          <button id="btn-minmax" class="btn btn--primary">Min-Max Scaling</button>
+          <button id="btn-standardize" class="btn btn--primary">Standardization</button>
+          <button id="btn-robust" class="btn btn--primary">Robust Scaler</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-scaling" width="600" height="300"></canvas>
+        </div>
+      </section>
+
+      <!-- ========================== 5. ENCODING =========================== -->
+      <section id="encoding" class="topic-section">
+        <h2>Data Encoding</h2>
+        <p>Transform categorical variables into numbers so models can interpret them.</p>
+
+        <div class="form-group">
+          <button id="btn-label-encode" class="btn btn--primary">Label Encoding</button>
+          <button id="btn-onehot-encode" class="btn btn--primary">One-Hot Encoding</button>
+          <button id="btn-target-encode" class="btn btn--primary">Target Encoding</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-encoding" width="600" height="300"></canvas>
+        </div>
+      </section>
+
+      <!-- ===================== 6. FEATURE SELECTION ======================= -->
+      <section id="feature-selection" class="topic-section">
+        <h2>Feature Selection</h2>
+        <p>Pick features that matter, drop those that don't.</p>
+
+        <div class="form-group">
+          <button id="btn-backward-elim" class="btn btn--primary">Backward Elimination</button>
+          <button id="btn-forward-select" class="btn btn--primary">Forward Selection</button>
+          <button id="btn-rfe" class="btn btn--primary">RFE</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-selection" width="600" height="300"></canvas>
+        </div>
+      </section>
+
+      <!-- =================== 7. IMBALANCED DATA =========================== -->
+      <section id="imbalanced-data" class="topic-section">
+        <h2>Handling Imbalanced Data</h2>
+        <p>Class imbalance leads to biased predictions. Balancing techniques can fix this.</p>
+
+        <div class="form-group">
+          <button id="btn-rus" class="btn btn--primary">Random Under-Sampling</button>
+          <button id="btn-ros" class="btn btn--primary">Random Over-Sampling</button>
+          <button id="btn-smote" class="btn btn--primary">SMOTE</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-imbalanced" width="600" height="300"></canvas>
+        </div>
+      </section>
+
+      <!-- ========================== 8. EDA ================================ -->
+      <section id="eda" class="topic-section">
+        <h2>Exploratory Data Analysis (EDA)</h2>
+        <p><strong>Exploratory Data Analysis (EDA)</strong> is a critical step in the machine learning pipeline that comes BEFORE feature engineering. EDA helps you understand your data, discover patterns, identify anomalies, detect outliers, test hypotheses, and check assumptions through summary statistics and graphical representations.</p>
+
+        <div class="info-card">
+          <strong>Key Questions EDA Answers:</strong>
+          <ul>
+            <li>How many columns are numerical vs. categorical?</li>
+            <li>What does the data distribution look like?</li>
+            <li>Are there missing values?</li>
+            <li>Are there outliers?</li>
+            <li>Is the data imbalanced (for classification problems)?</li>
+            <li>What are the correlations between features?</li>
+            <li>Are there any trends or patterns?</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <strong>Real-World Example:</strong> Imagine you're analyzing customer data for a bank to predict loan defaults. EDA helps you understand:
+          <ul>
+            <li>Age distribution of customers (histogram)</li>
+            <li>Income levels (box plot for outliers)</li>
+            <li>Correlation between income and loan amount (scatter plot)</li>
+            <li>Missing values in employment history</li>
+            <li>Class imbalance (5% defaults vs 95% non-defaults)</li>
+          </ul>
+        </div>
+
+        <h3>Two Main Types of EDA</h3>
+
+        <h4>1. Descriptive Statistics</h4>
+        <p><strong>Purpose:</strong> Summarize and visualize what the data looks like</p>
+
+        <div class="info-card">
+          <strong>A. Central Tendency:</strong><br>
+          • <strong>Mean (Average):</strong> μ = Σxᵢ / n<br>
+          &nbsp;&nbsp;Example: Average income = $50,000 (Sensitive to outliers)<br>
+          • <strong>Median:</strong> Middle value when sorted<br>
+          &nbsp;&nbsp;Example: Median income = $45,000 (Robust to outliers)<br>
+          • <strong>Mode:</strong> Most frequent value<br>
+          &nbsp;&nbsp;Example: Most common age = 35 years<br><br>
+
+          <strong>B. Variability (Spread):</strong><br>
+          • <strong>Variance:</strong> σ² = Σ(xᵢ - μ)² / n (Measures how spread out data is)<br>
+          • <strong>Standard Deviation:</strong> σ = √variance<br>
+          &nbsp;&nbsp;68% of data within 1σ, 95% within 2σ, 99.7% within 3σ (for normal distribution)<br>
+          • <strong>Interquartile Range (IQR):</strong> Q3 - Q1<br>
+          &nbsp;&nbsp;Middle 50% of data, robust to outliers<br><br>
+
+          <strong>C. Correlation &amp; Associations:</strong><br>
+          • <strong>Pearson Correlation:</strong> r = Cov(X,Y) / (σₓ × σᵧ)<br>
+          &nbsp;&nbsp;Range: -1 to +1<br>
+          &nbsp;&nbsp;r = +1: Perfect positive correlation<br>
+          &nbsp;&nbsp;r = 0: No linear correlation<br>
+          &nbsp;&nbsp;r = -1: Perfect negative correlation<br>
+          • <strong>Thresholds:</strong> |r| &gt; 0.7: Strong, |r| = 0.5-0.7: Moderate, |r| &lt; 0.3: Weak
+        </div>
+
+        <h4>2. Inferential Statistics</h4>
+        <p><strong>Purpose:</strong> Make inferences or generalizations about the population from the sample</p>
+        <p><strong>Key Question:</strong> Can we claim this effect exists in the larger population, or is it just by chance?</p>
+
+        <div class="info-card">
+          <strong>A. Hypothesis Testing:</strong><br>
+          • <strong>Null Hypothesis (H₀):</strong> No effect exists (e.g., "Mean of Group A = Mean of Group B")<br>
+          • <strong>Alternative Hypothesis (H₁):</strong> Effect exists (e.g., "Mean of Group A ≠ Mean of Group B")<br>
+          • <strong>P-value:</strong> Probability of observing data if H₀ is true<br>
+          &nbsp;&nbsp;p &lt; 0.05: Reject H₀ (effect is statistically significant)<br>
+          &nbsp;&nbsp;p &gt; 0.05: Fail to reject H₀ (not enough evidence)<br><br>
+
+          <strong>Example:</strong><br>
+          • H₀: "There is no difference between positive and negative movie review lengths"<br>
+          • H₁: "Negative reviews are longer than positive reviews"<br>
+          • After t-test: p = 0.003 (&lt; 0.05)<br>
+          • Conclusion: Reject H₀ → Negative reviews ARE significantly longer<br><br>
+
+          <strong>B. Confidence Intervals:</strong><br>
+          • Range where true population parameter likely lies<br>
+          • 95% CI: We're 95% confident the true value is within this range<br>
+          • Example: "Average customer age is 35 ± 2 years (95% CI: [33, 37])"<br><br>
+
+          <strong>C. Effect Size:</strong><br>
+          • Cohen's d = (mean₁ - mean₂) / pooled_std<br>
+          • Small effect: d = 0.2, Medium: d = 0.5, Large: d = 0.8
+        </div>
+
+        <h3>Algorithm Steps for EDA</h3>
+        <div class="info-card">
+          <strong>1. Load and Inspect Data:</strong> df.head(), df.info(), df.describe()<br>
+          <strong>2. Handle Missing Values:</strong> Identify (df.isnull().sum()), Visualize, Decide<br>
+          <strong>3. Analyze Distributions:</strong> Histograms, count plots, box plots<br>
+          <strong>4. Check for Imbalance:</strong> Count target classes, plot distribution<br>
+          <strong>5. Correlation Analysis:</strong> Correlation matrix, heatmap, identify multicollinearity<br>
+          <strong>6. Statistical Testing:</strong> Compare groups (t-test, ANOVA), test assumptions, calculate effect sizes
+        </div>
+
+        <h3>Interactive EDA Dashboard</h3>
+        <div class="form-group">
+          <label for="edaFeature" class="form-label">Select Feature:</label>
+          <select id="edaFeature" class="form-control w-100">
+            <option value="age">Age</option>
+            <option value="income">Income</option>
+            <option value="credit">Credit Score</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="confidenceLevel" class="form-label">Confidence Level: <span id="confidenceValue">95</span>%</label>
+          <input type="range" id="confidenceLevel" min="90" max="99" step="1" value="95" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <button id="btn-histogram" class="btn btn--primary">Show Histogram</button>
+          <button id="btn-boxplot" class="btn btn--primary">Show Box Plot</button>
+          <button id="btn-correlation" class="btn btn--primary">Show Correlation</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-eda" width="800" height="500"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 EDA typically takes 30-40% of total project time. Good EDA reveals which features to engineer.</div>
+        <div class="callout callout--mistake">⚠️ Common Mistakes: Skipping EDA, not checking outliers before scaling, ignoring missing value patterns, overlooking class imbalance, ignoring multicollinearity.</div>
+        <div class="callout callout--tip">✅ Best Practices: ALWAYS start with EDA, visualize EVERY feature, check correlations with target, document insights, use both descriptive and inferential statistics.</div>
+
+        <h3>Use Cases and Applications</h3>
+        <ul>
+          <li><strong>Healthcare:</strong> Analyzing patient data before building disease prediction models</li>
+          <li><strong>Finance:</strong> Understanding customer demographics before credit scoring</li>
+          <li><strong>E-commerce:</strong> Analyzing purchase patterns before recommendation systems</li>
+          <li><strong>Marketing:</strong> Understanding customer segments before targeted campaigns</li>
+          <li><strong>Time Series:</strong> Checking for seasonality and trends in sales data</li>
+        </ul>
+
+        <h3>Summary &amp; Key Takeaways</h3>
+        <p>Exploratory Data Analysis is the foundation of any successful machine learning project. It combines <strong>descriptive statistics</strong> (mean, median, variance, correlation) with <strong>inferential statistics</strong> (hypothesis testing, confidence intervals) to understand data deeply.</p>
+        <p><strong>Descriptive EDA</strong> answers: "What is happening in the dataset?"<br>
+        <strong>Inferential EDA</strong> answers: "Can we claim this effect exists in the larger population?"</p>
+        <p>Remember: <strong>Data → EDA → Feature Engineering → ML → Deployment</strong></p>
+      </section>
+
+      <!-- =================== 9. FEATURE TRANSFORMATION ==================== -->
+      <section id="feature-transformation" class="topic-section">
+        <h2>Feature Transformation</h2>
+        <p>Feature transformation creates new representations of data to capture non-linear patterns. Techniques like polynomial features, binning, and mathematical transformations unlock hidden relationships.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Predicting house prices with polynomial features (adding x² terms) improves model fit for non-linear relationships between square footage and price.
+        </div>
+
+        <h3>Mathematical Foundations</h3>
+        <div class="info-card">
+          <strong>Polynomial Features:</strong> Transform (x₁, x₂) → (1, x₁, x₂, x₁², x₁x₂, x₂²)<br>
+          • Degree 2 example: For features (x, y) → (1, x, y, x², xy, y²)<br>
+          • 2 features with degree=2 creates 6 features total<br><br>
+          <strong>Binning:</strong> Convert continuous → categorical<br>
+          • Equal-width: Divide range into equal intervals<br>
+          • Quantile: Each bin has equal number of samples<br>
+          • Example: Age (0-100) → [0-18], [19-35], [36-60], [61+]<br><br>
+          <strong>Mathematical Transformations:</strong><br>
+          • Square Root: √x (reduces right skew)<br>
+          • Log Transform: log(1 + x)<br>
+          • Box-Cox: λ = 0: log(x), λ ≠ 0: (x^λ - 1)/λ
+        </div>
+
+        <div class="form-group">
+          <button id="btn-polynomial" class="btn btn--primary">Add Polynomial Features</button>
+          <button id="btn-binning" class="btn btn--primary">Apply Binning</button>
+          <button id="btn-log" class="btn btn--primary">Log Transform</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-transformation" width="700" height="350"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Polynomial features capture curve fitting, but degree=3 on 10 features creates 286 features!</div>
+        <div class="callout callout--mistake">⚠️ Always scale features after polynomial transformation to prevent magnitude issues.</div>
+        <div class="callout callout--tip">✅ Start with degree=2 and visualize distributions before/after transformation.</div>
+
+        <h3>Use Cases</h3>
+        <ul>
+          <li>Polynomial features for non-linear house price prediction</li>
+          <li>Binning age into groups for marketing segmentation</li>
+          <li>Log transformation for right-skewed income data</li>
+        </ul>
+      </section>
+
+      <!-- =================== 10. FEATURE CREATION ========================= -->
+      <section id="feature-creation" class="topic-section">
+        <h2>Feature Creation</h2>
+        <p>Creating new features from existing ones based on domain knowledge. Interaction terms, ratios, and domain-specific calculations enhance model performance.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> E-commerce revenue = price × quantity. Profit margin = (selling_price - cost_price) / cost_price. These derived features often have stronger predictive power than raw features.
+        </div>
+
+        <h3>Mathematical Foundations</h3>
+        <div class="info-card">
+          <strong>Interaction Terms:</strong> feature₁ × feature₂<br>
+          • Example: advertising_budget × seasonality → total_impact<br>
+          • Why: Captures how one feature's effect depends on another<br><br>
+          <strong>Ratio Features:</strong> feature₁ / feature₂<br>
+          • Example: price/sqft, income/age<br><br>
+          <strong>Domain-Specific Features:</strong><br>
+          • BMI = weight(kg) / height²(m²)<br>
+          • Speed = distance / time<br>
+          • Profit margin = (revenue - cost) / cost<br><br>
+          <strong>Time-Based Features:</strong><br>
+          • Extract: year, month, day, weekday, hour<br>
+          • Create: is_weekend, is_holiday, season
+        </div>
+
+        <div class="form-group">
+          <button id="btn-interaction" class="btn btn--primary">Create Interaction</button>
+          <button id="btn-ratio" class="btn btn--primary">Create Ratio</button>
+          <button id="btn-bmi" class="btn btn--primary">Calculate BMI</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-creation" width="700" height="350"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Interaction terms are especially powerful in linear models - neural networks learn them automatically.</div>
+        <div class="callout callout--mistake">⚠️ Creating features without domain knowledge leads to meaningless combinations.</div>
+        <div class="callout callout--tip">✅ Always check correlation between new and existing features to avoid redundancy.</div>
+
+        <h3>Use Cases</h3>
+        <ul>
+          <li>BMI from height and weight in healthcare prediction</li>
+          <li>Click-through rate = clicks / impressions in digital marketing</li>
+          <li>Revenue = price × quantity in retail analytics</li>
+        </ul>
+      </section>
+
+      <!-- ================ 11. DIMENSIONALITY REDUCTION ==================== -->
+      <section id="dimensionality-reduction" class="topic-section">
+        <h2>Dimensionality Reduction</h2>
+        <p>Reducing the number of features while preserving information. PCA (Principal Component Analysis) projects high-dimensional data onto lower dimensions by finding directions of maximum variance.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Image compression and genome analysis with thousands of genes benefit from PCA. First 2-3 principal components often capture 80%+ of variance.
+        </div>
+
+        <h3>PCA Mathematical Foundations</h3>
+        <div class="info-card">
+          <strong>Algorithm Steps:</strong><br>
+          1. Standardize data: X_scaled = (X - μ) / σ<br>
+          2. Compute covariance matrix: Cov = (1/n) X^T X<br>
+          3. Calculate eigenvalues and eigenvectors<br>
+          4. Sort eigenvectors by eigenvalues (descending)<br>
+          5. Select top k eigenvectors (principal components)<br>
+          6. Transform: X_new = X × PC_matrix<br><br>
+          <strong>Explained Variance:</strong> λᵢ / Σλⱼ<br>
+          <strong>Cumulative Variance:</strong> Shows total information preserved<br><br>
+          <strong>Why PCA Works:</strong><br>
+          • Removes correlated features<br>
+          • Captures maximum variance in fewer dimensions<br>
+          • Components are orthogonal (no correlation)
+        </div>
+
+        <div class="form-group">
+          <label for="slider-components" class="form-label">Number of Components: <span id="pcaValue">2</span></label>
+          <input type="range" id="slider-components" min="1" max="3" step="1" value="2" class="form-control" />
+        </div>
+
+        <button id="btn-pca-apply" class="btn btn--primary">Apply PCA</button>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-pca" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 PCA is unsupervised - it doesn't use the target variable. First PC always captures most variance.</div>
+        <div class="callout callout--mistake">⚠️ Not standardizing before PCA is a critical error - features with large scales will dominate.</div>
+        <div class="callout callout--tip">✅ Aim for 95% cumulative explained variance when choosing number of components.</div>
+
+        <h3>Use Cases</h3>
+        <ul>
+          <li>Image compression (reduce pixel dimensions)</li>
+          <li>Genomics (thousands of genes → few principal components)</li>
+          <li>Visualization (project high-D data to 2D for plotting)</li>
+          <li>Speed up training (fewer features = faster models)</li>
+        </ul>
+
+        <h3>Common Mistakes</h3>
+        <ul>
+          <li>⚠️ Applying PCA before train-test split (data leakage)</li>
+          <li>⚠️ Using PCA with categorical features (PCA is for numerical data)</li>
+          <li>⚠️ Losing interpretability (PCs are linear combinations)</li>
+        </ul>
+      </section>
+
+      <!-- =================== 12. NUMPY INTRO ========================= -->
+      <section id="numpy-intro" class="topic-section">
+        <h2>🔢 Introduction to NumPy</h2>
+        <p>NumPy (Numerical Python) is the foundational library for scientific computing in Python. It provides support for multi-dimensional arrays and matrices, along with mathematical functions to operate on these arrays efficiently.</p>
+
+        <div class="info-card">
+          <strong>Why NumPy Matters:</strong>
+          <ul>
+            <li>10-100x faster than Python lists for large datasets</li>
+            <li>Foundation for Pandas, Matplotlib, Scikit-learn</li>
+            <li>Optimized C implementation</li>
+            <li>Broadcasting capabilities</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <strong>Real-World Example:</strong> Weather forecasting uses NumPy arrays to store temperature, humidity, pressure data across thousands of locations and perform rapid calculations.
+        </div>
+
+        <h3>Creating Arrays</h3>
+        <div class="form-group">
+          <button id="btn-create-array" class="btn btn--primary">Create Array</button>
+          <button id="btn-zeros-ones" class="btn btn--primary">Zeros &amp; Ones</button>
+          <button id="btn-random-array" class="btn btn--primary">Random Array</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-numpy-intro" width="700" height="350"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 NumPy arrays are homogeneous, fixed-size, and multi-dimensional.</div>
+        <div class="callout callout--mistake">⚠️ Not specifying dtype can lead to unexpected type conversions.</div>
+        <div class="callout callout--tip">✅ Use vectorized operations instead of loops for better performance.</div>
+      </section>
+
+      <!-- =================== 13. NUMPY OPERATIONS ==================== -->
+      <section id="numpy-operations" class="topic-section">
+        <h2>⚡ NumPy Arrays &amp; Operations</h2>
+        <p>NumPy performs element-wise operations on arrays, enabling fast mathematical computations without explicit loops.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Calculating BMI for 1000 patients: <code>bmi = weight / (height ** 2)</code> - single line instead of 1000 iterations.
+        </div>
+
+        <h3>Element-wise Operations &amp; Broadcasting</h3>
+        <div class="form-group">
+          <button id="btn-addition" class="btn btn--primary">Addition</button>
+          <button id="btn-multiplication" class="btn btn--primary">Multiplication</button>
+          <button id="btn-broadcasting" class="btn btn--primary">Broadcasting</button>
+          <button id="btn-dot-product" class="btn btn--primary">Dot Product</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-numpy-operations" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Broadcasting allows operations on arrays of different shapes.</div>
+        <div class="callout callout--mistake">⚠️ Don't confuse element-wise (*) with dot product (np.dot).</div>
+        <div class="callout callout--tip">✅ Vectorization is 10-100x faster than Python loops.</div>
+      </section>
+
+      <!-- =================== 14. NUMPY INDEXING ====================== -->
+      <section id="numpy-indexing" class="topic-section">
+        <h2>🎯 Array Manipulation &amp; Indexing</h2>
+        <p>NumPy provides powerful indexing and slicing capabilities to access and manipulate array elements.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Selecting specific patients from medical records: first 100 patients, ages &gt; 60, specific columns (age, blood_pressure).
+        </div>
+
+        <h3>Indexing Techniques</h3>
+        <div class="form-group">
+          <button id="btn-basic-index" class="btn btn--primary">Basic Indexing</button>
+          <button id="btn-slicing" class="btn btn--primary">Slicing</button>
+          <button id="btn-boolean-mask" class="btn btn--primary">Boolean Masking</button>
+          <button id="btn-reshape" class="btn btn--primary">Reshape</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-numpy-indexing" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Boolean indexing is powerful for filtering data based on conditions.</div>
+        <div class="callout callout--mistake">⚠️ Slicing creates views, not copies. Use .copy() to avoid modifying originals.</div>
+        <div class="callout callout--tip">✅ Use fancy indexing for non-contiguous element selection.</div>
+      </section>
+
+      <!-- =================== 15. NUMPY MATH ========================== -->
+      <section id="numpy-math" class="topic-section">
+        <h2>📐 NumPy Mathematical Operations</h2>
+        <p>NumPy provides comprehensive mathematical functions optimized for array operations.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Calculating statistical measures for sensor data: mean temperature, standard deviation, percentiles.
+        </div>
+
+        <h3>Statistical Functions</h3>
+        <div class="form-group">
+          <button id="btn-stats" class="btn btn--primary">Mean &amp; Std</button>
+          <button id="btn-aggregation" class="btn btn--primary">Aggregation</button>
+          <button id="btn-percentiles" class="btn btn--primary">Percentiles</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-numpy-math" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Use axis parameter to aggregate along specific dimensions.</div>
+        <div class="callout callout--mistake">⚠️ Not handling NaN values can produce incorrect results.</div>
+        <div class="callout callout--tip">✅ Use nanmean, nanstd for data with missing values.</div>
+      </section>
+
+      <!-- =================== 16. PANDAS INTRO ======================== -->
+      <section id="pandas-intro" class="topic-section">
+        <h2>🐼 Introduction to Pandas</h2>
+        <p>Pandas is the go-to library for data manipulation and analysis in Python. It provides DataFrame and Series objects for handling structured data efficiently.</p>
+
+        <div class="info-card">
+          <strong>Why Pandas:</strong>
+          <ul>
+            <li>Easy data loading from CSV, Excel, SQL, JSON</li>
+            <li>Powerful data cleaning and transformation</li>
+            <li>Built on NumPy for performance</li>
+            <li>Excellent for time series analysis</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Analyzing customer data: load CSV with 100k rows, filter by region, calculate average purchase value, handle missing data.
+        </div>
+
+        <h3>Creating DataFrames</h3>
+        <div class="form-group">
+          <button id="btn-create-df" class="btn btn--primary">Create DataFrame</button>
+          <button id="btn-df-info" class="btn btn--primary">Show Info</button>
+          <button id="btn-df-describe" class="btn btn--primary">Describe</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-pandas-intro" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 DataFrames are like Excel tables but much more powerful.</div>
+        <div class="callout callout--mistake">⚠️ Not checking data types after loading can cause errors.</div>
+        <div class="callout callout--tip">✅ Always use df.head(), df.info(), df.describe() first.</div>
+      </section>
+
+      <!-- =================== 17. PANDAS OPERATIONS =================== -->
+      <section id="pandas-operations" class="topic-section">
+        <h2>📊 DataFrame Operations</h2>
+        <p>Learn essential DataFrame operations: filtering, sorting, adding/removing columns, and data transformations.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Retail analysis: filter sales &gt; $1000, sort by date, create profit column, remove outliers.
+        </div>
+
+        <h3>Common Operations</h3>
+        <div class="form-group">
+          <button id="btn-filter-df" class="btn btn--primary">Filter Rows</button>
+          <button id="btn-sort-df" class="btn btn--primary">Sort Data</button>
+          <button id="btn-add-column" class="btn btn--primary">Add Column</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-pandas-operations" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Method chaining makes code cleaner: df.filter().sort().head()</div>
+        <div class="callout callout--mistake">⚠️ Forgetting inplace=True means changes aren't saved.</div>
+        <div class="callout callout--tip">✅ Use copy() when experimenting to preserve original data.</div>
+      </section>
+
+      <!-- =================== 18. PANDAS SELECTION ==================== -->
+      <section id="pandas-selection" class="topic-section">
+        <h2>🔍 Data Selection &amp; Filtering</h2>
+        <p>Master .loc, .iloc, boolean indexing, and query methods for precise data selection.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Select customers aged 25-35 from New York with purchases &gt; $500 using boolean masks.
+        </div>
+
+        <h3>Selection Methods</h3>
+        <div class="form-group">
+          <button id="btn-loc" class="btn btn--primary">.loc Selection</button>
+          <button id="btn-iloc" class="btn btn--primary">.iloc Selection</button>
+          <button id="btn-query" class="btn btn--primary">Query Method</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-pandas-selection" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 .loc uses labels, .iloc uses integer positions.</div>
+        <div class="callout callout--mistake">⚠️ Mixing .loc and .iloc causes confusion.</div>
+        <div class="callout callout--tip">✅ Use .query() for complex conditions (more readable).</div>
+      </section>
+
+      <!-- =================== 19. PANDAS GROUPBY ====================== -->
+      <section id="pandas-groupby" class="topic-section">
+        <h2>📈 GroupBy &amp; Aggregation</h2>
+        <p>GroupBy splits data into groups, applies functions, and combines results - the heart of data analysis.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Sales by region: group by 'Region', calculate total revenue, average order value, count of orders.
+        </div>
+
+        <h3>Aggregation Operations</h3>
+        <div class="form-group">
+          <button id="btn-groupby-mean" class="btn btn--primary">GroupBy Mean</button>
+          <button id="btn-groupby-agg" class="btn btn--primary">Multiple Aggs</button>
+          <button id="btn-pivot" class="btn btn--primary">Pivot Table</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-pandas-groupby" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 GroupBy follows: Split-Apply-Combine pattern.</div>
+        <div class="callout callout--mistake">⚠️ Not resetting index after groupby can cause issues.</div>
+        <div class="callout callout--tip">✅ Use .agg() with dictionary for different functions per column.</div>
+      </section>
+
+      <!-- =================== 20. MATPLOTLIB BASICS =================== -->
+      <section id="matplotlib-basics" class="topic-section">
+        <h2>📉 Matplotlib Basics</h2>
+        <p>Matplotlib is Python's foundational plotting library. Master line plots, scatter plots, bar charts, and histograms.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Stock price over time (line), sales by region (bar), height distribution (histogram), age vs income (scatter).
+        </div>
+
+        <h3>Basic Plot Types</h3>
+        <div class="form-group">
+          <button id="btn-line-plot" class="btn btn--primary">Line Plot</button>
+          <button id="btn-scatter-plot" class="btn btn--primary">Scatter Plot</button>
+          <button id="btn-bar-plot" class="btn btn--primary">Bar Chart</button>
+          <button id="btn-histogram" class="btn btn--primary">Histogram</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-matplotlib" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 plt.subplot() creates multiple plots in one figure.</div>
+        <div class="callout callout--mistake">⚠️ Forgetting plt.show() in scripts means no plot displayed.</div>
+        <div class="callout callout--tip">✅ Always add labels, title, and legend for clarity.</div>
+      </section>
+
+      <!-- =================== 21. SEABORN PLOTS ======================= -->
+      <section id="seaborn-plots" class="topic-section">
+        <h2>📊 Seaborn Statistical Plots</h2>
+        <p>Seaborn builds on Matplotlib with beautiful statistical visualizations: distplot, boxplot, heatmap, pairplot.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Medical study: distribution of cholesterol (distplot), outliers by age group (boxplot), feature correlations (heatmap).
+        </div>
+
+        <h3>Statistical Visualizations</h3>
+        <div class="form-group">
+          <button id="btn-distplot" class="btn btn--primary">Distribution</button>
+          <button id="btn-boxplot" class="btn btn--primary">Box Plot</button>
+          <button id="btn-heatmap" class="btn btn--primary">Heatmap</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-seaborn" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Seaborn automatically applies beautiful styling.</div>
+        <div class="callout callout--mistake">⚠️ Not normalizing data before heatmaps distorts colors.</div>
+        <div class="callout callout--tip">✅ Use seaborn for exploratory data analysis (EDA).</div>
+      </section>
+
+      <!-- =================== 22. ADVANCED VIZ ======================== -->
+      <section id="advanced-viz" class="topic-section">
+        <h2>🎨 Advanced Visualizations</h2>
+        <p>Master violin plots, pair plots, joint plots, and multi-panel figures for complex data analysis.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Customer segmentation: pairplot shows relationships between age, income, spending score across 3 clusters.
+        </div>
+
+        <h3>Complex Visualizations</h3>
+        <div class="form-group">
+          <button id="btn-violin" class="btn btn--primary">Violin Plot</button>
+          <button id="btn-pairplot" class="btn btn--primary">Pair Plot</button>
+          <button id="btn-subplots" class="btn btn--primary">Subplots</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-advanced-viz" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Violin plots combine box plot and KDE for richer insights.</div>
+        <div class="callout callout--mistake">⚠️ Too many subplots makes figures unreadable.</div>
+        <div class="callout callout--tip">✅ Use figure size appropriately: plt.figure(figsize=(12,8))</div>
+      </section>
+
+      <!-- =================== 23. CUSTOM PLOTS ======================== -->
+      <section id="custom-plots" class="topic-section">
+        <h2>🖌️ Customizing Plots</h2>
+        <p>Learn to customize colors, styles, annotations, and themes to create publication-quality visualizations.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Company report: branded colors, custom fonts, annotations for key events, professional styling.
+        </div>
+
+        <h3>Customization Techniques</h3>
+        <div class="form-group">
+          <button id="btn-colors" class="btn btn--primary">Custom Colors</button>
+          <button id="btn-annotations" class="btn btn--primary">Annotations</button>
+          <button id="btn-themes" class="btn btn--primary">Themes</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-custom-plots" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Consistent styling across plots creates professional reports.</div>
+        <div class="callout callout--mistake">⚠️ Too many colors or styles creates visual chaos.</div>
+        <div class="callout callout--tip">✅ Use plt.style.use('seaborn') for instant beautiful plots.</div>
+      </section>
+
+      <!-- =================== 24. PLOTLY BASICS ======================= -->
+      <section id="plotly-basics" class="topic-section">
+        <h2>📈 Plotly Basics</h2>
+        <p>Plotly creates interactive visualizations: zoom, pan, hover tooltips. Perfect for dashboards and web applications.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Sales dashboard: interactive line chart with hover showing exact values, zoom into specific months, download as PNG.
+        </div>
+
+        <h3>Interactive Charts</h3>
+        <div class="form-group">
+          <button id="btn-plotly-line" class="btn btn--primary">Interactive Line</button>
+          <button id="btn-plotly-scatter" class="btn btn--primary">3D Scatter</button>
+          <button id="btn-plotly-bar" class="btn btn--primary">Animated Bar</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-plotly-basics" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Plotly works seamlessly in Jupyter notebooks and web apps.</div>
+        <div class="callout callout--mistake">⚠️ Large datasets can make interactive plots slow.</div>
+        <div class="callout callout--tip">✅ Use plotly.express for quick, beautiful interactive plots.</div>
+      </section>
+
+      <!-- =================== 25. PLOTLY DASH ========================= -->
+      <section id="plotly-dash" class="topic-section">
+        <h2>🎛️ Dashboard with Plotly Dash</h2>
+        <p>Dash combines Plotly with Flask to create interactive web dashboards with callbacks and real-time updates.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> COVID-19 dashboard: dropdown selects country, slider filters date range, charts update automatically, multiple linked visualizations.
+        </div>
+
+        <h3>Dashboard Components</h3>
+        <div class="form-group">
+          <label for="dash-region" class="form-label">Select Region:</label>
+          <select id="dash-region" class="form-control">
+            <option value="north">North</option>
+            <option value="south">South</option>
+            <option value="east">East</option>
+            <option value="west">West</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <button id="btn-update-dash" class="btn btn--primary">Update Dashboard</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-plotly-dash" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Dash callbacks enable reactive programming for dashboards.</div>
+        <div class="callout callout--mistake">⚠️ Not managing state can cause infinite callback loops.</div>
+        <div class="callout callout--tip">✅ Start simple, add complexity gradually.</div>
+      </section>
+
+      <!-- =================== 26. GIT BASICS =========================== -->
+      <section id="git-basics" class="topic-section">
+        <h2>📁 Git Basics</h2>
+        <p>Git is version control for code. Track changes, collaborate with teams, and never lose work again.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Working on ML model: save checkpoints with git commit, experiment with new features, revert if it breaks, see full history.
+        </div>
+
+        <h3>Essential Git Commands</h3>
+        <div class="form-group">
+          <button id="btn-git-init" class="btn btn--primary">git init</button>
+          <button id="btn-git-add" class="btn btn--primary">git add</button>
+          <button id="btn-git-commit" class="btn btn--primary">git commit</button>
+          <button id="btn-git-status" class="btn btn--primary">git status</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-git-basics" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Commit often with clear messages: "Fix bug in data loader"</div>
+        <div class="callout callout--mistake">⚠️ Committing huge files (datasets, models) bloats repository.</div>
+        <div class="callout callout--tip">✅ Use .gitignore for data files, __pycache__, .env</div>
+      </section>
+
+      <!-- =================== 27. GITHUB REMOTE ======================= -->
+      <section id="github-remote" class="topic-section">
+        <h2>🌐 GitHub &amp; Remote Repositories</h2>
+        <p>GitHub hosts your code online. Push local changes, pull updates, clone repositories, collaborate globally.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Team project: push code to GitHub, teammate pulls changes, both work on different files, merge seamlessly.
+        </div>
+
+        <h3>Remote Operations</h3>
+        <div class="form-group">
+          <button id="btn-git-remote" class="btn btn--primary">git remote add</button>
+          <button id="btn-git-push" class="btn btn--primary">git push</button>
+          <button id="btn-git-pull" class="btn btn--primary">git pull</button>
+          <button id="btn-git-clone" class="btn btn--primary">git clone</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-github-remote" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Always pull before push to avoid conflicts.</div>
+        <div class="callout callout--mistake">⚠️ Pushing sensitive data (API keys, passwords) is dangerous.</div>
+        <div class="callout callout--tip">✅ Use SSH keys for secure authentication.</div>
+      </section>
+
+      <!-- =================== 28. GIT BRANCHING ======================= -->
+      <section id="git-branching" class="topic-section">
+        <h2>🌿 Branching &amp; Collaboration</h2>
+        <p>Branches allow parallel development. Work on features without breaking main code. Merge when ready.</p>
+
+        <div class="info-card">
+          <strong>Real Example:</strong> Main branch is production code. Create feature branch for new model, develop and test, merge via pull request after review.
+        </div>
+
+        <h3>Branch Operations</h3>
+        <div class="form-group">
+          <button id="btn-git-branch" class="btn btn--primary">git branch</button>
+          <button id="btn-git-checkout" class="btn btn--primary">git checkout</button>
+          <button id="btn-git-merge" class="btn btn--primary">git merge</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="canvas-git-branching" width="700" height="400"></canvas>
+        </div>
+
+        <div class="callout callout--insight">💡 Feature branches isolate work, main stays stable.</div>
+        <div class="callout callout--mistake">⚠️ Merge conflicts happen when same lines change.</div>
+        <div class="callout callout--tip">✅ Use pull requests for code review before merging.</div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
