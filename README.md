@@ -1,22 +1,51 @@
-# DataScience
+# 📊 DataScience Learning Hub
 
-A small collection of educational, static web projects for learning statistics and machine learning.
+Welcome to an interactive collection of educational web projects for learning statistics and machine learning! This repository contains two main interactive courses that you can access directly through your browser.
 
-## Contents
+## 🎯 Live Demos
 
-- `complete-statistics/` — An interactive, browser-based Statistics course (HTML/CSS/JS). It includes 40+ topics (descriptive statistics, probability, distributions, hypothesis testing, visualizations and interactive canvases).
-- `ml_complete-all-topics/` — A comprehensive Machine Learning guide with interactive demos and explanatory pages (static HTML/CSS).
+Visit our courses directly in your browser:
 
-There are no server-side components — each subproject is a static website you can open in a browser or serve with a simple static server.
+- [📈 Interactive Statistics Course](https://aashishgarg13.github.io/DataScience/complete-statistics/)
+- [🤖 Machine Learning Guide](https://aashishgarg13.github.io/DataScience/ml_complete-all-topics/)
 
-## Quick Start (run locally)
+## 📚 Contents
 
-Option A — open in your browser (double-click):
+### 📈 Complete Statistics Course
+- **Location:** `complete-statistics/`
+- **Features:**
+  - 40+ Interactive Topics
+  - Descriptive Statistics
+  - Probability & Distributions
+  - Hypothesis Testing
+  - Interactive Visualizations & Canvas
+  - Hands-on Learning Experience
 
-1. Navigate to the folder of the subproject you want to view (for example `complete-statistics/`).
-2. Open `index.html` in your browser.
+### 🤖 Machine Learning Guide
+- **Location:** `ml_complete-all-topics/`
+- **Features:**
+  - Comprehensive ML Topics
+  - Interactive Demonstrations
+  - Visual Learning Aids
+  - Step-by-Step Explanations
 
-Option B — serve locally (recommended to avoid CORS/cache issues):
+> 💡 Both projects are pure static websites - no server needed! Open directly in your browser or use a simple static server.
+
+## 🚀 Quick Start
+
+### Option A: View Online
+Visit our GitHub Pages hosted versions:
+1. [Statistics Course](https://aashishgarg13.github.io/DataScience/complete-statistics/)
+2. [Machine Learning Guide](https://aashishgarg13.github.io/DataScience/ml_complete-all-topics/)
+
+### Option B: Run Locally (Recommended for Development)
+
+#### Simple Browser Opening:
+1. Clone this repository
+2. Navigate to either project folder
+3. Double-click `index.html`
+
+#### Using Local Server (Recommended to avoid CORS issues):
 
 From the repository root, run one of the following in a terminal:
 
@@ -38,10 +67,23 @@ Then open http://localhost:8000/complete-statistics/ or http://localhost:8000/ml
 
 Because these are static sites you can also host them on Netlify, Vercel, or any static host.
 
-## Files of interest
+## 📁 Project Structure
 
-- `complete-statistics/index.html`, `complete-statistics/style.css`, `complete-statistics/app.js` — interactive statistics lessons and canvas visualizations
-- `ml_complete-all-topics/index.html` — long-form machine learning guide with examples and UI controls
+### Statistics Course
+```
+complete-statistics/
+├── index.html  # Main course interface
+├── style.css   # Course styling
+└── app.js      # Interactive visualizations
+```
+
+### Machine Learning Guide
+```
+ml_complete-all-topics/
+├── index.html  # Main guide interface
+├── style.css   # Guide styling
+└── app.js      # Interactive components
+```
 
 ## Notes about repository cleanup
 
