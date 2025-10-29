@@ -1663,6 +1663,215 @@ body {
     }
 }
 
+/* Worked Example Section Styles */
+.worked-example-section {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);
+    border-radius: 12px;
+    padding: 30px;
+    margin: 40px 0;
+    border-left: 5px solid #64ffda;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+.example-problem {
+    background: rgba(255,255,255,0.08);
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    border: 2px solid #64ffda;
+}
+
+.problem-statement {
+    font-size: 19px;
+    font-weight: 600;
+    color: #64ffda;
+    line-height: 1.6;
+}
+
+.solution-step {
+    display: flex;
+    gap: 20px;
+    margin: 25px 0;
+    padding: 25px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    border-left: 4px solid #4a90e2;
+    transition: all 0.3s ease;
+}
+
+.solution-step:hover {
+    background: rgba(0,0,0,0.4);
+    border-left-width: 6px;
+    transform: translateX(5px);
+}
+
+.step-number {
+    font-weight: 700;
+    color: #64ffda;
+    font-size: 20px;
+    min-width: 90px;
+    flex-shrink: 0;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-description {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 12px;
+}
+
+.step-work {
+    background: rgba(0,0,0,0.4);
+    padding: 18px;
+    border-radius: 8px;
+    margin: 12px 0;
+    font-family: 'Courier New', monospace;
+    border-left: 3px solid #ff6b6b;
+    overflow-x: auto;
+}
+
+.step-work code {
+    display: block;
+    color: #e1e1e1;
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 4px 0;
+}
+
+.step-explanation {
+    font-style: italic;
+    color: #a0a0a0;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.calculation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.calculation-table th,
+.calculation-table td {
+    padding: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+}
+
+.calculation-table th {
+    background: #4a90e2;
+    font-weight: 600;
+    color: #fff;
+}
+
+.calculation-table tbody tr:hover {
+    background: rgba(100, 255, 218, 0.1);
+}
+
+.final-answer {
+    background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+    padding: 25px;
+    border-radius: 10px;
+    margin-top: 30px;
+    text-align: center;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(81,207,102,0.3);
+}
+
+.answer-highlight {
+    font-weight: 700;
+    font-size: 24px;
+    color: white;
+    display: block;
+    margin-top: 12px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.verification {
+    background: rgba(100, 255, 218, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #51cf66;
+    margin-top: 20px;
+}
+
+.verification strong {
+    color: #51cf66;
+    font-size: 16px;
+}
+
+.verification p {
+    color: #d0d0d0;
+    margin-top: 10px;
+    line-height: 1.6;
+}
+
+.practice-problems {
+    background: rgba(74, 144, 226, 0.1);
+    padding: 25px;
+    border-radius: 10px;
+    margin-top: 30px;
+    border: 2px solid #4a90e2;
+}
+
+.practice-problems h4 {
+    color: #64ffda;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.practice-problems ol {
+    margin: 15px 0 15px 25px;
+    color: #d0d0d0;
+}
+
+.practice-problems li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.show-answers-btn {
+    background: #4a90e2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin: 10px 0;
+    transition: all 0.3s ease;
+}
+
+.show-answers-btn:hover {
+    background: #64ffda;
+    color: #1a1a2e;
+    transform: translateY(-2px);
+}
+
+.practice-answers {
+    background: rgba(0,0,0,0.3);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border-left: 4px solid #51cf66;
+}
+
+.practice-answers p strong {
+    color: #51cf66;
+}
+
+.practice-answers ol {
+    margin-left: 25px;
+    color: #e1e1e1;
+}
+
 /* Animations */
 @keyframes pulse {
     0%, 100% {
