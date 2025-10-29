@@ -810,6 +810,90 @@
                     <p>For skewed data (like income, house prices), <strong>always report the median</strong> along with the mean. If they're very different, your data has outliers or is skewed!</p>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Find the mean, median, and mode of: [12, 15, 12, 18, 20, 15, 12, 22]</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate the Mean (Average)</p>
+                                <div class="step-work">
+                                    <code>Sum = 12 + 15 + 12 + 18 + 20 + 15 + 12 + 22 = 126</code><br>
+                                    <code>Count (n) = 8 values</code><br>
+                                    <code>Mean = Sum ÷ n = 126 ÷ 8 = 15.75</code>
+                                </div>
+                                <p class="step-explanation">Add all values together, then divide by how many values there are</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find the Median (Middle Value)</p>
+                                <div class="step-work">
+                                    <code>Sorted data: [12, 12, 12, 15, 15, 18, 20, 22]</code><br>
+                                    <code>Even number of values (8), so average the middle two</code><br>
+                                    <code>Middle positions: 4th and 5th values = 15 and 15</code><br>
+                                    <code>Median = (15 + 15) ÷ 2 = 15</code>
+                                </div>
+                                <p class="step-explanation">For even-sized datasets, average the two middle values</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find the Mode (Most Frequent Value)</p>
+                                <div class="step-work">
+                                    <code>Frequency count:</code><br>
+                                    <code>  • 12 appears 3 times ← Most frequent!</code><br>
+                                    <code>  • 15 appears 2 times</code><br>
+                                    <code>  • 18, 20, 22 each appear 1 time</code><br>
+                                    <code>Mode = 12</code>
+                                </div>
+                                <p class="step-explanation">The mode is the value that appears most often</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>Final Answer:</strong>
+                            <span class="answer-highlight">Mean = 15.75, Median = 15, Mode = 12</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>✓ Check:</strong>
+                            <p>Mean (15.75) is slightly higher than median (15) because the outlier 22 pulls it up. The mode (12) is the lowest because it's the most common value at the lower end.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Find the mean of: [5, 10, 15, 20]</li>
+                            <li>What's the median of: [3, 1, 4, 1, 5]?</li>
+                            <li>Find the mode of: [2, 2, 3, 4, 4, 4, 5]</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>Mean = 12.5</li>
+                                <li>Median = 3 (sorted: [1,1,3,4,5])</li>
+                                <li>Mode = 4 (appears 3 times)</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -927,6 +1011,112 @@
                         <p><strong>Step 4:</strong> Sum = 17.5</p>
                         <p><strong>Step 5:</strong> Variance = 17.5/(6-1) = 3.5</p>
                         <p><strong>Step 6:</strong> Std Dev = √3.5 = 1.87</p>
+                    </div>
+                </div>
+
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Calculate the variance and standard deviation for the dataset: [4, 8, 6, 5, 3]</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate the Mean</p>
+                                <div class="step-work">
+                                    <code>Sum = 4 + 8 + 6 + 5 + 3 = 26</code><br>
+                                    <code>Mean (x̄) = 26 ÷ 5 = 5.2</code>
+                                </div>
+                                <p class="step-explanation">First, we need the mean to calculate deviations</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find Deviations from Mean</p>
+                                <div class="step-work">
+                                    <code>(4 - 5.2) = -1.2</code><br>
+                                    <code>(8 - 5.2) = 2.8</code><br>
+                                    <code>(6 - 5.2) = 0.8</code><br>
+                                    <code>(5 - 5.2) = -0.2</code><br>
+                                    <code>(3 - 5.2) = -2.2</code>
+                                </div>
+                                <p class="step-explanation">Subtract the mean from each value</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Square Each Deviation</p>
+                                <div class="step-work">
+                                    <code>(-1.2)² = 1.44</code><br>
+                                    <code>(2.8)² = 7.84</code><br>
+                                    <code>(0.8)² = 0.64</code><br>
+                                    <code>(-0.2)² = 0.04</code><br>
+                                    <code>(-2.2)² = 4.84</code>
+                                </div>
+                                <p class="step-explanation">Squaring eliminates negative signs and emphasizes larger deviations</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Variance (sample)</p>
+                                <div class="step-work">
+                                    <code>Sum of squared deviations = 1.44 + 7.84 + 0.64 + 0.04 + 4.84 = 14.8</code><br>
+                                    <code>Divide by (n-1) = 5-1 = 4</code><br>
+                                    <code>s² = 14.8 ÷ 4 = 3.7</code>
+                                </div>
+                                <p class="step-explanation">We use (n-1) for sample variance (Bessel's correction)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Standard Deviation</p>
+                                <div class="step-work">
+                                    <code>s = √s² = √3.7 ≈ 1.92</code>
+                                </div>
+                                <p class="step-explanation">Standard deviation is the square root of variance</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>Final Answer:</strong>
+                            <span class="answer-highlight">Variance = 3.7, Standard Deviation = 1.92</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>✓ Interpretation:</strong>
+                            <p>A standard deviation of 1.92 means most values fall within about 1.92 units of the mean (5.2). This indicates moderate spread in the data.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Calculate the standard deviation of: [2, 4, 6, 8]</li>
+                            <li>Find the variance of: [10, 12, 14, 16, 18]</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>SD ≈ 2.58</li>
+                                <li>Variance = 10</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
 
@@ -1057,6 +1247,104 @@
                     </div>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Calculate and interpret skewness for dataset: [2, 3, 4, 5, 15]</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate the Mean</p>
+                                <div class="step-work">
+                                    <code>Sum = 2 + 3 + 4 + 5 + 15 = 29</code><br>
+                                    <code>n = 5</code><br>
+                                    <code>Mean (x̄) = 29/5 = 5.8</code>
+                                </div>
+                                <p class="step-explanation">First, find the average of all values</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Standard Deviation</p>
+                                <div class="step-work">
+                                    <code>Deviations from mean: (2-5.8), (3-5.8), (4-5.8), (5-5.8), (15-5.8)</code><br>
+                                    <code>= -3.8, -2.8, -1.8, -0.8, 9.2</code><br>
+                                    <code>Squared: 14.44, 7.84, 3.24, 0.64, 84.64</code><br>
+                                    <code>Variance (sample) = (14.44+7.84+3.24+0.64+84.64)/4 = 110.8/4 = 27.7</code><br>
+                                    <code>SD = √27.7 = 5.26</code>
+                                </div>
+                                <p class="step-explanation">We need standard deviation for the skewness formula</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Skewness</p>
+                                <div class="step-work">
+                                    <code>Cubed deviations: (-3.8)³, (-2.8)³, (-1.8)³, (-0.8)³, (9.2)³</code><br>
+                                    <code>= -54.87, -21.95, -5.83, -0.51, 778.69</code><br>
+                                    <code>Sum = 695.53</code><br>
+                                    <code>Skewness = (695.53/5) / (5.26)³ = 139.11 / 145.77 = 0.95</code>
+                                </div>
+                                <p class="step-explanation">Skewness formula uses cubed deviations divided by cubed standard deviation</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Interpret the Result</p>
+                                <div class="step-work">
+                                    <code>Skewness = +0.95 (positive)</code><br>
+                                    <code>Distribution is right-skewed</code><br>
+                                    <code>The value 15 pulls the tail to the right</code><br>
+                                    <code>Most data clustered on left, long tail on right</code>
+                                </div>
+                                <p class="step-explanation">Positive skewness means tail extends to the right</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">Skewness = +0.95 (positively skewed, right tail)</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Check:</strong>
+                            <p>The positive skewness confirms that the outlier (15) creates a long right tail, pulling the mean (5.8) above the median (4).</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Find skewness of [1, 1, 2, 3, 3]</li>
+                            <li>Data with left tail - positive or negative skew?</li>
+                            <li>If mean &lt; median, what type of skew?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>Skewness ≈ 0 (symmetric distribution)</li>
+                                <li>Negative skew (left tail)</li>
+                                <li>Negative skew (left-skewed)</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -1098,6 +1386,144 @@
                         <li><strong>Zero:</strong> No linear relationship</li>
                         <li><strong>Problem:</strong> Scale-dependent, hard to interpret magnitude</li>
                     </ul>
+                </div>
+
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Find covariance between X=[2, 4, 6, 8] and Y=[1, 3, 5, 7]</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate the Means</p>
+                                <div class="step-work">
+                                    <code>x̄ = (2 + 4 + 6 + 8) / 4 = 20 / 4 = 5</code><br>
+                                    <code>ȳ = (1 + 3 + 5 + 7) / 4 = 16 / 4 = 4</code>
+                                </div>
+                                <p class="step-explanation">Find the average of each variable</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Create Deviation Table</p>
+                                <div class="step-work">
+                                    <table class="calculation-table">
+                                        <thead>
+                                            <tr>
+                                                <th>x</th>
+                                                <th>y</th>
+                                                <th>(x-x̄)</th>
+                                                <th>(y-ȳ)</th>
+                                                <th>(x-x̄)(y-ȳ)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>1</td>
+                                                <td>-3</td>
+                                                <td>-3</td>
+                                                <td>9</td>
+                                            </tr>
+                                            <tr>
+                                                <td>4</td>
+                                                <td>3</td>
+                                                <td>-1</td>
+                                                <td>-1</td>
+                                                <td>1</td>
+                                            </tr>
+                                            <tr>
+                                                <td>6</td>
+                                                <td>5</td>
+                                                <td>1</td>
+                                                <td>1</td>
+                                                <td>1</td>
+                                            </tr>
+                                            <tr>
+                                                <td>8</td>
+                                                <td>7</td>
+                                                <td>3</td>
+                                                <td>3</td>
+                                                <td>9</td>
+                                            </tr>
+                                            <tr style="font-weight: bold; background: rgba(100, 255, 218, 0.1);">
+                                                <td colspan="4">Sum</td>
+                                                <td>20</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="step-explanation">Calculate deviations from means and their products</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Sample Covariance</p>
+                                <div class="step-work">
+                                    <code>Cov(X,Y) = Σ(x-x̄)(y-ȳ) / (n-1)</code><br>
+                                    <code>Cov(X,Y) = 20 / (4-1)</code><br>
+                                    <code>Cov(X,Y) = 20 / 3</code><br>
+                                    <code>Cov(X,Y) = 6.67</code>
+                                </div>
+                                <p class="step-explanation">Use n-1 for sample covariance (Bessel's correction)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Interpret the Result</p>
+                                <div class="step-work">
+                                    <code>Cov(X,Y) = 6.67 &gt; 0</code><br>
+                                    <code>Positive covariance indicates:</code><br>
+                                    <code>• X and Y tend to increase together</code><br>
+                                    <code>• When X is above its mean, Y tends to be above its mean</code><br>
+                                    <code>• When X is below its mean, Y tends to be below its mean</code>
+                                </div>
+                                <p class="step-explanation">Positive covariance shows positive relationship</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>Final Answer:</strong>
+                            <span class="answer-highlight">Cov(X,Y) = 6.67 (positive relationship)</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>✓ Verification:</strong>
+                            <p>The positive covariance confirms that X and Y have a positive linear relationship. As X increases by 2, Y also increases by 2, showing consistent movement together.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Calculate Cov(X,Y) for X=[1, 2, 3] and Y=[2, 4, 6]</li>
+                            <li>If Cov(X,Y) = -5, what does this tell you about the relationship?</li>
+                            <li>Find Cov(X,Y) for X=[5, 5, 5] and Y=[1, 2, 3]. What do you notice?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>Cov(X,Y) = 2 (perfect positive relationship)</li>
+                                <li>Negative relationship - as X increases, Y tends to decrease</li>
+                                <li>Cov(X,Y) = 0 (X is constant, no variation, so no covariance)</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="summary-card">
@@ -1154,6 +1580,121 @@
                     <p>Study hours vs exam scores typically show r = 0.7 (strong positive). More study hours correlate with higher scores.</p>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Calculate correlation coefficient for X=[2, 4, 6, 8] and Y=[1, 3, 5, 7]</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Use Covariance from Topic 11</p>
+                                <div class="step-work">
+                                    <code>From previous calculation:</code><br>
+                                    <code>Cov(X,Y) = 6.67</code><br>
+                                    <code>x̄ = 5, ȳ = 4</code>
+                                </div>
+                                <p class="step-explanation">We already calculated this in Topic 11</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Standard Deviation of X</p>
+                                <div class="step-work">
+                                    <code>Deviations from mean: -3, -1, 1, 3</code><br>
+                                    <code>Squared deviations: 9, 1, 1, 9</code><br>
+                                    <code>Sum of squared deviations = 20</code><br>
+                                    <code>Variance_x = 20 / (4-1) = 20/3 = 6.67</code><br>
+                                    <code>SD_x = √6.67 ≈ 2.58</code>
+                                </div>
+                                <p class="step-explanation">Standard deviation measures spread of X values</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Standard Deviation of Y</p>
+                                <div class="step-work">
+                                    <code>Deviations from mean: -3, -1, 1, 3</code><br>
+                                    <code>Squared deviations: 9, 1, 1, 9</code><br>
+                                    <code>Sum of squared deviations = 20</code><br>
+                                    <code>Variance_y = 20 / (4-1) = 20/3 = 6.67</code><br>
+                                    <code>SD_y = √6.67 ≈ 2.58</code>
+                                </div>
+                                <p class="step-explanation">Standard deviation measures spread of Y values</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Correlation Coefficient</p>
+                                <div class="step-work">
+                                    <code>r = Cov(X,Y) / (SD_x × SD_y)</code><br>
+                                    <code>r = 6.67 / (2.58 × 2.58)</code><br>
+                                    <code>r = 6.67 / 6.66</code><br>
+                                    <code>r ≈ 1.00</code>
+                                </div>
+                                <p class="step-explanation">Correlation standardizes covariance by dividing by both standard deviations</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Interpret the Result</p>
+                                <div class="step-work">
+                                    <code>r = 1.00 (perfect positive correlation)</code><br>
+                                    <code>This means:</code><br>
+                                    <code>• X and Y have a perfect linear relationship</code><br>
+                                    <code>• As X increases by 2, Y increases by 2 (exactly)</code><br>
+                                    <code>• All points lie exactly on a straight line</code><br>
+                                    <code>• The relationship is: Y = 0.5X (or Y = -1 + 0.5X when adjusted)</code>
+                                </div>
+                                <p class="step-explanation">r = 1 indicates perfect positive linear correlation</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>Final Answer:</strong>
+                            <span class="answer-highlight">r = 1.00 (perfect positive linear correlation)</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>✓ Verification:</strong>
+                            <p>Check: If we plot these points, they form a perfect line. When X=2, Y=1; X=4, Y=3; X=6, Y=5; X=8, Y=7. The relationship is Y = (X/2) - 1 + (X/2) = 0.5X, which is indeed perfectly linear! ✓</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>If Cov(X,Y) = 10, SD_x = 2, SD_y = 5, find r</li>
+                            <li>What does r = -0.8 indicate about the relationship?</li>
+                            <li>Can correlation be greater than 1? Why or why not?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>r = 10/(2×5) = 10/10 = 1.0</li>
+                                <li>Strong negative relationship - as X increases, Y tends to decrease</li>
+                                <li>No! r is always between -1 and +1 (bounded by Cauchy-Schwarz inequality)</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -1195,6 +1736,119 @@
                     <div class="callout-header">📊 FAMOUS EXAMPLE</div>
                     <p><strong>Ice cream sales correlate with drowning deaths.</strong></p>
                     <p>Does ice cream cause drowning? NO! The third variable is summer weather—more people swim in summer (more drownings) and eat ice cream in summer.</p>
+                </div>
+
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Study finds r = -0.75 between hours of TV watched and exam scores. Interpret this result and discuss causation.</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Analyze the Sign</p>
+                                <div class="step-work">
+                                    <code>Negative correlation (r &lt; 0)</code><br>
+                                    <code>As one variable increases, the other decreases</code><br>
+                                    <code>More TV → Lower scores (or vice versa)</code>
+                                </div>
+                                <p class="step-explanation">The negative sign tells us the direction of the relationship</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Analyze the Strength</p>
+                                <div class="step-work">
+                                    <code>|r| = |-0.75| = 0.75</code><br>
+                                    <code>Interpretation scale:</code><br>
+                                    <code>  • 0.0-0.3 = Weak</code><br>
+                                    <code>  • 0.3-0.7 = Moderate</code><br>
+                                    <code>  • 0.7-1.0 = Strong</code><br>
+                                    <code>0.75 falls in "Strong" category</code>
+                                </div>
+                                <p class="step-explanation">The absolute value determines relationship strength</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">State the Relationship</p>
+                                <div class="step-work">
+                                    <code>Strong negative correlation</code><br>
+                                    <code>Students who watch more TV tend to have lower exam scores</code><br>
+                                    <code>Relationship is fairly consistent but not perfect</code>
+                                </div>
+                                <p class="step-explanation">Combine sign and strength for complete interpretation</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Address Causation</p>
+                                <div class="step-work">
+                                    <code>Correlation ≠ Causation!</code><br>
+                                    <code>Possible explanations:</code><br>
+                                    <code>  a) TV causes lower scores (less study time)</code><br>
+                                    <code>  b) Lower-performing students watch more TV (compensating)</code><br>
+                                    <code>  c) Third variable: stress causes both TV watching and poor performance</code><br>
+                                    <code>Cannot determine causation from correlation alone</code>
+                                </div>
+                                <p class="step-explanation">Correlation never proves causation - always consider alternatives</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Predict Using Correlation</p>
+                                <div class="step-work">
+                                    <code>If we know TV hours, we can predict exam score</code><br>
+                                    <code>But prediction ≠ causation</code><br>
+                                    <code>r² = 0.75² = 0.56 = 56% of variance explained</code>
+                                </div>
+                                <p class="step-explanation">r² shows percentage of variance in one variable explained by the other</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">Strong negative correlation (r = -0.75), but does NOT prove TV causes lower scores</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Check:</strong>
+                            <p>While the correlation is strong, we must resist concluding causation. The relationship could be coincidental, reverse-causal, or due to confounding variables.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>r = +0.90 between study hours and grades. Interpret.</li>
+                            <li>Can r = 1.5? Why or why not?</li>
+                            <li>If r = 0, does that mean no relationship at all?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>Very strong positive correlation - more study predicts higher grades</li>
+                                <li>No! r is always between -1 and +1</li>
+                                <li>No linear relationship, but could have non-linear relationship</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="summary-card">
@@ -1282,6 +1936,104 @@
                     </ul>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">In a class of 40 students: 25 like Math, 20 like Science, 10 like both. Find: a) P(Math OR Science), b) P(only Math), c) P(neither)</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Set Up the Information</p>
+                                <div class="step-work">
+                                    <code>Total students: n = 40</code><br>
+                                    <code>P(Math) = 25/40 = 0.625</code><br>
+                                    <code>P(Science) = 20/40 = 0.5</code><br>
+                                    <code>P(Math ∩ Science) = 10/40 = 0.25</code>
+                                </div>
+                                <p class="step-explanation">Convert all counts to probabilities</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find P(Math ∪ Science) using Addition Rule</p>
+                                <div class="step-work">
+                                    <code>Formula: P(A ∪ B) = P(A) + P(B) - P(A ∩ B)</code><br>
+                                    <code>P(Math ∪ Science) = 0.625 + 0.5 - 0.25</code><br>
+                                    <code>= 1.125 - 0.25</code><br>
+                                    <code>= 0.875</code>
+                                </div>
+                                <p class="step-explanation">We subtract the intersection to avoid double-counting</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find P(only Math)</p>
+                                <div class="step-work">
+                                    <code>Only Math = Math AND NOT Science</code><br>
+                                    <code>Students in only Math = 25 - 10 = 15</code><br>
+                                    <code>P(only Math) = 15/40 = 0.375</code>
+                                </div>
+                                <p class="step-explanation">Subtract those who like both from total Math students</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find P(neither)</p>
+                                <div class="step-work">
+                                    <code>Neither = NOT (Math OR Science)</code><br>
+                                    <code>P(neither) = 1 - P(Math ∪ Science)</code><br>
+                                    <code>= 1 - 0.875</code><br>
+                                    <code>= 0.125</code><br>
+                                    <code>Or: 40 - 35 = 5 students, so 5/40 = 0.125 ✓</code>
+                                </div>
+                                <p class="step-explanation">Use complement rule or count directly</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">a) P(Math OR Science) = 0.875 (87.5%)<br>b) P(only Math) = 0.375 (37.5%)<br>c) P(neither) = 0.125 (12.5%)</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Verification:</strong>
+                            <p>Check: 0.375 (only Math) + 0.25 (both) + 0.25 (only Science) + 0.125 (neither) = 1.0 ✓</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>P(A)=0.6, P(B)=0.5, P(A∩B)=0.3. Find P(A∪B)</li>
+                            <li>If P(A∪B)=0.8, P(A)=0.5, P(B)=0.4, find P(A∩B)</li>
+                            <li>100 students: 60 like pizza, 40 like burgers, 20 like both. How many like neither?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>P(A∪B) = 0.6 + 0.5 - 0.3 = 0.8</li>
+                                <li>P(A∩B) = 0.5 + 0.4 - 0.8 = 0.1</li>
+                                <li>60 + 40 - 20 = 80 like at least one, so 20 like neither</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -1365,6 +2117,112 @@
                     </ul>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Two dice are rolled. Let A = "first die shows 6" and B = "sum is 7". Are A and B independent?</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find P(A)</p>
+                                <div class="step-work">
+                                    <code>First die shows 6: one outcome out of 6</code><br>
+                                    <code>P(A) = 1/6 ≈ 0.167</code>
+                                </div>
+                                <p class="step-explanation">Probability the first die is 6</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find P(B)</p>
+                                <div class="step-work">
+                                    <code>Sum equals 7: (1,6), (2,5), (3,4), (4,3), (5,2), (6,1)</code><br>
+                                    <code>6 favorable outcomes out of 36 total</code><br>
+                                    <code>P(B) = 6/36 = 1/6 ≈ 0.167</code>
+                                </div>
+                                <p class="step-explanation">Count all ways to get sum of 7</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find P(A ∩ B)</p>
+                                <div class="step-work">
+                                    <code>First die is 6 AND sum is 7</code><br>
+                                    <code>Only possibility: (6,1)</code><br>
+                                    <code>P(A ∩ B) = 1/36 ≈ 0.028</code>
+                                </div>
+                                <p class="step-explanation">Find where both events occur simultaneously</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Test Independence</p>
+                                <div class="step-work">
+                                    <code>If independent: P(A ∩ B) = P(A) × P(B)</code><br>
+                                    <code>P(A) × P(B) = (1/6) × (1/6) = 1/36</code><br>
+                                    <code>P(A ∩ B) = 1/36</code><br>
+                                    <code>1/36 = 1/36 ✓ EQUAL!</code>
+                                </div>
+                                <p class="step-explanation">Compare the two probabilities to test independence</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Conclusion</p>
+                                <div class="step-work">
+                                    <code>Events A and B ARE independent</code><br>
+                                    <code>Knowing first die is 6 doesn't change probability of sum being 7</code>
+                                </div>
+                                <p class="step-explanation">When the product rule holds, events are independent</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">YES, events are independent. P(A∩B) = P(A)×P(B) = 1/36</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Check:</strong>
+                            <p>We can also verify: P(B|A) = P(A∩B)/P(A) = (1/36)/(1/6) = 1/6 = P(B). Since P(B|A) = P(B), the events are independent.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>P(A)=0.3, P(B)=0.4, P(A∩B)=0.12. Independent?</li>
+                            <li>Coin flip: P(Heads) and P(Tails). Independent?</li>
+                            <li>Drawing two cards without replacement. Independent?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>YES! 0.3 × 0.4 = 0.12 = P(A∩B)</li>
+                                <li>NO - they're mutually exclusive (can't both happen)</li>
+                                <li>NO - first draw affects second draw probabilities</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -1415,6 +2273,88 @@
                         <p>P(Positive) = 0.01×0.95 + 0.99×0.05 = 0.059</p>
                         <p>P(Disease|Positive) = (0.95×0.01)/0.059 = 0.161</p>
                         <p><strong>Only 16.1% chance you have the disease!</strong></p>
+                    </div>
+                </div>
+
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">A disease affects 1% of the population. A test is 99% accurate (detects 99% of sick people and correctly identifies 99% of healthy people). You test positive. What's the probability you actually have the disease?</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Define the Events and Given Information</p>
+                                <div class="step-work">
+                                    <code>Let A = has disease</code><br>
+                                    <code>Let B = tests positive</code><br>
+                                    <code>P(A) = 0.01 (1% of population has disease)</code><br>
+                                    <code>P(B|A) = 0.99 (99% true positive rate)</code><br>
+                                    <code>P(B|A') = 0.01 (1% false positive rate)</code>
+                                </div>
+                                <p class="step-explanation">Set up all known probabilities before applying Bayes' Theorem</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate P(B) using Total Probability</p>
+                                <div class="step-work">
+                                    <code>P(B) = P(B|A) × P(A) + P(B|A') × P(A')</code><br>
+                                    <code>P(B) = (0.99 × 0.01) + (0.01 × 0.99)</code><br>
+                                    <code>P(B) = 0.0099 + 0.0099 = 0.0198</code>
+                                </div>
+                                <p class="step-explanation">Find the overall probability of testing positive</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Apply Bayes' Theorem</p>
+                                <div class="step-work">
+                                    <code>P(A|B) = [P(B|A) × P(A)] / P(B)</code><br>
+                                    <code>P(A|B) = (0.99 × 0.01) / 0.0198</code><br>
+                                    <code>P(A|B) = 0.0099 / 0.0198</code><br>
+                                    <code>P(A|B) = 0.5 = 50%</code>
+                                </div>
+                                <p class="step-explanation">This is the posterior probability - what we want to find!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>Final Answer:</strong>
+                            <span class="answer-highlight">Only 50% chance you have the disease despite testing positive!</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>✓ Why So Low?</strong>
+                            <p>This counter-intuitive result occurs because the disease is so rare (1%). Even with a 99% accurate test, there are many more false positives from the healthy 99% than true positives from the sick 1%. Base rates matter!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>What if the disease affects 10% of the population instead? Recalculate P(A|B)</li>
+                            <li>If the test was 95% accurate instead of 99%, what would P(A|B) be?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>P(A|B) ≈ 91.7% (much higher!)</li>
+                                <li>P(A|B) ≈ 16.1% (much lower)</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
 
@@ -1495,6 +2435,103 @@
                     </ul>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Continuous random variable X has uniform distribution on interval [0, 10]. a) Find the PDF f(x), b) Calculate P(3 ≤ X ≤ 7)</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Understand Uniform Distribution</p>
+                                <div class="step-work">
+                                    <code>X is equally likely anywhere between 0 and 10</code><br>
+                                    <code>For uniform on [a, b], PDF is constant</code><br>
+                                    <code>Total area under curve must equal 1</code>
+                                </div>
+                                <p class="step-explanation">Uniform means constant probability density across the interval</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find PDF Height</p>
+                                <div class="step-work">
+                                    <code>Interval length = b - a = 10 - 0 = 10</code><br>
+                                    <code>For area = 1: height × width = 1</code><br>
+                                    <code>height × 10 = 1</code><br>
+                                    <code>height = 1/10 = 0.1</code><br>
+                                    <code>Therefore: f(x) = 0.1 for 0 ≤ x ≤ 10, and 0 otherwise</code>
+                                </div>
+                                <p class="step-explanation">The constant height must give total area of 1</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate P(3 ≤ X ≤ 7)</p>
+                                <div class="step-work">
+                                    <code>For continuous uniform: P(a ≤ X ≤ b) = (b-a) × height</code><br>
+                                    <code>P(3 ≤ X ≤ 7) = (7-3) × 0.1</code><br>
+                                    <code>= 4 × 0.1</code><br>
+                                    <code>= 0.4</code>
+                                </div>
+                                <p class="step-explanation">Probability is the area of the rectangle</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Visualize (Area Under Curve)</p>
+                                <div class="step-work">
+                                    <code>Rectangle: width = 4, height = 0.1</code><br>
+                                    <code>Area = 4 × 0.1 = 0.4</code><br>
+                                    <code>This represents probability</code>
+                                </div>
+                                <p class="step-explanation">The geometric area equals the probability</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">a) f(x) = 0.1 for x ∈ [0,10]<br>b) P(3 ≤ X ≤ 7) = 0.4 (40%)</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Verification:</strong>
+                            <p>P(0 ≤ X ≤ 10) = 10 × 0.1 = 1.0 ✓ (total probability = 1)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Uniform on [5,15]. Find PDF.</li>
+                            <li>For above, find P(8 ≤ X ≤ 12)</li>
+                            <li>Why is P(X = 7) = 0 for continuous distributions?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>f(x) = 1/10 = 0.1 for x ∈ [5,15]</li>
+                                <li>P(8 ≤ X ≤ 12) = 4 × 0.1 = 0.4</li>
+                                <li>A single point has no width, so area = 0</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -1530,6 +2567,115 @@
                     </ul>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">For the uniform distribution from Topic 20 (X ~ Uniform[0,10]), find: a) F(5) = P(X ≤ 5), b) F(12), c) P(2 &lt; X ≤ 8)</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Recall PDF</p>
+                                <div class="step-work">
+                                    <code>f(x) = 0.1 for 0 ≤ x ≤ 10</code><br>
+                                    <code>CDF is cumulative (area from left up to x)</code>
+                                </div>
+                                <p class="step-explanation">CDF accumulates probability from the left</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find F(5)</p>
+                                <div class="step-work">
+                                    <code>F(5) = P(X ≤ 5)</code><br>
+                                    <code>Area from 0 to 5: width = 5, height = 0.1</code><br>
+                                    <code>F(5) = 5 × 0.1 = 0.5</code>
+                                </div>
+                                <p class="step-explanation">Half of the distribution is below x = 5</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find F(12)</p>
+                                <div class="step-work">
+                                    <code>F(12) = P(X ≤ 12)</code><br>
+                                    <code>But X can't exceed 10</code><br>
+                                    <code>All probability is accounted for by x = 10</code><br>
+                                    <code>F(12) = 1.0 (certainty)</code>
+                                </div>
+                                <p class="step-explanation">CDF plateaus at 1 beyond the support of the distribution</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find P(2 &lt; X ≤ 8)</p>
+                                <div class="step-work">
+                                    <code>Using CDF: P(a &lt; X ≤ b) = F(b) - F(a)</code><br>
+                                    <code>F(8) = 8 × 0.1 = 0.8</code><br>
+                                    <code>F(2) = 2 × 0.1 = 0.2</code><br>
+                                    <code>P(2 &lt; X ≤ 8) = 0.8 - 0.2 = 0.6</code>
+                                </div>
+                                <p class="step-explanation">Subtract lower CDF from upper CDF</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">General CDF Formula</p>
+                                <div class="step-work">
+                                    <code>For uniform [0, 10]:</code><br>
+                                    <code>  • F(x) = 0 if x &lt; 0</code><br>
+                                    <code>  • F(x) = x/10 if 0 ≤ x ≤ 10</code><br>
+                                    <code>  • F(x) = 1 if x &gt; 10</code>
+                                </div>
+                                <p class="step-explanation">The complete CDF function has three pieces</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">a) F(5) = 0.5<br>b) F(12) = 1.0<br>c) P(2 &lt; X ≤ 8) = 0.6</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Check:</strong>
+                            <p>F(0) = 0 (no probability below 0), F(10) = 1 (all probability by 10), F is non-decreasing ✓</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>For uniform [5,15], find F(10)</li>
+                            <li>What is P(X &gt; 7) using the CDF?</li>
+                            <li>If F(x) = 0.75, what does this mean?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>F(10) = (10-5)/10 = 0.5</li>
+                                <li>P(X &gt; 7) = 1 - F(7) = 1 - 0.7 = 0.3</li>
+                                <li>75% of the distribution is at or below x</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -1562,6 +2708,113 @@
                         <div class="formula-main">P(X = 1) = p</div>
                         <div class="formula-main">P(X = 0) = 1 - p = q</div>
                         <p>Mean = p, Variance = p(1-p)</p>
+                    </div>
+                </div>
+
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Flip a fair coin once. Let X = 1 if Heads, X = 0 if Tails. a) Find P(X=1) and P(X=0), b) Calculate E(X) and Var(X)</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Identify Bernoulli Trial</p>
+                                <div class="step-work">
+                                    <code>Single trial with two outcomes (Success/Failure)</code><br>
+                                    <code>Success = Heads, p = 0.5</code><br>
+                                    <code>Failure = Tails, 1-p = 0.5</code>
+                                </div>
+                                <p class="step-explanation">This is a classic Bernoulli trial</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find Probabilities</p>
+                                <div class="step-work">
+                                    <code>P(X = 1) = p = 0.5 (probability of heads)</code><br>
+                                    <code>P(X = 0) = 1-p = 0.5 (probability of tails)</code><br>
+                                    <code>Check: 0.5 + 0.5 = 1.0 ✓</code>
+                                </div>
+                                <p class="step-explanation">Probabilities must sum to 1</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Expected Value</p>
+                                <div class="step-work">
+                                    <code>Formula: E(X) = p</code><br>
+                                    <code>E(X) = 0.5</code><br>
+                                    <code>Or: E(X) = 0×P(X=0) + 1×P(X=1)</code><br>
+                                    <code>= 0×0.5 + 1×0.5 = 0.5 ✓</code>
+                                </div>
+                                <p class="step-explanation">Expected value is the probability of success</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Variance</p>
+                                <div class="step-work">
+                                    <code>Formula: Var(X) = p(1-p)</code><br>
+                                    <code>Var(X) = 0.5 × 0.5 = 0.25</code><br>
+                                    <code>Standard deviation: σ = √0.25 = 0.5</code>
+                                </div>
+                                <p class="step-explanation">Variance measures spread of outcomes</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Interpret</p>
+                                <div class="step-work">
+                                    <code>On average, we get 0.5 heads per flip</code><br>
+                                    <code>Variance measures spread of 0 and 1 outcomes</code>
+                                </div>
+                                <p class="step-explanation">Expected value represents long-run average</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">a) P(X=1) = 0.5, P(X=0) = 0.5<br>b) E(X) = 0.5, Var(X) = 0.25</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Check:</strong>
+                            <p>For fair coin, p = 0.5 makes sense. Over many flips, we expect half heads (E(X) = 0.5).</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Biased coin: P(Heads) = 0.7. Find E(X) and Var(X)</li>
+                            <li>Free throw: 80% success rate. Model as Bernoulli</li>
+                            <li>When is Var(X) maximized for Bernoulli?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>E(X) = 0.7, Var(X) = 0.7(0.3) = 0.21</li>
+                                <li>p = 0.8, E(X) = 0.8, Var(X) = 0.16</li>
+                                <li>p = 0.5 (fair coin has maximum variance)</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
 
@@ -1660,6 +2913,104 @@
                     <p>99.7% have IQ between 55-145</p>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">IQ scores follow Normal distribution with μ = 100, σ = 15. Find: a) P(IQ ≤ 115), b) P(85 ≤ IQ ≤ 115), c) IQ score at 95th percentile</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Understand Normal Distribution</p>
+                                <div class="step-work">
+                                    <code>Bell-shaped, symmetric around mean</code><br>
+                                    <code>μ = 100 (center)</code><br>
+                                    <code>σ = 15 (spread)</code>
+                                </div>
+                                <p class="step-explanation">Parameters define the shape and location of the curve</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find P(IQ ≤ 115) using z-score</p>
+                                <div class="step-work">
+                                    <code>z = (x - μ)/σ = (115 - 100)/15 = 15/15 = 1</code><br>
+                                    <code>P(Z ≤ 1) = 0.8413 (from z-table)</code><br>
+                                    <code>About 84.13% have IQ ≤ 115</code>
+                                </div>
+                                <p class="step-explanation">Standardize to z-score, then use standard normal table</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find P(85 ≤ IQ ≤ 115)</p>
+                                <div class="step-work">
+                                    <code>Lower bound: z₁ = (85-100)/15 = -15/15 = -1</code><br>
+                                    <code>Upper bound: z₂ = (115-100)/15 = 1</code><br>
+                                    <code>This is μ ± 1σ (68-95-99.7 rule)</code><br>
+                                    <code>P(-1 ≤ Z ≤ 1) = 0.68 (approximately 68%)</code><br>
+                                    <code>Exact: P(Z≤1) - P(Z≤-1) = 0.8413 - 0.1587 = 0.6826</code>
+                                </div>
+                                <p class="step-explanation">One standard deviation on each side covers 68% of data</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find 95th Percentile</p>
+                                <div class="step-work">
+                                    <code>P(IQ ≤ x) = 0.95</code><br>
+                                    <code>From z-table: z = 1.645 for 95th percentile</code><br>
+                                    <code>x = μ + zσ = 100 + 1.645×15</code><br>
+                                    <code>= 100 + 24.675 = 124.675</code><br>
+                                    <code>IQ ≈ 125</code>
+                                </div>
+                                <p class="step-explanation">Convert z-score back to original scale using inverse formula</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">a) P(IQ ≤ 115) = 0.8413 (84.13%)<br>b) P(85 ≤ IQ ≤ 115) = 0.6826 (68.26%)<br>c) 95th percentile = IQ of 125</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Verification:</strong>
+                            <p>Using 68-95-99.7 rule: μ±1σ contains 68% ✓, μ±2σ contains 95%, μ±3σ contains 99.7%. Our answer matches the empirical rule!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Find P(IQ &gt; 130) using same distribution</li>
+                            <li>What IQ scores contain the middle 95% of people?</li>
+                            <li>If z = -2, what percentile is this?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>z = 2, P(Z &gt; 2) = 1 - 0.9772 = 0.0228 (2.28%)</li>
+                                <li>70 to 130 (μ ± 2σ)</li>
+                                <li>2.5th percentile (2.5% below)</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -1746,6 +3097,98 @@
                     </ul>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Explain the difference between α = 0.05 and α = 0.01. Which is more strict? Find critical values for both in a two-tailed test.</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Understand α = 0.05</p>
+                                <div class="step-work">
+                                    <code>α = 0.05 means 5% significance<br>
+                                    95% confidence level (1 - 0.05)<br>
+                                    P(Type I error) = 5%<br>
+                                    Willing to be wrong 5% of the time</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Understand α = 0.01</p>
+                                <div class="step-work">
+                                    <code>α = 0.01 means 1% significance<br>
+                                    99% confidence level (1 - 0.01)<br>
+                                    P(Type I error) = 1%<br>
+                                    Only willing to be wrong 1% of the time</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find Critical Values for α = 0.05</p>
+                                <div class="step-work">
+                                    <code>Two-tailed: split α into both tails<br>
+                                    Each tail = 0.05/2 = 0.025<br>
+                                    Z₀.₉₇₅ = ±1.96<br>
+                                    Reject if |z| &gt; 1.96</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find Critical Values for α = 0.01</p>
+                                <div class="step-work">
+                                    <code>Two-tailed: each tail = 0.01/2 = 0.005<br>
+                                    Z₀.₉₉₅ = ±2.576<br>
+                                    Reject if |z| &gt; 2.576<br>
+                                    Harder to reject (more strict!)</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Compare</p>
+                                <div class="step-work">
+                                    <code>α = 0.01 is MORE STRICT<br>
+                                    Requires stronger evidence to reject H₀<br>
+                                    Reduces Type I errors but increases Type II</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">α = 0.05: z = ±1.96; α = 0.01: z = ±2.576 (more strict)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Practice Problems:</h4>
+                        <ol>
+                            <li>Find critical value for α = 0.10, two-tailed</li>
+                            <li>If we want to be very strict, should we use α = 0.05 or α = 0.001?</li>
+                            <li>What happens to Type II error when α decreases?</li>
+                        </ol>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -1789,6 +3232,112 @@
                     </ul>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Population has σ = 20. Calculate standard error for sample sizes: n = 4, n = 16, n = 64, n = 100. What pattern do you notice?</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Recall Standard Error Formula</p>
+                                <div class="step-work">
+                                    <code>SE = σ / √n<br>
+                                    Where:<br>
+                                    - σ = population standard deviation<br>
+                                    - n = sample size<br>
+                                    SE measures variability of sample means</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate SE for n = 4</p>
+                                <div class="step-work">
+                                    <code>SE = 20 / √4<br>
+                                    SE = 20 / 2<br>
+                                    SE = 10</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate SE for n = 16</p>
+                                <div class="step-work">
+                                    <code>SE = 20 / √16<br>
+                                    SE = 20 / 4<br>
+                                    SE = 5</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate SE for n = 64</p>
+                                <div class="step-work">
+                                    <code>SE = 20 / √64<br>
+                                    SE = 20 / 8<br>
+                                    SE = 2.5</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate SE for n = 100</p>
+                                <div class="step-work">
+                                    <code>SE = 20 / √100<br>
+                                    SE = 20 / 10<br>
+                                    SE = 2</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 6:</div>
+                            <div class="step-content">
+                                <p class="step-description">Analyze Pattern</p>
+                                <div class="step-work">
+                                    <code>n = 4:   SE = 10<br>
+                                    n = 16:  SE = 5   (4× sample → ½ SE)<br>
+                                    n = 64:  SE = 2.5 (16× sample → ¼ SE)<br>
+                                    n = 100: SE = 2   (25× sample → ⅕ SE)<br>
+                                    <br>
+                                    Pattern: Quadruple sample size → Half the SE<br>
+                                    Larger samples give more precise estimates!</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">SE: 10, 5, 2.5, 2. Larger n → Smaller SE (more precision)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Practice Problems:</h4>
+                        <ol>
+                            <li>If σ = 15 and n = 25, find SE</li>
+                            <li>To cut SE in half, by what factor must we increase n?</li>
+                            <li>Why does larger sample size reduce SE?</li>
+                        </ol>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -1830,6 +3379,115 @@
                     </div>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">A factory claims μ = 100. Sample: n = 36, x̄ = 105, σ = 12. Test at α = 0.05 (two-tailed).</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">State Hypotheses</p>
+                                <div class="step-work">
+                                    <code>H₀: μ = 100 (claim is true)<br>
+                                    H₁: μ ≠ 100 (claim is false)<br>
+                                    α = 0.05, two-tailed test</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Standard Error</p>
+                                <div class="step-work">
+                                    <code>SE = σ / √n<br>
+                                    SE = 12 / √36<br>
+                                    SE = 12 / 6<br>
+                                    SE = 2</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Z-Statistic</p>
+                                <div class="step-work">
+                                    <code>z = (x̄ - μ₀) / SE<br>
+                                    z = (105 - 100) / 2<br>
+                                    z = 5 / 2<br>
+                                    z = 2.5</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find Critical Values</p>
+                                <div class="step-work">
+                                    <code>α = 0.05, two-tailed<br>
+                                    Critical values: z = ±1.96<br>
+                                    Rejection regions: z &lt; -1.96 or z &gt; 1.96</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Make Decision</p>
+                                <div class="step-work">
+                                    <code>Test statistic: z = 2.5<br>
+                                    Critical value: z = 1.96<br>
+                                    2.5 &gt; 1.96 → In rejection region<br>
+                                    <br>
+                                    REJECT H₀</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 6:</div>
+                            <div class="step-content">
+                                <p class="step-description">Interpret</p>
+                                <div class="step-work">
+                                    <code>There IS significant evidence that μ ≠ 100<br>
+                                    The sample mean of 105 is statistically different<br>
+                                    Factory's claim is likely false</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">z = 2.5 &gt; 1.96, REJECT H₀ (claim is false)</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Check:</strong>
+                            <p>P-value = 2 × P(Z &gt; 2.5) = 2 × 0.0062 = 0.0124 &lt; 0.05 ✓ Confirms rejection</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Practice Problems:</h4>
+                        <ol>
+                            <li>Test: μ₀ = 50, x̄ = 48, σ = 10, n = 25, α = 0.05</li>
+                            <li>If z = -1.5, α = 0.05, two-tailed, what's your decision?</li>
+                            <li>When should we use z-test vs t-test?</li>
+                        </ol>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -1865,6 +3523,96 @@
                         <li><strong>α = 0.05 (one-tailed):</strong> z = 1.645</li>
                         <li><strong>α = 0.01 (two-tailed):</strong> z = ±2.576</li>
                     </ul>
+                </div>
+
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Find critical z-values for: a) α = 0.05 one-tailed (right), b) α = 0.05 two-tailed, c) α = 0.01 two-tailed. Draw rejection regions.</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">One-Tailed Right (α = 0.05)</p>
+                                <div class="step-work">
+                                    <code>All α in right tail<br>
+                                    Find z where P(Z &gt; z) = 0.05<br>
+                                    P(Z ≤ z) = 1 - 0.05 = 0.95<br>
+                                    From z-table: z₀.₉₅ = 1.645<br>
+                                    <br>
+                                    Critical value: z = 1.645<br>
+                                    Reject H₀ if z &gt; 1.645</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Two-Tailed (α = 0.05)</p>
+                                <div class="step-work">
+                                    <code>Split α between both tails<br>
+                                    Each tail = 0.05/2 = 0.025<br>
+                                    Left tail: P(Z &lt; z) = 0.025 → z = -1.96<br>
+                                    Right tail: P(Z &gt; z) = 0.025 → z = +1.96<br>
+                                    <br>
+                                    Critical values: z = ±1.96<br>
+                                    Reject H₀ if |z| &gt; 1.96</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Two-Tailed (α = 0.01)</p>
+                                <div class="step-work">
+                                    <code>More strict test<br>
+                                    Each tail = 0.01/2 = 0.005<br>
+                                    P(Z &lt; z) = 0.005 → z = -2.576<br>
+                                    P(Z &gt; z) = 0.005 → z = +2.576<br>
+                                    <br>
+                                    Critical values: z = ±2.576<br>
+                                    Reject H₀ if |z| &gt; 2.576</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Visualize Rejection Regions</p>
+                                <div class="step-work">
+                                    <code>One-tailed (α=0.05): [______|████] z &gt; 1.645<br>
+                                    Two-tailed (α=0.05): [██|________|██] |z| &gt; 1.96<br>
+                                    Two-tailed (α=0.01): [█|__________|█] |z| &gt; 2.576<br>
+                                    <br>
+                                    Smaller α → Larger critical values → Harder to reject</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">a) z = 1.645, b) z = ±1.96, c) z = ±2.576</span>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Practice Problems:</h4>
+                        <ol>
+                            <li>Find critical value for α = 0.10, one-tailed (left)</li>
+                            <li>If your test statistic is z = 2.0, which tests would reject H₀?</li>
+                            <li>Why are two-tailed critical values larger than one-tailed?</li>
+                        </ol>
+                    </div>
                 </div>
 
                 <div class="summary-card">
@@ -1914,6 +3662,113 @@
                     <p>P-value is NOT the probability that H₀ is true! It's the probability of observing your data IF H₀ were true.</p>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Sample of 36 students has mean score x̄ = 78. Population mean claimed to be μ₀ = 75 with σ = 12. Test at α = 0.05 using p-value method.</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">State Hypotheses</p>
+                                <div class="step-work">
+                                    <code>H₀: μ = 75 (null hypothesis - no difference)</code><br>
+                                    <code>H₁: μ ≠ 75 (alternative - there is a difference)</code><br>
+                                    <code>Two-tailed test</code>
+                                </div>
+                                <p class="step-explanation">Set up null and alternative hypotheses</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Test Statistic</p>
+                                <div class="step-work">
+                                    <code>z = (x̄ - μ₀) / (σ/√n)</code><br>
+                                    <code>z = (78 - 75) / (12/√36)</code><br>
+                                    <code>z = 3 / (12/6)</code><br>
+                                    <code>z = 3 / 2 = 1.5</code>
+                                </div>
+                                <p class="step-explanation">Calculate the z-score</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find P-Value</p>
+                                <div class="step-work">
+                                    <code>For two-tailed: p-value = 2 × P(Z &gt; |1.5|)</code><br>
+                                    <code>P(Z &gt; 1.5) = 1 - 0.9332 = 0.0668</code><br>
+                                    <code>p-value = 2 × 0.0668 = 0.1336</code>
+                                </div>
+                                <p class="step-explanation">Multiply by 2 for two-tailed test</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Compare with α</p>
+                                <div class="step-work">
+                                    <code>p-value = 0.1336</code><br>
+                                    <code>α = 0.05</code><br>
+                                    <code>0.1336 &gt; 0.05</code>
+                                </div>
+                                <p class="step-explanation">Since p-value exceeds α, we fail to reject H₀</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Make Decision</p>
+                                <div class="step-work">
+                                    <code>Since p-value &gt; α, FAIL TO REJECT H₀</code><br>
+                                    <code>Not enough evidence to conclude mean differs from 75</code><br>
+                                    <code>p-value of 13.36% means we'd see results this extreme</code><br>
+                                    <code>13.36% of time if H₀ true</code>
+                                </div>
+                                <p class="step-explanation">Interpret in context</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">p-value = 0.1336 &gt; 0.05, Fail to reject H₀</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Check:</strong>
+                            <p>The result is not statistically significant at α = 0.05 level. We need stronger evidence to claim the mean differs from 75.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>If z = 2.5, α = 0.01, find p-value and decide</li>
+                            <li>When do we reject H₀ using p-value method?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>p-value = 0.0124, reject H₀ (0.0124 &lt; 0.01)</li>
+                                <li>When p-value ≤ α</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -1954,6 +3809,126 @@
                     </ul>
                 </div>
 
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Researcher claims new drug LOWERS blood pressure (μ &lt; 120). Sample of 49: x̄ = 115, σ = 21. Test at α = 0.05. Should this be one-tailed or two-tailed?</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Analyze the Claim</p>
+                                <div class="step-work">
+                                    <code>Claim: drug LOWERS pressure (directional)</code><br>
+                                    <code>Looking for decrease specifically</code><br>
+                                    <code>This requires ONE-TAILED test (left tail)</code>
+                                </div>
+                                <p class="step-explanation">Directional claim = one-tailed test</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Set Up Hypotheses</p>
+                                <div class="step-work">
+                                    <code>H₀: μ ≥ 120 (blood pressure not lower)</code><br>
+                                    <code>H₁: μ &lt; 120 (blood pressure IS lower)</code><br>
+                                    <code>Left-tailed test</code>
+                                </div>
+                                <p class="step-explanation">Alternative hypothesis shows the direction</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Z-Score</p>
+                                <div class="step-work">
+                                    <code>z = (x̄ - μ₀) / (σ/√n)</code><br>
+                                    <code>z = (115 - 120) / (21/√49)</code><br>
+                                    <code>z = -5 / (21/7)</code><br>
+                                    <code>z = -5 / 3 = -1.67</code>
+                                </div>
+                                <p class="step-explanation">Negative z-score indicates below mean</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find Critical Value (One-Tailed)</p>
+                                <div class="step-work">
+                                    <code>For α = 0.05, one-tailed (left)</code><br>
+                                    <code>Critical value: z = -1.645</code>
+                                </div>
+                                <p class="step-explanation">One-tailed critical value differs from two-tailed</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Make Decision</p>
+                                <div class="step-work">
+                                    <code>Test statistic: z = -1.67</code><br>
+                                    <code>Critical value: z = -1.645</code><br>
+                                    <code>-1.67 &lt; -1.645 (in rejection region)</code><br>
+                                    <code>REJECT H₀</code>
+                                </div>
+                                <p class="step-explanation">Falls in rejection region, so reject null</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 6:</div>
+                            <div class="step-content">
+                                <p class="step-description">Contrast with Two-Tailed</p>
+                                <div class="step-work">
+                                    <code>If two-tailed: critical values ±1.96</code><br>
+                                    <code>Our |z| = 1.67 &lt; 1.96</code><br>
+                                    <code>Would NOT reject H₀ with two-tailed!</code><br>
+                                    <code>This shows importance of choosing correct test</code>
+                                </div>
+                                <p class="step-explanation">Test choice matters!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">Use ONE-TAILED (left). z = -1.67 &lt; -1.645, Reject H₀</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Check:</strong>
+                            <p>Evidence supports claim that drug lowers blood pressure. One-tailed test was appropriate for directional claim.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Claim: μ &gt; 50. One-tailed or two-tailed?</li>
+                            <li>Claim: μ ≠ 100. Which test?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>One-tailed (right)</li>
+                                <li>Two-tailed</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -1989,6 +3964,124 @@
                         <div class="formula-main">t = (x̄ - μ₀) / (s / √n)</div>
                         <p>Same as z-test but uses s instead of σ</p>
                         <p>Follows t-distribution with df = n - 1</p>
+                    </div>
+                </div>
+
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Small sample: n = 16, x̄ = 52, s = 8. Test if μ = 50 at α = 0.05. Population σ unknown.</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Choose Correct Test</p>
+                                <div class="step-work">
+                                    <code>n = 16 &lt; 30 (small sample)</code><br>
+                                    <code>σ unknown (use sample s)</code><br>
+                                    <code>Use T-TEST instead of z-test</code>
+                                </div>
+                                <p class="step-explanation">Small sample + unknown σ = t-test</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate T-Statistic</p>
+                                <div class="step-work">
+                                    <code>t = (x̄ - μ₀) / (s/√n)</code><br>
+                                    <code>t = (52 - 50) / (8/√16)</code><br>
+                                    <code>t = 2 / (8/4)</code><br>
+                                    <code>t = 2 / 2 = 1.0</code>
+                                </div>
+                                <p class="step-explanation">Use sample standard deviation s</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find Degrees of Freedom</p>
+                                <div class="step-work">
+                                    <code>df = n - 1</code><br>
+                                    <code>df = 16 - 1 = 15</code>
+                                </div>
+                                <p class="step-explanation">Lose 1 df for estimating mean</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find Critical Value</p>
+                                <div class="step-work">
+                                    <code>Two-tailed test, α = 0.05</code><br>
+                                    <code>df = 15</code><br>
+                                    <code>From t-table: t₀.₀₂₅,₁₅ = ±2.131</code>
+                                </div>
+                                <p class="step-explanation">Look up in t-distribution table</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Compare and Decide</p>
+                                <div class="step-work">
+                                    <code>Test statistic: t = 1.0</code><br>
+                                    <code>Critical values: ±2.131</code><br>
+                                    <code>|1.0| &lt; 2.131</code><br>
+                                    <code>FAIL TO REJECT H₀</code>
+                                </div>
+                                <p class="step-explanation">Test statistic not in rejection region</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 6:</div>
+                            <div class="step-content">
+                                <p class="step-description">Interpret</p>
+                                <div class="step-work">
+                                    <code>Not enough evidence that μ ≠ 50</code><br>
+                                    <code>Sample mean of 52 is not significantly different from 50</code>
+                                </div>
+                                <p class="step-explanation">Interpret in context of problem</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">t = 1.0, critical = ±2.131, Fail to reject H₀</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Check:</strong>
+                            <p>The difference between 52 and 50 is not statistically significant at α = 0.05 level with this small sample.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>n = 25, x̄ = 100, s = 15, test μ = 95 at α = 0.01</li>
+                            <li>Why use t-test instead of z-test?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>t = 1.67, df = 24, not significant at α = 0.01</li>
+                                <li>When σ unknown or n &lt; 30</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
 
@@ -2032,6 +4125,101 @@
                         <li>Higher df → closer to normal distribution</li>
                         <li>Affects critical values</li>
                     </ul>
+                </div>
+
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Calculate degrees of freedom for: a) Single sample t-test: n = 20, b) Two-sample t-test: n₁ = 15, n₂ = 18, c) Chi-squared test: 3×4 contingency table</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Single Sample T-Test</p>
+                                <div class="step-work">
+                                    <code>Formula: df = n - 1</code><br>
+                                    <code>n = 20</code><br>
+                                    <code>df = 20 - 1 = 19</code><br>
+                                    <code>We "lose" 1 df because we estimate mean from sample</code>
+                                </div>
+                                <p class="step-explanation">Each parameter estimated reduces df by 1</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Two-Sample T-Test (Equal Variances)</p>
+                                <div class="step-work">
+                                    <code>Formula: df = n₁ + n₂ - 2</code><br>
+                                    <code>n₁ = 15, n₂ = 18</code><br>
+                                    <code>df = 15 + 18 - 2 = 31</code><br>
+                                    <code>Lose 1 df per sample for estimating each mean</code>
+                                </div>
+                                <p class="step-explanation">Two samples = two means estimated</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Chi-Squared Contingency Table</p>
+                                <div class="step-work">
+                                    <code>Formula: df = (rows - 1) × (columns - 1)</code><br>
+                                    <code>3 rows, 4 columns</code><br>
+                                    <code>df = (3 - 1) × (4 - 1)</code><br>
+                                    <code>df = 2 × 3 = 6</code>
+                                </div>
+                                <p class="step-explanation">Degrees of freedom for independence test</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Explain Concept</p>
+                                <div class="step-work">
+                                    <code>Degrees of freedom = number of values free to vary</code><br>
+                                    <code>Each parameter estimated reduces df by 1</code><br>
+                                    <code>Higher df → distribution closer to normal</code>
+                                </div>
+                                <p class="step-explanation">Conceptual understanding</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">a) df = 19, b) df = 31, c) df = 6</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Check:</strong>
+                            <p>These df values would be used to find appropriate critical values from respective distribution tables.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Sample size 100, find df for t-test</li>
+                            <li>5×3 table, find df for chi-squared</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>df = 99</li>
+                                <li>df = (5-1)(3-1) = 8</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="summary-card">
@@ -2091,6 +4279,114 @@
                     <div class="callout-header">📊 MEDICAL ANALOGY</div>
                     <p><strong>Type I Error:</strong> Telling healthy person they're sick (false alarm)</p>
                     <p><strong>Type II Error:</strong> Telling sick person they're healthy (missed diagnosis)</p>
+                </div>
+
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Drug trial tests H₀: "Drug is safe" vs H₁: "Drug is dangerous". Describe Type I and Type II errors with consequences.</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Define Type I Error (False Positive)</p>
+                                <div class="step-work">
+                                    <code>Type I: Reject H₀ when H₀ is TRUE</code><br>
+                                    <code>In this case: Conclude drug is dangerous when it's actually safe</code><br>
+                                    <code>Probability = α (significance level)</code><br>
+                                    <code>Consequence: Safe drug rejected, patients miss beneficial treatment</code>
+                                </div>
+                                <p class="step-explanation">False alarm - reject truth</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Define Type II Error (False Negative)</p>
+                                <div class="step-work">
+                                    <code>Type II: Fail to reject H₀ when H₁ is TRUE</code><br>
+                                    <code>In this case: Conclude drug is safe when it's actually dangerous</code><br>
+                                    <code>Probability = β</code><br>
+                                    <code>Consequence: Dangerous drug approved, patients harmed!</code>
+                                </div>
+                                <p class="step-explanation">Miss detecting danger</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Create Decision Matrix</p>
+                                <div class="step-work">
+                                    <code>Reality vs Decision:</code><br>
+                                    <code>If H₀ true (safe) + Reject H₀ (call dangerous) = TYPE I</code><br>
+                                    <code>If H₁ true (dangerous) + Fail to reject = TYPE II</code><br>
+                                    <code>Correct decisions: Accept truth or reject false</code>
+                                </div>
+                                <p class="step-explanation">Four possible outcomes</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Example</p>
+                                <div class="step-work">
+                                    <code>If α = 0.05: 5% chance of Type I error</code><br>
+                                    <code>If β = 0.20: 20% chance of Type II error</code><br>
+                                    <code>Power = 1 - β = 0.80 (80% chance of detecting dangerous drug)</code>
+                                </div>
+                                <p class="step-explanation">Probabilities of each error</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Compare Consequences</p>
+                                <div class="step-work">
+                                    <code>Type I: Waste safe drug (economic cost)</code><br>
+                                    <code>Type II: Approve dangerous drug (LIFE RISK!)</code><br>
+                                    <code>Type II often more serious → use lower α</code>
+                                </div>
+                                <p class="step-explanation">Context determines which error is worse</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>✓ Final Answer:</strong>
+                            <span class="answer-highlight">Type I (α): Reject safe drug<br>Type II (β): Approve dangerous drug<br>Type II more dangerous in this case!</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>Check:</strong>
+                            <p>In medical contexts, Type II errors (missing danger) are often considered worse than Type I errors (false alarms).</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Security scanner: H₀ = "Safe". Describe Type I/II errors</li>
+                            <li>If α = 0.01, what's P(Type I error)?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>Type I: False alarm (safe person flagged), Type II: Miss threat</li>
+                                <li>P(Type I error) = 0.01 = 1%</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="summary-card">
@@ -3204,6 +5500,119 @@
                     <p>f'(x) = 3·4x³ - 2·2x + 0</p>
                     <p>f'(x) = 12x³ - 4x</p>
                 </div>
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Find the derivative of f(x) = 3x⁴ - 2x³ + 5x - 7</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Identify the Power Rule</p>
+                                <div class="step-work">
+                                    <code>Power Rule: d/dx(xⁿ) = n·xⁿ⁻¹</code><br>
+                                    <code>Apply to each term separately</code>
+                                </div>
+                                <p class="step-explanation">The power rule works term by term</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Derivative of First Term: 3x⁴</p>
+                                <div class="step-work">
+                                    <code>Coefficient stays: 3</code><br>
+                                    <code>Exponent: 4 → multiply by 4 and decrease exponent</code><br>
+                                    <code>Result: 3 × 4 × x³ = 12x³</code>
+                                </div>
+                                <p class="step-explanation">Bring down the 4, multiply by coefficient 3</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Derivative of Second Term: -2x³</p>
+                                <div class="step-work">
+                                    <code>Result: -2 × 3 × x² = -6x²</code>
+                                </div>
+                                <p class="step-explanation">Same process, keep the negative sign</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Derivative of Third Term: 5x</p>
+                                <div class="step-work">
+                                    <code>5x = 5x¹</code><br>
+                                    <code>Result: 5 × 1 × x⁰ = 5</code>
+                                </div>
+                                <p class="step-explanation">x⁰ = 1, so we just get the coefficient</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Derivative of Fourth Term: -7</p>
+                                <div class="step-work">
+                                    <code>Constant → derivative is 0</code>
+                                </div>
+                                <p class="step-explanation">Constants disappear when we take the derivative</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 6:</div>
+                            <div class="step-content">
+                                <p class="step-description">Combine All Terms</p>
+                                <div class="step-work">
+                                    <code>f'(x) = 12x³ - 6x² + 5 + 0</code><br>
+                                    <code>f'(x) = 12x³ - 6x² + 5</code>
+                                </div>
+                                <p class="step-explanation">Sum the derivatives of each term</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>Final Answer:</strong>
+                            <span class="answer-highlight">f'(x) = 12x³ - 6x² + 5</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>✓ Check:</strong>
+                            <p>At x=1: f'(1) = 12(1) - 6(1) + 5 = 11. This is the slope of the tangent line at x=1.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Find f'(x) for f(x) = 2x³ + 4x² - 3</li>
+                            <li>Find the derivative of g(x) = 5x⁴ - x</li>
+                            <li>What is d/dx(7x² + 2x + 8)?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>f'(x) = 6x² + 8x</li>
+                                <li>g'(x) = 20x³ - 1</li>
+                                <li>14x + 2</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
@@ -3371,6 +5780,110 @@
                             <input type="range" id="slider64n" min="4" max="50" value="8" step="1" class="slider">
                         </div>
                         <button class="btn btn-primary" id="btn64animate">Animate Convergence</button>
+                    </div>
+                </div>
+
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Calculate the definite integral: ∫₀³ (2x + 1) dx</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find the Antiderivative</p>
+                                <div class="step-work">
+                                    <code>∫(2x + 1) dx</code><br>
+                                    <code>∫2x dx = 2 × (x²/2) = x²</code><br>
+                                    <code>∫1 dx = x</code><br>
+                                    <code>F(x) = x² + x + C</code>
+                                </div>
+                                <p class="step-explanation">Use the power rule in reverse</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Apply the Fundamental Theorem of Calculus (Part 2)</p>
+                                <div class="step-work">
+                                    <code>∫ₐᵇ f(x)dx = F(b) - F(a)</code><br>
+                                    <code>No need for +C (it cancels out)</code>
+                                </div>
+                                <p class="step-explanation">Evaluate antiderivative at bounds and subtract</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Evaluate at Upper Bound (x = 3)</p>
+                                <div class="step-work">
+                                    <code>F(3) = 3² + 3</code><br>
+                                    <code>F(3) = 9 + 3 = 12</code>
+                                </div>
+                                <p class="step-explanation">Substitute x = 3 into F(x)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Evaluate at Lower Bound (x = 0)</p>
+                                <div class="step-work">
+                                    <code>F(0) = 0² + 0</code><br>
+                                    <code>F(0) = 0</code>
+                                </div>
+                                <p class="step-explanation">Substitute x = 0 into F(x)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Subtract: F(upper) - F(lower)</p>
+                                <div class="step-work">
+                                    <code>∫₀³ (2x + 1) dx = F(3) - F(0)</code><br>
+                                    <code>= 12 - 0 = 12</code>
+                                </div>
+                                <p class="step-explanation">Final calculation</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>Final Answer:</strong>
+                            <span class="answer-highlight">12</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>✓ Meaning:</strong>
+                            <p>The area under the curve y = 2x + 1 from x = 0 to x = 3 is 12 square units. This represents the accumulated value of the function over that interval.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Calculate ∫₁⁴ x² dx</li>
+                            <li>Find ∫₀² (3x² + 2) dx</li>
+                            <li>Evaluate ∫₁³ (4x - 1) dx</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>21</li>
+                                <li>12</li>
+                                <li>14</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
 
@@ -3714,6 +6227,126 @@
                     <p>• Calculate R² to assess fit quality (closer to 1 = better)</p>
                     <p>• Use for prediction only within your data range</p>
                     <p>• Always visualize your data first (Anscombe's quartet!)</p>
+                </div>
+
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Find the best-fit line for the data points: (1,2), (2,4), (3,5), (4,7), (5,8)</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate the Means</p>
+                                <div class="step-work">
+                                    <code>x̄ = (1+2+3+4+5)/5 = 15/5 = 3</code><br>
+                                    <code>ȳ = (2+4+5+7+8)/5 = 26/5 = 5.2</code>
+                                </div>
+                                <p class="step-explanation">Find the average of x values and y values</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Set Up Slope Formula</p>
+                                <div class="step-work">
+                                    <code>b = Σ(x-x̄)(y-ȳ) / Σ(x-x̄)²</code><br>
+                                    <code>Need to calculate deviations and their products</code>
+                                </div>
+                                <p class="step-explanation">This is the least squares formula for slope</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Create Calculation Table</p>
+                                <div class="step-work">
+                                    <code>x  | y  | (x-x̄) | (y-ȳ) | (x-x̄)(y-ȳ) | (x-x̄)²</code><br>
+                                    <code>1  | 2  | -2    | -3.2  | 6.4        | 4</code><br>
+                                    <code>2  | 4  | -1    | -1.2  | 1.2        | 1</code><br>
+                                    <code>3  | 5  |  0    | -0.2  | 0          | 0</code><br>
+                                    <code>4  | 7  |  1    |  1.8  | 1.8        | 1</code><br>
+                                    <code>5  | 8  |  2    |  2.8  | 5.6        | 4</code><br>
+                                    <code>Sum|    |       |       | 15         | 10</code>
+                                </div>
+                                <p class="step-explanation">Organize all calculations in a table</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Slope (b)</p>
+                                <div class="step-work">
+                                    <code>b = 15 / 10 = 1.5</code>
+                                </div>
+                                <p class="step-explanation">For every 1 unit increase in x, y increases by 1.5</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Intercept (a)</p>
+                                <div class="step-work">
+                                    <code>a = ȳ - b·x̄</code><br>
+                                    <code>a = 5.2 - (1.5 × 3)</code><br>
+                                    <code>a = 5.2 - 4.5 = 0.7</code>
+                                </div>
+                                <p class="step-explanation">Where the line crosses the y-axis</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 6:</div>
+                            <div class="step-content">
+                                <p class="step-description">Write the Equation</p>
+                                <div class="step-work">
+                                    <code>y = a + bx</code><br>
+                                    <code>y = 0.7 + 1.5x</code>
+                                </div>
+                                <p class="step-explanation">This is our best-fit line!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>Final Answer:</strong>
+                            <span class="answer-highlight">y = 0.7 + 1.5x</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>✓ Check:</strong>
+                            <p>When x=3: y = 0.7 + 1.5(3) = 5.2 ✓ (matches our mean!)</p>
+                            <p>When x=1: y = 0.7 + 1.5(1) = 2.2 (close to actual 2)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Fit a line to: (0,1), (1,3), (2,5)</li>
+                            <li>Using y=2+3x, predict y when x=6</li>
+                            <li>If b=2 and the line passes through (3,10), find a</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>y = 1 + 2x</li>
+                                <li>y = 20</li>
+                                <li>a = 4 (since 10 = a + 2(3))</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="summary-card">
@@ -4437,6 +7070,119 @@
                     <p>• Try different initializations to avoid bad local minima</p>
                     <p>• Monitor convergence with loss curve</p>
                     <p>• Typical learning rates: 0.001 to 0.1</p>
+                </div>
+
+                <!-- WORKED EXAMPLE SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>📝 Worked Example - Step by Step</h3>
+                    
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Minimize f(x) = x² using gradient descent. Start at x₀ = 5, learning rate α = 0.1, run 3 iterations.</p>
+                    </div>
+                    
+                    <div class="example-solution">
+                        <h4>Solution:</h4>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Find the Gradient (Derivative)</p>
+                                <div class="step-work">
+                                    <code>f(x) = x²</code><br>
+                                    <code>f'(x) = 2x</code><br>
+                                    <code>This is the gradient we'll use</code>
+                                </div>
+                                <p class="step-explanation">The gradient tells us which direction is uphill</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Iteration 1</p>
+                                <div class="step-work">
+                                    <code>Current position: x₀ = 5</code><br>
+                                    <code>Gradient: f'(5) = 2(5) = 10</code><br>
+                                    <code>Update: x₁ = x₀ - α·f'(x₀)</code><br>
+                                    <code>x₁ = 5 - 0.1(10) = 5 - 1 = 4</code>
+                                </div>
+                                <p class="step-explanation">Move against the gradient (downhill)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Iteration 2</p>
+                                <div class="step-work">
+                                    <code>Current position: x₁ = 4</code><br>
+                                    <code>Gradient: f'(4) = 2(4) = 8</code><br>
+                                    <code>Update: x₂ = 4 - 0.1(8) = 4 - 0.8 = 3.2</code>
+                                </div>
+                                <p class="step-explanation">Gradient is smaller, we're getting closer to minimum</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Iteration 3</p>
+                                <div class="step-work">
+                                    <code>Current position: x₂ = 3.2</code><br>
+                                    <code>Gradient: f'(3.2) = 2(3.2) = 6.4</code><br>
+                                    <code>Update: x₃ = 3.2 - 0.1(6.4) = 3.2 - 0.64 = 2.56</code>
+                                </div>
+                                <p class="step-explanation">Still moving toward x = 0 (the true minimum)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Summary of Convergence</p>
+                                <div class="step-work">
+                                    <code>Iter | x     | f(x)  | Gradient</code><br>
+                                    <code>0    | 5.00  | 25.00 | 10.0</code><br>
+                                    <code>1    | 4.00  | 16.00 | 8.0</code><br>
+                                    <code>2    | 3.20  | 10.24 | 6.4</code><br>
+                                    <code>3    | 2.56  | 6.55  | 5.12</code><br>
+                                    <code>...  | ...   | ...   | ...</code><br>
+                                    <code>∞    | 0.00  | 0.00  | 0.0</code>
+                                </div>
+                                <p class="step-explanation">If we continue, x converges to 0</p>
+                            </div>
+                        </div>
+                        
+                        <div class="final-answer">
+                            <strong>Final Answer:</strong>
+                            <span class="answer-highlight">After 3 iterations: x₃ = 2.56, f(x₃) = 6.55</span><br>
+                            <span class="answer-highlight">At convergence: x = 0, minimum value f(0) = 0</span>
+                        </div>
+                        
+                        <div class="verification">
+                            <strong>✓ Check:</strong>
+                            <p>The function f(x) = x² has its minimum at x = 0. Gradient descent successfully moves us from x = 5 toward x = 0. With more iterations (or larger learning rate), we'd get even closer!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="practice-problems">
+                        <h4>💪 Try These:</h4>
+                        <ol>
+                            <li>Use GD to minimize f(x) = x² - 4x starting at x=0, α=0.1, 2 iterations</li>
+                            <li>Find the minimum of f(x) = (x-3)² using calculus (no GD)</li>
+                            <li>If gradient is positive, which direction should we move?</li>
+                        </ol>
+                        <button class="show-answers-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show Answers</button>
+                        <div class="practice-answers" style="display: none;">
+                            <p><strong>Answers:</strong></p>
+                            <ol>
+                                <li>x₂ = 0.76 (moving toward minimum at x=2)</li>
+                                <li>x = 3 (derivative = 0)</li>
+                                <li>Move left (negative direction) to go downhill</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="summary-card">
