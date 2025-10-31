@@ -107,6 +107,8 @@ function initSections() {
         if (section.id === 'optimal-k') initOptimalK();
         if (section.id === 'hyperparameter-tuning') initHyperparameterTuning();
         if (section.id === 'naive-bayes') initNaiveBayes();
+        if (section.id === 'decision-trees') initDecisionTrees();
+        if (section.id === 'ensemble-methods') initEnsembleMethods();
       }
     });
   });
@@ -2354,34 +2356,23 @@ function drawLossCurves() {
   ctx.restore();
 }
 
-// Optimal K for KNN
+// Topic 13: Finding Optimal K in KNN
 function initOptimalK() {
-  const canvas = document.getElementById('optimal-k-canvas');
-  if (!canvas || canvas.dataset.initialized) return;
-  canvas.dataset.initialized = 'true';
-  
-  const rangeSlider = document.getElementById('k-range-slider');
-  const foldsSlider = document.getElementById('cv-folds-slider');
-  
-  if (rangeSlider) {
-    rangeSlider.addEventListener('input', (e) => {
-      document.getElementById('k-range-val').textContent = e.target.value;
-      drawOptimalK();
-    });
+  const canvas1 = document.getElementById('elbow-canvas');
+  if (canvas1 && !canvas1.dataset.initialized) {
+    canvas1.dataset.initialized = 'true';
+    drawElbowCurve();
   }
   
-  if (foldsSlider) {
-    foldsSlider.addEventListener('input', (e) => {
-      document.getElementById('cv-folds-val').textContent = e.target.value;
-      drawOptimalK();
-    });
+  const canvas2 = document.getElementById('cv-k-canvas');
+  if (canvas2 && !canvas2.dataset.initialized) {
+    canvas2.dataset.initialized = 'true';
+    drawCVKHeatmap();
   }
-  
-  drawOptimalK();
 }
 
-function drawOptimalK() {
-  const canvas = document.getElementById('optimal-k-canvas');
+function drawElbowCurve() {
+  const canvas = document.getElementById('elbow-canvas');
   if (!canvas) return;
   
   const ctx = canvas.getContext('2d');
@@ -2396,30 +2387,13 @@ function drawOptimalK() {
   const chartWidth = width - 2 * padding;
   const chartHeight = height - 2 * padding;
   
-  // Use provided data
-  const kRange = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
-  const accuracies = [0.85, 0.88, 0.92, 0.94, 0.96, 0.97, 0.98, 0.97, 0.96, 0.95, 0.94, 0.93, 0.92, 0.91, 0.90, 0.89, 0.88, 0.87, 0.86, 0.85];
-  const optimalK = 7;
+  // Data from application_data_json
+  const kValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+  const accuracies = [0.96, 0.94, 0.93, 0.91, 0.89, 0.87, 0.85, 0.84, 0.83, 0.82, 0.81, 0.80, 0.79, 0.78, 0.77, 0.76, 0.75, 0.74, 0.73];
+  const optimalK = 3;
   
-  const scaleX = (k) => padding + ((k - 1) / 19) * chartWidth;
-  const scaleY = (acc) => height - padding - ((acc - 0.8) / 0.2) * chartHeight;
-  
-  // Draw grid
-  ctx.strokeStyle = 'rgba(42, 53, 68, 0.5)';
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= 10; i++) {
-    const x = padding + (chartWidth / 10) * i;
-    ctx.beginPath();
-    ctx.moveTo(x, padding);
-    ctx.lineTo(x, height - padding);
-    ctx.stroke();
-    
-    const y = padding + (chartHeight / 10) * i;
-    ctx.beginPath();
-    ctx.moveTo(padding, y);
-    ctx.lineTo(width - padding, y);
-    ctx.stroke();
-  }
+  const scaleX = (k) => padding + ((k - 1) / (kValues.length - 1)) * chartWidth;
+  const scaleY = (acc) => height - padding - ((acc - 0.7) / 0.3) * chartHeight;
   
   // Draw axes
   ctx.strokeStyle = '#2a3544';
@@ -2430,11 +2404,11 @@ function drawOptimalK() {
   ctx.lineTo(width - padding, height - padding);
   ctx.stroke();
   
-  // Draw line
+  // Draw curve
   ctx.strokeStyle = '#6aa9ff';
   ctx.lineWidth = 3;
   ctx.beginPath();
-  kRange.forEach((k, i) => {
+  kValues.forEach((k, i) => {
     const x = scaleX(k);
     const y = scaleY(accuracies[i]);
     if (i === 0) ctx.moveTo(x, y);
@@ -2443,39 +2417,24 @@ function drawOptimalK() {
   ctx.stroke();
   
   // Draw points
-  kRange.forEach((k, i) => {
+  kValues.forEach((k, i) => {
     const x = scaleX(k);
     const y = scaleY(accuracies[i]);
-    const isOptimal = k === optimalK;
-    
-    ctx.fillStyle = isOptimal ? '#7ef0d4' : '#6aa9ff';
+    ctx.fillStyle = k === optimalK ? '#7ef0d4' : '#6aa9ff';
     ctx.beginPath();
-    ctx.arc(x, y, isOptimal ? 8 : 5, 0, 2 * Math.PI);
+    ctx.arc(x, y, k === optimalK ? 8 : 4, 0, 2 * Math.PI);
     ctx.fill();
-    
-    if (isOptimal) {
-      ctx.strokeStyle = '#7ef0d4';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(x, y, 14, 0, 2 * Math.PI);
-      ctx.stroke();
-      
-      // Label
-      ctx.fillStyle = '#7ef0d4';
-      ctx.font = 'bold 14px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(`Optimal K=${optimalK}`, x, y - 25);
-      ctx.fillText(`Accuracy: ${(accuracies[i] * 100).toFixed(1)}%`, x, y - 10);
-    }
   });
   
-  // Draw vertical line at optimal K
-  ctx.strokeStyle = 'rgba(126, 240, 212, 0.3)';
+  // Highlight optimal K
+  const optX = scaleX(optimalK);
+  const optY = scaleY(accuracies[optimalK - 1]);
+  ctx.strokeStyle = '#7ef0d4';
   ctx.lineWidth = 2;
   ctx.setLineDash([5, 5]);
   ctx.beginPath();
-  ctx.moveTo(scaleX(optimalK), padding);
-  ctx.lineTo(scaleX(optimalK), height - padding);
+  ctx.moveTo(optX, optY);
+  ctx.lineTo(optX, height - padding);
   ctx.stroke();
   ctx.setLineDash([]);
   
@@ -2483,29 +2442,23 @@ function drawOptimalK() {
   ctx.fillStyle = '#a9b4c2';
   ctx.font = '12px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('K Value', width / 2, height - 20);
+  ctx.fillText('K (Number of Neighbors)', width / 2, height - 20);
   ctx.save();
   ctx.translate(20, height / 2);
   ctx.rotate(-Math.PI / 2);
-  ctx.fillText('Mean Accuracy', 0, 0);
+  ctx.fillText('Accuracy', 0, 0);
   ctx.restore();
   
-  // X-axis labels
-  for (let i = 1; i <= 20; i += 2) {
-    ctx.fillText(i, scaleX(i), height - padding + 20);
-  }
+  // Optimal K label
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`Optimal K = ${optimalK}`, optX, padding + 30);
+  ctx.fillText(`Accuracy: ${accuracies[optimalK - 1].toFixed(2)}`, optX, padding + 50);
 }
 
-// Hyperparameter Tuning & GridSearch
-function initHyperparameterTuning() {
-  const canvas = document.getElementById('gridsearch-canvas');
-  if (!canvas || canvas.dataset.initialized) return;
-  canvas.dataset.initialized = 'true';
-  drawGridSearch();
-}
-
-function drawGridSearch() {
-  const canvas = document.getElementById('gridsearch-canvas');
+function drawCVKHeatmap() {
+  const canvas = document.getElementById('cv-k-canvas');
   if (!canvas) return;
   
   const ctx = canvas.getContext('2d');
@@ -2520,33 +2473,146 @@ function drawGridSearch() {
   const chartWidth = width - 2 * padding;
   const chartHeight = height - 2 * padding;
   
-  // Grid data - C vs gamma heatmap
+  const kValues = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19];
+  const folds = ['Fold 1', 'Fold 2', 'Fold 3'];
+  const fold1 = [0.98, 0.92, 0.88, 0.85, 0.83, 0.81, 0.79, 0.77, 0.75, 0.73];
+  const fold2 = [0.96, 0.91, 0.87, 0.83, 0.81, 0.79, 0.77, 0.75, 0.73, 0.71];
+  const fold3 = [0.94, 0.90, 0.86, 0.82, 0.79, 0.77, 0.75, 0.73, 0.71, 0.69];
+  const allData = [fold1, fold2, fold3];
+  
+  const cellWidth = chartWidth / kValues.length;
+  const cellHeight = chartHeight / folds.length;
+  
+  // Draw heatmap
+  folds.forEach((fold, i) => {
+    kValues.forEach((k, j) => {
+      const acc = allData[i][j];
+      const x = padding + j * cellWidth;
+      const y = padding + i * cellHeight;
+      
+      // Color based on accuracy
+      const intensity = (acc - 0.65) / 0.35;
+      const r = Math.floor(106 + (126 - 106) * intensity);
+      const g = Math.floor(169 + (240 - 169) * intensity);
+      const b = Math.floor(255 + (212 - 255) * intensity);
+      ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+      ctx.fillRect(x, y, cellWidth, cellHeight);
+      
+      // Border
+      ctx.strokeStyle = '#1a2332';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x, y, cellWidth, cellHeight);
+      
+      // Text
+      ctx.fillStyle = '#1a2332';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(acc.toFixed(2), x + cellWidth / 2, y + cellHeight / 2 + 4);
+    });
+  });
+  
+  // Row labels
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'right';
+  folds.forEach((fold, i) => {
+    const y = padding + i * cellHeight + cellHeight / 2;
+    ctx.fillText(fold, padding - 10, y + 4);
+  });
+  
+  // Column labels
+  ctx.textAlign = 'center';
+  kValues.forEach((k, j) => {
+    const x = padding + j * cellWidth + cellWidth / 2;
+    ctx.fillText(`K=${k}`, x, padding - 10);
+  });
+  
+  // Mean accuracy
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'left';
+  const meanAccs = kValues.map((k, j) => {
+    const sum = fold1[j] + fold2[j] + fold3[j];
+    return sum / 3;
+  });
+  const maxMean = Math.max(...meanAccs);
+  const optIdx = meanAccs.indexOf(maxMean);
+  ctx.fillText(`Best K = ${kValues[optIdx]} (Mean Acc: ${maxMean.toFixed(3)})`, padding, height - 20);
+}
+
+// Topic 14: Hyperparameter Tuning
+function initHyperparameterTuning() {
+  const canvas1 = document.getElementById('gridsearch-heatmap');
+  if (canvas1 && !canvas1.dataset.initialized) {
+    canvas1.dataset.initialized = 'true';
+    drawGridSearchHeatmap();
+  }
+  
+  const canvas2 = document.getElementById('param-surface');
+  if (canvas2 && !canvas2.dataset.initialized) {
+    canvas2.dataset.initialized = 'true';
+    drawParamSurface();
+  }
+  
+  const radios = document.querySelectorAll('input[name="grid-model"]');
+  radios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      drawGridSearchHeatmap();
+    });
+  });
+}
+
+function drawGridSearchHeatmap() {
+  const canvas = document.getElementById('gridsearch-heatmap');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 450;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 80;
+  const chartWidth = width - 2 * padding;
+  const chartHeight = height - 2 * padding;
+  
   const cValues = [0.1, 1, 10, 100];
   const gammaValues = [0.001, 0.01, 0.1, 1];
   
-  // Scores (simulated)
-  const scores = [
-    [0.70, 0.75, 0.78, 0.76],
-    [0.82, 0.88, 0.92, 0.85],
-    [0.88, 0.95, 0.93, 0.87],
-    [0.85, 0.90, 0.88, 0.82]
+  // Simulate accuracy grid
+  const accuracies = [
+    [0.65, 0.82, 0.88, 0.75],
+    [0.78, 0.91, 0.95, 0.89],
+    [0.85, 0.93, 0.92, 0.87],
+    [0.80, 0.88, 0.84, 0.82]
   ];
   
   const cellWidth = chartWidth / cValues.length;
   const cellHeight = chartHeight / gammaValues.length;
   
-  // Draw cells
-  cValues.forEach((c, i) => {
-    gammaValues.forEach((g, j) => {
-      const x = padding + i * cellWidth;
-      const y = padding + j * cellHeight;
-      const score = scores[i][j];
+  let bestAcc = 0, bestI = 0, bestJ = 0;
+  
+  // Draw heatmap
+  gammaValues.forEach((gamma, i) => {
+    cValues.forEach((c, j) => {
+      const acc = accuracies[i][j];
+      if (acc > bestAcc) {
+        bestAcc = acc;
+        bestI = i;
+        bestJ = j;
+      }
       
-      // Color based on score
-      const intensity = (score - 0.7) / 0.25;
-      const r = Math.floor(255 - intensity * 155);
-      const gb = Math.floor(100 + intensity * 140);
-      ctx.fillStyle = `rgb(${r}, ${gb}, ${Math.floor(gb * 0.9)})`;
+      const x = padding + j * cellWidth;
+      const y = padding + i * cellHeight;
+      
+      // Color gradient
+      const intensity = (acc - 0.6) / 0.35;
+      const r = Math.floor(255 - 149 * intensity);
+      const g = Math.floor(140 + 100 * intensity);
+      const b = Math.floor(106 + 106 * intensity);
+      ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
       ctx.fillRect(x, y, cellWidth, cellHeight);
       
       // Border
@@ -2554,132 +2620,936 @@ function drawGridSearch() {
       ctx.lineWidth = 2;
       ctx.strokeRect(x, y, cellWidth, cellHeight);
       
-      // Score text
-      ctx.fillStyle = score > 0.88 ? '#1a2332' : '#e8eef6';
+      // Text
+      ctx.fillStyle = '#1a2332';
       ctx.font = 'bold 14px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText((score * 100).toFixed(0) + '%', x + cellWidth / 2, y + cellHeight / 2 + 5);
-      
-      // Highlight best
-      if (score === 0.95) {
-        ctx.strokeStyle = '#7ef0d4';
-        ctx.lineWidth = 4;
-        ctx.strokeRect(x, y, cellWidth, cellHeight);
-        
-        ctx.fillStyle = '#7ef0d4';
-        ctx.font = '12px sans-serif';
-        ctx.fillText('★ Best', x + cellWidth / 2, y + cellHeight / 2 + 22);
-      }
+      ctx.fillText(acc.toFixed(2), x + cellWidth / 2, y + cellHeight / 2 + 5);
     });
   });
   
-  // Axis labels - C
-  ctx.fillStyle = '#a9b4c2';
-  ctx.font = '12px sans-serif';
-  ctx.textAlign = 'center';
-  cValues.forEach((c, i) => {
-    const x = padding + i * cellWidth + cellWidth / 2;
-    ctx.fillText(`C=${c}`, x, height - padding + 25);
-  });
+  // Highlight best
+  const bestX = padding + bestJ * cellWidth;
+  const bestY = padding + bestI * cellHeight;
+  ctx.strokeStyle = '#7ef0d4';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(bestX, bestY, cellWidth, cellHeight);
   
-  // Axis labels - gamma
+  // Labels
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = '12px sans-serif';
   ctx.textAlign = 'right';
-  gammaValues.forEach((g, i) => {
+  gammaValues.forEach((gamma, i) => {
     const y = padding + i * cellHeight + cellHeight / 2;
-    ctx.fillText(`γ=${g}`, padding - 10, y + 5);
+    ctx.fillText(`γ=${gamma}`, padding - 10, y + 5);
   });
   
-  // Title
-  ctx.fillStyle = '#7ef0d4';
-  ctx.font = 'bold 16px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('GridSearch Heatmap: C vs gamma (RBF kernel)', width / 2, 30);
+  cValues.forEach((c, j) => {
+    const x = padding + j * cellWidth + cellWidth / 2;
+    ctx.fillText(`C=${c}`, x, padding - 10);
+  });
   
-  // Legend
-  ctx.font = '12px sans-serif';
+  // Axis labels
   ctx.fillStyle = '#a9b4c2';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.fillText('C Parameter', width / 2, height - 30);
+  ctx.save();
+  ctx.translate(25, height / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Gamma Parameter', 0, 0);
+  ctx.restore();
+  
+  // Best params
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 14px sans-serif';
   ctx.textAlign = 'left';
-  ctx.fillText('Lower accuracy', padding, height - 10);
-  ctx.textAlign = 'right';
-  ctx.fillText('Higher accuracy', width - padding, height - 10);
+  ctx.fillText(`Best: C=${cValues[bestJ]}, γ=${gammaValues[bestI]} → Acc=${bestAcc.toFixed(2)}`, padding, height - 30);
 }
 
-// Naive Bayes
-function initNaiveBayes() {
-  const canvas = document.getElementById('naive-bayes-canvas');
-  if (!canvas || canvas.dataset.initialized) return;
-  canvas.dataset.initialized = 'true';
-  drawNaiveBayes();
-}
-
-function drawNaiveBayes() {
-  const canvas = document.getElementById('naive-bayes-canvas');
+function drawParamSurface() {
+  const canvas = document.getElementById('param-surface');
   if (!canvas) return;
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
-  const height = canvas.height = 350;
+  const height = canvas.height = 400;
   
   ctx.clearRect(0, 0, width, height);
   ctx.fillStyle = '#1a2332';
   ctx.fillRect(0, 0, width, height);
   
-  // Display calculation flow
-  const steps = [
-    { label: 'Words', value: '["free", "money"]', color: '#6aa9ff' },
-    { label: 'P(free|spam)', value: '0.8', color: '#7ef0d4' },
-    { label: 'P(money|spam)', value: '0.7', color: '#7ef0d4' },
-    { label: 'P(spam)', value: '0.3', color: '#ff8c6a' },
-    { label: 'Likelihood', value: '0.8 × 0.7 = 0.56', color: '#7ef0d4' },
-    { label: 'Posterior', value: '0.56 × 0.3 = 0.168', color: '#7ef0d4' },
-    { label: 'Result', value: 'P(spam) = 0.98 (98%)', color: '#7ef0d4' }
+  const padding = 60;
+  const centerX = width / 2;
+  const centerY = height / 2;
+  
+  // Draw 3D-ish surface using contour lines
+  const levels = [0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95];
+  const colors = ['#ff8c6a', '#ffa07a', '#ffb490', '#ffc8a6', '#7ef0d4', '#6aa9ff', '#5a99ef'];
+  
+  levels.forEach((level, i) => {
+    const radius = 150 - i * 20;
+    ctx.strokeStyle = colors[i];
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.ellipse(centerX, centerY, radius, radius * 0.6, 0, 0, 2 * Math.PI);
+    ctx.stroke();
+    
+    // Label
+    ctx.fillStyle = colors[i];
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(level.toFixed(2), centerX + radius + 10, centerY);
+  });
+  
+  // Center point (optimum)
+  ctx.fillStyle = '#7ef0d4';
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 8, 0, 2 * Math.PI);
+  ctx.fill();
+  
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Optimal Point', centerX, centerY - 20);
+  ctx.fillText('(C=1, γ=scale)', centerX, centerY + 35);
+  
+  // Axis labels
+  ctx.fillStyle = '#a9b4c2';
+  ctx.font = '12px sans-serif';
+  ctx.fillText('C Parameter →', width - 80, height - 20);
+  ctx.save();
+  ctx.translate(30, 60);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('← Gamma', 0, 0);
+  ctx.restore();
+  
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Performance Surface (3D Contour View)', width / 2, 30);
+}
+
+// Topic 15: Naive Bayes
+function initNaiveBayes() {
+  const canvas1 = document.getElementById('bayes-theorem-viz');
+  if (canvas1 && !canvas1.dataset.initialized) {
+    canvas1.dataset.initialized = 'true';
+    drawBayesTheorem();
+  }
+  
+  const canvas2 = document.getElementById('spam-classification');
+  if (canvas2 && !canvas2.dataset.initialized) {
+    canvas2.dataset.initialized = 'true';
+    drawSpamClassification();
+  }
+}
+
+function drawBayesTheorem() {
+  const canvas = document.getElementById('bayes-theorem-viz');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const centerX = width / 2;
+  const centerY = height / 2;
+  
+  // Draw formula components as boxes
+  const boxes = [
+    { x: centerX - 300, y: centerY - 80, w: 120, h: 60, text: 'P(C|F)', label: 'Posterior', color: '#7ef0d4' },
+    { x: centerX - 100, y: centerY - 80, w: 120, h: 60, text: 'P(F|C)', label: 'Likelihood', color: '#6aa9ff' },
+    { x: centerX + 100, y: centerY - 80, w: 100, h: 60, text: 'P(C)', label: 'Prior', color: '#ffb490' },
+    { x: centerX - 50, y: centerY + 60, w: 100, h: 60, text: 'P(F)', label: 'Evidence', color: '#ff8c6a' }
   ];
   
-  const boxWidth = 180;
-  const boxHeight = 45;
-  const startY = 40;
-  const gap = 8;
-  
-  steps.forEach((step, i) => {
-    const x = (width - boxWidth) / 2;
-    const y = startY + i * (boxHeight + gap);
-    
-    // Box
-    ctx.fillStyle = '#2a3544';
-    ctx.fillRect(x, y, boxWidth, boxHeight);
-    ctx.strokeStyle = step.color;
+  boxes.forEach(box => {
+    ctx.fillStyle = box.color + '33';
+    ctx.fillRect(box.x, box.y, box.w, box.h);
+    ctx.strokeStyle = box.color;
     ctx.lineWidth = 2;
-    ctx.strokeRect(x, y, boxWidth, boxHeight);
+    ctx.strokeRect(box.x, box.y, box.w, box.h);
     
-    // Text
+    ctx.fillStyle = box.color;
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(box.text, box.x + box.w / 2, box.y + box.h / 2);
+    
+    ctx.font = '12px sans-serif';
     ctx.fillStyle = '#a9b4c2';
+    ctx.fillText(box.label, box.x + box.w / 2, box.y + box.h + 20);
+  });
+  
+  // Draw arrows and operators
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('=', centerX - 160, centerY - 40);
+  ctx.fillText('×', centerX + 40, centerY - 40);
+  ctx.fillText('÷', centerX, centerY + 20);
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 18px sans-serif';
+  ctx.fillText("Bayes' Theorem Breakdown", centerX, 40);
+}
+
+function drawSpamClassification() {
+  const canvas = document.getElementById('spam-classification');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 40;
+  const stepHeight = 70;
+  const startY = 60;
+  
+  // Step 1: Features
+  ctx.fillStyle = '#6aa9ff';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('Step 1: Email Features', padding, startY);
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = '13px sans-serif';
+  ctx.fillText('Words: ["free", "winner", "click"]', padding + 20, startY + 25);
+  
+  // Step 2: Calculate P(spam)
+  const y2 = startY + stepHeight;
+  ctx.fillStyle = '#6aa9ff';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.fillText('Step 2: P(spam | features)', padding, y2);
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = '12px monospace';
+  ctx.fillText('= P("free"|spam) × P("winner"|spam) × P("click"|spam) × P(spam)', padding + 20, y2 + 25);
+  ctx.fillText('= 0.8 × 0.7 × 0.6 × 0.3', padding + 20, y2 + 45);
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 14px monospace';
+  ctx.fillText('= 0.1008', padding + 20, y2 + 65);
+  
+  // Step 3: Calculate P(not spam)
+  const y3 = y2 + stepHeight + 50;
+  ctx.fillStyle = '#6aa9ff';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.fillText('Step 3: P(not-spam | features)', padding, y3);
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = '12px monospace';
+  ctx.fillText('= P("free"|not-spam) × P("winner"|not-spam) × P("click"|not-spam) × P(not-spam)', padding + 20, y3 + 25);
+  ctx.fillText('= 0.1 × 0.05 × 0.2 × 0.7', padding + 20, y3 + 45);
+  ctx.fillStyle = '#ff8c6a';
+  ctx.font = 'bold 14px monospace';
+  ctx.fillText('= 0.0007', padding + 20, y3 + 65);
+  
+  // Step 4: Decision
+  const y4 = y3 + stepHeight + 50;
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('Decision: 0.1008 > 0.0007', padding, y4);
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 18px sans-serif';
+  ctx.fillText('→ SPAM! 📧❌', padding, y4 + 30);
+  
+  // Visual comparison
+  const barY = y4 + 60;
+  const barMaxWidth = width - 2 * padding - 100;
+  ctx.fillStyle = '#7ef0d4';
+  ctx.fillRect(padding, barY, 0.1008 / 0.1008 * barMaxWidth, 20);
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('Spam', padding + barMaxWidth + 80, barY + 15);
+  
+  ctx.fillStyle = '#ff8c6a';
+  ctx.fillRect(padding, barY + 30, 0.0007 / 0.1008 * barMaxWidth, 20);
+  ctx.fillStyle = '#e8eef6';
+  ctx.fillText('Not Spam', padding + barMaxWidth + 80, barY + 45);
+}
+
+// Topic 16: Decision Trees
+function initDecisionTrees() {
+  const canvas1 = document.getElementById('decision-tree-viz');
+  if (canvas1 && !canvas1.dataset.initialized) {
+    canvas1.dataset.initialized = 'true';
+    drawDecisionTree();
+  }
+  
+  const canvas2 = document.getElementById('entropy-viz');
+  if (canvas2 && !canvas2.dataset.initialized) {
+    canvas2.dataset.initialized = 'true';
+    drawEntropyViz();
+  }
+  
+  const canvas3 = document.getElementById('split-comparison');
+  if (canvas3 && !canvas3.dataset.initialized) {
+    canvas3.dataset.initialized = 'true';
+    drawSplitComparison();
+  }
+  
+  const canvas4 = document.getElementById('tree-boundary');
+  if (canvas4 && !canvas4.dataset.initialized) {
+    canvas4.dataset.initialized = 'true';
+    drawTreeBoundary();
+  }
+}
+
+function drawDecisionTree() {
+  const canvas = document.getElementById('decision-tree-viz');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 450;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const centerX = width / 2;
+  
+  // Node structure
+  const nodes = [
+    { x: centerX, y: 60, text: 'Has "free"?', type: 'root' },
+    { x: centerX - 150, y: 160, text: 'Has link?', type: 'internal' },
+    { x: centerX + 150, y: 160, text: 'Sender new?', type: 'internal' },
+    { x: centerX - 220, y: 260, text: 'SPAM', type: 'leaf', class: 'spam' },
+    { x: centerX - 80, y: 260, text: 'NOT SPAM', type: 'leaf', class: 'not-spam' },
+    { x: centerX + 80, y: 260, text: 'SPAM', type: 'leaf', class: 'spam' },
+    { x: centerX + 220, y: 260, text: 'NOT SPAM', type: 'leaf', class: 'not-spam' }
+  ];
+  
+  const edges = [
+    { from: 0, to: 1, label: 'Yes' },
+    { from: 0, to: 2, label: 'No' },
+    { from: 1, to: 3, label: 'Yes' },
+    { from: 1, to: 4, label: 'No' },
+    { from: 2, to: 5, label: 'Yes' },
+    { from: 2, to: 6, label: 'No' }
+  ];
+  
+  // Draw edges
+  ctx.strokeStyle = '#6aa9ff';
+  ctx.lineWidth = 2;
+  edges.forEach(edge => {
+    const from = nodes[edge.from];
+    const to = nodes[edge.to];
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y + 25);
+    ctx.lineTo(to.x, to.y - 25);
+    ctx.stroke();
+    
+    // Edge label
+    ctx.fillStyle = '#7ef0d4';
     ctx.font = '11px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(step.label, x + boxWidth / 2, y + boxHeight / 2 - 6);
+    const midX = (from.x + to.x) / 2;
+    const midY = (from.y + to.y) / 2;
+    ctx.fillText(edge.label, midX + 15, midY);
+  });
+  
+  // Draw nodes
+  nodes.forEach(node => {
+    if (node.type === 'leaf') {
+      ctx.fillStyle = node.class === 'spam' ? '#ff8c6a33' : '#7ef0d433';
+      ctx.strokeStyle = node.class === 'spam' ? '#ff8c6a' : '#7ef0d4';
+    } else {
+      ctx.fillStyle = '#6aa9ff33';
+      ctx.strokeStyle = '#6aa9ff';
+    }
     
-    ctx.fillStyle = step.color;
-    ctx.font = 'bold 13px monospace';
-    ctx.fillText(step.value, x + boxWidth / 2, y + boxHeight / 2 + 10);
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.rect(node.x - 60, node.y - 20, 120, 40);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = node.type === 'leaf' ? 'bold 13px sans-serif' : '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(node.text, node.x, node.y + 5);
+  });
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('Decision Tree: Email Spam Classifier', centerX, 30);
+  
+  // Example path
+  ctx.fillStyle = '#a9b4c2';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('Example: Email with "free" + link → SPAM', 40, height - 20);
+}
+
+function drawEntropyViz() {
+  const canvas = document.getElementById('entropy-viz');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 60;
+  const chartWidth = width - 2 * padding;
+  const chartHeight = height - 2 * padding;
+  
+  // Draw entropy curve
+  ctx.strokeStyle = '#6aa9ff';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  for (let p = 0.01; p <= 0.99; p += 0.01) {
+    const entropy = -p * Math.log2(p) - (1 - p) * Math.log2(1 - p);
+    const x = padding + p * chartWidth;
+    const y = height - padding - entropy * chartHeight;
+    if (p === 0.01) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  
+  // Mark key points
+  const points = [
+    { p: 0.1, label: 'Pure\n(low)' },
+    { p: 0.5, label: 'Maximum\n(high)' },
+    { p: 0.9, label: 'Pure\n(low)' }
+  ];
+  
+  points.forEach(point => {
+    const entropy = -point.p * Math.log2(point.p) - (1 - point.p) * Math.log2(1 - point.p);
+    const x = padding + point.p * chartWidth;
+    const y = height - padding - entropy * chartHeight;
+    
+    ctx.fillStyle = '#7ef0d4';
+    ctx.beginPath();
+    ctx.arc(x, y, 6, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    ctx.fillStyle = '#7ef0d4';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    const lines = point.label.split('\n');
+    lines.forEach((line, i) => {
+      ctx.fillText(line, x, y - 15 - (lines.length - 1 - i) * 12);
+    });
+  });
+  
+  // Axes
+  ctx.strokeStyle = '#2a3544';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, height - padding);
+  ctx.lineTo(width - padding, height - padding);
+  ctx.stroke();
+  
+  // Labels
+  ctx.fillStyle = '#a9b4c2';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Proportion of Positive Class (p)', width / 2, height - 20);
+  ctx.save();
+  ctx.translate(20, height / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Entropy H(p)', 0, 0);
+  ctx.restore();
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Entropy: Measuring Disorder', width / 2, 30);
+}
+
+function drawSplitComparison() {
+  const canvas = document.getElementById('split-comparison');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const splits = [
+    { name: 'Split A: "Contains FREE"', ig: 0.034, color: '#ff8c6a' },
+    { name: 'Split B: "Has Link"', ig: 0.156, color: '#7ef0d4' },
+    { name: 'Split C: "Urgent"', ig: 0.089, color: '#ffb490' }
+  ];
+  
+  const padding = 60;
+  const barHeight = 60;
+  const maxWidth = width - 2 * padding - 200;
+  const maxIG = Math.max(...splits.map(s => s.ig));
+  
+  splits.forEach((split, i) => {
+    const y = 80 + i * (barHeight + 40);
+    const barWidth = (split.ig / maxIG) * maxWidth;
+    
+    // Bar
+    ctx.fillStyle = split.color;
+    ctx.fillRect(padding, y, barWidth, barHeight);
+    
+    // Border
+    ctx.strokeStyle = split.color;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(padding, y, barWidth, barHeight);
+    
+    // Label
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(split.name, padding, y - 10);
+    
+    // Value
+    ctx.fillStyle = '#1a2332';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`IG = ${split.ig.toFixed(3)}`, padding + barWidth / 2, y + barHeight / 2 + 6);
+  });
+  
+  // Winner
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('✓ Best split: Highest Information Gain!', width / 2, height - 30);
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('Comparing Split Quality', width / 2, 40);
+}
+
+function drawTreeBoundary() {
+  const canvas = document.getElementById('tree-boundary');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 60;
+  const chartWidth = width - 2 * padding;
+  const chartHeight = height - 2 * padding;
+  
+  // Draw regions
+  const regions = [
+    { x1: 0, y1: 0, x2: 0.5, y2: 0.6, class: 'orange' },
+    { x1: 0.5, y1: 0, x2: 1, y2: 0.6, class: 'yellow' },
+    { x1: 0, y1: 0.6, x2: 0.3, y2: 1, class: 'yellow' },
+    { x1: 0.3, y1: 0.6, x2: 1, y2: 1, class: 'orange' }
+  ];
+  
+  regions.forEach(region => {
+    const x = padding + region.x1 * chartWidth;
+    const y = padding + region.y1 * chartHeight;
+    const w = (region.x2 - region.x1) * chartWidth;
+    const h = (region.y2 - region.y1) * chartHeight;
+    
+    ctx.fillStyle = region.class === 'orange' ? 'rgba(255, 140, 106, 0.2)' : 'rgba(255, 235, 59, 0.2)';
+    ctx.fillRect(x, y, w, h);
+    
+    ctx.strokeStyle = region.class === 'orange' ? '#ff8c6a' : '#ffeb3b';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, w, h);
+  });
+  
+  // Generate random points
+  const orangePoints = [];
+  const yellowPoints = [];
+  for (let i = 0; i < 15; i++) {
+    if (Math.random() < 0.3) {
+      orangePoints.push({ x: Math.random() * 0.5, y: Math.random() * 0.6 });
+    }
+    if (Math.random() < 0.3) {
+      yellowPoints.push({ x: 0.5 + Math.random() * 0.5, y: Math.random() * 0.6 });
+    }
+    if (Math.random() < 0.3) {
+      orangePoints.push({ x: 0.3 + Math.random() * 0.7, y: 0.6 + Math.random() * 0.4 });
+    }
+    if (Math.random() < 0.3) {
+      yellowPoints.push({ x: Math.random() * 0.3, y: 0.6 + Math.random() * 0.4 });
+    }
+  }
+  
+  // Draw points
+  orangePoints.forEach(p => {
+    ctx.fillStyle = '#ff8c6a';
+    ctx.beginPath();
+    ctx.arc(padding + p.x * chartWidth, padding + p.y * chartHeight, 5, 0, 2 * Math.PI);
+    ctx.fill();
+  });
+  
+  yellowPoints.forEach(p => {
+    ctx.fillStyle = '#ffeb3b';
+    ctx.beginPath();
+    ctx.arc(padding + p.x * chartWidth, padding + p.y * chartHeight, 5, 0, 2 * Math.PI);
+    ctx.fill();
+  });
+  
+  // Labels
+  ctx.fillStyle = '#a9b4c2';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Feature 1', width / 2, height - 20);
+  ctx.save();
+  ctx.translate(20, height / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Feature 2', 0, 0);
+  ctx.restore();
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Decision Tree Creates Rectangular Regions', width / 2, 30);
+}
+
+// Topic 17: Ensemble Methods
+function initEnsembleMethods() {
+  const canvas1 = document.getElementById('bagging-viz');
+  if (canvas1 && !canvas1.dataset.initialized) {
+    canvas1.dataset.initialized = 'true';
+    drawBaggingViz();
+  }
+  
+  const canvas2 = document.getElementById('boosting-viz');
+  if (canvas2 && !canvas2.dataset.initialized) {
+    canvas2.dataset.initialized = 'true';
+    drawBoostingViz();
+  }
+  
+  const canvas3 = document.getElementById('random-forest-viz');
+  if (canvas3 && !canvas3.dataset.initialized) {
+    canvas3.dataset.initialized = 'true';
+    drawRandomForestViz();
+  }
+}
+
+function drawBaggingViz() {
+  const canvas = document.getElementById('bagging-viz');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const boxWidth = 150;
+  const boxHeight = 60;
+  const startY = 60;
+  const spacing = (width - 3 * boxWidth) / 4;
+  
+  // Original data
+  ctx.fillStyle = '#6aa9ff33';
+  ctx.fillRect(width / 2 - 100, startY, 200, boxHeight);
+  ctx.strokeStyle = '#6aa9ff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(width / 2 - 100, startY, 200, boxHeight);
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Original Dataset', width / 2, startY + boxHeight / 2 + 5);
+  
+  // Bootstrap samples
+  const sampleY = startY + boxHeight + 60;
+  for (let i = 0; i < 3; i++) {
+    const x = spacing + i * (boxWidth + spacing);
     
     // Arrow
-    if (i < steps.length - 1) {
-      ctx.strokeStyle = '#6aa9ff';
-      ctx.fillStyle = '#6aa9ff';
+    ctx.strokeStyle = '#7ef0d4';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(width / 2, startY + boxHeight);
+    ctx.lineTo(x + boxWidth / 2, sampleY);
+    ctx.stroke();
+    
+    // Sample box
+    ctx.fillStyle = '#7ef0d433';
+    ctx.fillRect(x, sampleY, boxWidth, boxHeight);
+    ctx.strokeStyle = '#7ef0d4';
+    ctx.strokeRect(x, sampleY, boxWidth, boxHeight);
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText(`Bootstrap ${i + 1}`, x + boxWidth / 2, sampleY + boxHeight / 2 - 5);
+    ctx.font = '10px sans-serif';
+    ctx.fillStyle = '#a9b4c2';
+    ctx.fillText('(random sample)', x + boxWidth / 2, sampleY + boxHeight / 2 + 10);
+    
+    // Model
+    const modelY = sampleY + boxHeight + 40;
+    ctx.fillStyle = '#ffb49033';
+    ctx.fillRect(x, modelY, boxWidth, boxHeight);
+    ctx.strokeStyle = '#ffb490';
+    ctx.strokeRect(x, modelY, boxWidth, boxHeight);
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText(`Model ${i + 1}`, x + boxWidth / 2, modelY + boxHeight / 2 + 5);
+    
+    // Arrow to final
+    ctx.strokeStyle = '#ffb490';
+    ctx.beginPath();
+    ctx.moveTo(x + boxWidth / 2, modelY + boxHeight);
+    ctx.lineTo(width / 2, height - 60);
+    ctx.stroke();
+  }
+  
+  // Final prediction
+  ctx.fillStyle = '#ff8c6a33';
+  ctx.fillRect(width / 2 - 100, height - 60, 200, boxHeight);
+  ctx.strokeStyle = '#ff8c6a';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(width / 2 - 100, height - 60, 200, boxHeight);
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.fillText('Average / Vote', width / 2, height - 60 + boxHeight / 2 + 5);
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('Bagging: Bootstrap Aggregating', width / 2, 30);
+}
+
+function drawBoostingViz() {
+  const canvas = document.getElementById('boosting-viz');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 450;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const iterY = [80, 180, 280];
+  const dataX = 100;
+  const modelX = width / 2;
+  const predX = width - 150;
+  
+  for (let i = 0; i < 3; i++) {
+    const y = iterY[i];
+    const alpha = i === 0 ? 1 : (i === 1 ? 0.7 : 0.5);
+    
+    // Iteration label
+    ctx.fillStyle = '#7ef0d4';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(`Iteration ${i + 1}`, 20, y + 30);
+    
+    // Data with weights
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#6aa9ff33';
+    ctx.fillRect(dataX, y, 120, 60);
+    ctx.strokeStyle = '#6aa9ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(dataX, y, 120, 60);
+    ctx.globalAlpha = 1;
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Weighted Data', dataX + 60, y + 25);
+    ctx.fillStyle = i > 0 ? '#ff8c6a' : '#7ef0d4';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.fillText(i > 0 ? '↑ Focus on errors' : 'Equal weights', dataX + 60, y + 45);
+    
+    // Arrow
+    ctx.strokeStyle = '#7ef0d4';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(dataX + 120, y + 30);
+    ctx.lineTo(modelX - 60, y + 30);
+    ctx.stroke();
+    
+    // Model
+    ctx.fillStyle = '#ffb49033';
+    ctx.fillRect(modelX - 60, y, 120, 60);
+    ctx.strokeStyle = '#ffb490';
+    ctx.strokeRect(modelX - 60, y, 120, 60);
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText(`Model ${i + 1}`, modelX, y + 35);
+    
+    // Arrow
+    ctx.strokeStyle = '#ffb490';
+    ctx.beginPath();
+    ctx.moveTo(modelX + 60, y + 30);
+    ctx.lineTo(predX - 60, y + 30);
+    ctx.stroke();
+    
+    // Predictions
+    ctx.fillStyle = '#7ef0d433';
+    ctx.fillRect(predX - 60, y, 120, 60);
+    ctx.strokeStyle = '#7ef0d4';
+    ctx.strokeRect(predX - 60, y, 120, 60);
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('Predictions', predX, y + 25);
+    ctx.fillStyle = i < 2 ? '#ff8c6a' : '#7ef0d4';
+    ctx.font = 'bold 10px sans-serif';
+    ctx.fillText(i < 2 ? 'Some errors' : 'Better!', predX, y + 45);
+    
+    // Feedback arrow
+    if (i < 2) {
+      ctx.strokeStyle = '#ff8c6a';
       ctx.lineWidth = 2;
-      const arrowY = y + boxHeight + gap / 2;
+      ctx.setLineDash([5, 5]);
       ctx.beginPath();
-      ctx.moveTo(x + boxWidth / 2, arrowY - 3);
-      ctx.lineTo(x + boxWidth / 2, arrowY + 3);
+      ctx.moveTo(predX - 60, y + 60);
+      ctx.lineTo(dataX + 60, y + 90);
       ctx.stroke();
+      ctx.setLineDash([]);
       
-      // Arrowhead
-      ctx.beginPath();
-      ctx.moveTo(x + boxWidth / 2, arrowY + 3);
-      ctx.lineTo(x + boxWidth / 2 - 4, arrowY - 2);
-      ctx.lineTo(x + boxWidth / 2 + 4, arrowY - 2);
-      ctx.fill();
+      ctx.fillStyle = '#ff8c6a';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Increase weights for errors', width / 2, y + 80);
     }
-  });
+  }
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Boosting: Sequential Learning from Mistakes', width / 2, 30);
+  
+  // Final
+  ctx.fillStyle = '#ff8c6a';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.fillText('Final Prediction = Weighted Combination of All Models', width / 2, height - 20);
+}
+
+function drawRandomForestViz() {
+  const canvas = document.getElementById('random-forest-viz');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const treeY = 120;
+  const numTrees = 5;
+  const treeSpacing = (width - 100) / numTrees;
+  const treeSize = 50;
+  
+  // Original data
+  ctx.fillStyle = '#6aa9ff33';
+  ctx.fillRect(width / 2 - 100, 40, 200, 50);
+  ctx.strokeStyle = '#6aa9ff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(width / 2 - 100, 40, 200, 50);
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Training Data', width / 2, 70);
+  
+  // Trees
+  for (let i = 0; i < numTrees; i++) {
+    const x = 50 + i * treeSpacing + treeSpacing / 2;
+    
+    // Arrow from data
+    ctx.strokeStyle = '#7ef0d4';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(width / 2, 90);
+    ctx.lineTo(x, treeY - 20);
+    ctx.stroke();
+    
+    // Tree icon (triangle)
+    ctx.fillStyle = '#7ef0d4';
+    ctx.beginPath();
+    ctx.moveTo(x, treeY - 20);
+    ctx.lineTo(x - treeSize / 2, treeY + treeSize - 20);
+    ctx.lineTo(x + treeSize / 2, treeY + treeSize - 20);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Trunk
+    ctx.fillStyle = '#ffb490';
+    ctx.fillRect(x - 8, treeY + treeSize - 20, 16, 30);
+    
+    // Tree label
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Tree ${i + 1}`, x, treeY + treeSize + 25);
+    
+    // Random features note
+    if (i === 0) {
+      ctx.font = '9px sans-serif';
+      ctx.fillStyle = '#a9b4c2';
+      ctx.fillText('Random', x, treeY + treeSize + 40);
+      ctx.fillText('subset', x, treeY + treeSize + 52);
+    }
+    
+    // Prediction
+    const predY = treeY + treeSize + 70;
+    ctx.fillStyle = i < 3 ? '#ff8c6a' : '#7ef0d4';
+    ctx.beginPath();
+    ctx.arc(x, predY, 12, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    ctx.fillStyle = '#1a2332';
+    ctx.font = 'bold 10px sans-serif';
+    ctx.fillText(i < 3 ? '1' : '0', x, predY + 4);
+    
+    // Arrow to vote
+    ctx.strokeStyle = i < 3 ? '#ff8c6a' : '#7ef0d4';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, predY + 12);
+    ctx.lineTo(width / 2, height - 80);
+    ctx.stroke();
+  }
+  
+  // Vote box
+  ctx.fillStyle = '#7ef0d433';
+  ctx.fillRect(width / 2 - 80, height - 80, 160, 60);
+  ctx.strokeStyle = '#7ef0d4';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(width / 2 - 80, height - 80, 160, 60);
+  
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Majority Vote', width / 2, height - 60);
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillStyle = '#ff8c6a';
+  ctx.fillText('Class 1 wins (3 vs 2)', width / 2, height - 35);
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('Random Forest: Ensemble of Decision Trees', width / 2, 25);
 }
 
 // Handle window resize
@@ -2708,8 +3578,19 @@ window.addEventListener('resize', () => {
     drawSVMCParameter();
     drawSVMTraining();
     drawSVMKernel();
-    drawOptimalK();
-    drawGridSearch();
-    drawNaiveBayes();
+    // New topics
+    drawElbowCurve();
+    drawCVKHeatmap();
+    drawGridSearchHeatmap();
+    drawParamSurface();
+    drawBayesTheorem();
+    drawSpamClassification();
+    drawDecisionTree();
+    drawEntropyViz();
+    drawSplitComparison();
+    drawTreeBoundary();
+    drawBaggingViz();
+    drawBoostingViz();
+    drawRandomForestViz();
   }, 250);
 });
