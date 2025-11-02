@@ -107,8 +107,10 @@ function initSections() {
         if (section.id === 'optimal-k') initOptimalK();
         if (section.id === 'hyperparameter-tuning') initHyperparameterTuning();
         if (section.id === 'naive-bayes') initNaiveBayes();
+        if (section.id === 'kmeans') initKMeans();
         if (section.id === 'decision-trees') initDecisionTrees();
         if (section.id === 'ensemble-methods') initEnsembleMethods();
+        if (section.id === 'algorithm-comparison') initAlgorithmComparison();
       }
     });
   });
@@ -204,82 +206,24 @@ function initLinearRegression() {
   drawLinearRegression();
 }
 
+let lrChart = null;
+
 function drawLinearRegression() {
   const canvas = document.getElementById('lr-canvas');
   if (!canvas) return;
   
-  const ctx = canvas.getContext('2d');
-  const width = canvas.width = canvas.offsetWidth;
-  const height = canvas.height = 400;
-  
-  ctx.clearRect(0, 0, width, height);
-  
-  const padding = 60;
-  const chartWidth = width - 2 * padding;
-  const chartHeight = height - 2 * padding;
-  
-  const xMin = 0, xMax = 7;
-  const yMin = 0, yMax = 100;
-  
-  // Draw axes
-  ctx.strokeStyle = '#2a3544';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(padding, padding);
-  ctx.lineTo(padding, height - padding);
-  ctx.lineTo(width - padding, height - padding);
-  ctx.stroke();
-  
-  // Grid
-  ctx.strokeStyle = 'rgba(42, 53, 68, 0.3)';
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= 5; i++) {
-    const x = padding + (chartWidth / 5) * i;
-    ctx.beginPath();
-    ctx.moveTo(x, padding);
-    ctx.lineTo(x, height - padding);
-    ctx.stroke();
-    
-    const y = height - padding - (chartHeight / 5) * i;
-    ctx.beginPath();
-    ctx.moveTo(padding, y);
-    ctx.lineTo(width - padding, y);
-    ctx.stroke();
+  // Destroy existing chart
+  if (lrChart) {
+    lrChart.destroy();
   }
   
-  const scaleX = (x) => padding + ((x - xMin) / (xMax - xMin)) * chartWidth;
-  const scaleY = (y) => height - padding - ((y - yMin) / (yMax - yMin)) * chartHeight;
+  const ctx = canvas.getContext('2d');
   
-  // Draw data points
-  ctx.fillStyle = '#6aa9ff';
-  data.linearRegression.forEach(point => {
-    const x = scaleX(point.experience);
-    const y = scaleY(point.salary);
-    ctx.beginPath();
-    ctx.arc(x, y, 6, 0, 2 * Math.PI);
-    ctx.fill();
-  });
-  
-  // Draw regression line
-  ctx.strokeStyle = '#ff8c6a';
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  const y1 = state.slope * xMin + state.intercept;
-  const y2 = state.slope * xMax + state.intercept;
-  ctx.moveTo(scaleX(xMin), scaleY(y1));
-  ctx.lineTo(scaleX(xMax), scaleY(y2));
-  ctx.stroke();
-  
-  // Labels
-  ctx.fillStyle = '#a9b4c2';
-  ctx.font = '12px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Experience (years)', width / 2, height - 20);
-  ctx.save();
-  ctx.translate(20, height / 2);
-  ctx.rotate(-Math.PI / 2);
-  ctx.fillText('Salary ($k)', 0, 0);
-  ctx.restore();
+  // Calculate fitted line points
+  const fittedLine = [];
+  for (let x = 0; x <= 7; x += 0.1) {
+    fittedLine.push({ x: x, y: state.slope * x + state.intercept });
+  }
   
   // Calculate MSE
   let mse = 0;
@@ -290,11 +234,57 @@ function drawLinearRegression() {
   });
   mse /= data.linearRegression.length;
   
-  // Display MSE
-  ctx.fillStyle = '#7ef0d4';
-  ctx.font = '14px sans-serif';
-  ctx.textAlign = 'right';
-  ctx.fillText(`MSE: ${mse.toFixed(2)}`, width - padding, padding + 20);
+  lrChart = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: 'Data Points',
+          data: data.linearRegression.map(p => ({ x: p.experience, y: p.salary })),
+          backgroundColor: '#6aa9ff',
+          pointRadius: 8,
+          pointHoverRadius: 10
+        },
+        {
+          label: 'Fitted Line',
+          data: fittedLine,
+          type: 'line',
+          borderColor: '#ff8c6a',
+          borderWidth: 3,
+          fill: false,
+          pointRadius: 0,
+          tension: 0
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: `Experience vs Salary (MSE: ${mse.toFixed(2)})`,
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: {
+          labels: { color: '#a9b4c2' }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Years of Experience', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          title: { display: true, text: 'Salary ($k)', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        }
+      }
+    }
+  });
 }
 
 // Gradient Descent Visualization
@@ -386,87 +376,73 @@ function animateGradientDescent() {
   }, 50);
 }
 
+let gdChart = null;
+
 function drawGradientDescent(currentStep = -1) {
   const canvas = document.getElementById('gd-canvas');
   if (!canvas) return;
   
-  const ctx = canvas.getContext('2d');
-  const width = canvas.width = canvas.offsetWidth;
-  const height = canvas.height = 400;
-  
-  ctx.clearRect(0, 0, width, height);
-  
   if (state.gdIterations.length === 0) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#a9b4c2';
     ctx.font = '16px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Click "Run Gradient Descent" to see the algorithm in action', width / 2, height / 2);
+    ctx.fillText('Click "Run Gradient Descent" to see the algorithm in action', canvas.width / 2, canvas.height / 2);
     return;
   }
   
-  const padding = 60;
-  const chartWidth = width - 2 * padding;
-  const chartHeight = height - 2 * padding;
-  
-  const maxLoss = Math.max(...state.gdIterations.map(i => i.loss));
-  const minLoss = Math.min(...state.gdIterations.map(i => i.loss));
-  
-  // Draw axes
-  ctx.strokeStyle = '#2a3544';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(padding, padding);
-  ctx.lineTo(padding, height - padding);
-  ctx.lineTo(width - padding, height - padding);
-  ctx.stroke();
-  
-  const scaleX = (i) => padding + (i / (state.gdIterations.length - 1)) * chartWidth;
-  const scaleY = (loss) => height - padding - ((loss - minLoss) / (maxLoss - minLoss)) * chartHeight;
-  
-  // Draw loss curve
-  ctx.strokeStyle = '#7ef0d4';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  state.gdIterations.forEach((iter, i) => {
-    const x = scaleX(i);
-    const y = scaleY(iter.loss);
-    if (i === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
-    }
-  });
-  ctx.stroke();
-  
-  // Highlight current step
-  if (currentStep >= 0 && currentStep < state.gdIterations.length) {
-    const iter = state.gdIterations[currentStep];
-    const x = scaleX(currentStep);
-    const y = scaleY(iter.loss);
-    
-    ctx.fillStyle = '#ff8c6a';
-    ctx.beginPath();
-    ctx.arc(x, y, 6, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    // Display current values
-    ctx.fillStyle = '#e8eef6';
-    ctx.font = '12px sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText(`Step: ${currentStep + 1}`, padding + 10, padding + 20);
-    ctx.fillText(`Loss: ${iter.loss.toFixed(2)}`, padding + 10, padding + 40);
+  // Destroy existing chart
+  if (gdChart) {
+    gdChart.destroy();
   }
   
-  // Labels
-  ctx.fillStyle = '#a9b4c2';
-  ctx.font = '12px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Iterations', width / 2, height - 20);
-  ctx.save();
-  ctx.translate(20, height / 2);
-  ctx.rotate(-Math.PI / 2);
-  ctx.fillText('Loss (MSE)', 0, 0);
-  ctx.restore();
+  const ctx = canvas.getContext('2d');
+  const lossData = state.gdIterations.map((iter, i) => ({ x: i + 1, y: iter.loss }));
+  
+  gdChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      datasets: [{
+        label: 'Training Loss',
+        data: lossData,
+        borderColor: '#7ef0d4',
+        backgroundColor: 'rgba(126, 240, 212, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: currentStep >= 0 ? lossData.map((_, i) => i === currentStep ? 8 : 2) : 4,
+        pointBackgroundColor: currentStep >= 0 ? lossData.map((_, i) => i === currentStep ? '#ff8c6a' : '#7ef0d4') : '#7ef0d4'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: currentStep >= 0 ? `Gradient Descent Progress (Step ${currentStep + 1}/${state.gdIterations.length})` : 'Gradient Descent Progress',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: {
+          labels: { color: '#a9b4c2' }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Iterations', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          title: { display: true, text: 'Loss (MSE)', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        }
+      }
+    }
+  });
 }
 
 // Initialize everything when DOM is ready
@@ -766,9 +742,16 @@ function initSVMCParameter() {
   drawSVMCParameter();
 }
 
+let svmCChart = null;
+
 function drawSVMCParameter() {
   const canvas = document.getElementById('svm-c-canvas');
   if (!canvas) return;
+  
+  // Destroy existing chart
+  if (svmCChart) {
+    svmCChart.destroy();
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -852,8 +835,10 @@ function drawSVMCParameter() {
   // Update info
   const wNorm = Math.sqrt(w1 * w1 + w2 * w2);
   const marginWidth = 2 / wNorm;
-  document.getElementById('margin-width').textContent = marginWidth.toFixed(2);
-  document.getElementById('violations-count').textContent = violations;
+  const marginEl = document.getElementById('margin-width');
+  const violEl = document.getElementById('violations-count');
+  if (marginEl) marginEl.textContent = marginWidth.toFixed(2);
+  if (violEl) violEl.textContent = violations;
 }
 
 function initSVMTraining() {
@@ -1009,6 +994,8 @@ function drawSVMTraining() {
   });
 }
 
+let svmKernelChart = null;
+
 function initSVMKernel() {
   const canvas = document.getElementById('svm-kernel-canvas');
   if (!canvas || canvas.dataset.initialized) return;
@@ -1030,7 +1017,8 @@ function initSVMKernel() {
   if (paramSlider) {
     paramSlider.addEventListener('input', (e) => {
       state.svm.kernelParam = parseFloat(e.target.value);
-      document.getElementById('kernel-param-val').textContent = state.svm.kernelParam.toFixed(1);
+      const paramVal = document.getElementById('kernel-param-val');
+      if (paramVal) paramVal.textContent = state.svm.kernelParam.toFixed(1);
       drawSVMKernel();
     });
   }
@@ -2357,6 +2345,9 @@ function drawLossCurves() {
 }
 
 // Topic 13: Finding Optimal K in KNN
+let elbowChart = null;
+let cvKChart = null;
+
 function initOptimalK() {
   const canvas1 = document.getElementById('elbow-canvas');
   if (canvas1 && !canvas1.dataset.initialized) {
@@ -2404,57 +2395,72 @@ function drawElbowCurve() {
   ctx.lineTo(width - padding, height - padding);
   ctx.stroke();
   
-  // Draw curve
-  ctx.strokeStyle = '#6aa9ff';
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  kValues.forEach((k, i) => {
-    const x = scaleX(k);
-    const y = scaleY(accuracies[i]);
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+  // Destroy existing chart
+  if (elbowChart) {
+    elbowChart.destroy();
+  }
+  
+  // Use Chart.js
+  elbowChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: kValues,
+      datasets: [{
+        label: 'Accuracy',
+        data: accuracies,
+        borderColor: '#6aa9ff',
+        backgroundColor: 'rgba(106, 169, 255, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: kValues.map(k => k === optimalK ? 10 : 5),
+        pointBackgroundColor: kValues.map(k => k === optimalK ? '#7ef0d4' : '#6aa9ff'),
+        pointBorderColor: kValues.map(k => k === optimalK ? '#7ef0d4' : '#6aa9ff'),
+        pointBorderWidth: kValues.map(k => k === optimalK ? 3 : 2)
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: `Elbow Method: Optimal K = ${optimalK} (Accuracy: ${accuracies[optimalK - 1].toFixed(2)})`,
+          color: '#7ef0d4',
+          font: { size: 16, weight: 'bold' }
+        },
+        legend: {
+          labels: { color: '#a9b4c2' }
+        },
+        annotation: {
+          annotations: {
+            line1: {
+              type: 'line',
+              xMin: optimalK,
+              xMax: optimalK,
+              borderColor: '#7ef0d4',
+              borderWidth: 2,
+              borderDash: [5, 5]
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'K (Number of Neighbors)', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          title: { display: true, text: 'Accuracy', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' },
+          min: 0.7,
+          max: 1.0
+        }
+      }
+    }
   });
-  ctx.stroke();
-  
-  // Draw points
-  kValues.forEach((k, i) => {
-    const x = scaleX(k);
-    const y = scaleY(accuracies[i]);
-    ctx.fillStyle = k === optimalK ? '#7ef0d4' : '#6aa9ff';
-    ctx.beginPath();
-    ctx.arc(x, y, k === optimalK ? 8 : 4, 0, 2 * Math.PI);
-    ctx.fill();
-  });
-  
-  // Highlight optimal K
-  const optX = scaleX(optimalK);
-  const optY = scaleY(accuracies[optimalK - 1]);
-  ctx.strokeStyle = '#7ef0d4';
-  ctx.lineWidth = 2;
-  ctx.setLineDash([5, 5]);
-  ctx.beginPath();
-  ctx.moveTo(optX, optY);
-  ctx.lineTo(optX, height - padding);
-  ctx.stroke();
-  ctx.setLineDash([]);
-  
-  // Labels
-  ctx.fillStyle = '#a9b4c2';
-  ctx.font = '12px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('K (Number of Neighbors)', width / 2, height - 20);
-  ctx.save();
-  ctx.translate(20, height / 2);
-  ctx.rotate(-Math.PI / 2);
-  ctx.fillText('Accuracy', 0, 0);
-  ctx.restore();
-  
-  // Optimal K label
-  ctx.fillStyle = '#7ef0d4';
-  ctx.font = 'bold 14px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(`Optimal K = ${optimalK}`, optX, padding + 30);
-  ctx.fillText(`Accuracy: ${accuracies[optimalK - 1].toFixed(2)}`, optX, padding + 50);
 }
 
 function drawCVKHeatmap() {
@@ -2541,6 +2547,8 @@ function drawCVKHeatmap() {
 }
 
 // Topic 14: Hyperparameter Tuning
+let gridSearchChart = null;
+
 function initHyperparameterTuning() {
   const canvas1 = document.getElementById('gridsearch-heatmap');
   if (canvas1 && !canvas1.dataset.initialized) {
@@ -2565,6 +2573,11 @@ function initHyperparameterTuning() {
 function drawGridSearchHeatmap() {
   const canvas = document.getElementById('gridsearch-heatmap');
   if (!canvas) return;
+  
+  // Destroy existing chart
+  if (gridSearchChart) {
+    gridSearchChart.destroy();
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -2660,7 +2673,24 @@ function drawGridSearchHeatmap() {
   ctx.fillText('Gamma Parameter', 0, 0);
   ctx.restore();
   
-  // Best params
+  // Best params - Use Chart.js for bar comparison instead
+  const compareData = [];
+  cValues.forEach((c, j) => {
+    gammaValues.forEach((g, i) => {
+      compareData.push({
+        c: c,
+        gamma: g,
+        acc: accuracies[i][j],
+        label: `C=${c}, γ=${g}`
+      });
+    });
+  });
+  
+  // Sort and get top 5
+  compareData.sort((a, b) => b.acc - a.acc);
+  const top5 = compareData.slice(0, 5);
+  
+  // Add annotation for best
   ctx.fillStyle = '#7ef0d4';
   ctx.font = 'bold 14px sans-serif';
   ctx.textAlign = 'left';
@@ -2731,6 +2761,10 @@ function drawParamSurface() {
 }
 
 // Topic 15: Naive Bayes
+let bayesComparisonChart = null;
+let categoricalNBChart = null;
+let gaussianNBChart = null;
+
 function initNaiveBayes() {
   const canvas1 = document.getElementById('bayes-theorem-viz');
   if (canvas1 && !canvas1.dataset.initialized) {
@@ -2742,6 +2776,18 @@ function initNaiveBayes() {
   if (canvas2 && !canvas2.dataset.initialized) {
     canvas2.dataset.initialized = 'true';
     drawSpamClassification();
+  }
+  
+  const canvas3 = document.getElementById('categorical-nb-canvas');
+  if (canvas3 && !canvas3.dataset.initialized) {
+    canvas3.dataset.initialized = 'true';
+    drawCategoricalNB();
+  }
+  
+  const canvas4 = document.getElementById('gaussian-nb-canvas');
+  if (canvas4 && !canvas4.dataset.initialized) {
+    canvas4.dataset.initialized = 'true';
+    drawGaussianNB();
   }
 }
 
@@ -2797,6 +2843,183 @@ function drawBayesTheorem() {
   ctx.fillStyle = '#7ef0d4';
   ctx.font = 'bold 18px sans-serif';
   ctx.fillText("Bayes' Theorem Breakdown", centerX, 40);
+}
+
+function drawCategoricalNB() {
+  const canvas = document.getElementById('categorical-nb-canvas');
+  if (!canvas) return;
+  
+  if (categoricalNBChart) {
+    categoricalNBChart.destroy();
+  }
+  
+  const ctx = canvas.getContext('2d');
+  
+  categoricalNBChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['P(Yes|Rainy,Hot)', 'P(No|Rainy,Hot)'],
+      datasets: [{
+        label: 'Without Smoothing',
+        data: [0.0833, 0],
+        backgroundColor: 'rgba(255, 140, 106, 0.6)',
+        borderColor: '#ff8c6a',
+        borderWidth: 2
+      }, {
+        label: 'With Laplace Smoothing',
+        data: [0.0818, 0.0266],
+        backgroundColor: 'rgba(126, 240, 212, 0.6)',
+        borderColor: '#7ef0d4',
+        borderWidth: 2
+      }, {
+        label: 'Normalized Probability',
+        data: [0.755, 0.245],
+        backgroundColor: 'rgba(106, 169, 255, 0.8)',
+        borderColor: '#6aa9ff',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Categorical Naive Bayes: Probability Comparison',
+          color: '#e8eef6',
+          font: { size: 16, weight: 'bold' }
+        },
+        legend: {
+          labels: { color: '#a9b4c2' }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          title: { display: true, text: 'Probability', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' },
+          min: 0,
+          max: 1
+        }
+      }
+    }
+  });
+}
+
+function drawGaussianNB() {
+  const canvas = document.getElementById('gaussian-nb-canvas');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 60;
+  const chartWidth = width - 2 * padding;
+  const chartHeight = height - 2 * padding;
+  
+  const xMin = 0, xMax = 5, yMin = 0, yMax = 4;
+  const scaleX = (x) => padding + (x / xMax) * chartWidth;
+  const scaleY = (y) => height - padding - (y / yMax) * chartHeight;
+  
+  // Draw decision boundary (approximate)
+  ctx.strokeStyle = '#6aa9ff';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([5, 5]);
+  ctx.beginPath();
+  ctx.moveTo(scaleX(2.5), scaleY(0));
+  ctx.lineTo(scaleX(2.5), scaleY(4));
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  // Draw "Yes" points
+  const yesPoints = [{x: 1.0, y: 2.0}, {x: 2.0, y: 1.0}, {x: 1.5, y: 1.8}];
+  yesPoints.forEach(p => {
+    ctx.fillStyle = '#7ef0d4';
+    ctx.beginPath();
+    ctx.arc(scaleX(p.x), scaleY(p.y), 8, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = '#1a2332';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+  
+  // Draw "No" points
+  const noPoints = [{x: 3.0, y: 3.0}, {x: 3.5, y: 2.8}, {x: 2.9, y: 3.2}];
+  noPoints.forEach(p => {
+    ctx.fillStyle = '#ff8c6a';
+    ctx.beginPath();
+    ctx.arc(scaleX(p.x), scaleY(p.y), 8, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = '#1a2332';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+  
+  // Draw test point
+  ctx.fillStyle = '#ffeb3b';
+  ctx.beginPath();
+  ctx.arc(scaleX(2.0), scaleY(2.0), 12, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.strokeStyle = '#6aa9ff';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  
+  // Label test point
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Test [2.0, 2.0]', scaleX(2.0), scaleY(2.0) - 20);
+  ctx.fillStyle = '#7ef0d4';
+  ctx.fillText('→ YES', scaleX(2.0), scaleY(2.0) + 30);
+  
+  // Axes
+  ctx.strokeStyle = '#2a3544';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, height - padding);
+  ctx.lineTo(width - padding, height - padding);
+  ctx.stroke();
+  
+  // Labels
+  ctx.fillStyle = '#a9b4c2';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('X₁', width / 2, height - 20);
+  ctx.save();
+  ctx.translate(20, height / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('X₂', 0, 0);
+  ctx.restore();
+  
+  // Legend
+  ctx.fillStyle = '#7ef0d4';
+  ctx.beginPath();
+  ctx.arc(padding + 20, 30, 6, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('Class: Yes', padding + 30, 35);
+  
+  ctx.fillStyle = '#ff8c6a';
+  ctx.beginPath();
+  ctx.arc(padding + 120, 30, 6, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.fillStyle = '#e8eef6';
+  ctx.fillText('Class: No', padding + 130, 35);
+  
+  ctx.fillStyle = '#6aa9ff';
+  ctx.fillText('| Decision Boundary', padding + 210, 35);
 }
 
 function drawSpamClassification() {
@@ -2859,20 +3082,52 @@ function drawSpamClassification() {
   ctx.font = 'bold 18px sans-serif';
   ctx.fillText('→ SPAM! 📧❌', padding, y4 + 30);
   
-  // Visual comparison
-  const barY = y4 + 60;
-  const barMaxWidth = width - 2 * padding - 100;
-  ctx.fillStyle = '#7ef0d4';
-  ctx.fillRect(padding, barY, 0.1008 / 0.1008 * barMaxWidth, 20);
-  ctx.fillStyle = '#e8eef6';
-  ctx.font = '11px sans-serif';
-  ctx.textAlign = 'right';
-  ctx.fillText('Spam', padding + barMaxWidth + 80, barY + 15);
-  
-  ctx.fillStyle = '#ff8c6a';
-  ctx.fillRect(padding, barY + 30, 0.0007 / 0.1008 * barMaxWidth, 20);
-  ctx.fillStyle = '#e8eef6';
-  ctx.fillText('Not Spam', padding + barMaxWidth + 80, barY + 45);
+  // Create comparison chart at bottom
+  if (!bayesComparisonChart) {
+    const compCanvas = document.createElement('canvas');
+    compCanvas.id = 'bayes-comparison-chart';
+    compCanvas.style.marginTop = '20px';
+    canvas.parentElement.appendChild(compCanvas);
+    
+    bayesComparisonChart = new Chart(compCanvas.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Spam Probability', 'Not-Spam Probability'],
+        datasets: [{
+          label: 'Probability',
+          data: [0.1008, 0.0007],
+          backgroundColor: ['#7ef0d4', '#ff8c6a'],
+          borderColor: ['#7ef0d4', '#ff8c6a'],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+          title: {
+            display: true,
+            text: 'Probability Comparison',
+            color: '#e8eef6',
+            font: { size: 14 }
+          },
+          legend: { display: false }
+        },
+        scales: {
+          x: {
+            grid: { color: '#2a3544' },
+            ticks: { color: '#a9b4c2' }
+          },
+          y: {
+            grid: { display: false },
+            ticks: { color: '#a9b4c2' }
+          }
+        }
+      }
+    });
+    compCanvas.style.height = '150px';
+  }
 }
 
 // Topic 16: Decision Trees
@@ -3552,6 +3807,326 @@ function drawRandomForestViz() {
   ctx.fillText('Random Forest: Ensemble of Decision Trees', width / 2, 25);
 }
 
+// Topic 16: K-means Clustering
+let kmeansVizChart = null;
+let kmeansElbowChart = null;
+
+function initKMeans() {
+  const canvas1 = document.getElementById('kmeans-viz-canvas');
+  if (canvas1 && !canvas1.dataset.initialized) {
+    canvas1.dataset.initialized = 'true';
+    drawKMeansVisualization();
+  }
+  
+  const canvas2 = document.getElementById('kmeans-elbow-canvas');
+  if (canvas2 && !canvas2.dataset.initialized) {
+    canvas2.dataset.initialized = 'true';
+    drawKMeansElbow();
+  }
+}
+
+function drawKMeansVisualization() {
+  const canvas = document.getElementById('kmeans-viz-canvas');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 450;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 60;
+  const chartWidth = width - 2 * padding;
+  const chartHeight = height - 2 * padding;
+  
+  const xMin = 0, xMax = 10, yMin = 0, yMax = 12;
+  const scaleX = (x) => padding + (x / xMax) * chartWidth;
+  const scaleY = (y) => height - padding - (y / yMax) * chartHeight;
+  
+  // Data points
+  const points = [
+    {id: 'A', x: 1, y: 2, cluster: 1},
+    {id: 'B', x: 1.5, y: 1.8, cluster: 1},
+    {id: 'C', x: 5, y: 8, cluster: 2},
+    {id: 'D', x: 8, y: 8, cluster: 2},
+    {id: 'E', x: 1, y: 0.6, cluster: 1},
+    {id: 'F', x: 9, y: 11, cluster: 2}
+  ];
+  
+  // Final centroids
+  const centroids = [
+    {x: 1.17, y: 1.47, color: '#7ef0d4'},
+    {x: 7.33, y: 9.0, color: '#ff8c6a'}
+  ];
+  
+  // Draw lines from points to centroids
+  points.forEach(p => {
+    const c = centroids[p.cluster - 1];
+    ctx.strokeStyle = p.cluster === 1 ? 'rgba(126, 240, 212, 0.3)' : 'rgba(255, 140, 106, 0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(scaleX(p.x), scaleY(p.y));
+    ctx.lineTo(scaleX(c.x), scaleY(c.y));
+    ctx.stroke();
+  });
+  
+  // Draw points
+  points.forEach(p => {
+    ctx.fillStyle = p.cluster === 1 ? '#7ef0d4' : '#ff8c6a';
+    ctx.beginPath();
+    ctx.arc(scaleX(p.x), scaleY(p.y), 8, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = '#1a2332';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    // Label
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(p.id, scaleX(p.x), scaleY(p.y) - 15);
+  });
+  
+  // Draw centroids
+  centroids.forEach((c, i) => {
+    ctx.fillStyle = c.color;
+    ctx.beginPath();
+    ctx.arc(scaleX(c.x), scaleY(c.y), 12, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = '#e8eef6';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    
+    // Draw X
+    ctx.strokeStyle = '#1a2332';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(scaleX(c.x) - 6, scaleY(c.y) - 6);
+    ctx.lineTo(scaleX(c.x) + 6, scaleY(c.y) + 6);
+    ctx.moveTo(scaleX(c.x) + 6, scaleY(c.y) - 6);
+    ctx.lineTo(scaleX(c.x) - 6, scaleY(c.y) + 6);
+    ctx.stroke();
+    
+    // Label
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`c${i+1}`, scaleX(c.x), scaleY(c.y) + 25);
+  });
+  
+  // Axes
+  ctx.strokeStyle = '#2a3544';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, height - padding);
+  ctx.lineTo(width - padding, height - padding);
+  ctx.stroke();
+  
+  // Labels
+  ctx.fillStyle = '#a9b4c2';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('X', width / 2, height - 20);
+  ctx.save();
+  ctx.translate(20, height / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Y', 0, 0);
+  ctx.restore();
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('K-means Clustering (K=2) - Final State', width / 2, 30);
+  
+  // WCSS
+  ctx.fillStyle = '#6aa9ff';
+  ctx.font = '14px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('WCSS = 15.984', padding, height - padding + 30);
+}
+
+function drawKMeansElbow() {
+  const canvas = document.getElementById('kmeans-elbow-canvas');
+  if (!canvas) return;
+  
+  if (kmeansElbowChart) {
+    kmeansElbowChart.destroy();
+  }
+  
+  const ctx = canvas.getContext('2d');
+  
+  const kValues = [1, 2, 3, 4, 5];
+  const wcssValues = [50, 18, 10, 8, 7];
+  
+  kmeansElbowChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: kValues,
+      datasets: [{
+        label: 'WCSS',
+        data: wcssValues,
+        borderColor: '#6aa9ff',
+        backgroundColor: 'rgba(106, 169, 255, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: kValues.map(k => k === 3 ? 10 : 6),
+        pointBackgroundColor: kValues.map(k => k === 3 ? '#7ef0d4' : '#6aa9ff'),
+        pointBorderColor: kValues.map(k => k === 3 ? '#7ef0d4' : '#6aa9ff'),
+        pointBorderWidth: kValues.map(k => k === 3 ? 3 : 2)
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Elbow Method: Optimal K = 3 (Elbow Point)',
+          color: '#7ef0d4',
+          font: { size: 16, weight: 'bold' }
+        },
+        legend: {
+          labels: { color: '#a9b4c2' }
+        },
+        annotation: {
+          annotations: {
+            line1: {
+              type: 'line',
+              xMin: 3,
+              xMax: 3,
+              borderColor: '#7ef0d4',
+              borderWidth: 2,
+              borderDash: [5, 5],
+              label: {
+                display: true,
+                content: 'Elbow!',
+                position: 'start'
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Number of Clusters (K)', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2', stepSize: 1 }
+        },
+        y: {
+          title: { display: true, text: 'Within-Cluster Sum of Squares (WCSS)', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' },
+          min: 0
+        }
+      }
+    }
+  });
+}
+
+// Topic 19: Algorithm Comparison
+function initAlgorithmComparison() {
+  const canvas = document.getElementById('decision-flowchart');
+  if (!canvas || canvas.dataset.initialized) return;
+  canvas.dataset.initialized = 'true';
+  drawDecisionFlowchart();
+}
+
+function drawDecisionFlowchart() {
+  const canvas = document.getElementById('decision-flowchart');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 500;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const nodes = [
+    { x: width/2, y: 50, text: 'Start:\nWhat problem?', w: 140, h: 60, color: '#7ef0d4', type: 'start' },
+    { x: width/4, y: 160, text: 'Classification', w: 120, h: 50, color: '#6aa9ff', type: 'decision' },
+    { x: width/2, y: 160, text: 'Regression', w: 120, h: 50, color: '#6aa9ff', type: 'decision' },
+    { x: 3*width/4, y: 160, text: 'Clustering', w: 120, h: 50, color: '#6aa9ff', type: 'decision' },
+    { x: width/8, y: 270, text: 'Linear?', w: 100, h: 50, color: '#ffb490', type: 'question' },
+    { x: 3*width/8, y: 270, text: 'Fast?', w: 100, h: 50, color: '#ffb490', type: 'question' },
+    { x: width/2, y: 270, text: 'Linear?', w: 100, h: 50, color: '#ffb490', type: 'question' },
+    { x: 3*width/4, y: 270, text: 'Known K?', w: 100, h: 50, color: '#ffb490', type: 'question' },
+    { x: width/16, y: 380, text: 'Logistic\nRegression', w: 90, h: 50, color: '#7ef0d4', type: 'result' },
+    { x: 3*width/16, y: 380, text: 'SVM', w: 90, h: 50, color: '#7ef0d4', type: 'result' },
+    { x: 5*width/16, y: 380, text: 'Naive\nBayes', w: 90, h: 50, color: '#7ef0d4', type: 'result' },
+    { x: 7*width/16, y: 380, text: 'Random\nForest', w: 90, h: 50, color: '#7ef0d4', type: 'result' },
+    { x: 9*width/16, y: 380, text: 'Linear\nRegression', w: 90, h: 50, color: '#7ef0d4', type: 'result' },
+    { x: 11*width/16, y: 380, text: 'XGBoost', w: 90, h: 50, color: '#7ef0d4', type: 'result' },
+    { x: 13*width/16, y: 380, text: 'K-means', w: 90, h: 50, color: '#7ef0d4', type: 'result' },
+    { x: 15*width/16, y: 380, text: 'DBSCAN', w: 90, h: 50, color: '#7ef0d4', type: 'result' }
+  ];
+  
+  const edges = [
+    { from: 0, to: 1 }, { from: 0, to: 2 }, { from: 0, to: 3 },
+    { from: 1, to: 4 }, { from: 1, to: 5 },
+    { from: 2, to: 6 },
+    { from: 3, to: 7 },
+    { from: 4, to: 8, label: 'Yes' }, { from: 4, to: 9, label: 'No' },
+    { from: 5, to: 10, label: 'Yes' }, { from: 5, to: 11, label: 'No' },
+    { from: 6, to: 12, label: 'Yes' }, { from: 6, to: 13, label: 'No' },
+    { from: 7, to: 14, label: 'Yes' }, { from: 7, to: 15, label: 'No' }
+  ];
+  
+  // Draw edges
+  ctx.strokeStyle = '#6aa9ff';
+  ctx.lineWidth = 2;
+  edges.forEach(edge => {
+    const from = nodes[edge.from];
+    const to = nodes[edge.to];
+    
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y + from.h/2);
+    ctx.lineTo(to.x, to.y - to.h/2);
+    ctx.stroke();
+    
+    if (edge.label) {
+      ctx.fillStyle = '#7ef0d4';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      const midX = (from.x + to.x) / 2;
+      const midY = (from.y + to.y) / 2;
+      ctx.fillText(edge.label, midX + 12, midY);
+    }
+  });
+  
+  // Draw nodes
+  nodes.forEach(node => {
+    const x = node.x - node.w/2;
+    const y = node.y - node.h/2;
+    
+    ctx.fillStyle = node.color + '33';
+    ctx.fillRect(x, y, node.w, node.h);
+    ctx.strokeStyle = node.color;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, node.w, node.h);
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = node.type === 'result' ? 'bold 11px sans-serif' : '11px sans-serif';
+    ctx.textAlign = 'center';
+    const lines = node.text.split('\n');
+    lines.forEach((line, i) => {
+      ctx.fillText(line, node.x, node.y - (lines.length - 1) * 6 + i * 12);
+    });
+  });
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Algorithm Selection Flowchart', width/2, 25);
+}
+
 // Handle window resize
 let resizeTimer;
 window.addEventListener('resize', () => {
@@ -3579,18 +4154,23 @@ window.addEventListener('resize', () => {
     drawSVMTraining();
     drawSVMKernel();
     // New topics
-    drawElbowCurve();
-    drawCVKHeatmap();
-    drawGridSearchHeatmap();
-    drawParamSurface();
-    drawBayesTheorem();
-    drawSpamClassification();
-    drawDecisionTree();
-    drawEntropyViz();
-    drawSplitComparison();
-    drawTreeBoundary();
-    drawBaggingViz();
-    drawBoostingViz();
-    drawRandomForestViz();
+    if (document.getElementById('elbow-canvas')) drawElbowCurve();
+    if (document.getElementById('cv-k-canvas')) drawCVKHeatmap();
+    if (document.getElementById('gridsearch-heatmap')) drawGridSearchHeatmap();
+    if (document.getElementById('param-surface')) drawParamSurface();
+    if (document.getElementById('bayes-theorem-viz')) drawBayesTheorem();
+    if (document.getElementById('spam-classification')) drawSpamClassification();
+    if (document.getElementById('decision-tree-viz')) drawDecisionTree();
+    if (document.getElementById('entropy-viz')) drawEntropyViz();
+    if (document.getElementById('split-comparison')) drawSplitComparison();
+    if (document.getElementById('tree-boundary')) drawTreeBoundary();
+    if (document.getElementById('bagging-viz')) drawBaggingViz();
+    if (document.getElementById('boosting-viz')) drawBoostingViz();
+    if (document.getElementById('random-forest-viz')) drawRandomForestViz();
+    if (document.getElementById('categorical-nb-canvas')) drawCategoricalNB();
+    if (document.getElementById('gaussian-nb-canvas')) drawGaussianNB();
+    if (document.getElementById('kmeans-viz-canvas')) drawKMeansVisualization();
+    if (document.getElementById('kmeans-elbow-canvas')) drawKMeansElbow();
+    if (document.getElementById('decision-flowchart')) drawDecisionFlowchart();
   }, 250);
 });

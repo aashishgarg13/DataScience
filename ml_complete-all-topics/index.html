@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Machine Learning: Complete Educational Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
 @font-face {
   font-family: 'FKGroteskNeue';
@@ -499,8 +500,10 @@ canvas {
                 <a href="#optimal-k" class="toc-link">13. Finding Optimal K in KNN</a>
                 <a href="#hyperparameter-tuning" class="toc-link">14. Hyperparameter Tuning</a>
                 <a href="#naive-bayes" class="toc-link">15. Naive Bayes</a>
-                <a href="#decision-trees" class="toc-link">16. Decision Trees</a>
-                <a href="#ensemble-methods" class="toc-link">17. Ensemble Methods</a>
+                <a href="#kmeans" class="toc-link">16. K-means Clustering</a>
+                <a href="#decision-trees" class="toc-link">17. Decision Trees</a>
+                <a href="#ensemble-methods" class="toc-link">18. Ensemble Methods</a>
+                <a href="#algorithm-comparison" class="toc-link">19. Algorithm Comparison</a>
             </nav>
         </aside>
 
@@ -616,8 +619,8 @@ canvas {
                     <p>We can find a line (y = 7.5x + 32) that predicts: Someone with 7 years experience will earn approximately $84.5k.</p>
 
                     <div class="figure">
-                        <div class="figure-placeholder" style="height: 400px">
-                            <canvas id="lr-canvas"></canvas>
+                        <div class="figure-placeholder" style="height: 400px; position: relative;">
+                            <canvas id="lr-canvas" style="width: 100%; height: 100%;"></canvas>
                         </div>
                         <p class="figure-caption"><strong>Figure 1:</strong> Scatter plot showing experience vs. salary with the best fit line</p>
                     </div>
@@ -710,8 +713,8 @@ canvas {
                     </ul>
 
                     <div class="figure">
-                        <div class="figure-placeholder" style="height: 400px">
-                            <canvas id="gd-canvas"></canvas>
+                        <div class="figure-placeholder" style="height: 400px; position: relative;">
+                            <canvas id="gd-canvas" style="width: 100%; height: 100%;"></canvas>
                         </div>
                         <p class="figure-caption"><strong>Figure 2:</strong> Loss surface showing gradient descent path to minimum</p>
                     </div>
@@ -2402,8 +2405,8 @@ Actual  Pos     TP     FN
                     <p>Test different K values and plot performance. Look for the "elbow" where adding more neighbors doesn't help much.</p>
 
                     <div class="figure">
-                        <div class="figure-placeholder" style="height: 400px">
-                            <canvas id="elbow-canvas"></canvas>
+                        <div class="figure-placeholder" style="height: 400px; position: relative;">
+                            <canvas id="elbow-canvas" style="width: 100%; height: 100%;"></canvas>
                         </div>
                         <p class="figure-caption"><strong>Figure 1:</strong> Elbow curve showing optimal K at the bend</p>
                     </div>
@@ -2550,14 +2553,14 @@ Actual  Pos     TP     FN
                 </div>
             </div>
 
-            <!-- Section 15: Naive Bayes -->
+            <!-- Section 15: Naive Bayes (COMPREHENSIVE WITH MATH) -->
             <div class="section" id="naive-bayes">
                 <div class="section-header">
                     <h2>15. Naive Bayes Classification</h2>
                     <button class="section-toggle">▼</button>
                 </div>
                 <div class="section-body">
-                    <p>Naive Bayes is a probabilistic classifier based on Bayes' Theorem. Despite its "naive" independence assumption, it works surprisingly well for text classification and other tasks!</p>
+                    <p>Naive Bayes is a probabilistic classifier based on Bayes' Theorem. Despite its "naive" independence assumption, it works surprisingly well for text classification and other tasks! We'll cover both Categorical and Gaussian Naive Bayes with complete mathematical solutions.</p>
 
                     <div class="info-card">
                         <div class="info-card-title">Key Concepts</div>
@@ -2668,9 +2671,271 @@ Actual  Pos     TP     FN
                         </tbody>
                     </table>
 
+                    <h3>🎯 PART A: Categorical Naive Bayes (Step-by-Step from PDF)</h3>
+                    
+                    <h4>Dataset: Tennis Play Prediction</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Outlook</th><th>Temperature</th><th>Play</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Sunny</td><td>Hot</td><td>No</td></tr>
+                            <tr><td>Sunny</td><td>Mild</td><td>No</td></tr>
+                            <tr><td>Cloudy</td><td>Hot</td><td>Yes</td></tr>
+                            <tr><td>Rainy</td><td>Mild</td><td>Yes</td></tr>
+                            <tr><td>Rainy</td><td>Cool</td><td>Yes</td></tr>
+                            <tr><td>Cloudy</td><td>Cool</td><td>Yes</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <p><strong>Problem:</strong> Predict whether to play tennis when Outlook=Rainy and Temperature=Hot</p>
+                    
+                    <div class="step">
+                        <div class="step-title">STEP 1: Calculate Prior Probabilities</div>
+                        <div class="step-calculation">
+                            Count occurrences in training data:<br>
+                            • Play=Yes appears 4 times out of 6 total<br>
+                            • Play=No appears 2 times out of 6 total<br>
+                            <br>
+                            <strong>Calculation:</strong><br>
+                            P(Yes) = 4/6 = <strong>0.667 (66.7%)</strong><br>
+                            P(No) = 2/6 = <strong>0.333 (33.3%)</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title">STEP 2: Calculate Conditional Probabilities (Before Smoothing)</div>
+                        <div class="step-calculation">
+                            <strong>For Outlook = "Rainy":</strong><br>
+                            • Count (Rainy AND Yes) = 2 examples<br>
+                            • Count (Yes) = 4 total<br>
+                            • P(Rainy|Yes) = 2/4 = <strong>0.5</strong><br>
+                            <br>
+                            • Count (Rainy AND No) = 0 examples ❌<br>
+                            • Count (No) = 2 total<br>
+                            • P(Rainy|No) = 0/2 = <strong>0</strong> ⚠️ <span style="color: #ff8c6a;">ZERO PROBABILITY PROBLEM!</span><br>
+                            <br>
+                            <strong>For Temperature = "Hot":</strong><br>
+                            • P(Hot|Yes) = 1/4 = <strong>0.25</strong><br>
+                            • P(Hot|No) = 1/2 = <strong>0.5</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="formula">
+                        <strong>Step 3: Apply Bayes' Theorem (Initial)</strong><br>
+                        <br>
+                        P(Yes|Rainy,Hot) = P(Yes) × P(Rainy|Yes) × P(Hot|Yes)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.667 × 0.5 × 0.25<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.0833<br>
+                        <br>
+                        P(No|Rainy,Hot) = P(No) × P(Rainy|No) × P(Hot|No)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.333 × 0 × 0.5<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0 ❌ Problem!
+                    </div>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Zero Probability Problem</div>
+                        <div class="callout-content">
+                            When P(Rainy|No) = 0, the entire probability becomes 0! This is unrealistic - just because we haven't seen "Rainy" with "No" in our training data doesn't mean it's impossible. We need <strong>Laplace Smoothing</strong>!
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title">STEP 4: Apply Laplace Smoothing (α = 1)</div>
+                        <div class="step-calculation">
+                            <strong>Smoothed formula:</strong><br>
+                            P(x|c) = (count(x,c) + α) / (count(c) + α × num_categories)<br>
+                            <br>
+                            <strong>For Outlook</strong> (3 categories: Sunny, Cloudy, Rainy):<br>
+                            P(Rainy|Yes) = (2 + 1) / (4 + 1×3)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 3/7<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <strong>0.429</strong> ✓<br>
+                            <br>
+                            P(Rainy|No) = (0 + 1) / (2 + 1×3)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 1/5<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <strong>0.2</strong> ✓ <span style="color: #7ef0d4;">Fixed the zero!</span><br>
+                            <br>
+                            <strong>For Temperature</strong> (3 categories: Hot, Mild, Cool):<br>
+                            P(Hot|Yes) = (1 + 1) / (4 + 1×3) = 2/7 = <strong>0.286</strong><br>
+                            P(Hot|No) = (1 + 1) / (2 + 1×3) = 2/5 = <strong>0.4</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title">STEP 5: Recalculate with Smoothing</div>
+                        <div class="step-calculation">
+                            <strong>P(Yes|Rainy,Hot):</strong><br>
+                            = P(Yes) × P(Rainy|Yes) × P(Hot|Yes)<br>
+                            = 0.667 × 0.429 × 0.286<br>
+                            = <strong>0.0818</strong><br>
+                            <br>
+                            <strong>P(No|Rainy,Hot):</strong><br>
+                            = P(No) × P(Rainy|No) × P(Hot|No)<br>
+                            = 0.333 × 0.2 × 0.4<br>
+                            = <strong>0.0266</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title">STEP 6: Normalize to Get Final Probabilities</div>
+                        <div class="step-calculation">
+                            <strong>Sum of probabilities:</strong><br>
+                            Sum = 0.0818 + 0.0266 = <strong>0.1084</strong><br>
+                            <br>
+                            <strong>Normalize:</strong><br>
+                            P(Yes|Rainy,Hot) = 0.0818 / 0.1084<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <strong style="color: #7ef0d4;">0.755 (75.5%)</strong><br>
+                            <br>
+                            P(No|Rainy,Hot) = 0.0266 / 0.1084<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <strong style="color: #ff8c6a;">0.245 (24.5%)</strong><br>
+                            <br>
+                            <div style="background: rgba(126, 240, 212, 0.2); padding: 16px; border-radius: 8px; margin-top: 12px;">
+                                <strong style="color: #7ef0d4; font-size: 20px;">✅ FINAL PREDICTION: YES (Play Tennis!)</strong><br>
+                                <span style="color: #a9b4c2; font-size: 14px;">Confidence: 75.5%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="categorical-nb-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Categorical Naive Bayes calculation visualization</p>
+                    </div>
+                    
+                    <h3>🎯 PART B: Gaussian Naive Bayes (Step-by-Step from PDF)</h3>
+                    
+                    <h4>Dataset: 2D Classification</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>ID</th><th>X₁</th><th>X₂</th><th>Class</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>A</td><td>1.0</td><td>2.0</td><td>Yes</td></tr>
+                            <tr><td>B</td><td>2.0</td><td>1.0</td><td>Yes</td></tr>
+                            <tr><td>C</td><td>1.5</td><td>1.8</td><td>Yes</td></tr>
+                            <tr><td>D</td><td>3.0</td><td>3.0</td><td>No</td></tr>
+                            <tr><td>E</td><td>3.5</td><td>2.8</td><td>No</td></tr>
+                            <tr><td>F</td><td>2.9</td><td>3.2</td><td>No</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <p><strong>Problem:</strong> Classify test point [X₁=2.0, X₂=2.0]</p>
+                    
+                    <div class="step">
+                        <div class="step-title">STEP 1: Calculate Mean and Variance for Each Class</div>
+                        <div class="step-calculation">
+                            <strong>Class "Yes" (samples A, B, C):</strong><br>
+                            X₁ values: [1.0, 2.0, 1.5]<br>
+                            μ₁(Yes) = (1.0 + 2.0 + 1.5) / 3 = <strong>1.5</strong><br>
+                            σ₁²(Yes) = [(1-1.5)² + (2-1.5)² + (1.5-1.5)²] / 3<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= [0.25 + 0.25 + 0] / 3<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <strong>0.166</strong><br>
+                            <br>
+                            X₂ values: [2.0, 1.0, 1.8]<br>
+                            μ₂(Yes) = (2.0 + 1.0 + 1.8) / 3 = <strong>1.6</strong><br>
+                            σ₂²(Yes) = [(2-1.6)² + (1-1.6)² + (1.8-1.6)²] / 3<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= [0.16 + 0.36 + 0.04] / 3<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <strong>0.186</strong><br>
+                            <br>
+                            <strong>Class "No" (samples D, E, F):</strong><br>
+                            X₁ values: [3.0, 3.5, 2.9]<br>
+                            μ₁(No) = (3.0 + 3.5 + 2.9) / 3 = <strong>3.133</strong><br>
+                            σ₁²(No) = <strong>0.0688</strong><br>
+                            <br>
+                            X₂ values: [3.0, 2.8, 3.2]<br>
+                            μ₂(No) = (3.0 + 2.8 + 3.2) / 3 = <strong>3.0</strong><br>
+                            σ₂²(No) = <strong>0.0266</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="formula">
+                        <strong>Step 2: Gaussian Probability Density Function</strong><br>
+                        <br>
+                        P(x|μ,σ²) = (1/√(2πσ²)) × exp(-(x-μ)²/(2σ²))<br>
+                        <br>
+                        This gives us the probability density at point x given mean μ and variance σ²
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title">STEP 3: Calculate P(X₁=2.0 | Class) using Gaussian PDF</div>
+                        <div class="step-calculation">
+                            <strong>For Class "Yes" (μ=1.5, σ²=0.166):</strong><br>
+                            P(2.0|Yes) = (1/√(2π × 0.166)) × exp(-(2.0-1.5)²/(2 × 0.166))<br>
+                            <br>
+                            Step-by-step:<br>
+                            • Normalization: 1/√(2π × 0.166) = 1/√1.043 = 1/1.021 = <strong>0.9772</strong><br>
+                            • Exponent: -(2.0-1.5)²/(2 × 0.166) = -(0.5)²/0.332 = -0.25/0.332 = <strong>-0.753</strong><br>
+                            • e^(-0.753) = <strong>0.471</strong><br>
+                            • Final: 0.9772 × 0.471 = <strong style="color: #7ef0d4;">0.460</strong><br>
+                            <br>
+                            <strong>For Class "No" (μ=3.133, σ²=0.0688):</strong><br>
+                            P(2.0|No) = (1/√(2π × 0.0688)) × exp(-(2.0-3.133)²/(2 × 0.0688))<br>
+                            <br>
+                            Step-by-step:<br>
+                            • Normalization: 1/√(2π × 0.0688) = <strong>1.523</strong><br>
+                            • Exponent: -(2.0-3.133)²/(2 × 0.0688) = -(-1.133)²/0.1376 = -1.283/0.1376 = <strong>-9.333</strong><br>
+                            • e^(-9.333) = <strong>0.000088</strong><br>
+                            • Final: 1.523 × 0.000088 = <strong style="color: #ff8c6a;">0.000134</strong><br>
+                            <br>
+                            <span style="color: #7ef0d4;">• Point (2.0, ?) is MUCH more likely to be "Yes"!</span>
+                        </div>
+                    </div>
+                    
+                    <div class="formula">
+                        <strong>Step 4: Calculate P(X₂=2.0 | Class)</strong><br>
+                        <br>
+                        <strong>For "Yes":</strong><br>
+                        P(2.0|Yes) = (1/√(2π×0.186)) × exp(-(2.0-1.6)²/(2×0.186))<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.923 × exp(-0.430)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.923 × 0.651<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.601<br>
+                        <br>
+                        <strong>For "No":</strong><br>
+                        P(2.0|No) = (1/√(2π×0.0266)) × exp(-(2.0-3.0)²/(2×0.0266))<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 2.449 × exp(-18.797)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 2.449 × 0.0000000614<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.00000015
+                    </div>
+                    
+                    <div class="formula">
+                        <strong>Step 5: Combine with Prior (assume equal priors)</strong><br>
+                        <br>
+                        P(Yes) = P(No) = 0.5<br>
+                        <br>
+                        P(Yes|X) ∝ P(Yes) × P(X₁=2.0|Yes) × P(X₂=2.0|Yes)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.5 × 0.460 × 0.601<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.138<br>
+                        <br>
+                        P(No|X) ∝ P(No) × P(X₁=2.0|No) × P(X₂=2.0|No)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.5 × 0.000134 × 0.00000015<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.00000000001
+                    </div>
+                    
+                    <div class="formula">
+                        <strong>Step 6: Normalize</strong><br>
+                        <br>
+                        Sum = 0.138 + 0.00000000001 ≈ 0.138<br>
+                        <br>
+                        P(Yes|X) = 0.138 / 0.138 ≈ 1.0 (99.99%)<br>
+                        P(No|X) ≈ 0.0 (0.01%)<br>
+                        <br>
+                        <strong style="color: #7ef0d4; font-size: 18px;">Prediction: YES ✅</strong>
+                    </div>
+                    
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="gaussian-nb-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Gaussian Naive Bayes with decision boundary</p>
+                    </div>
+
                     <div class="callout success">
                         <div class="callout-title">✅ When to Use Naive Bayes</div>
                         <div class="callout-content">
+                            <strong>Categorical NB:</strong> Discrete features (text, categories)<br>
+                            <strong>Gaussian NB:</strong> Continuous features (measurements, coordinates)<br>
+                            <br>
                             <strong>Perfect for:</strong><br>
                             • Text classification (spam detection, sentiment analysis)<br>
                             • Document categorization<br>
@@ -2687,7 +2952,187 @@ Actual  Pos     TP     FN
                 </div>
             </div>
 
-            <!-- Section 16: Decision Trees -->
+            <!-- Section 16: K-means Clustering -->
+            <div class="section" id="kmeans">
+                <div class="section-header">
+                    <h2>16. K-means Clustering</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>K-means is an unsupervised learning algorithm that groups data into K clusters. Each cluster has a centroid (center point), and points are assigned to the nearest centroid. Perfect for customer segmentation, image compression, and pattern discovery!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Unsupervised: No labels needed!</li>
+                            <li>K = number of clusters (you choose)</li>
+                            <li>Minimizes Within-Cluster Sum of Squares (WCSS)</li>
+                            <li>Iterative: Updates centroids until convergence</li>
+                        </ul>
+                    </div>
+
+                    <h3>🎯 Step-by-Step K-means Algorithm (from PDF)</h3>
+
+                    <h4>Dataset: 6 Points in 2D Space</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Point</th><th>X</th><th>Y</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>A</td><td>1</td><td>2</td></tr>
+                            <tr><td>B</td><td>1.5</td><td>1.8</td></tr>
+                            <tr><td>C</td><td>5</td><td>8</td></tr>
+                            <tr><td>D</td><td>8</td><td>8</td></tr>
+                            <tr><td>E</td><td>1</td><td>0.6</td></tr>
+                            <tr><td>F</td><td>9</td><td>11</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Goal:</strong> Group into K=2 clusters</p>
+                    <p><strong>Initial Centroids:</strong> c₁ = [3, 4], c₂ = [5, 1]</p>
+
+                    <div class="formula">
+                        <strong>Distance Formula (Euclidean):</strong><br>
+                        d(point, centroid) = √[(x₁-x₂)² + (y₁-y₂)²]
+                    </div>
+
+                    <h4>Iteration 1</h4>
+
+                    <div class="formula">
+                        <strong>Step 1: Calculate Distances to All Centroids</strong><br>
+                        <br>
+                        <strong>Point A (1, 2):</strong><br>
+                        d(A, c₁) = √[(1-3)² + (2-4)²] = √[4+4] = √8 = 2.83<br>
+                        d(A, c₂) = √[(1-5)² + (2-1)²] = √[16+1] = √17 = 4.12<br>
+                        → Assign to c₁ (closer)<br>
+                        <br>
+                        <strong>Point B (1.5, 1.8):</strong><br>
+                        d(B, c₁) = √[(1.5-3)² + (1.8-4)²] = √[2.25+4.84] = 2.66<br>
+                        d(B, c₂) = √[(1.5-5)² + (1.8-1)²] = √[12.25+0.64] = 3.59<br>
+                        → Assign to c₁<br>
+                        <br>
+                        <strong>Point C (5, 8):</strong><br>
+                        d(C, c₁) = √[(5-3)² + (8-4)²] = √[4+16] = 4.47<br>
+                        d(C, c₂) = √[(5-5)² + (8-1)²] = √[0+49] = 7.0<br>
+                        → Assign to c₁<br>
+                        <br>
+                        <strong>Point D (8, 8):</strong><br>
+                        d(D, c₁) = √[(8-3)² + (8-4)²] = √[25+16] = 6.40<br>
+                        d(D, c₂) = √[(8-5)² + (8-1)²] = √[9+49] = 7.62<br>
+                        → Assign to c₁<br>
+                        <br>
+                        <strong>Point E (1, 0.6):</strong><br>
+                        d(E, c₁) = √[(1-3)² + (0.6-4)²] = √[4+11.56] = 3.94<br>
+                        d(E, c₂) = √[(1-5)² + (0.6-1)²] = √[16+0.16] = 4.02<br>
+                        → Assign to c₁<br>
+                        <br>
+                        <strong>Point F (9, 11):</strong><br>
+                        d(F, c₁) = √[(9-3)² + (11-4)²] = √[36+49] = 9.22<br>
+                        d(F, c₂) = √[(9-5)² + (11-1)²] = √[16+100] = 10.77<br>
+                        → Assign to c₁<br>
+                        <br>
+                        <strong>Result:</strong> Cluster 1 = {A, B, C, D, E, F}, Cluster 2 = {}
+                    </div>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Poor Initial Centroids!</div>
+                        <div class="callout-content">
+                            All points assigned to c₁! This happens with bad initialization. Let's try better initial centroids for the algorithm to work properly.
+                        </div>
+                    </div>
+
+                    <p><strong>Better Initial Centroids:</strong> c₁ = [1, 1], c₂ = [8, 9]</p>
+
+                    <div class="formula">
+                        <strong>Iteration 1 (Revised):</strong><br>
+                        <br>
+                        Cluster 1: {A, B, E} → c₁_new = mean = [(1+1.5+1)/3, (2+1.8+0.6)/3] = [1.17, 1.47]<br>
+                        Cluster 2: {C, D, F} → c₂_new = mean = [(5+8+9)/3, (8+8+11)/3] = [7.33, 9.00]<br>
+                        <br>
+                        <strong>WCSS Calculation:</strong><br>
+                        WCSS₁ = d²(A,c₁) + d²(B,c₁) + d²(E,c₁)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= (1-1.17)²+(2-1.47)² + (1.5-1.17)²+(1.8-1.47)² + (1-1.17)²+(0.6-1.47)²<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.311 + 0.218 + 0.786 = 1.315<br>
+                        <br>
+                        WCSS₂ = d²(C,c₂) + d²(D,c₂) + d²(F,c₂)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= (5-7.33)²+(8-9)² + (8-7.33)²+(8-9)² + (9-7.33)²+(11-9)²<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 6.433 + 1.447 + 6.789 = 14.669<br>
+                        <br>
+                        <strong>Total WCSS = 1.315 + 14.669 = 15.984</strong>
+                    </div>
+
+                    <div class="formula">
+                        <strong>Iteration 2:</strong><br>
+                        <br>
+                        Using c₁ = [1.17, 1.47] and c₂ = [7.33, 9.00], recalculate distances...<br>
+                        <br>
+                        Result: Same assignments! Centroids don't change.<br>
+                        <strong>✓ Converged!</strong>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="kmeans-viz-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> K-means clustering visualization with centroid movement</p>
+                    </div>
+
+                    <h3>Finding Optimal K: The Elbow Method</h3>
+
+                    <p>How do we choose K? Try different values and plot WCSS!</p>
+
+                    <div class="formula">
+                        <strong>WCSS for Different K Values:</strong><br>
+                        <br>
+                        K=1: WCSS = 50.0 (all in one cluster)<br>
+                        K=2: WCSS = 18.0<br>
+                        K=3: WCSS = 10.0 ← Elbow point!<br>
+                        K=4: WCSS = 8.0<br>
+                        K=5: WCSS = 7.0<br>
+                        <br>
+                        <strong>Rule:</strong> Choose K at the "elbow" where WCSS stops decreasing rapidly
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="kmeans-elbow-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Elbow method - optimal K is where the curve bends</p>
+                    </div>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 K-means Tips</div>
+                        <div class="callout-content">
+                            <strong>Advantages:</strong><br>
+                            ✓ Simple and fast<br>
+                            ✓ Works well with spherical clusters<br>
+                            ✓ Scales to large datasets<br>
+                            <br>
+                            <strong>Disadvantages:</strong><br>
+                            ✗ Need to specify K in advance<br>
+                            ✗ Sensitive to initial centroids (use K-means++!)<br>
+                            ✗ Assumes spherical clusters<br>
+                            ✗ Sensitive to outliers<br>
+                            <br>
+                            <strong>Solutions:</strong><br>
+                            • Use elbow method for K<br>
+                            • Use K-means++ initialization<br>
+                            • Run multiple times with different initializations
+                        </div>
+                    </div>
+
+                    <h3>Real-World Applications</h3>
+                    <ul>
+                        <li><strong>Customer Segmentation:</strong> Group customers by behavior</li>
+                        <li><strong>Image Compression:</strong> Reduce colors in images</li>
+                        <li><strong>Document Clustering:</strong> Group similar articles</li>
+                        <li><strong>Anomaly Detection:</strong> Points far from centroids are outliers</li>
+                        <li><strong>Feature Learning:</strong> Learn representations for neural networks</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Section 17: Decision Trees -->
             <div class="section" id="decision-trees">
                 <div class="section-header">
                     <h2>16. Decision Trees</h2>
@@ -2845,10 +3290,10 @@ Actual  Pos     TP     FN
                 </div>
             </div>
 
-            <!-- Section 17: Ensemble Methods -->
+            <!-- Section 18: Ensemble Methods -->
             <div class="section" id="ensemble-methods">
                 <div class="section-header">
-                    <h2>17. Ensemble Methods</h2>
+                    <h2>18. Ensemble Methods</h2>
                     <button class="section-toggle">▼</button>
                 </div>
                 <div class="section-body">
