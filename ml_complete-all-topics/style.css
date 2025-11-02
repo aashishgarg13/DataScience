@@ -977,6 +977,103 @@ html, body {
   color: var(--color-btn-primary-text);
 }
 
+/* TOC Category Styles */
+.toc-category {
+  margin-bottom: var(--space-8);
+}
+
+.toc-category-header {
+  display: flex;
+  align-items: center;
+  padding: var(--space-12) var(--space-16);
+  background-color: rgba(var(--color-teal-500-rgb), 0.15);
+  border-radius: var(--radius-base);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-standard);
+  margin-bottom: var(--space-8);
+}
+
+.toc-category-header:hover {
+  background-color: rgba(var(--color-teal-500-rgb), 0.25);
+}
+
+.toc-category-header[data-category="supervised"] {
+  background-color: rgba(106, 169, 255, 0.15);
+}
+
+.toc-category-header[data-category="supervised"]:hover {
+  background-color: rgba(106, 169, 255, 0.25);
+}
+
+.toc-category-header[data-category="unsupervised"] {
+  background-color: rgba(126, 240, 212, 0.15);
+}
+
+.toc-category-header[data-category="unsupervised"]:hover {
+  background-color: rgba(126, 240, 212, 0.25);
+}
+
+.toc-category-header[data-category="reinforcement"] {
+  background-color: rgba(255, 140, 106, 0.15);
+}
+
+.toc-category-header[data-category="reinforcement"]:hover {
+  background-color: rgba(255, 140, 106, 0.25);
+}
+
+.category-icon {
+  font-size: var(--font-size-xl);
+  margin-right: var(--space-8);
+}
+
+.category-title {
+  flex: 1;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  letter-spacing: 0.5px;
+}
+
+.category-toggle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  transition: transform var(--duration-normal) var(--ease-standard);
+}
+
+.category-toggle.collapsed {
+  transform: rotate(-90deg);
+}
+
+.toc-category-content {
+  padding-left: var(--space-16);
+  max-height: 1000px;
+  overflow: hidden;
+  transition: max-height var(--duration-normal) var(--ease-standard);
+}
+
+.toc-category-content.collapsed {
+  max-height: 0;
+}
+
+.toc-subcategory {
+  margin-bottom: var(--space-12);
+}
+
+.toc-subcategory-title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: var(--space-8) var(--space-8) var(--space-4) var(--space-8);
+}
+
+.toc-link.toc-sub {
+  padding: var(--space-8) var(--space-12);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-4);
+}
+
 .nav-icon {
   font-size: var(--font-size-xl);
   margin-right: var(--space-12);

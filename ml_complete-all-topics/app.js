@@ -65,6 +65,32 @@ let state = {
   }
 };
 
+// Initialize category navigation
+function initCategories() {
+  const categoryHeaders = document.querySelectorAll('.toc-category-header');
+  
+  categoryHeaders.forEach(header => {
+    header.addEventListener('click', () => {
+      const category = header.getAttribute('data-category');
+      const content = document.getElementById(`${category}-content`);
+      const toggle = header.querySelector('.category-toggle');
+      
+      if (content.classList.contains('collapsed')) {
+        content.classList.remove('collapsed');
+        toggle.classList.remove('collapsed');
+      } else {
+        content.classList.add('collapsed');
+        toggle.classList.add('collapsed');
+      }
+    });
+  });
+  
+  // Start with all categories expanded
+  document.querySelectorAll('.toc-category-content').forEach(content => {
+    content.classList.remove('collapsed');
+  });
+}
+
 // Initialize collapsible sections
 function initSections() {
   const sections = document.querySelectorAll('.section');
@@ -110,6 +136,9 @@ function initSections() {
         if (section.id === 'kmeans') initKMeans();
         if (section.id === 'decision-trees') initDecisionTrees();
         if (section.id === 'ensemble-methods') initEnsembleMethods();
+        if (section.id === 'rl-intro') { /* No viz for intro */ }
+        if (section.id === 'q-learning') { /* Add Q-learning viz if needed */ }
+        if (section.id === 'policy-gradient') { /* Add policy gradient viz if needed */ }
         if (section.id === 'algorithm-comparison') initAlgorithmComparison();
       }
     });
@@ -234,7 +263,7 @@ function drawLinearRegression() {
   });
   mse /= data.linearRegression.length;
   
-  lrChart = new Chart(ctx, {
+  lrChart = safeCreateChart(ctx, {
     type: 'scatter',
     data: {
       datasets: [
@@ -284,7 +313,7 @@ function drawLinearRegression() {
         }
       }
     }
-  });
+  }, 'Linear Regression Chart');
 }
 
 // Gradient Descent Visualization
@@ -400,7 +429,7 @@ function drawGradientDescent(currentStep = -1) {
   const ctx = canvas.getContext('2d');
   const lossData = state.gdIterations.map((iter, i) => ({ x: i + 1, y: iter.loss }));
   
-  gdChart = new Chart(ctx, {
+  gdChart = safeCreateChart(ctx, {
     type: 'line',
     data: {
       datasets: [{
@@ -445,8 +474,27 @@ function drawGradientDescent(currentStep = -1) {
   });
 }
 
+// Safe chart creation with error handling
+function safeCreateChart(ctx, config, chartName) {
+  try {
+    if (!ctx) {
+      console.warn(`Canvas context not found for ${chartName}`);
+      return null;
+    }
+    return new Chart(ctx, config);
+  } catch (error) {
+    console.error(`Chart creation failed for ${chartName}:`, error);
+    // Show fallback message
+    if (ctx && ctx.canvas && ctx.canvas.parentElement) {
+      ctx.canvas.parentElement.innerHTML = `<p style="color: #ff8c6a; text-align: center; padding: 40px;">Visualization temporarily unavailable. Please refresh the page.</p>`;
+    }
+    return null;
+  }
+}
+
 // Initialize everything when DOM is ready
 function init() {
+  initCategories();
   initSections();
   initTOCLinks();
   
@@ -512,7 +560,12 @@ function drawSVMBasic() {
   if (!canvas) return;
   
   const ctx = canvas.getContext('2d');
-  const width = canvas.width = canvas.offsetWidth;
+  if (!ctx) {
+    console.warn('Could not get canvas context for svm-basic-canvas');
+    return;
+  }
+  
+  const width = canvas.width = canvas.offsetWidth || 600;
   const height = canvas.height = 450;
   
   ctx.clearRect(0, 0, width, height);
@@ -633,7 +686,12 @@ function drawSVMMargin() {
   if (!canvas) return;
   
   const ctx = canvas.getContext('2d');
-  const width = canvas.width = canvas.offsetWidth;
+  if (!ctx) {
+    console.warn('Could not get canvas context for svm-margin-canvas');
+    return;
+  }
+  
+  const width = canvas.width = canvas.offsetWidth || 600;
   const height = canvas.height = 450;
   
   ctx.clearRect(0, 0, width, height);
@@ -754,7 +812,12 @@ function drawSVMCParameter() {
   }
   
   const ctx = canvas.getContext('2d');
-  const width = canvas.width = canvas.offsetWidth;
+  if (!ctx) {
+    console.warn('Could not get canvas context for svm-c-canvas');
+    return;
+  }
+  
+  const width = canvas.width = canvas.offsetWidth || 600;
   const height = canvas.height = 450;
   
   ctx.clearRect(0, 0, width, height);
@@ -932,7 +995,12 @@ function drawSVMTraining() {
   if (!canvas) return;
   
   const ctx = canvas.getContext('2d');
-  const width = canvas.width = canvas.offsetWidth;
+  if (!ctx) {
+    console.warn('Could not get canvas context for svm-train-canvas');
+    return;
+  }
+  
+  const width = canvas.width = canvas.offsetWidth || 600;
   const height = canvas.height = 450;
   
   ctx.clearRect(0, 0, width, height);
@@ -2460,7 +2528,7 @@ function drawElbowCurve() {
         }
       }
     }
-  });
+  }, 'Elbow Chart');
 }
 
 function drawCVKHeatmap() {
@@ -2855,7 +2923,7 @@ function drawCategoricalNB() {
   
   const ctx = canvas.getContext('2d');
   
-  categoricalNBChart = new Chart(ctx, {
+  categoricalNBChart = safeCreateChart(ctx, {
     type: 'bar',
     data: {
       labels: ['P(Yes|Rainy,Hot)', 'P(No|Rainy,Hot)'],
@@ -2907,7 +2975,7 @@ function drawCategoricalNB() {
         }
       }
     }
-  });
+  }, 'Categorical Naive Bayes Chart');
 }
 
 function drawGaussianNB() {
@@ -3089,7 +3157,7 @@ function drawSpamClassification() {
     compCanvas.style.marginTop = '20px';
     canvas.parentElement.appendChild(compCanvas);
     
-    bayesComparisonChart = new Chart(compCanvas.getContext('2d'), {
+    bayesComparisonChart = safeCreateChart(compCanvas.getContext('2d'), {
       type: 'bar',
       data: {
         labels: ['Spam Probability', 'Not-Spam Probability'],
@@ -3125,8 +3193,8 @@ function drawSpamClassification() {
           }
         }
       }
-    });
-    compCanvas.style.height = '150px';
+    }, 'Bayes Comparison Chart');
+    if (bayesComparisonChart) compCanvas.style.height = '150px';
   }
 }
 
@@ -3243,6 +3311,67 @@ function drawDecisionTree() {
   ctx.font = '12px sans-serif';
   ctx.textAlign = 'left';
   ctx.fillText('Example: Email with "free" + link → SPAM', 40, height - 20);
+}
+
+function drawSplitComparison() {
+  const canvas = document.getElementById('split-comparison');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const splits = [
+    { name: 'Split A: "Contains FREE"', ig: 0.034, color: '#ff8c6a' },
+    { name: 'Split B: "Has Link"', ig: 0.156, color: '#7ef0d4' },
+    { name: 'Split C: "Urgent"', ig: 0.089, color: '#ffb490' }
+  ];
+  
+  const padding = 60;
+  const barHeight = 60;
+  const maxWidth = width - 2 * padding - 200;
+  const maxIG = Math.max(...splits.map(s => s.ig));
+  
+  splits.forEach((split, i) => {
+    const y = 80 + i * (barHeight + 40);
+    const barWidth = (split.ig / maxIG) * maxWidth;
+    
+    // Bar
+    ctx.fillStyle = split.color;
+    ctx.fillRect(padding, y, barWidth, barHeight);
+    
+    // Border
+    ctx.strokeStyle = split.color;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(padding, y, barWidth, barHeight);
+    
+    // Label
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(split.name, padding, y - 10);
+    
+    // Value
+    ctx.fillStyle = '#1a2332';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`IG = ${split.ig.toFixed(3)}`, padding + barWidth / 2, y + barHeight / 2 + 6);
+  });
+  
+  // Winner
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('✓ Best split: Highest Information Gain!', width / 2, height - 30);
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('Comparing Split Quality', width / 2, 40);
 }
 
 function drawEntropyViz() {
@@ -3386,6 +3515,88 @@ function drawSplitComparison() {
   ctx.fillStyle = '#7ef0d4';
   ctx.font = 'bold 16px sans-serif';
   ctx.fillText('Comparing Split Quality', width / 2, 40);
+}
+
+function drawEntropyViz() {
+  const canvas = document.getElementById('entropy-viz');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 60;
+  const chartWidth = width - 2 * padding;
+  const chartHeight = height - 2 * padding;
+  
+  // Draw entropy curve
+  ctx.strokeStyle = '#6aa9ff';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  for (let p = 0.01; p <= 0.99; p += 0.01) {
+    const entropy = -p * Math.log2(p) - (1 - p) * Math.log2(1 - p);
+    const x = padding + p * chartWidth;
+    const y = height - padding - entropy * chartHeight;
+    if (p === 0.01) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  
+  // Mark key points
+  const points = [
+    { p: 0.1, label: 'Pure\n(low)' },
+    { p: 0.5, label: 'Maximum\n(high)' },
+    { p: 0.9, label: 'Pure\n(low)' }
+  ];
+  
+  points.forEach(point => {
+    const entropy = -point.p * Math.log2(point.p) - (1 - point.p) * Math.log2(1 - point.p);
+    const x = padding + point.p * chartWidth;
+    const y = height - padding - entropy * chartHeight;
+    
+    ctx.fillStyle = '#7ef0d4';
+    ctx.beginPath();
+    ctx.arc(x, y, 6, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    ctx.fillStyle = '#7ef0d4';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    const lines = point.label.split('\n');
+    lines.forEach((line, i) => {
+      ctx.fillText(line, x, y - 15 - (lines.length - 1 - i) * 12);
+    });
+  });
+  
+  // Axes
+  ctx.strokeStyle = '#2a3544';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, height - padding);
+  ctx.lineTo(width - padding, height - padding);
+  ctx.stroke();
+  
+  // Labels
+  ctx.fillStyle = '#a9b4c2';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Proportion of Positive Class (p)', width / 2, height - 20);
+  ctx.save();
+  ctx.translate(20, height / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Entropy H(p)', 0, 0);
+  ctx.restore();
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Entropy: Measuring Disorder', width / 2, 30);
 }
 
 function drawTreeBoundary() {
@@ -3586,6 +3797,8 @@ function drawBaggingViz() {
   ctx.font = 'bold 16px sans-serif';
   ctx.fillText('Bagging: Bootstrap Aggregating', width / 2, 30);
 }
+
+
 
 function drawBoostingViz() {
   const canvas = document.getElementById('boosting-viz');
@@ -3962,7 +4175,7 @@ function drawKMeansElbow() {
   const kValues = [1, 2, 3, 4, 5];
   const wcssValues = [50, 18, 10, 8, 7];
   
-  kmeansElbowChart = new Chart(ctx, {
+  kmeansElbowChart = safeCreateChart(ctx, {
     type: 'line',
     data: {
       labels: kValues,
@@ -4025,15 +4238,511 @@ function drawKMeansElbow() {
         }
       }
     }
+  }, 'K-means Elbow Chart');
+}
+
+// Topic 18: Algorithm Comparison
+let comparisonState = {
+  selectedAlgorithms: [],
+  algorithmData: {
+    'Linear Regression': {
+      category: 'Supervised - Regression',
+      speed: 5, accuracy: 3, dataRequired: 1, interpretability: 5, scalability: 3,
+      featureScaling: 'Required', nonLinear: 'No', trainingTime: 'Fast', memoryUsage: 'Low',
+      bestFor: 'Linear trends, forecasting',
+      pros: ['Very fast', 'Highly interpretable', 'Works with little data', 'No tuning needed'],
+      cons: ['Assumes linearity', 'Sensitive to outliers', 'No complex patterns'],
+      useCases: { regression: 5, classification: 0, clustering: 0, speed: 5, interpretability: 5 }
+    },
+    'Logistic Regression': {
+      category: 'Supervised - Classification',
+      speed: 5, accuracy: 4, dataRequired: 2, interpretability: 4, scalability: 4,
+      featureScaling: 'Required', nonLinear: 'No', trainingTime: 'Fast', memoryUsage: 'Low',
+      bestFor: 'Binary classification, probabilities',
+      pros: ['Fast', 'Probabilistic output', 'Interpretable', 'Works well'],
+      cons: ['Binary only', 'Assumes linearity', 'Limited complexity'],
+      useCases: { regression: 0, classification: 5, clustering: 0, speed: 5, interpretability: 4 }
+    },
+    'SVM': {
+      category: 'Supervised - Classification',
+      speed: 2, accuracy: 5, dataRequired: 2, interpretability: 2, scalability: 2,
+      featureScaling: 'Required', nonLinear: 'Yes', trainingTime: 'Slow', memoryUsage: 'Medium',
+      bestFor: 'High accuracy, complex boundaries',
+      pros: ['Very high accuracy', 'Handles non-linear', 'Effective in high dims'],
+      cons: ['Slow training', 'Hard to interpret', 'Needs tuning'],
+      useCases: { regression: 2, classification: 5, clustering: 0, speed: 2, interpretability: 2 }
+    },
+    'KNN': {
+      category: 'Supervised - Classification',
+      speed: 1, accuracy: 4, dataRequired: 3, interpretability: 3, scalability: 1,
+      featureScaling: 'Required', nonLinear: 'Yes', trainingTime: 'None', memoryUsage: 'High',
+      bestFor: 'Local patterns, small datasets',
+      pros: ['Simple', 'No training', 'Handles non-linear'],
+      cons: ['Very slow prediction', 'Needs lots of memory', 'Needs scaling'],
+      useCases: { regression: 3, classification: 4, clustering: 3, speed: 1, interpretability: 3 }
+    },
+    'Naive Bayes': {
+      category: 'Supervised - Classification',
+      speed: 5, accuracy: 3, dataRequired: 2, interpretability: 5, scalability: 5,
+      featureScaling: 'Not needed', nonLinear: 'Yes', trainingTime: 'Fast', memoryUsage: 'Low',
+      bestFor: 'Quick models, text classification',
+      pros: ['Very fast', 'Interpretable', 'Works with little data'],
+      cons: ['Independence assumption wrong', 'Often biased', 'Limited accuracy'],
+      useCases: { regression: 2, classification: 4, clustering: 0, speed: 5, interpretability: 5 }
+    },
+    'Decision Trees': {
+      category: 'Supervised - Classification',
+      speed: 3, accuracy: 4, dataRequired: 2, interpretability: 5, scalability: 3,
+      featureScaling: 'Not needed', nonLinear: 'Yes', trainingTime: 'Medium', memoryUsage: 'Low',
+      bestFor: 'Interpretability, complex decisions',
+      pros: ['Very interpretable', 'No scaling needed', 'Handles non-linear'],
+      cons: ['Prone to overfitting', 'Unstable', 'Biased to dominant class'],
+      useCases: { regression: 3, classification: 4, clustering: 0, speed: 3, interpretability: 5 }
+    },
+    'Random Forest': {
+      category: 'Supervised - Classification',
+      speed: 2, accuracy: 5, dataRequired: 3, interpretability: 3, scalability: 3,
+      featureScaling: 'Not needed', nonLinear: 'Yes', trainingTime: 'Slow', memoryUsage: 'Medium',
+      bestFor: 'High accuracy with complex data',
+      pros: ['Very high accuracy', 'No scaling', 'Handles non-linear'],
+      cons: ['Slow', 'Less interpretable', 'Black box'],
+      useCases: { regression: 3, classification: 5, clustering: 0, speed: 3, interpretability: 2 }
+    },
+    'K-means': {
+      category: 'Unsupervised - Clustering',
+      speed: 4, accuracy: 3, dataRequired: 3, interpretability: 4, scalability: 4,
+      featureScaling: 'Required', nonLinear: 'No', trainingTime: 'Medium', memoryUsage: 'Low',
+      bestFor: 'Customer segmentation, grouping',
+      pros: ['Fast', 'Simple', 'Scalable'],
+      cons: ['Need to specify K', 'Sensitive to init', 'Assumes spherical'],
+      useCases: { regression: 0, classification: 0, clustering: 5, speed: 4, interpretability: 4 }
+    },
+    'PCA': {
+      category: 'Unsupervised - Dimensionality Reduction',
+      speed: 3, accuracy: 4, dataRequired: 2, interpretability: 2, scalability: 4,
+      featureScaling: 'Required', nonLinear: 'No', trainingTime: 'Medium', memoryUsage: 'Medium',
+      bestFor: 'High-dimensional data reduction',
+      pros: ['Reduces dimensions', 'Preserves variance', 'Fast after trained'],
+      cons: ['Components not interpretable', 'Linear only', 'Assumes normality'],
+      useCases: { regression: 0, classification: 0, clustering: 0, speed: 4, interpretability: 2 }
+    }
+  }
+};
+
+function initAlgorithmComparison() {
+  const container = document.getElementById('algorithm-checkboxes');
+  if (!container || container.dataset.initialized) return;
+  container.dataset.initialized = 'true';
+  
+  populateAlgorithmCheckboxes();
+  initComparisonListeners();
+  initQuiz();
+}
+
+function populateAlgorithmCheckboxes() {
+  const container = document.getElementById('algorithm-checkboxes');
+  if (!container) return;
+  
+  const categoryRadios = document.querySelectorAll('input[name="category"]');
+  
+  function updateCheckboxes() {
+    const selectedCategory = document.querySelector('input[name="category"]:checked')?.value || 'all';
+    container.innerHTML = '';
+    
+    Object.keys(comparisonState.algorithmData).forEach(name => {
+      const algo = comparisonState.algorithmData[name];
+      const category = algo.category.toLowerCase();
+      
+      if (selectedCategory === 'all' || 
+          (selectedCategory === 'supervised' && category.includes('supervised')) ||
+          (selectedCategory === 'unsupervised' && category.includes('unsupervised'))) {
+        
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.padding = '8px';
+        label.style.borderRadius = '6px';
+        label.style.transition = 'background 0.2s';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = name;
+        checkbox.addEventListener('change', updateSelection);
+        
+        const text = document.createTextNode(name);
+        
+        label.appendChild(checkbox);
+        label.appendChild(text);
+        label.addEventListener('mouseenter', () => label.style.background = 'var(--color-secondary)');
+        label.addEventListener('mouseleave', () => label.style.background = 'transparent');
+        
+        container.appendChild(label);
+      }
+    });
+  }
+  
+  categoryRadios.forEach(radio => radio.addEventListener('change', updateCheckboxes));
+  updateCheckboxes();
+}
+
+function updateSelection() {
+  const checkboxes = document.querySelectorAll('#algorithm-checkboxes input[type="checkbox"]:checked');
+  comparisonState.selectedAlgorithms = Array.from(checkboxes).map(cb => cb.value);
+  
+  const count = comparisonState.selectedAlgorithms.length;
+  const countEl = document.getElementById('selection-count');
+  const compareBtn = document.getElementById('compare-btn');
+  
+  if (countEl) {
+    countEl.textContent = `Selected: ${count} algorithm${count !== 1 ? 's' : ''}`;
+    countEl.style.color = count >= 2 && count <= 5 ? 'var(--color-success)' : 'var(--color-error)';
+  }
+  
+  if (compareBtn) {
+    compareBtn.disabled = count < 2 || count > 5;
+  }
+}
+
+function initComparisonListeners() {
+  const compareBtn = document.getElementById('compare-btn');
+  if (compareBtn) {
+    compareBtn.addEventListener('click', showComparison);
+  }
+  
+  const viewBtns = document.querySelectorAll('.view-btn');
+  viewBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      viewBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      const view = btn.dataset.view;
+      document.querySelectorAll('.comparison-view').forEach(v => v.style.display = 'none');
+      const targetView = document.getElementById(`view-${view}`);
+      if (targetView) targetView.style.display = 'block';
+    });
   });
 }
 
-// Topic 19: Algorithm Comparison
-function initAlgorithmComparison() {
-  const canvas = document.getElementById('decision-flowchart');
-  if (!canvas || canvas.dataset.initialized) return;
-  canvas.dataset.initialized = 'true';
-  drawDecisionFlowchart();
+function showComparison() {
+  const resultsDiv = document.getElementById('comparison-results');
+  if (!resultsDiv) return;
+  
+  resultsDiv.style.display = 'block';
+  resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  
+  renderComparisonTable();
+  renderRadarChart();
+  renderHeatmap();
+  renderUseCaseMatrix();
+  renderDetailedCards();
+}
+
+function renderComparisonTable() {
+  const table = document.getElementById('comparison-table');
+  if (!table) return;
+  
+  const metrics = [
+    { key: 'speed', label: 'Speed', format: (v) => '⭐'.repeat(v) },
+    { key: 'accuracy', label: 'Accuracy', format: (v) => '⭐'.repeat(v) },
+    { key: 'dataRequired', label: 'Data Required', format: (v) => ['Small', 'Small', 'Medium', 'Large', 'Very Large'][v] },
+    { key: 'interpretability', label: 'Interpretability', format: (v) => '⭐'.repeat(v) },
+    { key: 'featureScaling', label: 'Feature Scaling' },
+    { key: 'nonLinear', label: 'Handles Non-linear' },
+    { key: 'trainingTime', label: 'Training Time' },
+    { key: 'memoryUsage', label: 'Memory Usage' },
+    { key: 'bestFor', label: 'Best For' }
+  ];
+  
+  let html = '<thead><tr><th>Metric</th>';
+  comparisonState.selectedAlgorithms.forEach(name => {
+    html += `<th>${name}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+  
+  metrics.forEach(metric => {
+    html += `<tr><td><strong>${metric.label}</strong></td>`;
+    comparisonState.selectedAlgorithms.forEach(name => {
+      const algo = comparisonState.algorithmData[name];
+      const value = algo[metric.key];
+      const display = metric.format ? metric.format(value) : value;
+      html += `<td>${display}</td>`;
+    });
+    html += '</tr>';
+  });
+  
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+let radarComparisonChart = null;
+
+function renderRadarChart() {
+  const canvas = document.getElementById('radar-comparison-canvas');
+  if (!canvas) return;
+  
+  if (radarComparisonChart) {
+    radarComparisonChart.destroy();
+    radarComparisonChart = null;
+  }
+  
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 500;
+  
+  const colors = ['#6aa9ff', '#7ef0d4', '#ff8c6a', '#ffeb3b', '#ffb490'];
+  
+  const datasets = comparisonState.selectedAlgorithms.map((name, i) => {
+    const algo = comparisonState.algorithmData[name];
+    return {
+      label: name,
+      data: [algo.speed, algo.accuracy, 5 - algo.dataRequired, algo.interpretability, algo.scalability],
+      borderColor: colors[i],
+      backgroundColor: colors[i] + '33',
+      borderWidth: 2,
+      pointRadius: 4
+    };
+  });
+  
+  radarComparisonChart = safeCreateChart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['Speed', 'Accuracy', 'Data Efficiency', 'Interpretability', 'Scalability'],
+      datasets: datasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { color: '#a9b4c2', padding: 15 }
+        }
+      },
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 5,
+          ticks: { color: '#a9b4c2', backdropColor: 'transparent' },
+          grid: { color: '#2a3544' },
+          pointLabels: { color: '#e8eef6', font: { size: 12 } }
+        }
+      }
+    }
+  }, 'Radar Comparison Chart');
+}
+
+function renderHeatmap() {
+  const container = document.getElementById('view-heatmap');
+  if (!container) return;
+  
+  // Remove canvas, use HTML table instead for 100% browser compatibility
+  const metrics = ['Speed', 'Accuracy', 'Data Efficiency', 'Interpretability', 'Scalability'];
+  const algos = comparisonState.selectedAlgorithms;
+  
+  // Helper function to get color based on value
+  function getHeatmapColor(value) {
+    const intensity = value / 5;
+    const r = Math.floor(255 - 149 * intensity);
+    const g = Math.floor(140 + 100 * intensity);
+    const b = Math.floor(106 + 106 * intensity);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+  
+  // Build HTML table heatmap
+  let html = '<h3 style="margin-bottom: 20px; text-align: center; color: #7ef0d4;">Performance Heatmap (Higher is Better)</h3>';
+  html += '<div style="overflow-x: auto;">';
+  html += '<table style="width: 100%; border-collapse: collapse; margin: 20px auto; max-width: 1000px;">';
+  
+  // Header row
+  html += '<thead><tr style="background: #2a3544; border-bottom: 2px solid #6aa9ff;">';
+  html += '<th style="padding: 12px; text-align: left; color: #7ef0d4; border: 1px solid #3a4554; min-width: 150px;">Algorithm</th>';
+  metrics.forEach(metric => {
+    html += `<th style="padding: 12px; text-align: center; color: #7ef0d4; border: 1px solid #3a4554; min-width: 80px;">${metric}</th>`;
+  });
+  html += '</tr></thead>';
+  
+  // Data rows
+  html += '<tbody>';
+  algos.forEach((name, i) => {
+    const algo = comparisonState.algorithmData[name];
+    const values = [algo.speed, algo.accuracy, 5 - algo.dataRequired, algo.interpretability, algo.scalability];
+    
+    html += `<tr style="border-bottom: 1px solid #3a4554;">`;
+    html += `<td style="padding: 12px; font-weight: 600; background: #2a3544; color: #e8eef6; border: 1px solid #3a4554;">${name}</td>`;
+    
+    values.forEach((value, j) => {
+      const color = getHeatmapColor(value);
+      const stars = '⭐'.repeat(Math.round(value));
+      html += `<td style="padding: 12px; text-align: center; background: ${color}; border: 1px solid #1a2332; color: #1a2332; font-weight: bold; font-size: 16px;">`;
+      html += `<div style="margin-bottom: 4px;">${value.toFixed(0)}</div>`;
+      html += `<div style="font-size: 12px;">${stars}</div>`;
+      html += `</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  html += '</table>';
+  html += '</div>';
+  
+  // Legend
+  html += '<div style="text-align: center; margin-top: 24px; padding: 16px; background: var(--color-bg-2); border-radius: 8px;">';
+  html += '<strong style="color: #e8eef6;">Legend:</strong> ';
+  html += '<span style="margin-left: 16px;">🔴 Low (1-2)</span> ';
+  html += '<span style="margin-left: 16px;">🟡 Medium (3)</span> ';
+  html += '<span style="margin-left: 16px;">🟢 High (4-5)</span>';
+  html += '</div>';
+  
+  // Find the canvas and replace with our HTML
+  const oldCanvas = container.querySelector('#heatmap-canvas');
+  if (oldCanvas) {
+    oldCanvas.parentElement.innerHTML = html;
+  } else {
+    container.innerHTML = html;
+  }
+}
+
+function renderUseCaseMatrix() {
+  const table = document.getElementById('matrix-table');
+  if (!table) return;
+  
+  const useCases = [
+    { key: 'regression', label: 'Regression' },
+    { key: 'classification', label: 'Classification' },
+    { key: 'clustering', label: 'Clustering' },
+    { key: 'speed', label: 'Speed' },
+    { key: 'interpretability', label: 'Interpretability' }
+  ];
+  
+  let html = '<thead><tr><th>Use Case</th>';
+  comparisonState.selectedAlgorithms.forEach(name => {
+    html += `<th>${name}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+  
+  useCases.forEach(useCase => {
+    html += `<tr><td><strong>${useCase.label}</strong></td>`;
+    comparisonState.selectedAlgorithms.forEach(name => {
+      const algo = comparisonState.algorithmData[name];
+      const value = algo.useCases[useCase.key];
+      const check = '✓'.repeat(value);
+      html += `<td style="color: ${value > 3 ? 'var(--color-success)' : value > 0 ? 'var(--color-warning)' : 'var(--color-error)'}">${check || '✗'}</td>`;
+    });
+    html += '</tr>';
+  });
+  
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+function renderDetailedCards() {
+  const container = document.getElementById('detailed-cards');
+  if (!container) return;
+  
+  let html = '<h3 style="margin-bottom: 24px; text-align: center;">Detailed Comparison</h3>';
+  html += '<div style="display: grid; gap: 24px;">';
+  
+  comparisonState.selectedAlgorithms.forEach(name => {
+    const algo = comparisonState.algorithmData[name];
+    html += `
+      <div class="info-card" style="background: var(--color-bg-1); padding: 24px;">
+        <h4 style="font-size: 20px; margin-bottom: 16px; color: var(--color-primary);">${name}</h4>
+        <p style="margin-bottom: 12px; color: var(--color-text-secondary);">${algo.category}</p>
+        
+        <div style="margin: 20px 0;">
+          <strong style="color: var(--color-success);">✓ Pros:</strong>
+          <ul style="margin: 8px 0 0 20px; color: var(--color-text);">
+            ${algo.pros.map(p => `<li>${p}</li>`).join('')}
+          </ul>
+        </div>
+        
+        <div style="margin: 20px 0;">
+          <strong style="color: var(--color-error);">✗ Cons:</strong>
+          <ul style="margin: 8px 0 0 20px; color: var(--color-text);">
+            ${algo.cons.map(c => `<li>${c}</li>`).join('')}
+          </ul>
+        </div>
+        
+        <div style="padding: 12px; background: var(--color-secondary); border-radius: 6px; margin-top: 16px;">
+          <strong style="color: var(--color-text);">⚡ Best For:</strong> ${algo.bestFor}
+        </div>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function initQuiz() {
+  const questions = document.querySelectorAll('.quiz-question');
+  const resultDiv = document.getElementById('quiz-result');
+  
+  questions.forEach((q, idx) => {
+    const radios = q.querySelectorAll('input[type="radio"]');
+    radios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (idx < questions.length - 1) {
+          questions[idx + 1].style.display = 'block';
+        }
+        
+        if (idx === questions.length - 1) {
+          showQuizResult();
+        }
+      });
+    });
+  });
+  
+  function showQuizResult() {
+    const q1 = document.querySelector('input[name="q1"]:checked')?.value;
+    const q2 = document.querySelector('input[name="q2"]:checked')?.value;
+    const q3 = document.querySelector('input[name="q3"]:checked')?.value;
+    const q4 = document.querySelector('input[name="q4"]:checked')?.value;
+    
+    let recommendation = '';
+    let alternatives = [];
+    
+    if (q1 === 'no') {
+      recommendation = 'K-means';
+      alternatives = ['PCA', 'DBSCAN'];
+    } else if (q2 === 'numbers') {
+      if (q3 === 'little') {
+        recommendation = 'Linear Regression';
+        alternatives = ['Decision Trees'];
+      } else {
+        recommendation = 'Random Forest';
+        alternatives = ['XGBoost', 'Linear Regression'];
+      }
+    } else if (q2 === 'categories') {
+      if (q4 === 'very') {
+        recommendation = 'Decision Trees';
+        alternatives = ['Logistic Regression', 'Naive Bayes'];
+      } else if (q3 === 'little') {
+        recommendation = 'Naive Bayes';
+        alternatives = ['Logistic Regression'];
+      } else {
+        recommendation = 'Random Forest';
+        alternatives = ['SVM', 'XGBoost'];
+      }
+    } else {
+      recommendation = 'K-means';
+      alternatives = ['PCA'];
+    }
+    
+    if (resultDiv) {
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = `
+        <h4 style="font-size: 18px; color: var(--color-success); margin-bottom: 12px;">🎯 Recommendation: ${recommendation}</h4>
+        <p style="margin-bottom: 12px;">Based on your answers, <strong>${recommendation}</strong> is the best fit for your use case.</p>
+        <p style="margin-bottom: 8px;"><strong>Other good choices:</strong></p>
+        <ul style="margin-left: 20px;">
+          ${alternatives.map(a => `<li>${a}</li>`).join('')}
+        </ul>
+      `;
+      resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
 }
 
 function drawDecisionFlowchart() {
