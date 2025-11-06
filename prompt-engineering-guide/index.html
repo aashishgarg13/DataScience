@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Engineering Masterclass</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #121212;
+            color: #FFFFFF;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #1a1a1a;
+            border-right: 1px solid #333;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 20px;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-header h1 {
+            font-size: 20px;
+            color: #0066FF;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0066FF, #00D9FF);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .topic-list {
+            list-style: none;
+        }
+
+        .topic-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: #222;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .topic-item:hover {
+            background: #2a2a2a;
+            border-left-color: #0066FF;
+        }
+
+        .topic-item.active {
+            background: #0066FF22;
+            border-left-color: #0066FF;
+        }
+
+        .topic-item h3 {
+            font-size: 14px;
+            margin-bottom: 3px;
+            color: #fff;
+        }
+
+        .topic-item p {
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            color: #00D9FF;
+            margin-bottom: 8px;
+        }
+
+        .section-header .subtitle {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        .section-header .description {
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        /* Cards */
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: #0066FF;
+            box-shadow: 0 4px 20px rgba(0, 102, 255, 0.1);
+        }
+
+        .card h3 {
+            font-size: 20px;
+            color: #00D9FF;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 15px;
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        /* Callout Boxes */
+        .callout {
+            padding: 18px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .callout-insight {
+            background: rgba(0, 217, 255, 0.1);
+            border-color: #00D9FF;
+            color: #00D9FF;
+        }
+
+        .callout-mistake {
+            background: rgba(255, 107, 53, 0.1);
+            border-color: #FF6B35;
+            color: #FF6B35;
+        }
+
+        .callout-tip {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: #00FF88;
+            color: #00FF88;
+        }
+
+        .callout strong {
+            margin-right: 8px;
+        }
+
+        /* Interactive Elements */
+        .interactive-demo {
+            background: #0a0a0a;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+        }
+
+        .prompt-builder {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .prompt-component {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px dashed #444;
+        }
+
+        .prompt-component h4 {
+            color: #0066FF;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .prompt-component textarea {
+            width: 100%;
+            background: #222;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .prompt-component textarea:focus {
+            outline: none;
+            border-color: #0066FF;
+        }
+
+        .output-preview {
+            grid-column: 1 / -1;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #0066FF;
+        }
+
+        .quality-grade {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .grade-poor { background: #FF6B35; color: #000; }
+        .grade-good { background: #FFB800; color: #000; }
+        .grade-excellent { background: #00FF88; color: #000; }
+
+        /* Canvas */
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #0a0a0a;
+            border: 2px solid #333;
+            border-radius: 12px;
+            margin: 25px 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #0066FF;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #0052CC;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #444;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        /* Slider */
+        .slider-control {
+            margin: 25px 0;
+        }
+
+        .slider-control label {
+            display: block;
+            color: #00D9FF;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #333;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #0066FF;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            background: #00D9FF;
+            transform: scale(1.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #0066FF;
+            cursor: pointer;
+            border: none;
+        }
+
+        .slider-value {
+            display: inline-block;
+            margin-left: 15px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Comparison */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .comparison-item {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #333;
+        }
+
+        .comparison-item.bad {
+            border-color: #FF6B35;
+        }
+
+        .comparison-item.good {
+            border-color: #00FF88;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .comparison-item.bad h4 {
+            color: #FF6B35;
+        }
+
+        .comparison-item.good h4 {
+            color: #00FF88;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #333;
+        }
+
+        /* Component Grid */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .component-card {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #333;
+            transition: all 0.3s ease;
+        }
+
+        .component-card:hover {
+            border-color: #0066FF;
+            transform: translateY(-4px);
+        }
+
+        .component-card h4 {
+            color: #0066FF;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .component-card p {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 12px;
+        }
+
+        .component-card code {
+            display: block;
+            background: #0a0a0a;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #00D9FF;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Steps */
+        .steps {
+            margin: 25px 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            border-left: 4px solid #0066FF;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            background: #0066FF;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .step-content h4 {
+            color: #00D9FF;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .step-content p {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        /* Use Cases */
+        .use-case-section {
+            margin: 30px 0;
+        }
+
+        .use-case-section h4 {
+            color: #0066FF;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .use-case-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .use-case-list li {
+            padding: 12px 15px;
+            background: #1a1a1a;
+            border-left: 3px solid #00D9FF;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .checklist li {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #1a1a1a;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .checklist li:hover {
+            background: #222;
+        }
+
+        .checklist li::before {
+            content: '☐';
+            font-size: 20px;
+            color: #666;
+        }
+
+        .checklist li.checked::before {
+            content: '✓';
+            color: #00FF88;
+        }
+
+        .checklist li.checked {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #333;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .prompt-builder,
+            .comparison,
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header h2 {
+                font-size: 28px;
+            }
+        }
+
+        /* Template Library */
+        .template-library {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .template-item {
+            background: #1a1a1a;
+            padding: 18px;
+            border-radius: 8px;
+            border: 2px solid #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-item:hover {
+            border-color: #0066FF;
+            background: #222;
+        }
+
+        .template-item h5 {
+            color: #00D9FF;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .template-item pre {
+            background: #0a0a0a;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #ccc;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Practice Challenge */
+        .challenge-box {
+            background: linear-gradient(135deg, #0066FF22, #00D9FF22);
+            border: 2px solid #0066FF;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .challenge-box h3 {
+            color: #00D9FF;
+            margin-bottom: 15px;
+        }
+
+        .challenge-prompt {
+            background: #0a0a0a;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .feedback {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Scenario Selector */
+        .scenario-selector {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .scenario-btn {
+            padding: 10px 18px;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .scenario-btn:hover {
+            border-color: #0066FF;
+            background: #222;
+        }
+
+        .scenario-btn.active {
+            border-color: #0066FF;
+            background: #0066FF22;
+            color: #00D9FF;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Prompt Engineering</h1>
+                <p>Master the Art of AI Communication</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+            </div>
+            <ul class="topic-list" id="topicList"></ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topic 1: Introduction -->
+            <section class="content-section active" id="topic-1">
+                <div class="section-header">
+                    <h2>Introduction to Prompt Engineering</h2>
+                    <p class="subtitle">What Is It and Why Does It Matter?</p>
+                    <p class="description">Learn the fundamentals of prompt engineering and why it's crucial in the AI era</p>
+                </div>
+
+                <div class="card">
+                    <h3>What is Prompt Engineering?</h3>
+                    <p>Prompt engineering is the art of writing clear, specific instructions for AI models to produce desired outputs. Think of it as learning to communicate effectively with an intelligent assistant.</p>
+                    <p>Just like how you'd give detailed instructions to a colleague for important work, prompt engineering teaches you to craft precise, contextual requests that help AI understand exactly what you need.</p>
+                </div>
+
+                <div class="callout callout-insight">
+                    <strong>💡 Insight:</strong> The difference between a vague and specific prompt can be 10x in output quality
+                </div>
+
+                <div class="card">
+                    <h3>Real-World Analogy</h3>
+                    <p><strong>Ordering Food:</strong></p>
+                    <div class="comparison">
+                        <div class="comparison-item bad">
+                            <h4>❌ Vague Order</h4>
+                            <p>"Give me something to eat."</p>
+                            <p style="margin-top: 10px; font-size: 13px; color: #888;">Result: You might get anything - could be great, could be terrible, probably not what you wanted.</p>
+                        </div>
+                        <div class="comparison-item good">
+                            <h4>✓ Detailed Order</h4>
+                            <p>"I'd like a medium pepperoni pizza with thin crust, extra cheese, and light sauce. Please deliver it to 123 Main St by 7 PM."</p>
+                            <p style="margin-top: 10px; font-size: 13px; color: #888;">Result: You get exactly what you wanted, when you wanted it.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <strong>✅ Tip:</strong> AI models don't read minds—be explicit about what you want
+                </div>
+
+                <div class="card">
+                    <h3>Why Does It Matter?</h3>
+                    <p>In today's AI-powered world, the ability to communicate effectively with AI systems is becoming as important as traditional communication skills. Good prompt engineering helps you:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px; color: #ccc;">
+                        <li style="margin-bottom: 8px;">Save time by getting better results on the first try</li>
+                        <li style="margin-bottom: 8px;">Unlock advanced AI capabilities for complex tasks</li>
+                        <li style="margin-bottom: 8px;">Reduce errors and misunderstandings</li>
+                        <li style="margin-bottom: 8px;">Boost productivity across all domains</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Key Applications</h3>
+                    <div class="use-case-section">
+                        <ul class="use-case-list">
+                            <li>📧 Email writing and summarization</li>
+                            <li>📊 Report generation and data analysis</li>
+                            <li>💻 Code generation and debugging</li>
+                            <li>✍️ Creative writing and content creation</li>
+                            <li>🎓 Educational content and explanations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="callout callout-mistake">
+                    <strong>⚠️ Common Mistake:</strong> Assuming AI knows what you want without explicit instructions
+                </div>
+
+                <div class="card">
+                    <h3>Summary &amp; Key Takeaways</h3>
+                    <ul class="checklist">
+                        <li>Prompt engineering is about clear AI communication</li>
+                        <li>Specificity dramatically improves output quality</li>
+                        <li>It's a learnable skill that improves with practice</li>
+                        <li>Applications span professional, technical, and creative domains</li>
+                    </ul>
+                    <div class="btn-group" style="margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="startPractice(1)">Try Practice Challenge</button>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" disabled>← Previous</button>
+                    <button class="btn btn-primary" onclick="navigateTo(2)">Next: Prompt Structure →</button>
+                </div>
+            </section>
+
+            <!-- Topic 2: Prompt Structure -->
+            <section class="content-section" id="topic-2">
+                <div class="section-header">
+                    <h2>Prompt Structure: The Building Blocks</h2>
+                    <p class="subtitle">Role, Context, Task, and Format</p>
+                    <p class="description">Master the four key components of effective prompts</p>
+                </div>
+
+                <div class="card">
+                    <h3>The Four Components</h3>
+                    <p>Every effective prompt has four essential building blocks. Understanding and using these components will transform your AI interactions.</p>
+                </div>
+
+                <div class="component-grid">
+                    <div class="component-card">
+                        <h4>1. Role</h4>
+                        <p>What persona should the AI adopt?</p>
+                        <code>"You are an expert marketing consultant"</code>
+                    </div>
+                    <div class="component-card">
+                        <h4>2. Context</h4>
+                        <p>What background information is important?</p>
+                        <code>"We just launched a new coffee shop in Manhattan"</code>
+                    </div>
+                    <div class="component-card">
+                        <h4>3. Task</h4>
+                        <p>What exactly should the AI do?</p>
+                        <code>"Generate 5 creative marketing strategies"</code>
+                    </div>
+                    <div class="component-card">
+                        <h4>4. Format</h4>
+                        <p>How should the output be structured?</p>
+                        <code>"Provide as bullet points with pros and cons"</code>
+                    </div>
+                </div>
+
+                <div class="callout callout-insight">
+                    <strong>💡 Insight:</strong> Context is king—more information usually means better output
+                </div>
+
+                <div class="interactive-demo">
+                    <h3 style="color: #00D9FF; margin-bottom: 20px;">Interactive Prompt Builder</h3>
+                    <p style="color: #888; margin-bottom: 15px;">Fill in each component and watch the quality grade update in real-time:</p>
+                    
+                    <div class="prompt-builder">
+                        <div class="prompt-component">
+                            <h4>Role</h4>
+                            <textarea id="roleInput" placeholder="e.g., You are a senior software engineer..." oninput="updatePromptQuality()"></textarea>
+                        </div>
+                        <div class="prompt-component">
+                            <h4>Context</h4>
+                            <textarea id="contextInput" placeholder="e.g., Working on a mobile app for..." oninput="updatePromptQuality()"></textarea>
+                        </div>
+                        <div class="prompt-component">
+                            <h4>Task</h4>
+                            <textarea id="taskInput" placeholder="e.g., Write a function that..." oninput="updatePromptQuality()"></textarea>
+                        </div>
+                        <div class="prompt-component">
+                            <h4>Format</h4>
+                            <textarea id="formatInput" placeholder="e.g., Provide code with comments..." oninput="updatePromptQuality()"></textarea>
+                        </div>
+                        <div class="output-preview">
+                            <span class="quality-grade grade-poor" id="qualityGrade">Quality: Poor</span>
+                            <h4 style="color: #00D9FF; margin-bottom: 10px;">Combined Prompt:</h4>
+                            <p id="combinedPrompt" style="color: #ccc; font-size: 14px;">Start filling in the components above...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <strong>✅ Tip:</strong> Start with clear action verbs: Write, Analyze, Explain, Generate, Debug
+                </div>
+
+                <div class="canvas-container">
+                    <canvas id="structureCanvas"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>Summary &amp; Key Takeaways</h3>
+                    <ul class="checklist">
+                        <li>All four components work together for best results</li>
+                        <li>Role sets the AI's perspective and expertise level</li>
+                        <li>Context provides necessary background information</li>
+                        <li>Task defines the specific action you want</li>
+                        <li>Format ensures output matches your needs</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="navigateTo(1)">← Previous</button>
+                    <button class="btn btn-primary" onclick="navigateTo(3)">Next: Clarity &amp; Specificity →</button>
+                </div>
+            </section>
+
+            <!-- Topic 3: Clarity and Specificity -->
+            <section class="content-section" id="topic-3">
+                <div class="section-header">
+                    <h2>Clarity and Specificity</h2>
+                    <p class="subtitle">Writing Precise Prompts</p>
+                    <p class="description">Learn how to eliminate ambiguity and get better results</p>
+                </div>
+
+                <div class="card">
+                    <h3>Why Specificity Matters</h3>
+                    <p>Vague prompts leave too much room for interpretation. The AI has to guess what you want, and guesses are rarely perfect. Specific prompts eliminate ambiguity and guide the AI to produce exactly what you need.</p>
+                </div>
+
+                <div class="callout callout-insight">
+                    <strong>💡 Insight:</strong> Testing and iteration is key to prompt mastery
+                </div>
+
+                <div class="card">
+                    <h3>Before &amp; After Examples</h3>
+                    <div class="comparison" style="margin-top: 20px;">
+                        <div class="comparison-item bad">
+                            <h4>❌ Vague Prompt</h4>
+                            <p style="font-family: monospace; font-size: 13px;">"Write something about AI"</p>
+                        </div>
+                        <div class="comparison-item good">
+                            <h4>✓ Specific Prompt</h4>
+                            <p style="font-family: monospace; font-size: 13px;">"Write a 200-word beginner's guide explaining how machine learning works, using a coffee shop analogy"</p>
+                        </div>
+                    </div>
+
+                    <div class="comparison" style="margin-top: 20px;">
+                        <div class="comparison-item bad">
+                            <h4>❌ Vague Prompt</h4>
+                            <p style="font-family: monospace; font-size: 13px;">"Fix my code"</p>
+                        </div>
+                        <div class="comparison-item good">
+                            <h4>✓ Specific Prompt</h4>
+                            <p style="font-family: monospace; font-size: 13px;">"I have a Python function that calculates factorial but it returns wrong results for numbers &gt; 10. Here's the code: [code]. What's the bug and how do I fix it?"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout callout-mistake">
+                    <strong>⚠️ Common Mistake:</strong> Not specifying output format, then being surprised by format
+                </div>
+
+                <div class="interactive-demo">
+                    <h3 style="color: #00D9FF; margin-bottom: 20px;">Specificity Slider</h3>
+                    <p style="color: #888; margin-bottom: 15px;">Adjust the specificity level and see how the prompt improves:</p>
+                    
+                    <div class="slider-control">
+                        <label>Specificity Level: <span class="slider-value" id="specificityValue">1</span>/5</label>
+                        <input type="range" min="1" max="5" value="1" class="slider" id="specificitySlider" oninput="updateSpecificity()">
+                    </div>
+
+                    <div style="margin-top: 25px; background: #1a1a1a; padding: 20px; border-radius: 8px;">
+                        <h4 style="color: #00D9FF; margin-bottom: 12px;">Current Prompt:</h4>
+                        <p id="specificityPrompt" style="color: #ccc; font-size: 14px; line-height: 1.8;"></p>
+                        <div style="margin-top: 15px; padding: 12px; background: #0a0a0a; border-radius: 6px;">
+                            <strong style="color: #00D9FF;">Expected Quality:</strong>
+                            <span id="specificityQuality" style="margin-left: 10px;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <strong>✅ Tip:</strong> Use phrases like 'For a 10th-grade student' to guide tone and complexity
+                </div>
+
+                <div class="card">
+                    <h3>Key Elements of Specific Prompts</h3>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Define Clear Objectives</h4>
+                                <p>State exactly what you want to achieve</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Set Constraints</h4>
+                                <p>Specify length, style, tone, or other limitations</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Provide Examples</h4>
+                                <p>Show the AI what good output looks like</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Specify Audience</h4>
+                                <p>Indicate who will consume the output</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Summary &amp; Key Takeaways</h3>
+                    <ul class="checklist">
+                        <li>Vague prompts lead to unpredictable results</li>
+                        <li>Add specific details: length, format, style, audience</li>
+                        <li>Include examples when possible</li>
+                        <li>Set clear constraints and boundaries</li>
+                        <li>Think about edge cases and clarify them</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="navigateTo(2)">← Previous</button>
+                    <button class="btn btn-primary" onclick="navigateTo(4)">Next: Context &amp; Background →</button>
+                </div>
+            </section>
+
+            <!-- Topic 4: Context and Background -->
+            <section class="content-section" id="topic-4">
+                <div class="section-header">
+                    <h2>Context and Background</h2>
+                    <p class="subtitle">Providing Enough Information</p>
+                    <p class="description">Give AI the full picture for better outputs</p>
+                </div>
+
+                <div class="card">
+                    <h3>Why Context Matters</h3>
+                    <p>Context is the background information that helps AI understand the bigger picture. Without proper context, even the most specific task instructions can lead to irrelevant results.</p>
+                    <p style="margin-top: 15px;">Think of context as the frame around a painting—it helps define boundaries and provides essential information for interpretation.</p>
+                </div>
+
+                <div class="callout callout-insight">
+                    <strong>💡 Insight:</strong> Format specification prevents surprises in AI responses
+                </div>
+
+                <div class="card">
+                    <h3>Essential Context Elements</h3>
+                    <div class="component-grid">
+                        <div class="component-card">
+                            <h4>📄 Relevant Documents</h4>
+                            <p>Include or reference important files, data, or prior conversations</p>
+                        </div>
+                        <div class="component-card">
+                            <h4>🎯 Target Audience</h4>
+                            <p>Specify who will use or read the output</p>
+                        </div>
+                        <div class="component-card">
+                            <h4>⚙️ Constraints</h4>
+                            <p>Mention technical, budget, or time limitations</p>
+                        </div>
+                        <div class="component-card">
+                            <h4>🎨 Brand Voice</h4>
+                            <p>Describe tone, style, or brand guidelines</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <strong>✅ Tip:</strong> Include examples of good output in your prompt
+                </div>
+
+                <div class="card">
+                    <h3>Context Levels Comparison</h3>
+                    <div class="interactive-demo">
+                        <div class="scenario-selector">
+                            <button class="scenario-btn active" onclick="showContextExample('minimal')">Minimal Context</button>
+                            <button class="scenario-btn" onclick="showContextExample('moderate')">Moderate Context</button>
+                            <button class="scenario-btn" onclick="showContextExample('rich')">Rich Context</button>
+                        </div>
+
+                        <div id="contextExample" style="margin-top: 20px; background: #1a1a1a; padding: 20px; border-radius: 8px;">
+                            <h4 style="color: #00D9FF; margin-bottom: 12px;">Prompt Example:</h4>
+                            <p id="contextPromptText" style="color: #ccc; line-height: 1.8;"></p>
+                            <div style="margin-top: 15px; padding: 12px; background: #0a0a0a; border-radius: 6px;">
+                                <strong style="color: #00D9FF;">Output Quality:</strong>
+                                <span id="contextQuality" style="margin-left: 10px;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout callout-mistake">
+                    <strong>⚠️ Common Mistake:</strong> Providing too little context about your problem
+                </div>
+
+                <div class="card">
+                    <h3>Best Practices for Context</h3>
+                    <ul style="margin-left: 20px; margin-top: 15px; color: #ccc;">
+                        <li style="margin-bottom: 12px;"><strong style="color: #00D9FF;">Be comprehensive but focused:</strong> Include all relevant information without overwhelming details</li>
+                        <li style="margin-bottom: 12px;"><strong style="color: #00D9FF;">Front-load important context:</strong> Put crucial information at the beginning</li>
+                        <li style="margin-bottom: 12px;"><strong style="color: #00D9FF;">Use examples:</strong> Show the AI what success looks like</li>
+                        <li style="margin-bottom: 12px;"><strong style="color: #00D9FF;">Mention constraints:</strong> Be upfront about limitations</li>
+                        <li style="margin-bottom: 12px;"><strong style="color: #00D9FF;">Define your audience:</strong> Specify who will consume the output</li>
+                    </ul>
+                </div>
+
+                <div class="canvas-container">
+                    <canvas id="contextCanvas"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>Summary &amp; Key Takeaways</h3>
+                    <ul class="checklist">
+                        <li>Context provides the frame for AI to understand your request</li>
+                        <li>Include relevant documents and background information</li>
+                        <li>Specify target audience and use cases</li>
+                        <li>Mention constraints and limitations upfront</li>
+                        <li>Provide examples of desired output when possible</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="navigateTo(3)">← Previous</button>
+                    <button class="btn btn-primary" onclick="navigateTo(5)">Next: Output Format →</button>
+                </div>
+            </section>
+
+            <!-- Topic 5: Output Format -->
+            <section class="content-section" id="topic-5">
+                <div class="section-header">
+                    <h2>Output Format and Constraints</h2>
+                    <p class="subtitle">Specifying Desired Output</p>
+                    <p class="description">Control exactly how the AI structures its response</p>
+                </div>
+
+                <div class="card">
+                    <h3>Why Format Matters</h3>
+                    <p>Specifying the output format ensures you get results in a structure that's immediately useful. Without format guidance, AI might provide information in a way that requires significant reformatting.</p>
+                </div>
+
+                <div class="callout callout-tip">
+                    <strong>✅ Tip:</strong> Keep prompts focused on one main task
+                </div>
+
+                <div class="card">
+                    <h3>Common Output Formats</h3>
+                    <div class="component-grid">
+                        <div class="component-card">
+                            <h4>📝 Structured List</h4>
+                            <p>Organized points with clear hierarchy</p>
+                            <code>"Return as numbered list with brief explanations"</code>
+                        </div>
+                        <div class="component-card">
+                            <h4>📊 Table Format</h4>
+                            <p>Data organized in rows and columns</p>
+                            <code>"Create a comparison table with 3 columns: Feature, Pros, Cons"</code>
+                        </div>
+                        <div class="component-card">
+                            <h4>📖 Narrative</h4>
+                            <p>Flowing prose or storytelling format</p>
+                            <code>"Write as a 3-paragraph narrative explanation"</code>
+                        </div>
+                        <div class="component-card">
+                            <h4>💻 Code Block</h4>
+                            <p>Formatted code with explanations</p>
+                            <code>"Provide Python code with comments explaining each step"</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout callout-insight">
+                    <strong>💡 Insight:</strong> Save and reuse effective prompts as templates
+                </div>
+
+                <div class="interactive-demo">
+                    <h3 style="color: #00D9FF; margin-bottom: 20px;">Format Selector</h3>
+                    <p style="color: #888; margin-bottom: 15px;">Choose a format and see how to specify it in your prompt:</p>
+                    
+                    <div class="scenario-selector">
+                        <button class="scenario-btn active" onclick="showFormatExample('list')">List</button>
+                        <button class="scenario-btn" onclick="showFormatExample('table')">Table</button>
+                        <button class="scenario-btn" onclick="showFormatExample('narrative')">Narrative</button>
+                        <button class="scenario-btn" onclick="showFormatExample('code')">Code</button>
+                        <button class="scenario-btn" onclick="showFormatExample('json')">JSON</button>
+                    </div>
+
+                    <div id="formatExample" style="margin-top: 20px; background: #1a1a1a; padding: 20px; border-radius: 8px;">
+                        <h4 style="color: #00D9FF; margin-bottom: 12px;">Format Specification:</h4>
+                        <p id="formatPromptText" style="color: #ccc; line-height: 1.8; margin-bottom: 15px;"></p>
+                        <h4 style="color: #00D9FF; margin-bottom: 12px;">Example Output:</h4>
+                        <pre id="formatOutputExample" style="background: #0a0a0a; padding: 15px; border-radius: 6px; color: #ccc; overflow-x: auto;"></pre>
+                    </div>
+                </div>
+
+                <div class="callout callout-mistake">
+                    <strong>⚠️ Common Mistake:</strong> Asking too many things in one prompt
+                </div>
+
+                <div class="card">
+                    <h3>Setting Effective Constraints</h3>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Length Constraints</h4>
+                                <p>Specify word count, character limit, or number of items</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Style Guidelines</h4>
+                                <p>Define tone, formality, and writing style</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Structure Rules</h4>
+                                <p>Specify sections, headings, or organization</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Content Boundaries</h4>
+                                <p>Define what to include or exclude</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Summary &amp; Key Takeaways</h3>
+                    <ul class="checklist">
+                        <li>Always specify the desired output format</li>
+                        <li>Use clear format instructions (list, table, code, etc.)</li>
+                        <li>Set length and style constraints</li>
+                        <li>Define structure and organization upfront</li>
+                        <li>Provide format examples when needed</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="navigateTo(4)">← Previous</button>
+                    <button class="btn btn-primary" onclick="navigateTo(6)">Next: Iterative Refinement →</button>
+                </div>
+            </section>
+
+            <!-- Topic 6: Iterative Refinement -->
+            <section class="content-section" id="topic-6">
+                <div class="section-header">
+                    <h2>Iterative Refinement</h2>
+                    <p class="subtitle">Testing and Improving Prompts</p>
+                    <p class="description">How to iterate and optimize your prompts through testing</p>
+                </div>
+
+                <div class="card">
+                    <h3>The Refinement Process</h3>
+                    <p>Perfect prompts are rarely written on the first try. Iterative refinement is the process of testing, evaluating, and improving your prompts based on actual results.</p>
+                    <p style="margin-top: 15px;">Think of it like cooking—you taste and adjust seasonings until it's just right.</p>
+                </div>
+
+                <div class="callout callout-insight">
+                    <strong>💡 Insight:</strong> Testing and iteration is key to prompt mastery
+                </div>
+
+                <div class="card">
+                    <h3>5-Step Refinement Process</h3>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Test Your Prompt</h4>
+                                <p>Run your prompt and get initial output</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Evaluate Results</h4>
+                                <p>Does it meet your requirements? What's missing?</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Refine</h4>
+                                <p>Add specificity, context, or better format instructions</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Test Again</h4>
+                                <p>Compare new output with previous version</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Repeat</h4>
+                                <p>Keep iterating until satisfied</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <strong>✅ Tip:</strong> Keep a library of successful prompts for future use
+                </div>
+
+                <div class="canvas-container">
+                    <canvas id="refinementCanvas"></canvas>
+                </div>
+
+                <div class="callout callout-mistake">
+                    <strong>⚠️ Common Mistake:</strong> Not iterating or refining based on initial results
+                </div>
+
+                <div class="card">
+                    <h3>What to Look For When Evaluating</h3>
+                    <div class="component-grid">
+                        <div class="component-card">
+                            <h4>✓ Accuracy</h4>
+                            <p>Is the information correct and relevant?</p>
+                        </div>
+                        <div class="component-card">
+                            <h4>✓ Completeness</h4>
+                            <p>Did it cover everything you needed?</p>
+                        </div>
+                        <div class="component-card">
+                            <h4>✓ Format</h4>
+                            <p>Is it structured as you requested?</p>
+                        </div>
+                        <div class="component-card">
+                            <h4>✓ Tone & Style</h4>
+                            <p>Does it match your requirements?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="interactive-demo">
+                    <h3 style="color: #00D9FF; margin-bottom: 20px;">Refinement Simulator</h3>
+                    <p style="color: #888; margin-bottom: 15px;">See how a prompt improves through iterations:</p>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="showIteration(1)">Iteration 1</button>
+                        <button class="btn btn-primary" onclick="showIteration(2)">Iteration 2</button>
+                        <button class="btn btn-primary" onclick="showIteration(3)">Iteration 3 (Final)</button>
+                    </div>
+
+                    <div id="iterationDisplay" style="margin-top: 20px; background: #1a1a1a; padding: 20px; border-radius: 8px;">
+                        <h4 style="color: #00D9FF; margin-bottom: 12px;">Current Iteration:</h4>
+                        <p id="iterationPrompt" style="color: #ccc; line-height: 1.8; margin-bottom: 15px;"></p>
+                        <div style="padding: 12px; background: #0a0a0a; border-radius: 6px;">
+                            <strong style="color: #00D9FF;">Quality Score:</strong>
+                            <span id="iterationScore" style="margin-left: 10px;"></span>
+                        </div>
+                        <div id="iterationNotes" style="margin-top: 15px; padding: 12px; border-left: 3px solid #00D9FF; background: #0a0a0a;"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Summary &amp; Key Takeaways</h3>
+                    <ul class="checklist">
+                        <li>First attempts rarely produce perfect results</li>
+                        <li>Test, evaluate, refine, and repeat</li>
+                        <li>Look for accuracy, completeness, format, and style</li>
+                        <li>Keep successful prompts as templates</li>
+                        <li>Small tweaks can lead to big improvements</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="navigateTo(5)">← Previous</button>
+                    <button class="btn btn-primary" onclick="navigateTo(7)">Next: Advanced Techniques →</button>
+                </div>
+            </section>
+
+            <!-- Topic 7: Advanced Techniques -->
+            <section class="content-section" id="topic-7">
+                <div class="section-header">
+                    <h2>Prompt Patterns and Techniques</h2>
+                    <p class="subtitle">Advanced Methods for Better Results</p>
+                    <p class="description">Learn professional techniques used by prompt engineering experts</p>
+                </div>
+
+                <div class="card">
+                    <h3>Advanced Prompt Techniques</h3>
+                    <p>Once you master the basics, these advanced techniques will help you unlock even more powerful AI capabilities.</p>
+                </div>
+
+                <div class="component-grid">
+                    <div class="component-card">
+                        <h4>🧠 Chain-of-Thought</h4>
+                        <p>Ask AI to show its reasoning step-by-step</p>
+                        <code>"Think through this step-by-step before answering"</code>
+                    </div>
+                    <div class="component-card">
+                        <h4>📚 Few-Shot Examples</h4>
+                        <p>Provide examples of desired output format</p>
+                        <code>"Here are 3 examples: [examples]. Now do this:"</code>
+                    </div>
+                    <div class="component-card">
+                        <h4>⚙️ System Prompts</h4>
+                        <p>Set AI behavior and personality upfront</p>
+                        <code>"You are a helpful tutor for 10th-grade students"</code>
+                    </div>
+                    <div class="component-card">
+                        <h4>🎯 Constraints</h4>
+                        <p>Limit scope and manage complexity</p>
+                        <code>"Keep under 100 words, use simple language"</code>
+                    </div>
+                </div>
+
+                <div class="callout callout-insight">
+                    <strong>💡 Insight:</strong> Chain-of-thought prompting can improve reasoning by 50% or more
+                </div>
+
+                <div class="card">
+                    <h3>Technique Deep Dive: Chain-of-Thought</h3>
+                    <p>Chain-of-thought prompting asks the AI to show its work, which leads to better reasoning and more accurate results.</p>
+                    
+                    <div class="comparison" style="margin-top: 20px;">
+                        <div class="comparison-item bad">
+                            <h4>❌ Without Chain-of-Thought</h4>
+                            <p style="font-family: monospace; font-size: 13px; margin-bottom: 10px;">"What's 15% of 240?"</p>
+                            <p style="font-size: 13px; color: #888;">AI might give answer without showing work, making errors harder to spot.</p>
+                        </div>
+                        <div class="comparison-item good">
+                            <h4>✓ With Chain-of-Thought</h4>
+                            <p style="font-family: monospace; font-size: 13px; margin-bottom: 10px;">"What's 15% of 240? Think through this step-by-step."</p>
+                            <p style="font-size: 13px; color: #888;">AI shows: 1) 10% of 240 = 24, 2) 5% = half of 10% = 12, 3) 15% = 24 + 12 = 36</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <strong>✅ Tip:</strong> Use few-shot examples when the output format is complex or unusual
+                </div>
+
+                <div class="card">
+                    <h3>Template Library</h3>
+                    <p style="margin-bottom: 20px;">Ready-to-use prompt templates for common scenarios:</p>
+                    
+                    <div class="template-library">
+                        <div class="template-item" onclick="copyTemplate(this)">
+                            <h5>📧 Email Writing</h5>
+                            <pre>You are a professional email writer.
+
+Write a [formal/casual] email to [recipient] about [topic].
+
+Tone: [professional/friendly]
+Length: [brief/detailed]
+Action needed: [yes/no]</pre>
+                        </div>
+                        <div class="template-item" onclick="copyTemplate(this)">
+                            <h5>💻 Code Generation</h5>
+                            <pre>You are an expert [language] developer.
+
+Write a function that [task description].
+
+Requirements:
+- [requirement 1]
+- [requirement 2]
+
+Provide code with comments.</pre>
+                        </div>
+                        <div class="template-item" onclick="copyTemplate(this)">
+                            <h5>📊 Data Analysis</h5>
+                            <pre>Analyze this data: [data]
+
+Provide:
+1. Key insights
+2. Trends or patterns
+3. Recommendations
+
+Format as bullet points.</pre>
+                        </div>
+                        <div class="template-item" onclick="copyTemplate(this)">
+                            <h5>✍️ Content Creation</h5>
+                            <pre>Write a [blog post/article] about [topic].
+
+Audience: [description]
+Tone: [conversational/professional]
+Length: [word count]
+
+Include:
+- Introduction
+- 3-5 main points
+- Conclusion</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout callout-mistake">
+                    <strong>⚠️ Common Mistake:</strong> Using advanced techniques when simple prompts would work better
+                </div>
+
+                <div class="canvas-container">
+                    <canvas id="techniquesCanvas"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>Summary &amp; Key Takeaways</h3>
+                    <ul class="checklist">
+                        <li>Chain-of-thought improves reasoning quality</li>
+                        <li>Few-shot examples guide output format</li>
+                        <li>System prompts set overall behavior</li>
+                        <li>Constraints keep responses focused</li>
+                        <li>Use templates to save time and ensure consistency</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="navigateTo(6)">← Previous</button>
+                    <button class="btn btn-primary" onclick="navigateTo(8)">Next: Real-World Applications →</button>
+                </div>
+            </section>
+
+            <!-- Topic 8: Real-World Applications -->
+            <section class="content-section" id="topic-8">
+                <div class="section-header">
+                    <h2>Real-World Applications</h2>
+                    <p class="subtitle">Putting It All Together</p>
+                    <p class="description">See prompt engineering in action across different domains</p>
+                </div>
+
+                <div class="card">
+                    <h3>Prompt Engineering in Practice</h3>
+                    <p>Now that you've learned the fundamentals and advanced techniques, let's explore how prompt engineering is applied across different real-world domains.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Professional Writing</h3>
+                    <div class="use-case-section">
+                        <ul class="use-case-list">
+                            <li>Email summarization and drafting</li>
+                            <li>Report generation</li>
+                            <li>Meeting notes synthesis</li>
+                        </ul>
+                    </div>
+                    <div class="callout callout-tip" style="margin-top: 15px;">
+                        <strong>✅ Example:</strong> "Summarize this 3-page meeting transcript into 5 key action items with owners and deadlines. Format as a table."
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Technical Applications</h3>
+                    <div class="use-case-section">
+                        <ul class="use-case-list">
+                            <li>Code generation and debugging</li>
+                            <li>API documentation creation</li>
+                            <li>Technical explanation simplification</li>
+                        </ul>
+                    </div>
+                    <div class="callout callout-tip" style="margin-top: 15px;">
+                        <strong>✅ Example:</strong> "I have a React component that's re-rendering unnecessarily. Here's the code: [code]. Identify the issue and provide an optimized version with explanations."
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Creative Work</h3>
+                    <div class="use-case-section">
+                        <ul class="use-case-list">
+                            <li>Marketing copy creation</li>
+                            <li>Brainstorming ideas</li>
+                            <li>Content outline generation</li>
+                        </ul>
+                    </div>
+                    <div class="callout callout-tip" style="margin-top: 15px;">
+                        <strong>✅ Example:</strong> "Generate 10 creative Instagram post ideas for a sustainable fashion brand targeting Gen Z. Include post caption and hashtag suggestions."
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Educational Content</h3>
+                    <div class="use-case-section">
+                        <ul class="use-case-list">
+                            <li>Concept explanation</li>
+                            <li>Quiz generation</li>
+                            <li>Study guide creation</li>
+                        </ul>
+                    </div>
+                    <div class="callout callout-tip" style="margin-top: 15px;">
+                        <strong>✅ Example:</strong> "Explain photosynthesis to a 7th grader using an analogy they can relate to. Keep it under 150 words."
+                    </div>
+                </div>
+
+                <div class="callout callout-insight">
+                    <strong>💡 Insight:</strong> The best prompts combine multiple techniques based on the specific use case
+                </div>
+
+                <div class="challenge-box">
+                    <h3>🎯 Final Challenge: Build Your Own Prompt</h3>
+                    <p style="color: #ccc; margin-bottom: 15px;">Choose a scenario and build a complete prompt using everything you've learned:</p>
+                    
+                    <div class="scenario-selector">
+                        <button class="scenario-btn active" onclick="setChallenge('email')">Email Writing</button>
+                        <button class="scenario-btn" onclick="setChallenge('code')">Coding Help</button>
+                        <button class="scenario-btn" onclick="setChallenge('creative')">Creative Writing</button>
+                        <button class="scenario-btn" onclick="setChallenge('analysis')">Data Analysis</button>
+                    </div>
+
+                    <div class="challenge-prompt" id="challengeScenario" style="margin-top: 15px;">
+                        Scenario will appear here...
+                    </div>
+
+                    <textarea id="challengeInput" placeholder="Build your prompt here..." style="width: 100%; min-height: 150px; background: #0a0a0a; border: 2px solid #333; color: #fff; padding: 15px; border-radius: 8px; font-size: 14px; margin-top: 15px; font-family: inherit;"></textarea>
+
+                    <div class="btn-group" style="margin-top: 15px;">
+                        <button class="btn btn-primary" onclick="evaluateChallenge()">Evaluate My Prompt</button>
+                        <button class="btn btn-secondary" onclick="resetChallenge()">Reset</button>
+                    </div>
+
+                    <div class="feedback" id="challengeFeedback"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Congratulations! 🎉</h3>
+                    <p>You've completed the Prompt Engineering Masterclass! You now have the knowledge and tools to communicate effectively with AI systems.</p>
+                    
+                    <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #0066FF22, #00D9FF22); border-radius: 8px;">
+                        <h4 style="color: #00D9FF; margin-bottom: 15px;">What You've Learned:</h4>
+                        <ul class="checklist">
+                            <li>The four components of effective prompts</li>
+                            <li>How to write clear and specific instructions</li>
+                            <li>The importance of context and background</li>
+                            <li>How to specify output formats</li>
+                            <li>Iterative refinement techniques</li>
+                            <li>Advanced prompt patterns</li>
+                            <li>Real-world applications across domains</li>
+                        </ul>
+                    </div>
+
+                    <div class="btn-group" style="margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="navigateTo(1)">↻ Review from Beginning</button>
+                        <button class="btn btn-secondary" onclick="alert('Export feature coming soon!')">📄 Export Summary</button>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="navigateTo(7)">← Previous</button>
+                    <button class="btn btn-primary" onclick="navigateTo(1)">↻ Start Over</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
