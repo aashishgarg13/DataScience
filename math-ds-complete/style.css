@@ -952,6 +952,35 @@ body {
     background: linear-gradient(135deg, #51cf66, #40c057);
 }
 
+.topic-section[data-subject="machine-learning"] .topic-number {
+    background: linear-gradient(135deg, #ff6b9d, #c44569);
+}
+
+/* ML-specific topic number colors by category */
+.topic-number.ml-regression {
+    background: linear-gradient(135deg, #4a90e2, #64ffda);
+}
+
+.topic-number.ml-classification {
+    background: linear-gradient(135deg, #ff6b9d, #ffa94d);
+}
+
+.topic-number.ml-clustering {
+    background: linear-gradient(135deg, #51cf66, #40c057);
+}
+
+.topic-number.ml-reduction {
+    background: linear-gradient(135deg, #b47aea, #e66af5);
+}
+
+.topic-number.ml-reinforcement {
+    background: linear-gradient(135deg, #c44569, #ff6b9d);
+}
+
+.topic-number.ml-advanced {
+    background: linear-gradient(135deg, #ffa94d, #f39c12);
+}
+
 .topic-section[data-subject="linear-algebra"] .topic-header h2 {
     color: #b47aea;
 }
@@ -962,6 +991,35 @@ body {
 
 .topic-section[data-subject="data-science"] .topic-header h2 {
     color: #51cf66;
+}
+
+.topic-section[data-subject="machine-learning"] .topic-header h2 {
+    color: #ff6b9d;
+}
+
+/* ML section styling */
+.ml-section {
+    border-left: 4px solid rgba(255, 107, 157, 0.3);
+    padding-left: 20px;
+}
+
+.ml-section .worked-example-section {
+    border: 2px solid rgba(255, 107, 157, 0.2);
+}
+
+.ml-section .code-block {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #ff6b9d;
+    font-family: 'Courier New', monospace;
+    overflow-x: auto;
+}
+
+.ml-section .code-block code {
+    color: #64ffda;
+    font-size: 14px;
+    line-height: 1.8;
 }
 
 /* Topic Section */

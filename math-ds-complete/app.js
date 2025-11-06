@@ -55,7 +55,8 @@ function switchSubject(subject) {
         'statistics': 'Statistics Content',
         'linear-algebra': 'Linear Algebra Content',
         'calculus': 'Calculus Content',
-        'data-science': 'Data Science Content'
+        'data-science': 'Data Science Content',
+        'machine-learning': 'Machine Learning Algorithms'
     };
     const sidebarTitle = document.getElementById('sidebarTitle');
     if (sidebarTitle) {
@@ -496,6 +497,265 @@ function initializeAllVisualizations() {
     initPCACanvas();
     initGradientDescentCanvas();
     initLossLandscapeCanvas();
+    
+    // Machine Learning visualizations
+    initMLLinearRegressionCanvas();
+    initMLKMeansCanvas();
+}
+
+// ===== MACHINE LEARNING VISUALIZATIONS =====
+
+function initMLLinearRegressionCanvas() {
+    const canvas = document.getElementById('canvas-ml-1');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    let showLine = false;
+    
+    // House price data from worked example
+    const data = [
+        {x: 1000, y: 150},
+        {x: 1500, y: 200},
+        {x: 2000, y: 250},
+        {x: 3000, y: 350}
+    ];
+    
+    function draw() {
+        clearCanvas(ctx, canvas);
+        
+        const padding = 80;
+        const width = canvas.width - 2 * padding;
+        const height = canvas.height - 2 * padding;
+        
+        const maxX = 3500;
+        const maxY = 400;
+        
+        // Draw axes
+        drawLine(ctx, padding, canvas.height - padding, canvas.width - padding, canvas.height - padding, COLORS.text, 2);
+        drawLine(ctx, padding, padding, padding, canvas.height - padding, COLORS.text, 2);
+        
+        // Draw grid
+        for (let i = 0; i <= 7; i++) {
+            const x = padding + (i / 7) * width;
+            const xVal = (i * 500).toString();
+            drawLine(ctx, x, canvas.height - padding, x, canvas.height - padding + 5, COLORS.textSecondary, 1);
+            drawText(ctx, xVal, x, canvas.height - padding + 20, 10, COLORS.textSecondary);
+        }
+        
+        for (let i = 0; i <= 8; i++) {
+            const y = canvas.height - padding - (i / 8) * height;
+            const yVal = (i * 50).toString();
+            drawLine(ctx, padding - 5, y, padding, y, COLORS.textSecondary, 1);
+            drawText(ctx, yVal, padding - 15, y + 4, 10, COLORS.textSecondary, 'right');
+        }
+        
+        // Draw labels
+        drawText(ctx, 'Size (sq ft)', canvas.width / 2, canvas.height - 10, 12, COLORS.cyan);
+        ctx.save();
+        ctx.translate(20, canvas.height / 2);
+        ctx.rotate(-Math.PI / 2);
+        drawText(ctx, 'Price ($1000s)', 0, 0, 12, COLORS.cyan);
+        ctx.restore();
+        
+        // Draw data points
+        data.forEach(point => {
+            const px = padding + (point.x / maxX) * width;
+            const py = canvas.height - padding - (point.y / maxY) * height;
+            drawCircle(ctx, px, py, 8, COLORS.cyan);
+            drawText(ctx, `${point.y}k`, px + 15, py - 10, 10, COLORS.cyan, 'left');
+        });
+        
+        // Draw regression line if enabled
+        if (showLine) {
+            // From worked example: y = 50 + 0.1x
+            const slope = 0.1;
+            const intercept = 50;
+            
+            const x1 = 0;
+            const y1 = intercept;
+            const x2 = maxX;
+            const y2 = intercept + slope * x2;
+            
+            const px1 = padding + (x1 / maxX) * width;
+            const py1 = canvas.height - padding - (y1 / maxY) * height;
+            const px2 = padding + (x2 / maxX) * width;
+            const py2 = canvas.height - padding - (y2 / maxY) * height;
+            
+            drawLine(ctx, px1, py1, px2, py2, COLORS.orange, 3);
+            
+            // Show equation
+            drawText(ctx, 'y = 50 + 0.10x', canvas.width / 2, 30, 16, COLORS.orange);
+            drawText(ctx, 'R² = 1.00 (Perfect Fit!)', canvas.width / 2, 50, 14, COLORS.green);
+            
+            // Highlight prediction point (2500, 300)
+            const predX = 2500;
+            const predY = 50 + 0.1 * predX;
+            const ppx = padding + (predX / maxX) * width;
+            const ppy = canvas.height - padding - (predY / maxY) * height;
+            drawCircle(ctx, ppx, ppy, 10, COLORS.green);
+            drawText(ctx, '2500 sq ft → $300k', ppx - 80, ppy - 15, 12, COLORS.green, 'left');
+        }
+    }
+    
+    const fitBtn = document.getElementById('btn-ml-1-fit');
+    const resetBtn = document.getElementById('btn-ml-1-reset');
+    
+    if (fitBtn) {
+        fitBtn.addEventListener('click', () => {
+            showLine = true;
+            draw();
+        });
+    }
+    
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            showLine = false;
+            draw();
+        });
+    }
+    
+    draw();
+}
+
+function initMLKMeansCanvas() {
+    const canvas = document.getElementById('canvas-ml-15');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    let clustered = false;
+    
+    // Customer data from worked example
+    const customers = [
+        {name: 'A', age: 25, income: 40, cluster: null},
+        {name: 'B', age: 30, income: 50, cluster: null},
+        {name: 'C', age: 28, income: 45, cluster: null},
+        {name: 'D', age: 55, income: 80, cluster: null},
+        {name: 'E', age: 60, income: 90, cluster: null},
+        {name: 'F', age: 52, income: 75, cluster: null}
+    ];
+    
+    let centroids = [
+        {age: 25, income: 40, color: COLORS.cyan},
+        {age: 60, income: 90, color: COLORS.orange}
+    ];
+    
+    function assignClusters() {
+        customers.forEach(customer => {
+            // Calculate distance to each centroid
+            const d1 = Math.sqrt(Math.pow(customer.age - centroids[0].age, 2) + Math.pow(customer.income - centroids[0].income, 2));
+            const d2 = Math.sqrt(Math.pow(customer.age - centroids[1].age, 2) + Math.pow(customer.income - centroids[1].income, 2));
+            
+            customer.cluster = d1 < d2 ? 0 : 1;
+        });
+        
+        // Update centroids
+        const cluster0 = customers.filter(c => c.cluster === 0);
+        const cluster1 = customers.filter(c => c.cluster === 1);
+        
+        if (cluster0.length > 0) {
+            centroids[0].age = cluster0.reduce((s, c) => s + c.age, 0) / cluster0.length;
+            centroids[0].income = cluster0.reduce((s, c) => s + c.income, 0) / cluster0.length;
+        }
+        if (cluster1.length > 0) {
+            centroids[1].age = cluster1.reduce((s, c) => s + c.age, 0) / cluster1.length;
+            centroids[1].income = cluster1.reduce((s, c) => s + c.income, 0) / cluster1.length;
+        }
+    }
+    
+    function draw() {
+        clearCanvas(ctx, canvas);
+        
+        const padding = 80;
+        const width = canvas.width - 2 * padding;
+        const height = canvas.height - 2 * padding;
+        
+        const minAge = 20, maxAge = 70;
+        const minIncome = 30, maxIncome = 100;
+        
+        // Draw axes
+        drawLine(ctx, padding, canvas.height - padding, canvas.width - padding, canvas.height - padding, COLORS.text, 2);
+        drawLine(ctx, padding, padding, padding, canvas.height - padding, COLORS.text, 2);
+        
+        // Draw grid
+        for (let age = 20; age <= 70; age += 10) {
+            const x = padding + ((age - minAge) / (maxAge - minAge)) * width;
+            drawLine(ctx, x, canvas.height - padding, x, canvas.height - padding + 5, COLORS.textSecondary, 1);
+            drawText(ctx, age.toString(), x, canvas.height - padding + 20, 10, COLORS.textSecondary);
+        }
+        
+        for (let income = 30; income <= 100; income += 10) {
+            const y = canvas.height - padding - ((income - minIncome) / (maxIncome - minIncome)) * height;
+            drawLine(ctx, padding - 5, y, padding, y, COLORS.textSecondary, 1);
+            drawText(ctx, `$${income}k`, padding - 40, y + 4, 10, COLORS.textSecondary, 'right');
+        }
+        
+        // Draw labels
+        drawText(ctx, 'Age', canvas.width / 2, canvas.height - 10, 12, COLORS.cyan);
+        ctx.save();
+        ctx.translate(20, canvas.height / 2);
+        ctx.rotate(-Math.PI / 2);
+        drawText(ctx, 'Income ($k)', 0, 0, 12, COLORS.cyan);
+        ctx.restore();
+        
+        // Draw customers
+        customers.forEach(customer => {
+            const px = padding + ((customer.age - minAge) / (maxAge - minAge)) * width;
+            const py = canvas.height - padding - ((customer.income - minIncome) / (maxIncome - minIncome)) * height;
+            
+            const color = clustered ? (customer.cluster === 0 ? COLORS.cyan : COLORS.orange) : COLORS.primary;
+            drawCircle(ctx, px, py, 10, color);
+            drawText(ctx, customer.name, px, py - 15, 12, COLORS.text);
+        });
+        
+        // Draw centroids if clustered
+        if (clustered) {
+            centroids.forEach((centroid, i) => {
+                const cx = padding + ((centroid.age - minAge) / (maxAge - minAge)) * width;
+                const cy = canvas.height - padding - ((centroid.income - minIncome) / (maxIncome - minIncome)) * height;
+                
+                // Draw X marker for centroid
+                ctx.strokeStyle = centroid.color;
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(cx - 12, cy - 12);
+                ctx.lineTo(cx + 12, cy + 12);
+                ctx.moveTo(cx + 12, cy - 12);
+                ctx.lineTo(cx - 12, cy + 12);
+                ctx.stroke();
+                
+                drawText(ctx, `C${i+1} [${centroid.age.toFixed(1)}, ${centroid.income.toFixed(1)}]`, 
+                         cx + 20, cy, 11, centroid.color, 'left');
+            });
+            
+            drawText(ctx, 'Cluster 1 (Young, Lower Income)', 150, 30, 12, COLORS.cyan);
+            drawText(ctx, 'Cluster 2 (Mature, Higher Income)', 150, 50, 12, COLORS.orange);
+        }
+    }
+    
+    const clusterBtn = document.getElementById('btn-ml-15-cluster');
+    const resetBtn = document.getElementById('btn-ml-15-reset');
+    
+    if (clusterBtn) {
+        clusterBtn.addEventListener('click', () => {
+            clustered = true;
+            assignClusters();
+            draw();
+        });
+    }
+    
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            clustered = false;
+            customers.forEach(c => c.cluster = null);
+            centroids = [
+                {age: 25, income: 40, color: COLORS.cyan},
+                {age: 60, income: 90, color: COLORS.orange}
+            ];
+            draw();
+        });
+    }
+    
+    draw();
 }
 
 // ===== LINEAR ALGEBRA VISUALIZATIONS =====
@@ -1676,6 +1936,6 @@ function initLossLandscapeCanvas() {
     draw();
 }
 
-console.log('%c📊 Mathematics Mastery Platform Loaded', 'color: #64ffda; font-size: 16px; font-weight: bold;');
-console.log('%cReady to explore 85 comprehensive topics across 4 subjects!', 'color: #4a90e2; font-size: 14px;');
-console.log('%c✓ Statistics (1-41) ✓ Linear Algebra (42-57) ✓ Calculus (58-69) ✓ Data Science (70-85)', 'color: #51cf66; font-size: 12px;');
+console.log('%c📊 Ultimate Learning Platform Loaded', 'color: #64ffda; font-size: 16px; font-weight: bold;');
+console.log('%cReady to explore 125+ comprehensive topics across 5 subjects!', 'color: #4a90e2; font-size: 14px;');
+console.log('%c✓ Statistics (41) ✓ Linear Algebra (16) ✓ Calculus (12) ✓ Data Science (16) ✓ Machine Learning (40+)', 'color: #51cf66; font-size: 12px;');
