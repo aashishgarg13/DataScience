@@ -114,17 +114,18 @@ function initNavigation() {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const topicId = link.getAttribute('data-topic');
-            const target = document.getElementById(`topic-${topicId}`);
+            // Handle both regular topics and ML topics
+    const target = document.getElementById(topicId.startsWith('ml-') ? topicId : `topic-${topicId}`);
             
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                updateActiveLink(topicId);
-                
-                // Close mobile menu if open
-                if (window.innerWidth <= 1024) {
-                    sidebar.classList.remove('active');
-                }
-            }
+    if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        updateActiveLink(topicId);
+        
+        // Close mobile menu if open
+        if (window.innerWidth <= 1024) {
+            sidebar.classList.remove('active');
+        }
+    }
         });
     });
 }
@@ -137,7 +138,10 @@ function updateActiveLink(topicId) {
     if (activeLink) {
         activeLink.classList.add('active');
     }
-    currentTopic = parseInt(topicId);
+    // Only update currentTopic if it's a number
+    if (!topicId.startsWith('ml-')) {
+        currentTopic = parseInt(topicId);
+    }
 }
 
 // ===== SCROLL OBSERVER =====
