@@ -81,8 +81,8 @@ function switchSubject(subject) {
     });
     
     // Scroll to first topic of subject
-    const firstTopic = document.querySelector(`.topic-section[data-subject="${subject}"]`);
-    if (firstTopic) {
+    const firstTopic = document.querySelector(`.topic-section[data-subject="${subject}"], .topic-section:not([data-subject])`);
+    if (firstTopic && subject !== 'statistics') {
         setTimeout(() => {
             firstTopic.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
@@ -93,12 +93,6 @@ function switchSubject(subject) {
                 statsFirst.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
         }
-    }
-    
-    // Set initial active state for the first topic link of the subject
-    const firstLink = document.querySelector(`.topic-link[data-topic^="${subject === 'machine-learning' ? 'ml-' : 'topic-'}"]`);
-    if (firstLink) {
-        updateActiveLink(firstLink.getAttribute('data-topic'));
     }
 }
 
@@ -120,11 +114,12 @@ function initNavigation() {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const topicId = link.getAttribute('data-topic');
-            let targetId = topicId;
-            if (!topicId.startsWith('ml-')) {
-                targetId = `topic-${topicId}`;
+            
+            // Handle both 'topic-X' and 'ml-topic-X' formats
+            let target = document.getElementById(topicId);
+            if (!target && !topicId.includes('-')) {
+                target = document.getElementById(`topic-${topicId}`);
             }
-            const target = document.getElementById(targetId);
             
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -146,23 +141,8 @@ function updateActiveLink(topicId) {
     const activeLink = document.querySelector(`[data-topic="${topicId}"]`);
     if (activeLink) {
         activeLink.classList.add('active');
-        
-        // Get subject from parent module's data-subject attribute
-        const moduleElement = activeLink.closest('.module');
-        const subjectFromModule = moduleElement ? moduleElement.dataset.subject : null;
-        
-        // Only update subject if module has an explicit subject
-        if (subjectFromModule && currentSubject !== subjectFromModule) {
-            switchSubject(subjectFromModule);
-        }
     }
-    
-    // Update currentTopic - preserve numeric ID for stats, or null for others
-    if (!topicId.startsWith('ml-') && !isNaN(parseInt(topicId))) {
-        currentTopic = parseInt(topicId);
-    } else {
-        currentTopic = null;
-    }
+    currentTopic = parseInt(topicId);
 }
 
 // ===== SCROLL OBSERVER =====
@@ -176,8 +156,9 @@ function setupScrollObserver() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const topicId = entry.target.id.split('-')[1];
-                updateActiveLink(topicId);
+                // Handle both 'topic-X' and 'ml-topic-X' formats
+                const fullId = entry.target.id;
+                updateActiveLink(fullId);
             }
         });
     }, options);
@@ -526,6 +507,10 @@ function initializeAllVisualizations() {
     // Machine Learning visualizations
     initMLLinearRegressionCanvas();
     initMLKMeansCanvas();
+    initMLSVMCanvas();
+    initMLRandomForestCanvas();
+    initMLGradientBoostingCanvas();
+    initMLNeuralNetworkCanvas();
 }
 
 // ===== MACHINE LEARNING VISUALIZATIONS =====
@@ -1422,6 +1407,169 @@ function stopAnimation(canvasId) {
 }
 
 // ===== CONSOLE LOG =====
+
+// ===== ADDITIONAL ML VISUALIZATIONS =====
+
+function initMLSVMCanvas() {
+    const canvas = document.getElementById('canvas-ml-9');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    // Generate two-class data
+    const class1 = Array.from({length: 20}, () => ({
+        x: Math.random() * 100 + 50,
+        y: Math.random() * 100 + 50
+    }));
+    const class2 = Array.from({length: 20}, () => ({
+        x: Math.random() * 100 + 200,
+        y: Math.random() * 100 + 200
+    }));
+    
+    function draw() {
+        clearCanvas(ctx, canvas);
+        
+        const padding = 50;
+        
+        // Draw decision boundary (simplified)
+        drawLine(ctx, padding, canvas.height - padding, canvas.width - padding, padding, COLORS.orange, 3);
+        drawText(ctx, 'Decision Boundary', canvas.width/2, 30, 14, COLORS.orange);
+        
+        // Draw margin lines
+        drawLine(ctx, padding, canvas.height - padding - 30, canvas.width - padding, padding - 30, COLORS.green, 1);
+        drawLine(ctx, padding, canvas.height - padding + 30, canvas.width - padding, padding + 30, COLORS.green, 1);
+        drawText(ctx, 'Maximum Margin', canvas.width/2, 50, 12, COLORS.green);
+        
+        // Draw data points
+        class1.forEach(p => drawCircle(ctx, p.x, p.y, 6, COLORS.cyan));
+        class2.forEach(p => drawCircle(ctx, p.x, p.y, 6, COLORS.primary));
+    }
+    
+    draw();
+}
+
+function initMLRandomForestCanvas() {
+    const canvas = document.getElementById('canvas-ml-12');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    function draw() {
+        clearCanvas(ctx, canvas);
+        
+        drawText(ctx, 'Random Forest: Ensemble of Decision Trees', canvas.width/2, 50, 16, COLORS.cyan);
+        
+        // Draw multiple trees
+        const treeCount = 5;
+        const treeWidth = (canvas.width - 100) / treeCount;
+        
+        for (let i = 0; i < treeCount; i++) {
+            const x = 50 + i * treeWidth + treeWidth/2;
+            const y = 100;
+            
+            // Draw simple tree structure
+            drawLine(ctx, x, y, x - 30, y + 60, COLORS.green, 2);
+            drawLine(ctx, x, y, x + 30, y + 60, COLORS.green, 2);
+            drawCircle(ctx, x, y, 8, COLORS.cyan);
+            drawCircle(ctx, x - 30, y + 60, 6, COLORS.orange);
+            drawCircle(ctx, x + 30, y + 60, 6, COLORS.orange);
+            
+            drawText(ctx, `Tree ${i+1}`, x, y + 100, 12, COLORS.text);
+        }
+        
+        // Draw voting arrow
+        drawLine(ctx, canvas.width/2, 200, canvas.width/2, 280, COLORS.orange, 3);
+        drawText(ctx, '↓ Majority Vote', canvas.width/2 + 10, 250, 14, COLORS.orange, 'left');
+        
+        drawRect(ctx, canvas.width/2 - 80, 280, 160, 40, COLORS.green);
+        drawText(ctx, 'Final Prediction', canvas.width/2, 305, 14, '#000');
+    }
+    
+    draw();
+}
+
+function initMLGradientBoostingCanvas() {
+    const canvas = document.getElementById('canvas-ml-13');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    function draw() {
+        clearCanvas(ctx, canvas);
+        
+        drawText(ctx, 'Gradient Boosting: Sequential Error Correction', canvas.width/2, 40, 16, COLORS.cyan);
+        
+        const stages = 4;
+        const stageWidth = (canvas.width - 100) / stages;
+        
+        for (let i = 0; i < stages; i++) {
+            const x = 50 + i * stageWidth;
+            const y = canvas.height/2;
+            
+            // Draw tree
+            drawRect(ctx, x, y - 40, stageWidth - 40, 80, i === 0 ? COLORS.cyan : COLORS.orange, false);
+            drawText(ctx, `Tree ${i+1}`, x + (stageWidth-40)/2, y, 12, COLORS.text);
+            drawText(ctx, i === 0 ? 'Base' : 'Fix Errors', x + (stageWidth-40)/2, y + 20, 10, COLORS.textSecondary);
+            
+            // Draw arrow
+            if (i < stages - 1) {
+                drawLine(ctx, x + stageWidth - 40, y, x + stageWidth, y, COLORS.green, 2);
+                drawText(ctx, '+', x + stageWidth - 20, y - 10, 16, COLORS.green);
+            }
+        }
+        
+        drawText(ctx, 'Each tree learns from previous mistakes', canvas.width/2, canvas.height - 30, 12, COLORS.text);
+    }
+    
+    draw();
+}
+
+function initMLNeuralNetworkCanvas() {
+    const canvas = document.getElementById('canvas-ml-14');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    function draw() {
+        clearCanvas(ctx, canvas);
+        
+        drawText(ctx, 'Neural Network Architecture', canvas.width/2, 30, 16, COLORS.cyan);
+        
+        const layers = [3, 5, 4, 2]; // neurons per layer
+        const layerSpacing = (canvas.width - 100) / (layers.length - 1);
+        
+        // Draw connections
+        ctx.globalAlpha = 0.3;
+        for (let l = 0; l < layers.length - 1; l++) {
+            const x1 = 50 + l * layerSpacing;
+            const x2 = 50 + (l + 1) * layerSpacing;
+            
+            for (let i = 0; i < layers[l]; i++) {
+                const y1 = canvas.height/2 - (layers[l] - 1) * 15 + i * 30;
+                for (let j = 0; j < layers[l + 1]; j++) {
+                    const y2 = canvas.height/2 - (layers[l + 1] - 1) * 15 + j * 30;
+                    drawLine(ctx, x1, y1, x2, y2, COLORS.textSecondary, 1);
+                }
+            }
+        }
+        ctx.globalAlpha = 1;
+        
+        // Draw neurons
+        layers.forEach((count, l) => {
+            const x = 50 + l * layerSpacing;
+            for (let i = 0; i < count; i++) {
+                const y = canvas.height/2 - (count - 1) * 15 + i * 30;
+                drawCircle(ctx, x, y, 12, l === 0 ? COLORS.cyan : (l === layers.length - 1 ? COLORS.green : COLORS.orange));
+            }
+            
+            const layerNames = ['Input', 'Hidden 1', 'Hidden 2', 'Output'];
+            drawText(ctx, layerNames[l], x, canvas.height - 30, 12, COLORS.text);
+        });
+    }
+    
+    draw();
+}
+
 // ===== DATA SCIENCE VISUALIZATIONS =====
 
 function initSimpleRegressionCanvas() {
