@@ -81,8 +81,8 @@ function switchSubject(subject) {
     });
     
     // Scroll to first topic of subject
-    const firstTopic = document.querySelector(`.topic-section[data-subject="${subject}"], .topic-section:not([data-subject])`);
-    if (firstTopic && subject !== 'statistics') {
+    const firstTopic = document.querySelector(`.topic-section[data-subject="${subject}"]`);
+    if (firstTopic) {
         setTimeout(() => {
             firstTopic.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
@@ -93,6 +93,12 @@ function switchSubject(subject) {
                 statsFirst.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
         }
+    }
+    
+    // Set initial active state for the first topic link of the subject
+    const firstLink = document.querySelector(`.topic-link[data-topic^="${subject === 'machine-learning' ? 'ml-' : 'topic-'}"]`);
+    if (firstLink) {
+        updateActiveLink(firstLink.getAttribute('data-topic'));
     }
 }
 
@@ -114,18 +120,21 @@ function initNavigation() {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const topicId = link.getAttribute('data-topic');
-            // Handle both regular topics and ML topics
-    const target = document.getElementById(topicId.startsWith('ml-') ? topicId : `topic-${topicId}`);
+            let targetId = topicId;
+            if (!topicId.startsWith('ml-')) {
+                targetId = `topic-${topicId}`;
+            }
+            const target = document.getElementById(targetId);
             
-    if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        updateActiveLink(topicId);
-        
-        // Close mobile menu if open
-        if (window.innerWidth <= 1024) {
-            sidebar.classList.remove('active');
-        }
-    }
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                updateActiveLink(topicId);
+                
+                // Close mobile menu if open
+                if (window.innerWidth <= 1024) {
+                    sidebar.classList.remove('active');
+                }
+            }
         });
     });
 }
@@ -137,10 +146,22 @@ function updateActiveLink(topicId) {
     const activeLink = document.querySelector(`[data-topic="${topicId}"]`);
     if (activeLink) {
         activeLink.classList.add('active');
+        
+        // Get subject from parent module's data-subject attribute
+        const moduleElement = activeLink.closest('.module');
+        const subjectFromModule = moduleElement ? moduleElement.dataset.subject : null;
+        
+        // Only update subject if module has an explicit subject
+        if (subjectFromModule && currentSubject !== subjectFromModule) {
+            switchSubject(subjectFromModule);
+        }
     }
-    // Only update currentTopic if it's a number
-    if (!topicId.startsWith('ml-')) {
+    
+    // Update currentTopic - preserve numeric ID for stats, or null for others
+    if (!topicId.startsWith('ml-') && !isNaN(parseInt(topicId))) {
         currentTopic = parseInt(topicId);
+    } else {
+        currentTopic = null;
     }
 }
 
