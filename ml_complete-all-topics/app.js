@@ -148,43 +148,26 @@ function initSections() {
 // Smooth scroll for TOC links
 function initTOCLinks() {
   const links = document.querySelectorAll('.toc-link');
-
+  
   links.forEach(link => {
-    const href = link.getAttribute('href');
-    // Only attach handler for hash links
-    if (!href || !href.startsWith('#')) return;
-
     link.addEventListener('click', (e) => {
       e.preventDefault();
-
-      const targetId = href.substring(1);
+      const targetId = link.getAttribute('href').substring(1);
       const target = document.getElementById(targetId);
-
-      if (!target) {
-        // target not present in DOM; warn and do nothing
-        console.warn(`TOC link clicked but target not found: #${targetId}`);
-        return;
-      }
-
-      try {
-        // Remove active from all links and mark this one
+      
+      if (target) {
+        // Remove active from all links
         links.forEach(l => l.classList.remove('active'));
         link.classList.add('active');
-
-        // Smooth scroll to the section
-        if (typeof target.scrollIntoView === 'function') {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-          window.location.hash = '#' + targetId;
-        }
-
-        // Expand the section body if present (guarded)
-        const body = target.querySelector('.section-body');
+        
+        // Scroll to target
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // Expand the section
         const toggle = target.querySelector('.section-toggle');
-        if (body && body.classList) body.classList.add('expanded');
-        if (toggle && toggle.classList) toggle.classList.remove('collapsed');
-      } catch (err) {
-        console.error('Error handling TOC link click for #' + targetId, err);
+        const body = target.querySelector('.section-body');
+        body.classList.add('expanded');
+        toggle.classList.remove('collapsed');
       }
     });
   });
