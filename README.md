@@ -11,7 +11,7 @@ Visit our courses directly in your browser:
 - [📊 Data Visualization](https://aashishgarg13.github.io/DataScience/Visualization/)
 - [🔢 Mathematics for Data Science](https://aashishgarg13.github.io/DataScience/math-ds-complete/)
 - [⚙️ Feature Engineering Guide](https://aashishgarg13.github.io/DataScience/feature-engineering/)
-- [🤔 Prompt Engineering Guide](https://learnprompting.org/) - Interactive AI prompting course
+- [🤔 Prompt Engineering Guide](https://aashishgarg13.github.io/DataScience/prompt-engineering-guide) - Interactive AI prompting course
 
 ## 🔗 Prompt Engineering Resources
 
