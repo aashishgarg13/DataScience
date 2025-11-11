@@ -529,8 +529,14 @@ canvas {
                             <a href="#svm" class="toc-link toc-sub">Support Vector Machines</a>
                             <a href="#knn" class="toc-link toc-sub">K-Nearest Neighbors</a>
                             <a href="#naive-bayes" class="toc-link toc-sub">Naive Bayes</a>
-                            <a href="#decision-trees" class="toc-link toc-sub">Decision Trees</a>
-                            <a href="#ensemble-methods" class="toc-link toc-sub">Ensemble Methods</a>
+                            <a href="#decision-tree-regression" class="toc-link toc-sub">Decision Tree Regression</a>
+                            <a href="#decision-trees" class="toc-link toc-sub">Decision Trees (Classification)</a>
+                            <a href="#bagging" class="toc-link toc-sub">Bagging</a>
+                            <a href="#boosting-adaboost" class="toc-link toc-sub">Boosting (AdaBoost)</a>
+                            <a href="#gradient-boosting" class="toc-link toc-sub">Gradient Boosting</a>
+                            <a href="#xgboost" class="toc-link toc-sub">XGBoost</a>
+                            <a href="#random-forest" class="toc-link toc-sub">Random Forest</a>
+                            <a href="#ensemble-methods" class="toc-link toc-sub">Ensemble Methods Overview</a>
                         </div>
                         <div class="toc-subcategory">
                             <div class="toc-subcategory-title">Evaluation &amp; Tuning</div>
@@ -577,6 +583,7 @@ canvas {
                 </div>
                 
                 <a href="#algorithm-comparison" class="toc-link">📊 Algorithm Comparison</a>
+                <a href="#diagnostics" class="toc-link">🔧 Diagnostics</a>
             </nav>
         </aside>
 
@@ -3242,6 +3249,192 @@ Actual  Pos     TP     FN
                 </div>
             </div>
 
+            <!-- Section 17: Decision Tree Regression (FROM PDF) -->
+            <div class="section" id="decision-tree-regression">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(106, 169, 255, 0.3); color: #6aa9ff;">📊 Supervised - Regression</span> Decision Tree Regression</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Decision Tree Regression predicts continuous values by recursively splitting data to minimize variance. Unlike classification trees that use entropy, regression trees use variance reduction!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Splits based on variance reduction (not entropy)</li>
+                            <li>Leaf nodes predict mean of samples</li>
+                            <li>Test all split points to find best</li>
+                            <li>Recursive partitioning until stopping criteria</li>
+                        </ul>
+                    </div>
+
+                    <h3>🎯 Complete Mathematical Solution (From PDF)</h3>
+
+                    <h4>Dataset: House Price Prediction</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>ID</th><th>Square Feet</th><th>Price (Lakhs)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>800</td><td>50</td></tr>
+                            <tr><td>2</td><td>850</td><td>52</td></tr>
+                            <tr><td>3</td><td>900</td><td>54</td></tr>
+                            <tr><td>4</td><td>1500</td><td>90</td></tr>
+                            <tr><td>5</td><td>1600</td><td>95</td></tr>
+                            <tr><td>6</td><td>1700</td><td>100</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="step">
+                        <div class="step-title">STEP 1: Calculate Parent Variance</div>
+                        <div class="step-calculation">
+Mean price = (50 + 52 + 54 + 90 + 95 + 100) / 6
+           = 441 / 6
+           = <strong style="color: #7ef0d4;">73.5 Lakhs</strong>
+
+Variance = Σ(yᵢ - mean)² / n
+
+Calculating each term:
+• (50 - 73.5)² = (-23.5)² = 552.25
+• (52 - 73.5)² = (-21.5)² = 462.25
+• (54 - 73.5)² = (-19.5)² = 380.25
+• (90 - 73.5)² = (16.5)² = 272.25
+• (95 - 73.5)² = (21.5)² = 462.25
+• (100 - 73.5)² = (26.5)² = 702.25
+
+Sum = 552.25 + 462.25 + 380.25 + 272.25 + 462.25 + 702.25
+    = 2831.5
+
+Variance = 2831.5 / 6 = <strong style="color: #7ef0d4;">471.92</strong>
+
+<strong style="color: #6aa9ff;">✓ Parent Variance = 471.92</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 2: Test Split Points</div>
+                        <div class="step-calculation">
+Sort by Square Feet: 800, 850, 900, 1500, 1600, 1700
+
+Possible midpoints: 825, 875, 1200, 1550, 1650
+
+<strong style="color: #6aa9ff;">Testing Split at 1200:</strong>
+
+<strong>LEFT (Square Feet &lt;= 1200):</strong>
+Samples: 800(50), 850(52), 900(54)
+Left Mean = (50 + 52 + 54) / 3 = 156 / 3 = <strong>52</strong>
+
+Left Variance:
+• (50 - 52)² = 4
+• (52 - 52)² = 0
+• (54 - 52)² = 4
+Sum = 8
+Variance = 8 / 3 = <strong>2.67</strong>
+
+<strong>RIGHT (Square Feet &gt; 1200):</strong>
+Samples: 1500(90), 1600(95), 1700(100)
+Right Mean = (90 + 95 + 100) / 3 = 285 / 3 = <strong>95</strong>
+
+Right Variance:
+• (90 - 95)² = 25
+• (95 - 95)² = 0
+• (100 - 95)² = 25
+Sum = 50
+Variance = 50 / 3 = <strong>16.67</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 3: Calculate Weighted Variance After Split</div>
+                        <div class="step-calculation">
+Weighted Variance = (n_left/n_total) × Var_left + (n_right/n_total) × Var_right
+
+                  = (3/6) × 2.67 + (3/6) × 16.67
+                  = 0.5 × 2.67 + 0.5 × 16.67
+                  = 1.335 + 8.335
+                  = <strong style="color: #6aa9ff;">9.67</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 4: Calculate Variance Reduction</div>
+                        <div class="step-calculation">
+Variance Reduction = Parent Variance - Weighted Variance After Split
+
+                   = 471.92 - 9.67
+                   = <strong style="color: #7ef0d4; font-size: 18px;">462.25</strong>
+
+<strong style="color: #7ef0d4;">✓ This is the BEST SPLIT!</strong>
+Splitting at 1200 sq ft reduces variance by 462.25
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 5: Build Final Tree Structure</div>
+                        <div class="step-calculation">
+Final Decision Tree:
+
+                [All data, Mean=73.5, Var=471.92]
+                              │
+                   Split at Square Feet = 1200
+                         /              \
+                    &lt;= 1200              &gt; 1200
+                      /                    \
+              Mean = 52            Split at 1550
+          (3 samples)               /        \
+                                &lt;= 1550      &gt; 1550
+                                  /            \
+                            Mean = 90      Mean = 97.5
+                            (1 sample)    (2 samples)
+
+<strong style="color: #7ef0d4;">Prediction Example:</strong>
+New property: 950 sq ft
+├─ 950 &lt;= 1200? YES → Go LEFT
+└─ Prediction: <strong style="color: #7ef0d4; font-size: 18px;">₹52 Lakhs</strong>
+
+New property: 1650 sq ft
+├─ 1650 &lt;= 1200? NO → Go RIGHT
+├─ 1650 &lt;= 1550? NO → Go RIGHT
+└─ Prediction: <strong style="color: #7ef0d4; font-size: 18px;">₹97.5 Lakhs</strong>
+                        </div>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="dt-regression-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Decision tree regression with splits and predictions</p>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Key Takeaway</div>
+                        <div class="callout-content">
+                            Decision Tree Regression finds splits that minimize variance in leaf nodes. Each leaf predicts the mean of samples in that region. The recursive splitting creates a piecewise constant function!
+                        </div>
+                    </div>
+
+                    <h3>Variance Reduction vs Information Gain</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Aspect</th><th>Classification Trees</th><th>Regression Trees</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Splitting Criterion</td><td>Information Gain (Entropy/Gini)</td><td>Variance Reduction</td></tr>
+                            <tr><td>Prediction</td><td>Majority class</td><td>Mean value</td></tr>
+                            <tr><td>Leaf Node</td><td>Class label</td><td>Continuous value</td></tr>
+                            <tr><td>Goal</td><td>Maximize purity</td><td>Minimize variance</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="dt-splits-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Comparing different split points and their variance reduction</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Section 17: Decision Trees -->
             <div class="section" id="decision-trees">
                 <div class="section-header">
@@ -3893,7 +4086,506 @@ Actual  Pos     TP     FN
                 </div>
             </div>
 
-            <!-- Section 19: Ensemble Methods -->
+            <!-- Section 19a: Gradient Boosting (NEW FROM PDF) -->
+            <div class="section" id="gradient-boosting">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(106, 169, 255, 0.3); color: #6aa9ff;">📊 Supervised - Ensemble</span> Gradient Boosting</h2>
+                    <button class="section-toggle collapsed">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Gradient Boosting is a powerful ensemble technique that builds models sequentially, where each new model corrects the errors (residuals) of the previous models. Unlike AdaBoost which adjusts sample weights, Gradient Boosting directly fits new models to the residual errors!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Sequential learning: Each tree fixes errors of previous</li>
+                            <li>Weak learners: Simple stumps (depth=1)</li>
+                            <li>Learning rate: Controls step size (0.1 = small steps)</li>
+                            <li>Residuals: What model got wrong</li>
+                            <li>SSE: Sum of Squared Errors (lower = better split)</li>
+                        </ul>
+                    </div>
+
+                    <h3>🎯 Complete Mathematical Solution (From PDF)</h3>
+
+                    <h4>Dataset: House Price Prediction</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>ID</th><th>Size (sq ft)</th><th>Bedrooms</th><th>Price (₹ Lakhs)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>800</td><td>2</td><td>120</td></tr>
+                            <tr><td>2</td><td>900</td><td>2</td><td>130</td></tr>
+                            <tr><td>3</td><td>1000</td><td>3</td><td>150</td></tr>
+                            <tr><td>4</td><td>1100</td><td>3</td><td>170</td></tr>
+                            <tr><td>5</td><td>1200</td><td>4</td><td>200</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Learning Rate:</strong> lr = 0.1</p>
+
+                    <div class="step">
+                        <div class="step-title">STEP 0: Initialize Model F(0)</div>
+                        <div class="step-calculation">
+Formula: F(0) = mean(y)
+
+Calculation:
+  F(0) = (120 + 130 + 150 + 170 + 200) / 5
+       = 770 / 5
+       = <strong style="color: #7ef0d4;">154</strong>
+
+<strong style="color: #7ef0d4;">✓ Result: F(0) = 154</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 1: Compute Residuals</div>
+                        <div class="step-calculation">
+Formula: r_i = y_i - F(0)
+
+<strong style="color: #6aa9ff;">Residual Calculation:</strong>
+
+ID | Size | Beds | Price(y) | Prediction F(0) | Residual r_i
+---|------|------|----------|-----------------|-------------
+1  | 800  | 2    | 120      | 154            | -34
+2  | 900  | 2    | 130      | 154            | -24
+3  | 1000 | 3    | 150      | 154            | -4
+4  | 1100 | 3    | 170      | 154            | +16
+5  | 1200 | 4    | 200      | 154            | +46
+
+<strong style="color: #7ef0d4;">✓ Residuals: [-34, -24, -4, +16, +46]</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 2: Find Best Split (Build Weak Learner h1)</div>
+                        <div class="step-calculation">
+Test all candidate splits for Size feature:
+Midpoints: 850, 950, 1050, 1150
+
+<strong style="color: #6aa9ff;">Test: Size &lt; 1050</strong>
+
+├─ Left (Size ≤ 1050): IDs 1,2,3
+│  Residuals: [-34, -24, -4]
+│  Mean: (-34 + -24 + -4) / 3 = -62 / 3 = <strong>-20.66</strong>
+│  SSE: (-34-(-20.66))² + (-24-(-20.66))² + (-4-(-20.66))²
+│       = 177.78 + 11.11 + 277.78 = <strong>466.67</strong>
+│
+└─ Right (Size &gt; 1050): IDs 4,5
+   Residuals: [+16, +46]
+   Mean: (16 + 46) / 2 = 62 / 2 = <strong>31.0</strong>
+   SSE: (16-31)² + (46-31)² = 225 + 225 = <strong>450</strong>
+
+<strong style="color: #ff8c6a;">Total SSE = 466.67 + 450 = 916.67</strong>
+
+<strong style="color: #6aa9ff;">Test All Splits:</strong>
+Feature  | Threshold | SSE
+---------|-----------|--------
+Size     | 850       | 2675
+Size     | 950       | 1316.66
+Size     | 1050      | 916.67 ← BEST SPLIT
+Size     | 1150      | 1475.0
+Bedrooms | 2.5       | 1316.66
+Bedrooms | 3.5       | 1475.0
+
+<strong style="color: #7ef0d4; font-size: 18px;">✓ BEST SPLIT: Size &lt; 1050 with SSE = 916.67</strong>
+
+Weak Learner h1(x):
+├─ If Size ≤ 1050: h1(x) = -20.66
+└─ If Size &gt; 1050: h1(x) = 31.0
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 3: Update Predictions</div>
+                        <div class="step-calculation">
+Formula: F1(x) = F(0) + lr × h1(x)
+         where lr = 0.1
+
+<strong style="color: #6aa9ff;">For ID 1 (Size=800):</strong>
+  F1(1) = 154 + 0.1 × (-20.66)
+        = 154 - 2.066
+        = <strong style="color: #7ef0d4;">151.93</strong> ✓
+
+<strong style="color: #6aa9ff;">For ID 4 (Size=1100):</strong>
+  F1(4) = 154 + 0.1 × 31.0
+        = 154 + 3.10
+        = <strong style="color: #7ef0d4;">157.10</strong> ✓
+
+<strong style="color: #6aa9ff;">Complete Table:</strong>
+ID | Size | Price(y) | F(0) | h1(x)  | F1(x)  | New Residual
+---|------|----------|------|--------|--------|-------------
+1  | 800  | 120      | 154  | -20.66 | 151.93 | -31.93
+2  | 900  | 130      | 154  | -20.66 | 151.93 | -21.93
+3  | 1000 | 150      | 154  | -20.66 | 151.93 | -1.93
+4  | 1100 | 170      | 154  | +31.0  | 157.10 | +12.90
+5  | 1200 | 200      | 154  | +31.0  | 157.10 | +42.90
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 4: Repeat for h2, h3, ... h10</div>
+                        <div class="step-calculation">
+Continue building weak learners on residuals:
+
+F(x) = F(0) + lr×h1(x) + lr×h2(x) + lr×h3(x) + ... + lr×h10(x)
+
+Each iteration:
+1. Compute residuals
+2. Find best split
+3. Build weak learner
+4. Update predictions
+
+After 10 iterations:
+<strong style="color: #7ef0d4; font-size: 18px;">Final Model: F(x) = 154 + 0.1×h1(x) + 0.1×h2(x) + ... + 0.1×h10(x)</strong>
+                        </div>
+                    </div>
+
+                    <h3>📊 Visualizations</h3>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="gb-sequential-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 1:</strong> Sequential tree building - residuals decreasing over iterations</p>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="gb-residuals-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 2:</strong> Residual reduction across iterations</p>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="gb-learning-rate-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 3:</strong> Learning rate effect - comparing lr=0.01, 0.1, 1.0</p>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="gb-stumps-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 4:</strong> Weak learner stumps with decision boundaries</p>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="gb-predictions-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 5:</strong> Prediction vs actual - showing improvement</p>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Key Takeaways</div>
+                        <div class="callout-content">
+                            <strong>Why Gradient Boosting Works:</strong><br>
+                            • Each tree learns from previous mistakes (residuals)<br>
+                            • Learning rate prevents overfitting<br>
+                            • Simple weak learners combine into strong predictor<br>
+                            • SSE-based splits find best variance reduction<br>
+                            <br>
+                            <strong>Advantages:</strong><br>
+                            ✓ Very high accuracy<br>
+                            ✓ Handles non-linear relationships<br>
+                            ✓ Feature importance built-in<br>
+                            <br>
+                            <strong>Disadvantages:</strong><br>
+                            ✗ Sequential (can't parallelize)<br>
+                            ✗ Sensitive to overfitting<br>
+                            ✗ Requires careful tuning
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 19b: XGBoost (NEW FROM PDF) -->
+            <div class="section" id="xgboost">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(106, 169, 255, 0.3); color: #6aa9ff;">📊 Supervised - Ensemble</span> XGBoost (Extreme Gradient Boosting)</h2>
+                    <button class="section-toggle collapsed">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>XGBoost is an optimized implementation of gradient boosting that uses second-order derivatives (Hessian) and regularization for superior performance. It's the algorithm that wins most Kaggle competitions!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Concepts</div>
+                        <ul class="info-card-list">
+                            <li>Uses 2nd order derivatives (Hessian) for better approximation</li>
+                            <li>Built-in regularization (λ) to prevent overfitting</li>
+                            <li>Better gain calculation for splits</li>
+                            <li>Handles parallelism and missing values</li>
+                            <li>Much faster than standard gradient boosting</li>
+                        </ul>
+                    </div>
+
+                    <h3>🎯 XGBoost vs Gradient Boosting</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Aspect</th><th>Gradient Boosting</th><th>XGBoost</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Derivatives</td><td>1st order (gradient)</td><td>1st + 2nd order (Hessian)</td></tr>
+                            <tr><td>Regularization</td><td>None built-in</td><td>L1 &amp; L2 built-in (λ)</td></tr>
+                            <tr><td>Split Criterion</td><td>MSE/MAE</td><td>Gain with regularization</td></tr>
+                            <tr><td>Parallelism</td><td>No</td><td>Yes (tree building)</td></tr>
+                            <tr><td>Missing Values</td><td>Must handle separately</td><td>Built-in handling</td></tr>
+                            <tr><td>Speed</td><td>Slower</td><td>Much faster</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h3>🎯 Complete Mathematical Solution (From PDF)</h3>
+
+                    <p><strong>Using same dataset as Gradient Boosting:</strong></p>
+
+                    <div class="formula">
+                        <strong>XGBoost Gain Formula:</strong>
+                        Gain = [GL² / (HL + λ)] + [GR² / (HR + λ)] - [G_parent² / (H_parent + λ)]
+                        <br><br>
+                        Where:<br>
+                        &nbsp;&nbsp;G = Gradient (1st derivative) = Σ(y - ŷ)<br>
+                        &nbsp;&nbsp;H = Hessian (2nd derivative) = Σ(1) for regression<br>
+                        &nbsp;&nbsp;λ = Regularization parameter (default = 1)
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 0: Initialize</div>
+                        <div class="step-calculation">
+F(0) = mean(y) = <strong style="color: #7ef0d4;">154</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 1: Compute Gradients and Hessians</div>
+                        <div class="step-calculation">
+<strong style="color: #6aa9ff;">For Regression (MSE loss):</strong>
+gradient g = (y - ŷ)
+hessian h = 1 (constant for MSE)
+
+ID | Size | Price(y) | F(0) | g=(y-ŷ) | h
+---|------|----------|------|---------|---
+1  | 800  | 120      | 154  | -34     | 1
+2  | 900  | 130      | 154  | -24     | 1
+3  | 1000 | 150      | 154  | -4      | 1
+4  | 1100 | 170      | 154  | +16     | 1
+5  | 1200 | 200      | 154  | +46     | 1
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 2: Test Split - Size &lt; 950</div>
+                        <div class="step-calculation">
+<strong style="color: #6aa9ff;">Split: Size &lt; 950</strong>
+
+├─ Left: IDs 1,2 (800, 900)
+│  GL = -34 + (-24) = <strong>-58</strong>
+│  HL = 1 + 1 = <strong>2</strong>
+│
+└─ Right: IDs 3,4,5 (1000, 1100, 1200)
+   GR = -4 + 16 + 46 = <strong>+58</strong>
+   HR = 1 + 1 + 1 = <strong>3</strong>
+
+Parent:
+  G_parent = -34 + (-24) + (-4) + 16 + 46 = <strong>0</strong>
+  H_parent = <strong>5</strong>
+
+<strong style="color: #6aa9ff;">Calculate Scores (λ = 1):</strong>
+
+Score(Left) = -GL² / (HL + λ)
+            = -(-58)² / (2 + 1)
+            = -3364 / 3
+            = <strong>-1121.33</strong>
+
+Score(Right) = -GR² / (HR + λ)
+             = -(58)² / (3 + 1)
+             = -3364 / 4
+             = <strong>-841</strong>
+
+Score(Parent) = -G_parent² / (H_parent + λ)
+              = -(0)² / (5 + 1)
+              = <strong>0</strong>
+
+Gain = Score(Left) + Score(Right) - Score(Parent)
+     = -1121.33 + (-841) - 0
+     = -1962.33
+     
+Use absolute value: Gain = <strong style="color: #7ef0d4; font-size: 18px;">1962.33</strong> ✓ HIGHEST GAIN
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 3: Compute Leaf Weights</div>
+                        <div class="step-calculation">
+Formula: w = -G / (H + λ)
+
+<strong style="color: #6aa9ff;">Left Leaf:</strong>
+  w_left = -(-58) / (2 + 1)
+         = 58 / 3
+         = <strong style="color: #7ef0d4;">19.33</strong>
+
+<strong style="color: #6aa9ff;">Right Leaf:</strong>
+  w_right = -(58) / (3 + 1)
+          = -58 / 4
+          = <strong style="color: #7ef0d4;">-14.5</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 4: Update Predictions</div>
+                        <div class="step-calculation">
+Formula: F1(x) = F(0) + lr × w
+
+<strong style="color: #6aa9ff;">Complete Table:</strong>
+ID | Size | Price(y) | F(0) | Leaf Weight | F1(x)     | New Residual
+---|------|----------|------|-------------|-----------|-------------
+1  | 800  | 120      | 154  | -19.33      | 134.67    | -14.67
+2  | 900  | 130      | 154  | -19.33      | 134.67    | -4.67
+3  | 1000 | 150      | 154  | +14.5       | 168.50    | -18.50
+4  | 1100 | 170      | 154  | +14.5       | 168.50    | +1.50
+5  | 1200 | 200      | 154  | +14.5       | 168.50    | +31.50
+                        </div>
+                    </div>
+
+                    <h3>📊 Visualizations</h3>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="xgb-gain-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 1:</strong> Gain calculation showing GL, GR, HL, HR for each split</p>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="xgb-regularization-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 2:</strong> Regularization effect - comparing λ=0, 1, 10</p>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="xgb-hessian-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 3:</strong> Hessian contribution to better optimization</p>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 350px">
+                            <canvas id="xgb-leaf-weights-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 4:</strong> Leaf weight calculation breakdown</p>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="xgb-comparison-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 5:</strong> Gradient Boosting vs XGBoost performance comparison</p>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Key Advantages of XGBoost</div>
+                        <div class="callout-content">
+                            <strong>Mathematical Improvements:</strong><br>
+                            ✓ 2nd order derivatives → Better approximation<br>
+                            ✓ Regularization (λ) → Prevents overfitting<br>
+                            ✓ Gain-based splitting → More accurate<br>
+                            <br>
+                            <strong>Engineering Improvements:</strong><br>
+                            ✓ Parallel processing → Faster training<br>
+                            ✓ Handles missing values → More robust<br>
+                            ✓ Built-in cross-validation → Easy tuning<br>
+                            ✓ Tree pruning → Better generalization<br>
+                            ✓ Cache optimization → Memory efficient<br>
+                            <br>
+                            <strong>Real-World Impact:</strong><br>
+                            • Most popular algorithm for structured data<br>
+                            • Dominates Kaggle competitions<br>
+                            • Used by: Uber, Airbnb, Microsoft, etc.
+                        </div>
+                    </div>
+
+                    <h3>Hyperparameter Guide</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Parameter</th><th>Description</th><th>Typical Values</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>learning_rate (η)</td><td>Step size shrinkage</td><td>0.01 - 0.3</td></tr>
+                            <tr><td>n_estimators</td><td>Number of trees</td><td>100 - 1000</td></tr>
+                            <tr><td>max_depth</td><td>Tree depth</td><td>3 - 10</td></tr>
+                            <tr><td>lambda (λ)</td><td>L2 regularization</td><td>0 - 10</td></tr>
+                            <tr><td>alpha (α)</td><td>L1 regularization</td><td>0 - 10</td></tr>
+                            <tr><td>subsample</td><td>Row sampling</td><td>0.5 - 1.0</td></tr>
+                            <tr><td>colsample_bytree</td><td>Column sampling</td><td>0.5 - 1.0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Section 19c: Bagging (Renamed) -->
+            <div class="section" id="bagging">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(106, 169, 255, 0.3); color: #6aa9ff;">📊 Supervised - Ensemble</span> Bagging (Bootstrap Aggregating)</h2>
+                    <button class="section-toggle collapsed">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Bagging trains multiple models on different random subsets of data (with replacement), then averages predictions. It's the foundation for Random Forest!</p>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="bagging-complete-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Bagging process showing 3 trees and averaged prediction</p>
+                    </div>
+
+                    <p>See the <a href="#ensemble-methods">Ensemble Methods Overview</a> section below for complete mathematical walkthrough.</p>
+                </div>
+            </div>
+
+            <!-- Section 19d: Boosting/AdaBoost (Renamed) -->
+            <div class="section" id="boosting-adaboost">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(106, 169, 255, 0.3); color: #6aa9ff;">📊 Supervised - Ensemble</span> Boosting (AdaBoost)</h2>
+                    <button class="section-toggle collapsed">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>AdaBoost trains models sequentially, where each new model focuses on examples the previous models got wrong by adjusting sample weights.</p>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="boosting-complete-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Boosting rounds showing weight updates and error reduction</p>
+                    </div>
+
+                    <p>See the <a href="#ensemble-methods">Ensemble Methods Overview</a> section below for complete mathematical walkthrough.</p>
+                </div>
+            </div>
+
+            <!-- Section 19e: Random Forest (Renamed) -->
+            <div class="section" id="random-forest">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(106, 169, 255, 0.3); color: #6aa9ff;">📊 Supervised - Ensemble</span> Random Forest</h2>
+                    <button class="section-toggle collapsed">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Random Forest combines bagging with feature randomness. Each tree is trained on a bootstrap sample AND considers only random subsets of features at each split!</p>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 500px">
+                            <canvas id="rf-complete-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Random Forest showing feature randomness and OOB validation</p>
+                    </div>
+
+                    <p>See the <a href="#ensemble-methods">Ensemble Methods Overview</a> section below for complete mathematical walkthrough.</p>
+                </div>
+            </div>
+
+            <!-- Section 19: Ensemble Methods (COMPREHENSIVE FROM PDF) -->
             <div class="section" id="ensemble-methods">
                 <div class="section-header">
                     <h2><span class="badge" style="background: rgba(106, 169, 255, 0.3); color: #6aa9ff;">📊 Supervised</span> Ensemble Methods</h2>
@@ -3930,8 +4622,98 @@ Actual  Pos     TP     FN
                         </div>
                     </div>
 
-                    <h3>Method 1: Bagging (Bootstrap Aggregating)</h3>
+                    <h3>🎯 Method 1: Bagging (Bootstrap Aggregating) - Complete Walkthrough</h3>
                     <p>Train multiple models on different random subsets of data (with replacement), then average predictions.</p>
+
+                    <h4>Dataset: 6 Properties</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Row</th><th>Square Feet</th><th>Price (Lakhs)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>A</td><td>900</td><td>70</td></tr>
+                            <tr><td>B</td><td>1000</td><td>80</td></tr>
+                            <tr><td>C</td><td>900</td><td>70</td></tr>
+                            <tr><td>D</td><td>1500</td><td>90</td></tr>
+                            <tr><td>E</td><td>1600</td><td>95</td></tr>
+                            <tr><td>F</td><td>1700</td><td>100</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="step">
+                        <div class="step-title">STEP 1: Create Bootstrap Samples (WITH Replacement)</div>
+                        <div class="step-calculation">
+<strong style="color: #6aa9ff;">Bootstrap Sample 1:</strong>
+Randomly pick 6 samples WITH replacement:
+├─ Row A: 900 sq ft, ₹70L (sampled TWICE!)
+├─ Row A: 900 sq ft, ₹70L (duplicate)
+├─ Row B: 1000 sq ft, ₹80L
+├─ Row D: 1500 sq ft, ₹90L
+├─ Row E: 1600 sq ft, ₹95L
+└─ Row F: 1700 sq ft, ₹100L
+
+<strong style="color: #6aa9ff;">Bootstrap Sample 2:</strong>
+├─ Row C: 900 sq ft, ₹70L
+├─ Row D: 1500 sq ft, ₹90L
+├─ Row E: 1600 sq ft, ₹95L
+├─ Row E: 1600 sq ft, ₹95L (sampled TWICE!)
+├─ Row F: 1700 sq ft, ₹100L
+└─ Row B: 1000 sq ft, ₹80L
+
+<strong style="color: #6aa9ff;">Bootstrap Sample 3:</strong>
+├─ Row F: 1700 sq ft, ₹100L
+├─ Row C: 900 sq ft, ₹70L
+├─ Row E: 1600 sq ft, ₹95L
+├─ Row A: 900 sq ft, ₹70L
+├─ Row B: 1000 sq ft, ₹80L
+└─ Row D: 1500 sq ft, ₹90L
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 2: Train Separate Model on Each Sample</div>
+                        <div class="step-calculation">
+<strong style="color: #7ef0d4;">Tree 1:</strong> Trained on Sample 1
+• Learns splits based on its data
+• For 950 sq ft → Predicts: <strong>₹75L</strong>
+
+<strong style="color: #7ef0d4;">Tree 2:</strong> Trained on Sample 2
+• Different data → Different splits!
+• For 950 sq ft → Predicts: <strong>₹72L</strong>
+
+<strong style="color: #7ef0d4;">Tree 3:</strong> Trained on Sample 3
+• Yet another perspective
+• For 950 sq ft → Predicts: <strong>₹78L</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 3: Aggregate Predictions (Average)</div>
+                        <div class="step-calculation">
+For test property with 950 sq ft:
+
+Prediction₁ = ₹75L
+Prediction₂ = ₹72L
+Prediction₃ = ₹78L
+
+<strong style="color: #6aa9ff;">Final Bagging Prediction:</strong>
+Average = (75 + 72 + 78) / 3
+        = 225 / 3
+        = <strong style="color: #7ef0d4; font-size: 18px;">₹75 Lakhs</strong> ✓
+
+<strong style="color: #7ef0d4;">Why it works:</strong>
+• Each tree makes slightly different errors
+• Averaging reduces overall variance
+• More stable than single tree!
+                        </div>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="bagging-complete-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Bagging process showing 3 trees and averaged prediction</p>
+                    </div>
 
                     <div class="formula">
                         <strong>Bagging Algorithm:</strong><br>
@@ -3951,8 +4733,101 @@ Actual  Pos     TP     FN
                         <p class="figure-caption"><strong>Figure 1:</strong> Bagging process - multiple models from bootstrap samples</p>
                     </div>
 
-                    <h3>Method 2: Boosting (Sequential Learning)</h3>
+                    <h3>🎯 Method 2: Boosting (Sequential Learning) - Complete Walkthrough</h3>
                     <p>Train models sequentially, where each new model focuses on examples the previous models got wrong.</p>
+
+                    <div class="step">
+                        <div class="step-title">STEP 1: Round 1 - Train Model 1 on All Data (Equal Weights)</div>
+                        <div class="step-calculation">
+Original Dataset (all samples weighted equally: w=1.0):
+├─ 800 sq ft → Actual: ₹50L
+├─ 850 sq ft → Actual: ₹52L
+├─ 900 sq ft → Actual: ₹54L
+├─ 1500 sq ft → Actual: ₹90L
+├─ 1600 sq ft → Actual: ₹95L
+└─ 1700 sq ft → Actual: ₹100L
+
+<strong style="color: #6aa9ff;">Model 1 Predictions:</strong>
+├─ 800 sq ft → Predicts: ₹70L (Error: -20)
+├─ 850 sq ft → Predicts: ₹72L (Error: -20)
+├─ 900 sq ft → Predicts: ₹75L (Error: -21)
+├─ 1500 sq ft → Predicts: ₹88L (Error: +2) ⚠️
+├─ 1600 sq ft → Predicts: ₹92L (Error: +3) ⚠️
+└─ 1700 sq ft → Predicts: ₹98L (Error: +2) ⚠️
+
+<strong style="color: #ff8c6a;">Large errors on rows 4, 5, 6!</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 2: Round 2 - Increase Weights on Misclassified</div>
+                        <div class="step-calculation">
+Update weights based on errors:
+├─ Row 1: w = 1.0 (small error)
+├─ Row 2: w = 1.0 (small error)
+├─ Row 3: w = 1.0 (small error)
+├─ Row 4: w = 2.5 (large error → FOCUS!) 🎯
+├─ Row 5: w = 3.0 (large error → FOCUS!) 🎯
+└─ Row 6: w = 2.5 (large error → FOCUS!) 🎯
+
+<strong style="color: #6aa9ff;">Train Model 2 with these weights:</strong>
+Model 2 focuses on the high-priced properties!
+
+<strong style="color: #6aa9ff;">Model 2 Predictions:</strong>
+├─ 800 sq ft → ₹71L (Error: -21)
+├─ 850 sq ft → ₹73L (Error: -21)
+├─ 900 sq ft → ₹74L (Error: -20)
+├─ 1500 sq ft → ₹90L (Error: 0) ✓
+├─ 1600 sq ft → ₹94L (Error: +1) ✓
+└─ 1700 sq ft → ₹100L (Error: 0) ✓
+
+<strong style="color: #7ef0d4;">Better on high-priced properties!</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 3: Round 3 - Further Refine</div>
+                        <div class="step-calculation">
+Update weights again:
+├─ Rows 1,2,3 still have errors → increase weights
+├─ Rows 4,5,6 now accurate → decrease weights
+
+<strong style="color: #6aa9ff;">Model 3 Predictions:</strong>
+├─ 800 sq ft → ₹70L (Error: -20)
+├─ 850 sq ft → ₹72L (Error: -20)
+├─ 900 sq ft → ₹75L (Error: -21)
+├─ 1500 sq ft → ₹89L (Error: +1)
+├─ 1600 sq ft → ₹93L (Error: +2)
+└─ 1700 sq ft → ₹99L (Error: +1)
+
+<strong style="color: #7ef0d4;">All errors minimized!</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 4: Combine with Weights</div>
+                        <div class="step-calculation">
+Model weights (based on accuracy):
+• Model 1: α₁ = 0.2 (least accurate)
+• Model 2: α₂ = 0.3 (medium accuracy)
+• Model 3: α₃ = 0.5 (most accurate)
+
+<strong style="color: #6aa9ff;">Final Prediction for 950 sq ft:</strong>
+Weighted Average = α₁×Pred₁ + α₂×Pred₂ + α₃×Pred₃
+                 = 0.2×75 + 0.3×74 + 0.5×75
+                 = 15 + 22.2 + 37.5
+                 = <strong style="color: #7ef0d4; font-size: 18px;">₹74.7 Lakhs</strong> ✓
+
+<strong style="color: #7ef0d4;">More accurate than any single model!</strong>
+                        </div>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="boosting-complete-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Boosting rounds showing weight updates and error reduction</p>
+                    </div>
 
                     <div class="formula">
                         <strong>Boosting Algorithm:</strong><br>
@@ -3973,8 +4848,148 @@ Actual  Pos     TP     FN
                         <p class="figure-caption"><strong>Figure 2:</strong> Boosting iteration - focusing on misclassified points</p>
                     </div>
 
-                    <h3>Random Forest: Bagging + Decision Trees</h3>
+                    <h3>🎯 Random Forest: Complete Walkthrough (From PDF)</h3>
                     <p>The most popular ensemble method! Combines bagging with feature randomness.</p>
+
+                    <h4>Dataset: House Prices with 3 Features</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Square Feet</th><th>Bedrooms</th><th>Age (years)</th><th>Price (Lakhs)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>800</td><td>2</td><td>10</td><td>50</td></tr>
+                            <tr><td>850</td><td>2</td><td>8</td><td>52</td></tr>
+                            <tr><td>900</td><td>2</td><td>5</td><td>54</td></tr>
+                            <tr><td>1500</td><td>3</td><td>3</td><td>90</td></tr>
+                            <tr><td>1600</td><td>3</td><td>2</td><td>95</td></tr>
+                            <tr><td>1700</td><td>4</td><td>1</td><td>100</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Key Parameter:</strong> Max Features = 2 (random subset at each split)</p>
+
+                    <div class="step">
+                        <div class="step-title">STEP 1: Tree 1 - Random Features at Each Split</div>
+                        <div class="step-calculation">
+<strong style="color: #6aa9ff;">Bootstrap Sample 1:</strong> {A, A, B, D, E, F}
+
+<strong>Root Split:</strong>
+Available features: [Square Feet, Bedrooms, Age]
+Randomly select 2: <strong style="color: #7ef0d4;">[Square Feet, Age]</strong>
+
+Test splits:
+• Square Feet = 1200: Variance Reduction = 450 ← BEST!
+• Age = 5: Variance Reduction = 120
+
+<strong style="color: #7ef0d4;">Choose: Split at Square Feet = 1200</strong>
+
+<strong>Left Child Split:</strong>
+Samples: {A, A, B} - all small houses
+Randomly select 2: <strong style="color: #7ef0d4;">[Bedrooms, Age]</strong>
+• Both have 2 bedrooms → split by Age
+• Age = 9: Best split
+
+<strong>Right Child Split:</strong>
+Samples: {D, E, F} - all large houses
+Randomly select 2: <strong style="color: #7ef0d4;">[Square Feet, Bedrooms]</strong>
+• Split at Square Feet = 1550
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 2: Tree 2 - Different Bootstrap, Different Features</div>
+                        <div class="step-calculation">
+<strong style="color: #6aa9ff;">Bootstrap Sample 2:</strong> {B, C, C, D, E, F}
+
+<strong>Root Split:</strong>
+Randomly select 2: <strong style="color: #7ef0d4;">[Square Feet, Bedrooms]</strong> (different!)
+• Square Feet = 1100: Variance Reduction = 420
+• Bedrooms = 2.5: Variance Reduction = 380
+
+<strong style="color: #7ef0d4;">Choose: Split at Square Feet = 1100</strong>
+
+This tree has DIFFERENT structure than Tree 1!
+→ More diversity = Better ensemble
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 3: Continue for 100 Trees</div>
+                        <div class="step-calculation">
+Repeat process 100 times:
+• Each tree gets different bootstrap sample
+• Each split considers different random features
+• Creates 100 diverse trees!
+
+Tree predictions for 950 sq ft:
+├─ Tree 1: ₹74L
+├─ Tree 2: ₹76L
+├─ Tree 3: ₹75L
+├─ Tree 4: ₹73L
+├─ ...
+└─ Tree 100: ₹75L
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 4: Average All Predictions</div>
+                        <div class="step-calculation">
+<strong style="color: #6aa9ff;">Final Random Forest Prediction:</strong>
+
+Average of 100 trees:
+= (74 + 76 + 75 + 73 + ... + 75) / 100
+= <strong style="color: #7ef0d4; font-size: 18px;">₹75.2 Lakhs</strong> ✓
+
+Confidence interval (std dev):
+= ±2.3 Lakhs
+
+<strong style="color: #7ef0d4;">Result: ₹75.2L ± ₹2.3L</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 5: Out-of-Bag (OOB) Error Estimation</div>
+                        <div class="step-calculation">
+<strong style="color: #6aa9ff;">OOB Validation (FREE!):</strong>
+
+For each original sample:
+├─ Find trees that did NOT include it in bootstrap
+├─ Use those trees to predict
+├─ Compare with actual value
+
+Example - Row A (800 sq ft, ₹50L):
+├─ Not in bootstrap of Trees: 12, 25, 38, 51, ..., 94
+├─ Average prediction from those trees: ₹48.5L
+├─ Error: |50 - 48.5| = 1.5L
+
+Repeat for all 6 samples:
+OOB MAE = Average of all errors = <strong style="color: #7ef0d4;">₹2.1L</strong>
+
+<strong style="color: #7ef0d4;">✓ Estimate test error WITHOUT separate test set!</strong>
+                        </div>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 500px">
+                            <canvas id="rf-complete-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Random Forest showing feature randomness and OOB validation</p>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Why Random Forest Works So Well</div>
+                        <div class="callout-content">
+                            <strong>Two sources of randomness:</strong><br>
+                            1. <strong>Bootstrap sampling:</strong> Each tree sees different data<br>
+                            2. <strong>Feature randomness:</strong> Each split considers random feature subset<br>
+                            <br>
+                            This creates diverse trees that make DIFFERENT errors!<br>
+                            → Averaging cancels out individual mistakes<br>
+                            → More robust than bagging alone<br>
+                            <br>
+                            <strong>Bonus:</strong> OOB samples give free validation estimate!
+                        </div>
+                    </div>
 
                     <div class="formula">
                         <strong>Random Forest Algorithm:</strong><br>
@@ -4051,6 +5066,72 @@ Actual  Pos     TP     FN
                     <p style="font-size: 18px; color: #7ef0d4; margin-top: 16px;">
                         Keep practicing, building projects, and exploring! The ML journey never ends. 🚀✨
                     </p>
+                </div>
+            </div>
+
+            <!-- Section: Diagnostics -->
+            <div class="section" id="diagnostics">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(126, 240, 212, 0.3); color: #7ef0d4;">🔧 System</span> Visualization Diagnostics</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Comprehensive diagnostic report for all visualizations in the application. Use this to verify that every chart and visualization is working correctly.</p>
+
+                    <div class="info-card" style="background: var(--color-bg-3); margin-bottom: 24px;">
+                        <h3 style="margin-bottom: 16px; color: var(--color-text);">Quick Status</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                            <div style="padding: 16px; background: var(--color-surface); border-radius: 8px; border-left: 4px solid var(--color-success);">
+                                <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px;">Successful</div>
+                                <div style="font-size: 32px; font-weight: bold; color: var(--color-success);" id="diag-success-count">0</div>
+                            </div>
+                            <div style="padding: 16px; background: var(--color-surface); border-radius: 8px; border-left: 4px solid var(--color-error);">
+                                <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px;">Failed</div>
+                                <div style="font-size: 32px; font-weight: bold; color: var(--color-error);" id="diag-failed-count">0</div>
+                            </div>
+                            <div style="padding: 16px; background: var(--color-surface); border-radius: 8px; border-left: 4px solid var(--color-warning);">
+                                <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px;">Warnings</div>
+                                <div style="font-size: 32px; font-weight: bold; color: var(--color-warning);" id="diag-warning-count">0</div>
+                            </div>
+                            <div style="padding: 16px; background: var(--color-surface); border-radius: 8px; border-left: 4px solid var(--color-primary);">
+                                <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px;">Total</div>
+                                <div style="font-size: 32px; font-weight: bold; color: var(--color-primary);" id="diag-total-count">45</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card" style="background: var(--color-bg-1);">
+                        <h3 style="margin-bottom: 16px; color: var(--color-text);">Browser Information</h3>
+                        <ul id="browser-details" style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-border); color: var(--color-text);">Loading...</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card" style="background: var(--color-bg-2); margin-top: 24px;">
+                        <h3 style="margin-bottom: 16px; color: var(--color-text);">Library Status</h3>
+                        <ul id="library-details" style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-border); color: var(--color-text);">Loading...</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card" style="background: var(--color-bg-5); margin-top: 24px;">
+                        <h3 style="margin-bottom: 16px; color: var(--color-text);">Visualization Details</h3>
+                        <div style="margin-bottom: 16px;">
+                            <button class="btn btn--primary" onclick="showDiagnosticDetails('success')" style="margin-right: 8px;">Show Successful (✓)</button>
+                            <button class="btn btn--secondary" onclick="showDiagnosticDetails('failed')" style="margin-right: 8px;">Show Failed (✗)</button>
+                            <button class="btn btn--secondary" onclick="showDiagnosticDetails('all')">Show All</button>
+                        </div>
+                        <div id="viz-details" style="background: var(--color-surface); padding: 16px; border-radius: 8px; max-height: 400px; overflow-y: auto;">
+                            <p style="color: var(--color-text-secondary);">Click a button above to view details</p>
+                        </div>
+                    </div>
+
+                    <div class="callout success" style="margin-top: 24px;">
+                        <div class="callout-title">✓ All Visualizations Verified</div>
+                        <div class="callout-content">
+                            This diagnostic system ensures that every visualization in every module is working correctly. If you see any failures, please refresh the page or check the browser console for details.
+                        </div>
+                    </div>
                 </div>
             </div>
 

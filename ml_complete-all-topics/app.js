@@ -1,3 +1,97 @@
+// ========== VISUALIZATION VERIFICATION SYSTEM ==========
+const vizLog = {
+  success: [],
+  failed: [],
+  warnings: []
+};
+
+function logViz(module, name, status, error = null) {
+  const log = {
+    module: module,
+    name: name,
+    status: status,
+    timestamp: new Date().toLocaleTimeString(),
+    error: error
+  };
+  
+  if (status === 'success') {
+    vizLog.success.push(log);
+    console.log(`✓ ${module} - ${name}`);
+  } else if (status === 'failed') {
+    vizLog.failed.push(log);
+    console.error(`✗ ${module} - ${name}: ${error}`);
+  } else {
+    vizLog.warnings.push(log);
+    console.warn(`⚠ ${module} - ${name}: ${error}`);
+  }
+}
+
+function createVerifiedVisualization(canvasId, chartConfig, moduleName, vizName) {
+  try {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+      logViz(moduleName, vizName, 'failed', 'Canvas not found');
+      showFallback(canvasId, 'error');
+      return null;
+    }
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      logViz(moduleName, vizName, 'failed', 'Cannot get context');
+      showFallback(canvasId, 'error');
+      return null;
+    }
+    
+    if (typeof Chart === 'undefined') {
+      logViz(moduleName, vizName, 'failed', 'Chart.js not loaded');
+      showFallback(canvasId, 'error');
+      return null;
+    }
+    
+    const chart = new Chart(ctx, chartConfig);
+    logViz(moduleName, vizName, 'success');
+    return chart;
+    
+  } catch (error) {
+    logViz(moduleName, vizName, 'failed', error.message);
+    showFallback(canvasId, 'error');
+    return null;
+  }
+}
+
+function showFallback(elementId, type) {
+  const element = document.getElementById(elementId);
+  if (!element) return;
+  
+  const container = element.parentElement;
+  if (!container) return;
+  
+  if (type === 'error') {
+    container.innerHTML = '<div style="padding: 40px; text-align: center; color: #ff8c6a; background: rgba(255, 140, 106, 0.1); border-radius: 8px; border: 2px solid #ff8c6a;">⚠️ Visualization temporarily unavailable<br><small style="color: #a9b4c2; margin-top: 8px; display: block;">Data is still accessible via diagnostic tools</small></div>';
+  }
+}
+
+// Show report on load
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    console.log('\n=== VISUALIZATION VERIFICATION REPORT ===');
+    console.log(`✓ Success: ${vizLog.success.length}`);
+    console.log(`✗ Failed: ${vizLog.failed.length}`);
+    console.log(`⚠ Warnings: ${vizLog.warnings.length}`);
+    
+    if (vizLog.failed.length > 0) {
+      console.error('Failed visualizations:', vizLog.failed);
+    }
+    
+    if (vizLog.success.length > 0) {
+      console.log('\nSuccessful visualizations:');
+      vizLog.success.forEach(v => console.log(`  ✓ ${v.module} - ${v.name}`));
+    }
+    
+    console.log('\n=========================================');
+  }, 2000);
+});
+
 // Data
 const data = {
   linearRegression: [
@@ -134,8 +228,18 @@ function initSections() {
         if (section.id === 'hyperparameter-tuning') initHyperparameterTuning();
         if (section.id === 'naive-bayes') initNaiveBayes();
         if (section.id === 'kmeans') initKMeans();
+        if (section.id === 'decision-tree-regression') initDecisionTreeRegression();
         if (section.id === 'decision-trees') initDecisionTrees();
+        if (section.id === 'gradient-boosting') initGradientBoosting();
+        if (section.id === 'xgboost') initXGBoost();
+        if (section.id === 'bagging') initBagging();
+        if (section.id === 'boosting-adaboost') initBoostingAdaBoost();
+        if (section.id === 'random-forest') initRandomForest();
         if (section.id === 'ensemble-methods') initEnsembleMethods();
+        if (section.id === 'diagnostics') {
+          // Wait for all visualizations to initialize
+          setTimeout(showDiagnostics, 500);
+        }
         if (section.id === 'rl-intro') { /* No viz for intro */ }
         if (section.id === 'q-learning') { /* Add Q-learning viz if needed */ }
         if (section.id === 'policy-gradient') { /* Add policy gradient viz if needed */ }
@@ -182,7 +286,7 @@ function initTOCLinks() {
       });
       ticking = true;
     }
-  });
+  }, 'Gradient Descent', 'Loss Curve');
 }
 
 function updateActiveLink() {
@@ -263,7 +367,12 @@ function drawLinearRegression() {
   });
   mse /= data.linearRegression.length;
   
-  lrChart = safeCreateChart(ctx, {
+  // Destroy existing chart
+  if (lrChart) {
+    lrChart.destroy();
+  }
+  
+  lrChart = createVerifiedVisualization('lr-canvas', {
     type: 'scatter',
     data: {
       datasets: [
@@ -313,7 +422,7 @@ function drawLinearRegression() {
         }
       }
     }
-  }, 'Linear Regression Chart');
+  }, 'Linear Regression', 'Scatter + Line');
 }
 
 // Gradient Descent Visualization
@@ -429,7 +538,12 @@ function drawGradientDescent(currentStep = -1) {
   const ctx = canvas.getContext('2d');
   const lossData = state.gdIterations.map((iter, i) => ({ x: i + 1, y: iter.loss }));
   
-  gdChart = safeCreateChart(ctx, {
+  // Destroy existing chart
+  if (gdChart) {
+    gdChart.destroy();
+  }
+  
+  gdChart = createVerifiedVisualization('gd-canvas', {
     type: 'line',
     data: {
       datasets: [{
@@ -481,15 +595,55 @@ function safeCreateChart(ctx, config, chartName) {
       console.warn(`Canvas context not found for ${chartName}`);
       return null;
     }
-    return new Chart(ctx, config);
+    const chart = new Chart(ctx, config);
+    console.log(`✓ Chart created: ${chartName}`);
+    return chart;
   } catch (error) {
     console.error(`Chart creation failed for ${chartName}:`, error);
-    // Show fallback message
-    if (ctx && ctx.canvas && ctx.canvas.parentElement) {
-      ctx.canvas.parentElement.innerHTML = `<p style="color: #ff8c6a; text-align: center; padding: 40px;">Visualization temporarily unavailable. Please refresh the page.</p>`;
-    }
     return null;
   }
+}
+
+// Link Verification System
+function verifyAllLinks() {
+  const links = document.querySelectorAll('a[href^="#"]');
+  const broken = [];
+  let working = 0;
+  
+  links.forEach(link => {
+    const targetId = link.getAttribute('href').substring(1);
+    const target = document.getElementById(targetId);
+    
+    if (!target) {
+      broken.push({
+        text: link.textContent,
+        href: link.getAttribute('href')
+      });
+      link.style.color = 'red';
+      link.title = 'Broken link';
+    } else {
+      working++;
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+        
+        // Highlight section
+        const originalBg = target.style.backgroundColor;
+        target.style.backgroundColor = 'rgba(106, 169, 255, 0.2)';
+        setTimeout(() => {
+          target.style.backgroundColor = originalBg;
+        }, 1000);
+      });
+    }
+  });
+  
+  console.log(`\n=== LINK VERIFICATION ===`);
+  console.log(`✓ Working: ${working}/${links.length}`);
+  console.log(`✗ Broken: ${broken.length}`);
+  if (broken.length > 0) {
+    console.error('Broken links:', broken);
+  }
+  console.log('==========================\n');
 }
 
 // Initialize everything when DOM is ready
@@ -502,6 +656,17 @@ function init() {
   setTimeout(() => {
     initLinearRegression();
   }, 100);
+  
+  // Verify all links on load
+  setTimeout(verifyAllLinks, 1000);
+  
+  // Initialize diagnostics refresh
+  setInterval(() => {
+    const diagSection = document.getElementById('diagnostics');
+    if (diagSection && diagSection.querySelector('.section-body').classList.contains('expanded')) {
+      showDiagnostics();
+    }
+  }, 3000);
 }
 
 if (document.readyState === 'loading') {
@@ -557,7 +722,10 @@ function initSVMBasic() {
 
 function drawSVMBasic() {
   const canvas = document.getElementById('svm-basic-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('SVM', 'Basic Decision Boundary', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   if (!ctx) {
@@ -661,6 +829,8 @@ function drawSVMBasic() {
   ctx.font = '13px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('X₁', width / 2, height - 20);
+  
+  logViz('SVM', 'Basic Decision Boundary', 'success');
   ctx.save();
   ctx.translate(20, height / 2);
   ctx.rotate(-Math.PI / 2);
@@ -683,7 +853,10 @@ function initSVMMargin() {
 
 function drawSVMMargin() {
   const canvas = document.getElementById('svm-margin-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('SVM', 'Margin Visualization', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   if (!ctx) {
@@ -804,11 +977,9 @@ let svmCChart = null;
 
 function drawSVMCParameter() {
   const canvas = document.getElementById('svm-c-canvas');
-  if (!canvas) return;
-  
-  // Destroy existing chart
-  if (svmCChart) {
-    svmCChart.destroy();
+  if (!canvas) {
+    logViz('SVM', 'C Parameter Effect', 'failed', 'Canvas not found');
+    return;
   }
   
   const ctx = canvas.getContext('2d');
@@ -902,6 +1073,8 @@ function drawSVMCParameter() {
   const violEl = document.getElementById('violations-count');
   if (marginEl) marginEl.textContent = marginWidth.toFixed(2);
   if (violEl) violEl.textContent = violations;
+  
+  logViz('SVM', 'Margin Visualization', 'success');
 }
 
 function initSVMTraining() {
@@ -992,7 +1165,10 @@ function updateTrainingInfo(point = null, violation = null) {
 
 function drawSVMTraining() {
   const canvas = document.getElementById('svm-train-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('SVM', 'Training Animation', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   if (!ctx) {
@@ -1060,6 +1236,8 @@ function drawSVMTraining() {
     ctx.textAlign = 'center';
     ctx.fillText(point.label, x, y - 15);
   });
+  
+  logViz('SVM', 'Training Animation', 'success');
 }
 
 let svmKernelChart = null;
@@ -1096,7 +1274,10 @@ function initSVMKernel() {
 
 function drawSVMKernel() {
   const canvas = document.getElementById('svm-kernel-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('SVM', 'Kernel Comparison', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -1180,6 +1361,8 @@ function drawSVMKernel() {
     ctx.fillStyle = '#7ef0d4';
     ctx.fillText('✓ Non-linear kernel successfully separates the data', padding + 10, padding + 50);
   }
+  
+  logViz('SVM', 'Kernel Comparison', 'success');
 }
 
 // Logistic Regression Visualizations
@@ -1197,7 +1380,10 @@ function initSigmoid() {
 
 function drawSigmoid() {
   const canvas = document.getElementById('sigmoid-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Logistic Regression', 'Sigmoid Curve', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -1281,6 +1467,8 @@ function drawSigmoid() {
   ctx.fillText('σ(z) = 1/(1+e⁻ᶻ)', padding + 10, padding + 25);
   ctx.fillStyle = '#ff8c6a';
   ctx.fillText('Threshold = 0.5', padding + 10, scaleY(0.5) - 10);
+  
+  logViz('Logistic Regression', 'Sigmoid Curve', 'success');
 }
 
 function initLogisticClassification() {
@@ -1292,7 +1480,10 @@ function initLogisticClassification() {
 
 function drawLogisticClassification() {
   const canvas = document.getElementById('logistic-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Logistic Regression', 'Classification Boundary', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -1349,6 +1540,8 @@ function drawLogisticClassification() {
     ctx.textAlign = 'center';
     ctx.fillText(point.height, x, height - padding + 20);
   });
+  
+  logViz('Logistic Regression', 'Classification Boundary', 'success');
   
   // Labels
   ctx.fillStyle = '#a9b4c2';
@@ -1436,7 +1629,10 @@ function stopDragKNN() {
 
 function drawKNN() {
   const canvas = document.getElementById('knn-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('KNN', 'Draggable Point', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -1524,6 +1720,8 @@ function drawKNN() {
   ctx.textAlign = 'left';
   ctx.fillText(`K=${knnState.k} | Prediction: ${prediction}`, padding + 10, padding + 25);
   ctx.fillText(`Votes: Orange=${votes.orange || 0}, Yellow=${votes.yellow || 0}`, padding + 10, padding + 50);
+  
+  logViz('KNN', 'Draggable Point', 'success');
 }
 
 // Model Evaluation
@@ -1542,7 +1740,10 @@ function initConfusionMatrix() {
 
 function drawConfusionMatrix() {
   const canvas = document.getElementById('confusion-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Model Evaluation', 'Confusion Matrix', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -1598,6 +1799,8 @@ function drawConfusionMatrix() {
   ctx.rotate(-Math.PI / 2);
   ctx.fillText('Actual Negative', 0, 0);
   ctx.restore();
+  
+  logViz('Model Evaluation', 'Confusion Matrix', 'success');
 }
 
 let rocState = { threshold: 0.5 };
@@ -1621,7 +1824,10 @@ function initROC() {
 
 function drawROC() {
   const canvas = document.getElementById('roc-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Model Evaluation', 'ROC Curve', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -1718,6 +1924,8 @@ function drawROC() {
   ctx.textAlign = 'left';
   ctx.fillText(`TPR: ${tpr.toFixed(2)} | FPR: ${fpr.toFixed(2)}`, chartX + 10, chartY + 25);
   ctx.fillText(`TP=${tp} FP=${fp} TN=${tn} FN=${fn}`, chartX + 10, chartY + 50);
+  
+  logViz('Model Evaluation', 'ROC Curve', 'success');
 }
 
 function initR2() {
@@ -1729,7 +1937,10 @@ function initR2() {
 
 function drawR2() {
   const canvas = document.getElementById('r2-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Model Evaluation', 'R² Score', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -1808,6 +2019,8 @@ function drawR2() {
   ctx.textAlign = 'left';
   ctx.fillText(`R² = ${r2.toFixed(3)}`, padding + 10, padding + 25);
   ctx.fillText(`Model explains ${(r2 * 100).toFixed(1)}% of variance`, padding + 10, padding + 50);
+  
+  logViz('Model Evaluation', 'R² Score', 'success');
 }
 
 // Regularization
@@ -1832,7 +2045,10 @@ function initRegularization() {
 
 function drawRegularization() {
   const canvas = document.getElementById('regularization-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Regularization', 'L1 vs L2 Comparison', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -1899,6 +2115,8 @@ function drawRegularization() {
   ctx.fillRect(padding + 210, legendY, 15, 15);
   ctx.fillStyle = '#e8eef6';
   ctx.fillText('L2 (Ridge)', padding + 230, legendY + 12);
+  
+  logViz('Regularization', 'L1 vs L2 Comparison', 'success');
 }
 
 // Bias-Variance
@@ -1917,7 +2135,10 @@ function initBiasVariance() {
 
 function drawBiasVariance() {
   const canvas = document.getElementById('bias-variance-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Bias-Variance', 'Three Models', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -1993,11 +2214,16 @@ function drawBiasVariance() {
       ctx.fillText(line, offsetX + sectionWidth / 2, 20 + i * 18);
     });
   });
+  
+  logViz('Bias-Variance', 'Three Models', 'success');
 }
 
 function drawComplexityCurve() {
   const canvas = document.getElementById('complexity-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Bias-Variance', 'Complexity Curve', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -2050,6 +2276,8 @@ function drawComplexityCurve() {
   ctx.fillStyle = '#7ef0d4';
   ctx.fillText('● Sweet Spot', padding + 10, padding + 60);
   
+  logViz('Bias-Variance', 'Complexity Curve', 'success');
+  
   // Labels
   ctx.fillStyle = '#a9b4c2';
   ctx.textAlign = 'center';
@@ -2071,7 +2299,10 @@ function initCrossValidation() {
 
 function drawCrossValidation() {
   const canvas = document.getElementById('cv-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Cross-Validation', 'K-Fold Visualization', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -2142,6 +2373,8 @@ function drawCrossValidation() {
   ctx.font = 'bold 16px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText(`Final Score: ${mean.toFixed(2)} ± ${std.toFixed(3)}`, width / 2, height - 20);
+  
+  logViz('Cross-Validation', 'K-Fold Visualization', 'success');
 }
 
 // Preprocessing
@@ -2161,7 +2394,10 @@ function initPreprocessing() {
 
 function drawScaling() {
   const canvas = document.getElementById('scaling-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Preprocessing', 'Feature Scaling', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -2213,11 +2449,16 @@ function drawScaling() {
       centerX += 35;
     });
   });
+  
+  logViz('Preprocessing', 'Feature Scaling', 'success');
 }
 
 function drawPipeline() {
   const canvas = document.getElementById('pipeline-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Preprocessing', 'Pipeline Flow', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -2268,6 +2509,8 @@ function drawPipeline() {
       ctx.fill();
     }
   });
+  
+  logViz('Preprocessing', 'Pipeline Flow', 'success');
 }
 
 // Loss Functions
@@ -2287,7 +2530,10 @@ function initLossFunctions() {
 
 function drawLossComparison() {
   const canvas = document.getElementById('loss-comparison-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Loss Functions', 'Loss Comparison', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -2350,11 +2596,16 @@ function drawLossComparison() {
   ctx.font = 'bold 16px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('Regression Loss Comparison', width / 2, 50);
+  
+  logViz('Loss Functions', 'Loss Comparison', 'success');
 }
 
 function drawLossCurves() {
   const canvas = document.getElementById('loss-curves-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Loss Functions', 'Loss Curves', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -2410,6 +2661,8 @@ function drawLossCurves() {
   ctx.rotate(-Math.PI / 2);
   ctx.fillText('Loss', 0, 0);
   ctx.restore();
+  
+  logViz('Loss Functions', 'Loss Curves', 'success');
 }
 
 // Topic 13: Finding Optimal K in KNN
@@ -2469,7 +2722,12 @@ function drawElbowCurve() {
   }
   
   // Use Chart.js
-  elbowChart = new Chart(ctx, {
+  // Destroy existing chart
+  if (elbowChart) {
+    elbowChart.destroy();
+  }
+  
+  elbowChart = createVerifiedVisualization('elbow-canvas', {
     type: 'line',
     data: {
       labels: kValues,
@@ -2528,12 +2786,15 @@ function drawElbowCurve() {
         }
       }
     }
-  }, 'Elbow Chart');
+  }, 'KNN', 'Elbow Method');
 }
 
 function drawCVKHeatmap() {
   const canvas = document.getElementById('cv-k-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Optimal K', 'CV Heatmap', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -2612,6 +2873,8 @@ function drawCVKHeatmap() {
   const maxMean = Math.max(...meanAccs);
   const optIdx = meanAccs.indexOf(maxMean);
   ctx.fillText(`Best K = ${kValues[optIdx]} (Mean Acc: ${maxMean.toFixed(3)})`, padding, height - 20);
+  
+  logViz('Optimal K', 'CV Heatmap', 'success');
 }
 
 // Topic 14: Hyperparameter Tuning
@@ -2640,11 +2903,9 @@ function initHyperparameterTuning() {
 
 function drawGridSearchHeatmap() {
   const canvas = document.getElementById('gridsearch-heatmap');
-  if (!canvas) return;
-  
-  // Destroy existing chart
-  if (gridSearchChart) {
-    gridSearchChart.destroy();
+  if (!canvas) {
+    logViz('Hyperparameter Tuning', 'GridSearch Heatmap', 'failed', 'Canvas not found');
+    return;
   }
   
   const ctx = canvas.getContext('2d');
@@ -2763,11 +3024,16 @@ function drawGridSearchHeatmap() {
   ctx.font = 'bold 14px sans-serif';
   ctx.textAlign = 'left';
   ctx.fillText(`Best: C=${cValues[bestJ]}, γ=${gammaValues[bestI]} → Acc=${bestAcc.toFixed(2)}`, padding, height - 30);
+  
+  logViz('Hyperparameter Tuning', 'GridSearch Heatmap', 'success');
 }
 
 function drawParamSurface() {
   const canvas = document.getElementById('param-surface');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Hyperparameter Tuning', 'Parameter Surface', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -2826,6 +3092,8 @@ function drawParamSurface() {
   ctx.font = 'bold 16px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('Performance Surface (3D Contour View)', width / 2, 30);
+  
+  logViz('Hyperparameter Tuning', 'Parameter Surface', 'success');
 }
 
 // Topic 15: Naive Bayes
@@ -2861,7 +3129,10 @@ function initNaiveBayes() {
 
 function drawBayesTheorem() {
   const canvas = document.getElementById('bayes-theorem-viz');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Naive Bayes', 'Bayes Theorem Flow', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -2923,7 +3194,11 @@ function drawCategoricalNB() {
   
   const ctx = canvas.getContext('2d');
   
-  categoricalNBChart = safeCreateChart(ctx, {
+  if (categoricalNBChart) {
+    categoricalNBChart.destroy();
+  }
+  
+  categoricalNBChart = createVerifiedVisualization('categorical-nb-canvas', {
     type: 'bar',
     data: {
       labels: ['P(Yes|Rainy,Hot)', 'P(No|Rainy,Hot)'],
@@ -2975,12 +3250,15 @@ function drawCategoricalNB() {
         }
       }
     }
-  }, 'Categorical Naive Bayes Chart');
+  }, 'Naive Bayes', 'Categorical Calculation');
 }
 
 function drawGaussianNB() {
   const canvas = document.getElementById('gaussian-nb-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Naive Bayes', 'Gaussian NB Boundary', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -3088,6 +3366,8 @@ function drawGaussianNB() {
   
   ctx.fillStyle = '#6aa9ff';
   ctx.fillText('| Decision Boundary', padding + 210, 35);
+  
+  logViz('Naive Bayes', 'Gaussian NB Boundary', 'success');
 }
 
 function drawSpamClassification() {
@@ -3157,7 +3437,11 @@ function drawSpamClassification() {
     compCanvas.style.marginTop = '20px';
     canvas.parentElement.appendChild(compCanvas);
     
-    bayesComparisonChart = safeCreateChart(compCanvas.getContext('2d'), {
+    if (bayesComparisonChart) {
+      bayesComparisonChart.destroy();
+    }
+    
+    bayesComparisonChart = createVerifiedVisualization('bayes-comparison-chart', {
       type: 'bar',
       data: {
         labels: ['Spam Probability', 'Not-Spam Probability'],
@@ -3193,9 +3477,11 @@ function drawSpamClassification() {
           }
         }
       }
-    }, 'Bayes Comparison Chart');
+    }, 'Naive Bayes', 'Spam Classification');
     if (bayesComparisonChart) compCanvas.style.height = '150px';
   }
+  
+  logViz('Naive Bayes', 'Bayes Theorem Flow', 'success');
 }
 
 // Topic 16: Decision Trees
@@ -3227,7 +3513,10 @@ function initDecisionTrees() {
 
 function drawDecisionTree() {
   const canvas = document.getElementById('decision-tree-viz');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Decision Trees', 'Tree Structure', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -3311,6 +3600,8 @@ function drawDecisionTree() {
   ctx.font = '12px sans-serif';
   ctx.textAlign = 'left';
   ctx.fillText('Example: Email with "free" + link → SPAM', 40, height - 20);
+  
+  logViz('Decision Trees', 'Tree Structure', 'success');
 }
 
 function drawSplitComparison() {
@@ -3368,6 +3659,8 @@ function drawSplitComparison() {
   ctx.textAlign = 'center';
   ctx.fillText('✓ Best split: Highest Information Gain!', width / 2, height - 30);
   
+  logViz('Decision Trees', 'Information Gain', 'success');
+  
   // Title
   ctx.fillStyle = '#7ef0d4';
   ctx.font = 'bold 16px sans-serif';
@@ -3376,7 +3669,10 @@ function drawSplitComparison() {
 
 function drawEntropyViz() {
   const canvas = document.getElementById('entropy-viz');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Decision Trees', 'Entropy Visualization', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -3454,6 +3750,8 @@ function drawEntropyViz() {
   ctx.font = 'bold 16px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('Entropy: Measuring Disorder', width / 2, 30);
+  
+  logViz('Decision Trees', 'Entropy Visualization', 'success');
 }
 
 function drawSplitComparison() {
@@ -3601,7 +3899,10 @@ function drawEntropyViz() {
 
 function drawTreeBoundary() {
   const canvas = document.getElementById('tree-boundary');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Decision Trees', 'Decision Regions', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -3686,10 +3987,962 @@ function drawTreeBoundary() {
   ctx.font = 'bold 16px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('Decision Tree Creates Rectangular Regions', width / 2, 30);
+  
+  logViz('Decision Trees', 'Decision Regions', 'success');
+}
+
+// Topic 16b: Decision Tree Regression Visualization
+function initDecisionTreeRegression() {
+  const canvas1 = document.getElementById('dt-regression-canvas');
+  if (canvas1 && !canvas1.dataset.initialized) {
+    canvas1.dataset.initialized = 'true';
+    drawDTRegression();
+  }
+  
+  const canvas2 = document.getElementById('dt-splits-canvas');
+  if (canvas2 && !canvas2.dataset.initialized) {
+    canvas2.dataset.initialized = 'true';
+    drawDTSplits();
+  }
+}
+
+function drawDTRegression() {
+  const canvas = document.getElementById('dt-regression-canvas');
+  if (!canvas) {
+    logViz('Decision Tree Regression', 'Splits & Predictions', 'failed', 'Canvas not found');
+    return;
+  }
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 450;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 60;
+  const chartWidth = width - 2 * padding;
+  const chartHeight = height - 2 * padding;
+  
+  const xMin = 700, xMax = 1800;
+  const yMin = 40, yMax = 110;
+  const scaleX = (x) => padding + ((x - xMin) / (xMax - xMin)) * chartWidth;
+  const scaleY = (y) => height - padding - ((y - yMin) / (yMax - yMin)) * chartHeight;
+  
+  // Data points
+  const data = [
+    {x: 800, y: 50}, {x: 850, y: 52}, {x: 900, y: 54},
+    {x: 1500, y: 90}, {x: 1600, y: 95}, {x: 1700, y: 100}
+  ];
+  
+  // Draw decision boundaries
+  ctx.strokeStyle = '#6aa9ff';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([5, 5]);
+  ctx.beginPath();
+  ctx.moveTo(scaleX(1200), padding);
+  ctx.lineTo(scaleX(1200), height - padding);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.moveTo(scaleX(1550), padding);
+  ctx.lineTo(scaleX(1550), height - padding);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  // Draw regions with predictions
+  ctx.fillStyle = 'rgba(126, 240, 212, 0.1)';
+  ctx.fillRect(scaleX(700), scaleY(52), scaleX(1200) - scaleX(700), height - padding - scaleY(52));
+  ctx.fillStyle = 'rgba(255, 140, 106, 0.1)';
+  ctx.fillRect(scaleX(1200), scaleY(90), scaleX(1550) - scaleX(1200), height - padding - scaleY(90));
+  ctx.fillStyle = 'rgba(106, 169, 255, 0.1)';
+  ctx.fillRect(scaleX(1550), scaleY(97.5), scaleX(1800) - scaleX(1550), height - padding - scaleY(97.5));
+  
+  // Draw prediction lines
+  ctx.strokeStyle = '#7ef0d4';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(scaleX(700), scaleY(52));
+  ctx.lineTo(scaleX(1200), scaleY(52));
+  ctx.stroke();
+  
+  ctx.strokeStyle = '#ff8c6a';
+  ctx.beginPath();
+  ctx.moveTo(scaleX(1200), scaleY(90));
+  ctx.lineTo(scaleX(1550), scaleY(90));
+  ctx.stroke();
+  
+  ctx.strokeStyle = '#6aa9ff';
+  ctx.beginPath();
+  ctx.moveTo(scaleX(1550), scaleY(97.5));
+  ctx.lineTo(scaleX(1800), scaleY(97.5));
+  ctx.stroke();
+  
+  // Draw data points
+  data.forEach(point => {
+    ctx.fillStyle = '#e8eef6';
+    ctx.beginPath();
+    ctx.arc(scaleX(point.x), scaleY(point.y), 6, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = '#1a2332';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+  
+  // Labels
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Predict: ₹52L', scaleX(950), scaleY(52) - 10);
+  ctx.fillStyle = '#ff8c6a';
+  ctx.fillText('Predict: ₹90L', scaleX(1375), scaleY(90) - 10);
+  ctx.fillStyle = '#6aa9ff';
+  ctx.fillText('Predict: ₹97.5L', scaleX(1650), scaleY(97.5) - 10);
+  
+  // Axes
+  ctx.fillStyle = '#a9b4c2';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Square Feet', width / 2, height - 20);
+  ctx.save();
+  ctx.translate(20, height / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Price (Lakhs)', 0, 0);
+  ctx.restore();
+  
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.fillText('Split at 1200', scaleX(1200), 30);
+  ctx.fillText('Split at 1550', scaleX(1550), 30);
+  
+  logViz('Decision Tree Regression', 'Splits & Predictions', 'success');
+}
+
+function drawDTSplits() {
+  const canvas = document.getElementById('dt-splits-canvas');
+  if (!canvas) {
+    logViz('Decision Tree Regression', 'Split Comparison', 'failed', 'Canvas not found');
+    return;
+  }
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const splits = [
+    {value: 825, varReduction: 120, color: '#ff8c6a'},
+    {value: 875, varReduction: 180, color: '#ffb490'},
+    {value: 1200, varReduction: 462.25, color: '#7ef0d4'},
+    {value: 1550, varReduction: 95, color: '#ffb490'},
+    {value: 1650, varReduction: 65, color: '#ff8c6a'}
+  ];
+  
+  const padding = 60;
+  const barHeight = 50;
+  const maxWidth = width - 2 * padding - 200;
+  const maxVR = Math.max(...splits.map(s => s.varReduction));
+  
+  splits.forEach((split, i) => {
+    const y = 60 + i * (barHeight + 25);
+    const barWidth = (split.varReduction / maxVR) * maxWidth;
+    
+    ctx.fillStyle = split.color;
+    ctx.fillRect(padding, y, barWidth, barHeight);
+    ctx.strokeStyle = split.color;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(padding, y, barWidth, barHeight);
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(`Split at ${split.value}`, padding, y - 8);
+    
+    ctx.fillStyle = '#1a2332';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`VR = ${split.varReduction.toFixed(1)}`, padding + barWidth / 2, y + barHeight / 2 + 5);
+  });
+  
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('✓ Split at 1200: Maximum Variance Reduction!', width / 2, height - 20);
+  
+  logViz('Decision Tree Regression', 'Split Comparison', 'success');
+}
+
+// Topic 17a: Gradient Boosting (NEW)
+function initGradientBoosting() {
+  const canvases = [
+    { id: 'gb-sequential-canvas', fn: drawGBSequential },
+    { id: 'gb-residuals-canvas', fn: drawGBResiduals },
+    { id: 'gb-learning-rate-canvas', fn: drawGBLearningRate },
+    { id: 'gb-stumps-canvas', fn: drawGBStumps },
+    { id: 'gb-predictions-canvas', fn: drawGBPredictions }
+  ];
+  
+  canvases.forEach(c => {
+    const canvas = document.getElementById(c.id);
+    if (canvas && !canvas.dataset.initialized) {
+      canvas.dataset.initialized = 'true';
+      c.fn();
+    }
+  });
+}
+
+function drawGBSequential() {
+  const canvas = document.getElementById('gb-sequential-canvas');
+  if (!canvas) return;
+  
+  const gbData = [
+    { iteration: 0, f: 154, residual: 29.6 },
+    { iteration: 1, f: 151.93, residual: 26.8 },
+    { iteration: 2, f: 149.5, residual: 24.1 },
+    { iteration: 3, f: 147.2, residual: 21.5 },
+    { iteration: 4, f: 145.1, residual: 19.2 },
+    { iteration: 5, f: 143.2, residual: 17.1 },
+    { iteration: 6, f: 141.5, residual: 15.3 },
+    { iteration: 7, f: 140.0, residual: 13.7 },
+    { iteration: 8, f: 138.6, residual: 12.2 },
+    { iteration: 9, f: 137.4, residual: 10.9 },
+    { iteration: 10, f: 136.3, residual: 9.8 }
+  ];
+  
+  createVerifiedVisualization('gb-sequential-canvas', {
+    type: 'line',
+    data: {
+      datasets: [
+        {
+          label: 'Mean Prediction F(t)',
+          data: gbData.map(d => ({ x: d.iteration, y: d.f })),
+          borderColor: '#6aa9ff',
+          backgroundColor: 'rgba(106, 169, 255, 0.1)',
+          borderWidth: 3,
+          fill: true,
+          yAxisID: 'y'
+        },
+        {
+          label: 'Mean Absolute Residual',
+          data: gbData.map(d => ({ x: d.iteration, y: d.residual })),
+          borderColor: '#ff8c6a',
+          backgroundColor: 'rgba(255, 140, 106, 0.1)',
+          borderWidth: 3,
+          fill: true,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Gradient Boosting: Sequential Learning',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: { labels: { color: '#a9b4c2' } }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Iteration', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          type: 'linear',
+          position: 'left',
+          title: { display: true, text: 'Prediction F(t)', color: '#6aa9ff' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          title: { display: true, text: 'Residual', color: '#ff8c6a' },
+          grid: { display: false },
+          ticks: { color: '#a9b4c2' }
+        }
+      }
+    }
+  }, 'Gradient Boosting', 'Sequential Trees');
+}
+
+function drawGBResiduals() {
+  const canvas = document.getElementById('gb-residuals-canvas');
+  if (!canvas) return;
+  
+  const residuals = [
+    { id: 1, iter0: -34, iter1: -31.93, iter5: -12, iter10: -3 },
+    { id: 2, iter0: -24, iter1: -21.93, iter5: -8, iter10: -2 },
+    { id: 3, iter0: -4, iter1: -1.93, iter5: -1, iter10: 0 },
+    { id: 4, iter0: 16, iter1: 12.90, iter5: 5, iter10: 1 },
+    { id: 5, iter0: 46, iter1: 42.90, iter5: 18, iter10: 4 }
+  ];
+  
+  createVerifiedVisualization('gb-residuals-canvas', {
+    type: 'bar',
+    data: {
+      labels: ['ID 1', 'ID 2', 'ID 3', 'ID 4', 'ID 5'],
+      datasets: [
+        {
+          label: 'Iteration 0',
+          data: residuals.map(r => r.iter0),
+          backgroundColor: '#ff8c6a'
+        },
+        {
+          label: 'Iteration 1',
+          data: residuals.map(r => r.iter1),
+          backgroundColor: '#ffb490'
+        },
+        {
+          label: 'Iteration 5',
+          data: residuals.map(r => r.iter5),
+          backgroundColor: '#6aa9ff'
+        },
+        {
+          label: 'Iteration 10',
+          data: residuals.map(r => r.iter10),
+          backgroundColor: '#7ef0d4'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Residual Reduction Over Iterations',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: { labels: { color: '#a9b4c2' } }
+      },
+      scales: {
+        x: {
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          title: { display: true, text: 'Residual Value', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        }
+      }
+    }
+  }, 'Gradient Boosting', 'Residual Reduction');
+}
+
+function drawGBLearningRate() {
+  const canvas = document.getElementById('gb-learning-rate-canvas');
+  if (!canvas) return;
+  
+  const iterations = Array.from({length: 21}, (_, i) => i);
+  
+  const lr01 = iterations.map(i => 154 - 18 * (1 - Math.exp(-i * 0.01)));
+  const lr10 = iterations.map(i => 154 - 18 * (1 - Math.exp(-i * 0.1)));
+  const lr100 = iterations.map(i => {
+    if (i === 0) return 154;
+    if (i < 5) return 154 - 18 * (1 - Math.exp(-i * 1.0));
+    return 136 + Math.sin(i) * 2;
+  });
+  
+  createVerifiedVisualization('gb-learning-rate-canvas', {
+    type: 'line',
+    data: {
+      labels: iterations,
+      datasets: [
+        {
+          label: 'lr = 0.01 (slow)',
+          data: lr01,
+          borderColor: '#ff8c6a',
+          borderWidth: 3,
+          pointRadius: 2
+        },
+        {
+          label: 'lr = 0.1 (good)',
+          data: lr10,
+          borderColor: '#7ef0d4',
+          borderWidth: 3,
+          pointRadius: 2
+        },
+        {
+          label: 'lr = 1.0 (too fast)',
+          data: lr100,
+          borderColor: '#6aa9ff',
+          borderWidth: 3,
+          pointRadius: 2
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Learning Rate Effect on Convergence',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: { labels: { color: '#a9b4c2' } }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Iteration', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          title: { display: true, text: 'Mean Prediction', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        }
+      }
+    }
+  }, 'Gradient Boosting', 'Learning Rate Effect');
+}
+
+function drawGBStumps() {
+  const canvas = document.getElementById('gb-stumps-canvas');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const stumps = [
+    { name: 'h1', split: 1050, left: -20.66, right: 31.0, color: '#6aa9ff' },
+    { name: 'h2', split: 950, left: -15.2, right: 22.5, color: '#7ef0d4' },
+    { name: 'h3', split: 1150, left: -8.5, right: 14.8, color: '#ffb490' }
+  ];
+  
+  const stumpWidth = width / 3;
+  
+  stumps.forEach((stump, idx) => {
+    const offsetX = idx * stumpWidth;
+    const centerX = offsetX + stumpWidth / 2;
+    
+    // Title
+    ctx.fillStyle = stump.color;
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(stump.name, centerX, 30);
+    
+    // Root node
+    ctx.fillStyle = stump.color + '33';
+    ctx.fillRect(centerX - 40, 60, 80, 50);
+    ctx.strokeStyle = stump.color;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(centerX - 40, 60, 80, 50);
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = '12px sans-serif';
+    ctx.fillText('Size &lt;', centerX, 80);
+    ctx.fillText(stump.split, centerX, 95);
+    
+    // Left child
+    ctx.strokeStyle = stump.color;
+    ctx.beginPath();
+    ctx.moveTo(centerX, 110);
+    ctx.lineTo(centerX - 50, 180);
+    ctx.stroke();
+    
+    ctx.fillStyle = '#7ef0d4' + '33';
+    ctx.fillRect(centerX - 85, 180, 70, 50);
+    ctx.strokeStyle = '#7ef0d4';
+    ctx.strokeRect(centerX - 85, 180, 70, 50);
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.fillText(stump.left.toFixed(2), centerX - 50, 210);
+    
+    // Right child
+    ctx.strokeStyle = stump.color;
+    ctx.beginPath();
+    ctx.moveTo(centerX, 110);
+    ctx.lineTo(centerX + 50, 180);
+    ctx.stroke();
+    
+    ctx.fillStyle = '#ff8c6a' + '33';
+    ctx.fillRect(centerX + 15, 180, 70, 50);
+    ctx.strokeStyle = '#ff8c6a';
+    ctx.strokeRect(centerX + 15, 180, 70, 50);
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.fillText(stump.right.toFixed(2), centerX + 50, 210);
+    
+    // Labels
+    ctx.fillStyle = '#a9b4c2';
+    ctx.font = '10px sans-serif';
+    ctx.fillText('≤', centerX - 50, 150);
+    ctx.fillText('&gt;', centerX + 50, 150);
+  });
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Weak Learner Stumps (Depth = 1)', width / 2, height - 20);
+  
+  logViz('Gradient Boosting', 'Weak Learner Stumps', 'success');
+}
+
+function drawGBPredictions() {
+  const canvas = document.getElementById('gb-predictions-canvas');
+  if (!canvas) return;
+  
+  const actual = [120, 130, 150, 170, 200];
+  const iter0 = [154, 154, 154, 154, 154];
+  const iter5 = [125, 135, 148, 165, 195];
+  const iter10 = [121, 131, 149, 169, 199];
+  
+  createVerifiedVisualization('gb-predictions-canvas', {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: 'Actual',
+          data: actual.map((y, i) => ({ x: i + 1, y: y })),
+          backgroundColor: '#7ef0d4',
+          pointRadius: 8
+        },
+        {
+          label: 'Iteration 0',
+          data: iter0.map((y, i) => ({ x: i + 1, y: y })),
+          backgroundColor: '#ff8c6a',
+          pointRadius: 6
+        },
+        {
+          label: 'Iteration 5',
+          data: iter5.map((y, i) => ({ x: i + 1, y: y })),
+          backgroundColor: '#ffb490',
+          pointRadius: 6
+        },
+        {
+          label: 'Iteration 10',
+          data: iter10.map((y, i) => ({ x: i + 1, y: y })),
+          backgroundColor: '#6aa9ff',
+          pointRadius: 6
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Predictions Approaching Actual Values',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: { labels: { color: '#a9b4c2' } }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Sample ID', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2', stepSize: 1 }
+        },
+        y: {
+          title: { display: true, text: 'Price (₹ Lakhs)', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        }
+      }
+    }
+  }, 'Gradient Boosting', 'Predictions vs Actual');
+}
+
+// Topic 17b: XGBoost (NEW)
+function initXGBoost() {
+  const canvases = [
+    { id: 'xgb-gain-canvas', fn: drawXGBGain },
+    { id: 'xgb-regularization-canvas', fn: drawXGBRegularization },
+    { id: 'xgb-hessian-canvas', fn: drawXGBHessian },
+    { id: 'xgb-leaf-weights-canvas', fn: drawXGBLeafWeights },
+    { id: 'xgb-comparison-canvas', fn: drawXGBComparison }
+  ];
+  
+  canvases.forEach(c => {
+    const canvas = document.getElementById(c.id);
+    if (canvas && !canvas.dataset.initialized) {
+      canvas.dataset.initialized = 'true';
+      c.fn();
+    }
+  });
+}
+
+function drawXGBGain() {
+  const canvas = document.getElementById('xgb-gain-canvas');
+  if (!canvas) return;
+  
+  const splits = [
+    { threshold: 850, gl: -58, gr: 0, hl: 2, hr: 3, gain: 1121 },
+    { threshold: 950, gl: -58, gr: 58, hl: 2, hr: 3, gain: 1962 },
+    { threshold: 1050, gl: -62, gr: 62, hl: 3, hr: 2, gain: 1842 },
+    { threshold: 1150, gl: -4, gr: 4, hl: 4, hr: 1, gain: 892 }
+  ];
+  
+  createVerifiedVisualization('xgb-gain-canvas', {
+    type: 'bar',
+    data: {
+      labels: splits.map(s => `Split ${s.threshold}`),
+      datasets: [
+        {
+          label: 'GL (Left Gradient)',
+          data: splits.map(s => s.gl),
+          backgroundColor: '#ff8c6a',
+          stack: 'gradient'
+        },
+        {
+          label: 'GR (Right Gradient)',
+          data: splits.map(s => s.gr),
+          backgroundColor: '#6aa9ff',
+          stack: 'gradient'
+        },
+        {
+          label: 'Gain Score',
+          data: splits.map(s => s.gain),
+          backgroundColor: '#7ef0d4',
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'XGBoost Gain Calculation for Different Splits',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: { labels: { color: '#a9b4c2' } }
+      },
+      scales: {
+        x: {
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          title: { display: true, text: 'Gradient Sum', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          title: { display: true, text: 'Gain', color: '#7ef0d4' },
+          grid: { display: false },
+          ticks: { color: '#a9b4c2' }
+        }
+      }
+    }
+  }, 'XGBoost', 'Gain Calculation');
+}
+
+function drawXGBRegularization() {
+  const canvas = document.getElementById('xgb-regularization-canvas');
+  if (!canvas) return;
+  
+  const lambdas = ['λ=0', 'λ=1', 'λ=10'];
+  const trainAcc = [0.99, 0.95, 0.88];
+  const testAcc = [0.82, 0.93, 0.91];
+  
+  createVerifiedVisualization('xgb-regularization-canvas', {
+    type: 'bar',
+    data: {
+      labels: lambdas,
+      datasets: [
+        {
+          label: 'Training Accuracy',
+          data: trainAcc,
+          backgroundColor: '#6aa9ff'
+        },
+        {
+          label: 'Test Accuracy',
+          data: testAcc,
+          backgroundColor: '#7ef0d4'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Regularization Effect: λ Controls Overfitting',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: { labels: { color: '#a9b4c2' } }
+      },
+      scales: {
+        x: {
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          title: { display: true, text: 'Accuracy', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' },
+          min: 0.7,
+          max: 1.0
+        }
+      }
+    }
+  }, 'XGBoost', 'Regularization Effect');
+}
+
+function drawXGBHessian() {
+  const canvas = document.getElementById('xgb-hessian-canvas');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 60;
+  const chartWidth = width - 2 * padding;
+  const chartHeight = height - 2 * padding;
+  
+  // Draw surface comparison
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Hessian Provides Curvature Information', width / 2, 30);
+  
+  // Draw gradient only curve
+  ctx.strokeStyle = '#ff8c6a';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  for (let x = 0; x <= 10; x += 0.2) {
+    const y = 200 - 100 * Math.exp(-Math.pow(x - 5, 2) / 8);
+    if (x === 0) ctx.moveTo(padding + x * chartWidth / 10, y);
+    else ctx.lineTo(padding + x * chartWidth / 10, y);
+  }
+  ctx.stroke();
+  
+  // Draw gradient + hessian curve
+  ctx.strokeStyle = '#7ef0d4';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  for (let x = 0; x <= 10; x += 0.2) {
+    const y = 200 - 120 * Math.exp(-Math.pow(x - 5, 2) / 5);
+    if (x === 0) ctx.moveTo(padding + x * chartWidth / 10, y);
+    else ctx.lineTo(padding + x * chartWidth / 10, y);
+  }
+  ctx.stroke();
+  
+  // Optimum point
+  ctx.fillStyle = '#7ef0d4';
+  ctx.beginPath();
+  ctx.arc(padding + 5 * chartWidth / 10, 80, 8, 0, 2 * Math.PI);
+  ctx.fill();
+  
+  // Legend
+  ctx.fillStyle = '#ff8c6a';
+  ctx.fillRect(padding + 10, height - 80, 20, 3);
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('1st order only (slower)', padding + 40, height - 75);
+  
+  ctx.fillStyle = '#7ef0d4';
+  ctx.fillRect(padding + 10, height - 55, 20, 3);
+  ctx.fillStyle = '#e8eef6';
+  ctx.fillText('1st + 2nd order (faster)', padding + 40, height - 50);
+  
+  logViz('XGBoost', 'Hessian Contribution', 'success');
+}
+
+function drawXGBLeafWeights() {
+  const canvas = document.getElementById('xgb-leaf-weights-canvas');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 350;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 40;
+  const boxWidth = 300;
+  const boxHeight = 120;
+  
+  // Left leaf
+  const leftX = width / 4 - boxWidth / 2;
+  ctx.fillStyle = '#7ef0d4' + '22';
+  ctx.fillRect(leftX, 80, boxWidth, boxHeight);
+  ctx.strokeStyle = '#7ef0d4';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(leftX, 80, boxWidth, boxHeight);
+  
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('Left Leaf (Size ≤ 950):', leftX + 10, 105);
+  ctx.font = '12px monospace';
+  ctx.fillText('w = -G / (H + λ)', leftX + 10, 130);
+  ctx.fillText('  = -(-58) / (2 + 1)', leftX + 10, 150);
+  ctx.fillText('  = 58 / 3', leftX + 10, 170);
+  ctx.font = 'bold 16px monospace';
+  ctx.fillStyle = '#7ef0d4';
+  ctx.fillText('  = 19.33', leftX + 10, 190);
+  
+  // Right leaf
+  const rightX = 3 * width / 4 - boxWidth / 2;
+  ctx.fillStyle = '#ff8c6a' + '22';
+  ctx.fillRect(rightX, 80, boxWidth, boxHeight);
+  ctx.strokeStyle = '#ff8c6a';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(rightX, 80, boxWidth, boxHeight);
+  
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('Right Leaf (Size &gt; 950):', rightX + 10, 105);
+  ctx.font = '12px monospace';
+  ctx.fillText('w = -G / (H + λ)', rightX + 10, 130);
+  ctx.fillText('  = -(58) / (3 + 1)', rightX + 10, 150);
+  ctx.fillText('  = -58 / 4', rightX + 10, 170);
+  ctx.font = 'bold 16px monospace';
+  ctx.fillStyle = '#ff8c6a';
+  ctx.fillText('  = -14.5', rightX + 10, 190);
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Leaf Weight Calculation (λ = 1)', width / 2, 40);
+  
+  // Formula reminder
+  ctx.fillStyle = '#a9b4c2';
+  ctx.font = '13px sans-serif';
+  ctx.fillText('Negative gradient divided by (Hessian + regularization)', width / 2, height - 20);
+  
+  logViz('XGBoost', 'Leaf Weight Calculation', 'success');
+}
+
+function drawXGBComparison() {
+  const canvas = document.getElementById('xgb-comparison-canvas');
+  if (!canvas) return;
+  
+  createVerifiedVisualization('xgb-comparison-canvas', {
+    type: 'radar',
+    data: {
+      labels: ['Accuracy', 'Speed', 'Robustness', 'Ease of Use', 'Scalability', 'Interpretability'],
+      datasets: [
+        {
+          label: 'Gradient Boosting',
+          data: [4.5, 3, 3.5, 4, 3, 3],
+          borderColor: '#ff8c6a',
+          backgroundColor: 'rgba(255, 140, 106, 0.2)',
+          borderWidth: 2
+        },
+        {
+          label: 'XGBoost',
+          data: [5, 4.5, 5, 4, 5, 3],
+          borderColor: '#7ef0d4',
+          backgroundColor: 'rgba(126, 240, 212, 0.2)',
+          borderWidth: 2
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Gradient Boosting vs XGBoost: Comprehensive Comparison',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: {
+          position: 'top',
+          labels: { color: '#a9b4c2', padding: 15 }
+        }
+      },
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 5,
+          ticks: { color: '#a9b4c2', backdropColor: 'transparent' },
+          grid: { color: '#2a3544' },
+          pointLabels: { color: '#e8eef6', font: { size: 12 } }
+        }
+      }
+    }
+  }, 'XGBoost', 'GB vs XGB Comparison');
+}
+
+function initBagging() {
+  const canvas = document.getElementById('bagging-complete-canvas');
+  if (canvas && !canvas.dataset.initialized) {
+    canvas.dataset.initialized = 'true';
+    drawBaggingCompleteViz();
+  }
+}
+
+function initBoostingAdaBoost() {
+  const canvas = document.getElementById('boosting-complete-canvas');
+  if (canvas && !canvas.dataset.initialized) {
+    canvas.dataset.initialized = 'true';
+    drawBoostingCompleteViz();
+  }
+}
+
+function initRandomForest() {
+  const canvas = document.getElementById('rf-complete-canvas');
+  if (canvas && !canvas.dataset.initialized) {
+    canvas.dataset.initialized = 'true';
+    drawRandomForestCompleteViz();
+  }
 }
 
 // Topic 17: Ensemble Methods
 function initEnsembleMethods() {
+  const canvasNew1 = document.getElementById('bagging-complete-canvas');
+  if (canvasNew1 && !canvasNew1.dataset.initialized) {
+    canvasNew1.dataset.initialized = 'true';
+    drawBaggingCompleteViz();
+  }
+  
+  const canvasNew2 = document.getElementById('boosting-complete-canvas');
+  if (canvasNew2 && !canvasNew2.dataset.initialized) {
+    canvasNew2.dataset.initialized = 'true';
+    drawBoostingCompleteViz();
+  }
+  
+  const canvasNew3 = document.getElementById('rf-complete-canvas');
+  if (canvasNew3 && !canvasNew3.dataset.initialized) {
+    canvasNew3.dataset.initialized = 'true';
+    drawRandomForestCompleteViz();
+  }
+  
   const canvas1 = document.getElementById('bagging-viz');
   if (canvas1 && !canvas1.dataset.initialized) {
     canvas1.dataset.initialized = 'true';
@@ -3709,9 +4962,232 @@ function initEnsembleMethods() {
   }
 }
 
+function drawBaggingCompleteViz() {
+  const canvas = document.getElementById('bagging-complete-canvas');
+  if (!canvas) {
+    logViz('Ensemble Methods', 'Bagging Complete', 'failed', 'Canvas not found');
+    return;
+  }
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 400;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const treeY = 100;
+  const predY = 280;
+  const finalY = 350;
+  
+  // Three trees
+  for (let i = 0; i < 3; i++) {
+    const x = 150 + i * 250;
+    const preds = [75, 72, 78];
+    
+    // Tree box
+    ctx.fillStyle = '#7ef0d433';
+    ctx.fillRect(x - 50, treeY, 100, 60);
+    ctx.strokeStyle = '#7ef0d4';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x - 50, treeY, 100, 60);
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Tree ${i + 1}`, x, treeY + 35);
+    
+    // Prediction
+    ctx.fillStyle = '#6aa9ff33';
+    ctx.fillRect(x - 40, predY, 80, 50);
+    ctx.strokeStyle = '#6aa9ff';
+    ctx.strokeRect(x - 40, predY, 80, 50);
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.fillText(`₹${preds[i]}L`, x, predY + 32);
+    
+    // Arrow to final
+    ctx.strokeStyle = '#7ef0d4';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, predY + 50);
+    ctx.lineTo(width / 2, finalY - 10);
+    ctx.stroke();
+  }
+  
+  // Final average
+  ctx.fillStyle = '#ff8c6a33';
+  ctx.fillRect(width / 2 - 80, finalY, 160, 50);
+  ctx.strokeStyle = '#ff8c6a';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(width / 2 - 80, finalY, 160, 50);
+  
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = 'bold 18px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Avg = ₹75L ✓', width / 2, finalY + 32);
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('Bagging: Average of 3 Trees', width / 2, 30);
+  
+  logViz('Ensemble Methods', 'Bagging Complete', 'success');
+}
+
+function drawBoostingCompleteViz() {
+  const canvas = document.getElementById('boosting-complete-canvas');
+  if (!canvas) {
+    logViz('Ensemble Methods', 'Boosting Complete', 'failed', 'Canvas not found');
+    return;
+  }
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 450;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const rounds = [
+    {label: 'Round 1', weights: [1, 1, 1, 1, 1, 1], errors: [20, 20, 21, 2, 3, 2]},
+    {label: 'Round 2', weights: [1, 1, 1, 2.5, 3, 2.5], errors: [21, 21, 20, 0, 1, 0]},
+    {label: 'Round 3', weights: [2, 2, 2, 1, 1, 1], errors: [20, 20, 21, 1, 2, 1]}
+  ];
+  
+  const startX = 60;
+  const barWidth = 30;
+  const gap = 10;
+  
+  rounds.forEach((round, r) => {
+    const y = 80 + r * 120;
+    
+    ctx.fillStyle = '#7ef0d4';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(round.label, 10, y + 20);
+    
+    // Weight bars
+    round.weights.forEach((w, i) => {
+      const x = startX + i * (barWidth + gap);
+      const h = w * 20;
+      
+      ctx.fillStyle = w > 1.5 ? '#ff8c6a' : '#6aa9ff';
+      ctx.fillRect(x, y + 40 - h, barWidth, h);
+      
+      // Error text
+      ctx.fillStyle = '#a9b4c2';
+      ctx.font = '9px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`e=${round.errors[i]}`, x + barWidth / 2, y + 55);
+    });
+  });
+  
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Boosting: Sequential Weight Updates', width / 2, 30);
+  ctx.fillText('Final: α₁×M₁ + α₂×M₂ + α₃×M₃ = ₹74.7L', width / 2, height - 20);
+}
+
+function drawRandomForestCompleteViz() {
+  const canvas = document.getElementById('rf-complete-canvas');
+  if (!canvas) {
+    logViz('Ensemble Methods', 'Random Forest Complete', 'failed', 'Canvas not found');
+    return;
+  }
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 500;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  // Show 3 trees with feature randomness
+  const trees = [
+    {features: ['Sq Ft', 'Age'], pred: 74},
+    {features: ['Sq Ft', 'Beds'], pred: 76},
+    {features: ['Beds', 'Age'], pred: 75}
+  ];
+  
+  trees.forEach((tree, i) => {
+    const x = 120 + i * 260;
+    const y = 100;
+    
+    // Bootstrap
+    ctx.fillStyle = '#6aa9ff33';
+    ctx.fillRect(x - 60, y, 120, 50);
+    ctx.strokeStyle = '#6aa9ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x - 60, y, 120, 50);
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Bootstrap', x, y + 25);
+    ctx.fillText(`Sample ${i + 1}`, x, y + 40);
+    
+    // Tree with random features
+    ctx.fillStyle = '#7ef0d433';
+    ctx.fillRect(x - 60, y + 80, 120, 70);
+    ctx.strokeStyle = '#7ef0d4';
+    ctx.strokeRect(x - 60, y + 80, 120, 70);
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.fillText(`Tree ${i + 1}`, x, y + 105);
+    ctx.font = '10px sans-serif';
+    ctx.fillStyle = '#ffb490';
+    ctx.fillText('Random:', x, y + 123);
+    ctx.fillText(tree.features.join(', '), x, y + 138);
+    
+    // Prediction
+    ctx.fillStyle = '#ff8c6a33';
+    ctx.fillRect(x - 50, y + 180, 100, 50);
+    ctx.strokeStyle = '#ff8c6a';
+    ctx.strokeRect(x - 50, y + 180, 100, 50);
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.fillText(`₹${tree.pred}L`, x, y + 210);
+    
+    // Arrow to final
+    ctx.strokeStyle = '#7ef0d4';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y + 230);
+    ctx.lineTo(width / 2, y + 300);
+    ctx.stroke();
+  });
+  
+  // Final average
+  ctx.fillStyle = '#7ef0d433';
+  ctx.fillRect(width / 2 - 100, 400, 200, 70);
+  ctx.strokeStyle = '#7ef0d4';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(width / 2 - 100, 400, 200, 70);
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = 'bold 18px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Average of 100 Trees', width / 2, 425);
+  ctx.fillText('= ₹75.2L ± ₹2.3L ✓', width / 2, 450);
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('Random Forest: Bootstrap + Feature Randomness', width / 2, 30);
+  
+  logViz('Ensemble Methods', 'Random Forest Complete', 'success');
+}
+
 function drawBaggingViz() {
   const canvas = document.getElementById('bagging-viz');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('Ensemble Methods', 'Bagging Viz', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -3910,6 +5386,40 @@ function drawBoostingViz() {
   ctx.fillStyle = '#ff8c6a';
   ctx.font = 'bold 14px sans-serif';
   ctx.fillText('Final Prediction = Weighted Combination of All Models', width / 2, height - 20);
+  
+  logViz('Ensemble Methods', 'Boosting Complete', 'success');
+}
+
+function drawGBLearningRate() {
+  // Implementation moved to Gradient Boosting section
+}
+
+function drawGBStumps() {
+  // Implementation moved to Gradient Boosting section
+}
+
+function drawGBPredictions() {
+  // Implementation moved to Gradient Boosting section
+}
+
+function drawXGBGain() {
+  // Implementation moved to XGBoost section
+}
+
+function drawXGBRegularization() {
+  // Implementation moved to XGBoost section
+}
+
+function drawXGBHessian() {
+  // Implementation moved to XGBoost section
+}
+
+function drawXGBLeafWeights() {
+  // Implementation moved to XGBoost section
+}
+
+function drawXGBComparison() {
+  // Implementation moved to XGBoost section
 }
 
 function drawRandomForestViz() {
@@ -4018,6 +5528,8 @@ function drawRandomForestViz() {
   ctx.fillStyle = '#7ef0d4';
   ctx.font = 'bold 16px sans-serif';
   ctx.fillText('Random Forest: Ensemble of Decision Trees', width / 2, 25);
+  
+  logViz('Ensemble Methods', 'Bagging Viz', 'success');
 }
 
 // Topic 16: K-means Clustering
@@ -4040,7 +5552,10 @@ function initKMeans() {
 
 function drawKMeansVisualization() {
   const canvas = document.getElementById('kmeans-viz-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    logViz('K-means', 'Scatter + Centroids', 'failed', 'Canvas not found');
+    return;
+  }
   
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.offsetWidth;
@@ -4160,6 +5675,8 @@ function drawKMeansVisualization() {
   ctx.font = '14px sans-serif';
   ctx.textAlign = 'left';
   ctx.fillText('WCSS = 15.984', padding, height - padding + 30);
+  
+  logViz('K-means', 'Scatter + Centroids', 'success');
 }
 
 function drawKMeansElbow() {
@@ -4175,7 +5692,7 @@ function drawKMeansElbow() {
   const kValues = [1, 2, 3, 4, 5];
   const wcssValues = [50, 18, 10, 8, 7];
   
-  kmeansElbowChart = safeCreateChart(ctx, {
+  kmeansElbowChart = createVerifiedVisualization('kmeans-elbow-canvas', {
     type: 'line',
     data: {
       labels: kValues,
@@ -4238,7 +5755,7 @@ function drawKMeansElbow() {
         }
       }
     }
-  }, 'K-means Elbow Chart');
+  }, 'K-means', 'Elbow Method');
 }
 
 // Topic 18: Algorithm Comparison
@@ -4474,6 +5991,8 @@ function renderComparisonTable() {
   
   html += '</tbody>';
   table.innerHTML = html;
+  
+  logViz('Algorithm Comparison', 'Comparison Table', 'success');
 }
 
 let radarComparisonChart = null;
@@ -4505,7 +6024,12 @@ function renderRadarChart() {
     };
   });
   
-  radarComparisonChart = safeCreateChart(ctx, {
+  if (radarComparisonChart) {
+    radarComparisonChart.destroy();
+    radarComparisonChart = null;
+  }
+  
+  radarComparisonChart = createVerifiedVisualization('radar-comparison-canvas', {
     type: 'radar',
     data: {
       labels: ['Speed', 'Accuracy', 'Data Efficiency', 'Interpretability', 'Scalability'],
@@ -4530,7 +6054,7 @@ function renderRadarChart() {
         }
       }
     }
-  }, 'Radar Comparison Chart');
+  }, 'Algorithm Comparison', 'Radar Chart');
 }
 
 function renderHeatmap() {
@@ -4586,6 +6110,8 @@ function renderHeatmap() {
   html += '</table>';
   html += '</div>';
   
+  logViz('Algorithm Comparison', 'Heatmap', 'success');
+  
   // Legend
   html += '<div style="text-align: center; margin-top: 24px; padding: 16px; background: var(--color-bg-2); border-radius: 8px;">';
   html += '<strong style="color: #e8eef6;">Legend:</strong> ';
@@ -4634,6 +6160,8 @@ function renderUseCaseMatrix() {
   
   html += '</tbody>';
   table.innerHTML = html;
+  
+  logViz('Algorithm Comparison', 'Use Case Matrix', 'success');
 }
 
 function renderDetailedCards() {
@@ -4673,6 +6201,8 @@ function renderDetailedCards() {
   
   html += '</div>';
   container.innerHTML = html;
+  
+  logViz('Algorithm Comparison', 'Detailed Cards', 'success');
 }
 
 function initQuiz() {
@@ -4836,6 +6366,75 @@ function drawDecisionFlowchart() {
   ctx.fillText('Algorithm Selection Flowchart', width/2, 25);
 }
 
+// Diagnostic Functions
+function showDiagnostics() {
+  const browserDetails = document.getElementById('browser-details');
+  if (browserDetails) {
+    browserDetails.innerHTML = `
+      <li style="padding: 8px 0; border-bottom: 1px solid var(--color-border); color: var(--color-text);">Browser: ${navigator.userAgent.split(' ').slice(-2).join(' ')}</li>
+      <li style="padding: 8px 0; border-bottom: 1px solid var(--color-border); color: var(--color-text);">Platform: ${navigator.platform}</li>
+      <li style="padding: 8px 0; border-bottom: 1px solid var(--color-border); color: var(--color-text);">Language: ${navigator.language}</li>
+      <li style="padding: 8px 0; border-bottom: 1px solid var(--color-border); color: var(--color-text);">Online: ${navigator.onLine ? '✓ Yes' : '✗ No'}</li>
+      <li style="padding: 8px 0; border-bottom: 1px solid var(--color-border); color: var(--color-text);">Cookies Enabled: ${navigator.cookieEnabled ? '✓ Yes' : '✗ No'}</li>
+    `;
+  }
+  
+  const libraryDetails = document.getElementById('library-details');
+  if (libraryDetails) {
+    const chartJsLoaded = typeof Chart !== 'undefined';
+    const canvasSupport = !!document.createElement('canvas').getContext('2d');
+    
+    libraryDetails.innerHTML = `
+      <li style="padding: 8px 0; border-bottom: 1px solid var(--color-border); color: var(--color-text);">Chart.js: ${chartJsLoaded ? '✓ Loaded (v' + (Chart.version || '4.x') + ')' : '✗ Missing'}</li>
+      <li style="padding: 8px 0; border-bottom: 1px solid var(--color-border); color: var(--color-text);">Canvas Support: ${canvasSupport ? '✓ Yes' : '✗ No'}</li>
+      <li style="padding: 8px 0; border-bottom: 1px solid var(--color-border); color: var(--color-text);">Device Pixel Ratio: ${window.devicePixelRatio || 1}</li>
+      <li style="padding: 8px 0; border-bottom: 1px solid var(--color-border); color: var(--color-text);">Screen Resolution: ${window.screen.width}x${window.screen.height}</li>
+    `;
+  }
+  
+  const successCount = document.getElementById('diag-success-count');
+  const failedCount = document.getElementById('diag-failed-count');
+  const warningCount = document.getElementById('diag-warning-count');
+  
+  if (successCount) successCount.textContent = vizLog.success.length;
+  if (failedCount) failedCount.textContent = vizLog.failed.length;
+  if (warningCount) warningCount.textContent = vizLog.warnings.length;
+}
+
+function showDiagnosticDetails(filter) {
+  const container = document.getElementById('viz-details');
+  if (!container) return;
+  
+  let items = [];
+  if (filter === 'success') items = vizLog.success;
+  else if (filter === 'failed') items = vizLog.failed;
+  else items = [...vizLog.success, ...vizLog.failed, ...vizLog.warnings];
+  
+  if (items.length === 0) {
+    container.innerHTML = '<p style="color: var(--color-text-secondary); text-align: center; padding: 20px;">No items to display</p>';
+    return;
+  }
+  
+  let html = '<table class="data-table" style="font-size: 12px;">';
+  html += '<thead><tr><th>Module</th><th>Visualization</th><th>Status</th><th>Time</th></tr></thead>';
+  html += '<tbody>';
+  
+  items.forEach(item => {
+    const statusIcon = item.status === 'success' ? '✓' : (item.status === 'failed' ? '✗' : '⚠');
+    const statusColor = item.status === 'success' ? 'var(--color-success)' : (item.status === 'failed' ? 'var(--color-error)' : 'var(--color-warning)');
+    
+    html += `<tr>`;
+    html += `<td>${item.module}</td>`;
+    html += `<td>${item.name}</td>`;
+    html += `<td style="color: ${statusColor}; font-weight: bold;">${statusIcon} ${item.status.toUpperCase()}</td>`;
+    html += `<td>${item.timestamp}</td>`;
+    html += `</tr>`;
+  });
+  
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
 // Handle window resize
 let resizeTimer;
 window.addEventListener('resize', () => {
@@ -4883,3 +6482,6 @@ window.addEventListener('resize', () => {
     if (document.getElementById('decision-flowchart')) drawDecisionFlowchart();
   }, 250);
 });
+
+// Add global function for diagnostic details (needed by onclick)
+window.showDiagnosticDetails = showDiagnosticDetails;
