@@ -533,8 +533,10 @@ canvas {
                             <a href="#decision-trees" class="toc-link toc-sub">Decision Trees (Classification)</a>
                             <a href="#bagging" class="toc-link toc-sub">Bagging</a>
                             <a href="#boosting-adaboost" class="toc-link toc-sub">Boosting (AdaBoost)</a>
-                            <a href="#gradient-boosting" class="toc-link toc-sub">Gradient Boosting</a>
-                            <a href="#xgboost" class="toc-link toc-sub">XGBoost</a>
+                            <a href="#gradient-boosting" class="toc-link toc-sub">Gradient Boosting (Regression)</a>
+                            <a href="#gradient-boosting-classification" class="toc-link toc-sub">Gradient Boosting (Classification)</a>
+                            <a href="#xgboost" class="toc-link toc-sub">XGBoost (Regression)</a>
+                            <a href="#xgboost-classification" class="toc-link toc-sub">XGBoost (Classification)</a>
                             <a href="#random-forest" class="toc-link toc-sub">Random Forest</a>
                             <a href="#ensemble-methods" class="toc-link toc-sub">Ensemble Methods Overview</a>
                         </div>
@@ -560,6 +562,9 @@ canvas {
                         <div class="toc-subcategory">
                             <div class="toc-subcategory-title">Clustering</div>
                             <a href="#kmeans" class="toc-link toc-sub">K-means Clustering</a>
+                            <a href="#hierarchical-clustering" class="toc-link toc-sub">Hierarchical Clustering</a>
+                            <a href="#dbscan" class="toc-link toc-sub">DBSCAN Clustering</a>
+                            <a href="#clustering-evaluation" class="toc-link toc-sub">Clustering Evaluation</a>
                         </div>
                         <div class="toc-subcategory">
                             <div class="toc-subcategory-title">Preprocessing</div>
@@ -4086,6 +4091,129 @@ New property: 1650 sq ft
                 </div>
             </div>
 
+            <!-- Section 19a-NEW: Gradient Boosting Classification -->
+            <div class="section" id="gradient-boosting-classification">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(106, 169, 255, 0.3); color: #6aa9ff;">📊 Supervised - Classification</span> Gradient Boosting Classification</h2>
+                    <button class="section-toggle collapsed">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Gradient Boosting for classification predicts probabilities using sequential trees that minimize log loss. Each tree corrects the previous model's errors by fitting to gradients!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Simple Math Breakdown</div>
+                        <ul class="info-card-list">
+                            <li>Step 1: Start with log-odds F(0) = log(pos/neg)</li>
+                            <li>Step 2: Calculate gradient g = p - y</li>
+                            <li>Step 3: Build tree on gradients</li>
+                            <li>Step 4: Update F(x) = F(0) + lr × tree</li>
+                            <li>Step 5: Repeat to minimize errors</li>
+                        </ul>
+                    </div>
+
+                    <div class="formula">
+                        <strong>Simple Explanation:</strong><br>
+                        Step 1: F(0) = log(positive_count / negative_count)<br>
+                        Step 2: g = p - y (how wrong we are)<br>
+                        Step 3: Build tree to fix errors<br>
+                        Step 4: F(x) = F(0) + learning_rate × tree(x)<br>
+                        Step 5: Repeat Steps 2-4 multiple times
+                    </div>
+
+                    <h3>Real Example: House Price ≥ 170k</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>ID</th><th>Size</th><th>Price</th><th>≥170k?</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>800</td><td>120k</td><td>0 (No)</td></tr>
+                            <tr><td>2</td><td>900</td><td>130k</td><td>0 (No)</td></tr>
+                            <tr><td>3</td><td>1000</td><td>150k</td><td>0 (No)</td></tr>
+                            <tr><td>4</td><td>1100</td><td>170k</td><td>1 (Yes)</td></tr>
+                            <tr><td>5</td><td>1200</td><td>200k</td><td>1 (Yes)</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="step">
+                        <div class="step-title">STEP 1: Initialize F(0)</div>
+                        <div class="step-calculation">
+F(0) = log(positive / negative)
+     = log(2 / 3)
+     = <strong style="color: #7ef0d4;">-0.405</strong>
+
+Meaning: 40.5% initial chance of ≥170k
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 2: Calculate Gradients</div>
+                        <div class="step-calculation">
+For House 1:
+  p = sigmoid(-0.405) = <strong>0.4</strong> (40% probability)
+  y = 0 (actual)
+  gradient g = 0.4 - 0 = <strong style="color: #ff8c6a;">0.4</strong>
+
+For House 4:
+  p = sigmoid(-0.405) = 0.4
+  y = 1 (actual)
+  gradient g = 0.4 - 1 = <strong style="color: #7ef0d4;">-0.6</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 3: Find Best Split</div>
+                        <div class="step-calculation">
+Test split: Size &lt; 1050
+
+<strong>Left (Size ≤ 1050):</strong> Houses 1,2,3
+  Gradients: [0.4, 0.4, 0.4]
+  Average = <strong>0.4</strong>
+
+<strong>Right (Size &gt; 1050):</strong> Houses 4,5
+  Gradients: [-0.6, -0.6]
+  Average = <strong>-0.6</strong>
+
+✓ This split separates positive/negative gradients!
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">STEP 4: Update Predictions</div>
+                        <div class="step-calculation">
+F1(x) = F(0) + learning_rate × tree(x)
+
+For House 1 (Size=800):
+  F1(1) = -0.405 + 0.1 × (-0.4)
+        = -0.405 - 0.04
+        = <strong style="color: #7ef0d4;">-0.445</strong>
+
+New probability = sigmoid(-0.445) = <strong>0.39</strong> ✓ Lower!
+                        </div>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="gb-class-sequential-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 1:</strong> Sequential prediction updates across iterations</p>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="gb-class-gradients-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 2:</strong> Gradient values per sample showing error correction</p>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Key Takeaway</div>
+                        <div class="callout-content">
+                            Gradient Boosting Classification uses gradients (p - y) to sequentially build trees that correct probability predictions. Each tree reduces log loss by fitting to the errors!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Section 19a: Gradient Boosting (NEW FROM PDF) -->
             <div class="section" id="gradient-boosting">
                 <div class="section-header">
@@ -4296,6 +4424,55 @@ After 10 iterations:
                             ✗ Sequential (can't parallelize)<br>
                             ✗ Sensitive to overfitting<br>
                             ✗ Requires careful tuning
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 19b-NEW: XGBoost Classification -->
+            <div class="section" id="xgboost-classification">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(106, 169, 255, 0.3); color: #6aa9ff;">📊 Supervised - Classification</span> XGBoost Classification</h2>
+                    <button class="section-toggle collapsed">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>XGBoost Classification adds Hessian (2nd derivative) and regularization to Gradient Boosting for better accuracy and less overfitting!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Difference from Gradient Boosting</div>
+                        <ul class="info-card-list">
+                            <li>GB: Uses gradient g = p - y</li>
+                            <li>XGB: Uses gradient g AND Hessian h = p(1-p)</li>
+                            <li>XGB: Adds regularization λ to prevent overfitting</li>
+                            <li>XGB: Better gain calculation for splits</li>
+                        </ul>
+                    </div>
+
+                    <div class="formula">
+                        <strong>Hessian Formula:</strong><br>
+                        h = p × (1 - p)<br>
+                        <br>
+                        Measures confidence of prediction:<br>
+                        • p = 0.5 → h = 0.25 (most uncertain)<br>
+                        • p = 0.9 → h = 0.09 (very confident)<br>
+                        <br>
+                        <strong>Gain Formula:</strong><br>
+                        Gain = GL²/(HL+λ) + GR²/(HR+λ) - Gp²/(Hp+λ)
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="xgb-class-hessian-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Hessian values showing prediction confidence</p>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Why XGBoost is Better</div>
+                        <div class="callout-content">
+                            Hessian gives curvature information → better optimization path<br>
+                            Regularization λ prevents overfitting → better generalization<br>
+                            Result: State-of-the-art accuracy on classification tasks!
                         </div>
                     </div>
                 </div>
@@ -5066,6 +5243,213 @@ OOB MAE = Average of all errors = <strong style="color: #7ef0d4;">₹2.1L</stron
                     <p style="font-size: 18px; color: #7ef0d4; margin-top: 16px;">
                         Keep practicing, building projects, and exploring! The ML journey never ends. 🚀✨
                     </p>
+                </div>
+            </div>
+
+            <!-- Section: Hierarchical Clustering -->
+            <div class="section" id="hierarchical-clustering">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(126, 240, 212, 0.3); color: #7ef0d4;">🔍 Unsupervised - Clustering</span> Hierarchical Clustering</h2>
+                    <button class="section-toggle collapsed">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Hierarchical Clustering builds a tree of clusters by repeatedly merging the closest pairs. No need to specify K upfront!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Simple Steps</div>
+                        <ul class="info-card-list">
+                            <li>Step 1: Start with each point as its own cluster</li>
+                            <li>Step 2: Find two closest clusters</li>
+                            <li>Step 3: Merge them into one cluster</li>
+                            <li>Step 4: Repeat until all in one cluster</li>
+                            <li>Result: Dendrogram tree showing hierarchy</li>
+                        </ul>
+                    </div>
+
+                    <div class="formula">
+                        <strong>Distance Metrics:</strong><br>
+                        Euclidean: d = √((x2-x1)² + (y2-y1)²)<br>
+                        Manhattan: d = |x2-x1| + |y2-y1|<br>
+                        <br>
+                        <strong>Linkage Methods:</strong><br>
+                        • Complete: max distance between any two points<br>
+                        • Single: min distance between any two points<br>
+                        • Average: average distance between all points<br>
+                        • Ward: minimizes variance (BEST for most cases)
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="hierarchical-dendrogram-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> Dendrogram showing cluster merging history</p>
+                    </div>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 When to Use</div>
+                        <div class="callout-content">
+                            ✓ Don't know number of clusters<br>
+                            ✓ Want to see cluster hierarchy<br>
+                            ✓ Small to medium datasets (&lt;5000 points)<br>
+                            ✓ Need interpretable results
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: DBSCAN -->
+            <div class="section" id="dbscan">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(126, 240, 212, 0.3); color: #7ef0d4;">🔍 Unsupervised - Clustering</span> DBSCAN Clustering</h2>
+                    <button class="section-toggle collapsed">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>DBSCAN finds clusters of arbitrary shapes and automatically detects outliers! Based on density, not distance to centroids.</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Parameters</div>
+                        <ul class="info-card-list">
+                            <li>eps: Neighborhood radius (e.g., 0.4)</li>
+                            <li>min_samples: Minimum points in neighborhood (e.g., 3)</li>
+                            <li>Core point: Has ≥ min_samples within eps</li>
+                            <li>Border point: Near core point but not core itself</li>
+                            <li>Outlier: Not near any core point</li>
+                        </ul>
+                    </div>
+
+                    <div class="formula">
+                        <strong>Simple Algorithm:</strong><br>
+                        Step 1: Pick random unvisited point<br>
+                        Step 2: Find all points within eps radius<br>
+                        Step 3: If count ≥ min_samples → Core point!<br>
+                        Step 4: Mark all reachable points in same cluster<br>
+                        Step 5: Move to next unvisited point<br>
+                        Step 6: Points alone = Outliers ❌
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">Example: eps=0.4, min_samples=3</div>
+                        <div class="step-calculation">
+<strong>Point A at (1, 1):</strong>
+  Points within 0.4 units: [A, B, C]
+  Count = 3 ✓ Core point!
+  Start Cluster 1 with A, B, C
+
+<strong>Point D at (8, 8):</strong>
+  Points within 0.4 units: [D, E]
+  Count = 2 ✗ Not core
+  But near core E → Border point in Cluster 2
+
+<strong>Point G at (5, 5):</strong>
+  No neighbors within 0.4
+  Mark as <strong style="color: #ff8c6a;">OUTLIER</strong> ❌
+                        </div>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 450px">
+                            <canvas id="dbscan-clusters-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure:</strong> DBSCAN showing core, border, and outlier points</p>
+                    </div>
+
+                    <div class="callout success">
+                        <div class="callout-title">✅ Advantages</div>
+                        <div class="callout-content">
+                            ✓ Finds clusters of ANY shape<br>
+                            ✓ Automatically detects outliers<br>
+                            ✓ No need to specify number of clusters<br>
+                            ✓ Robust to noise
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Clustering Evaluation -->
+            <div class="section" id="clustering-evaluation">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(126, 240, 212, 0.3); color: #7ef0d4;">🔍 Unsupervised - Evaluation</span> Clustering Evaluation Metrics</h2>
+                    <button class="section-toggle collapsed">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>How do we know if our clustering is good? Use Silhouette Coefficient and Calinski-Harabasz Index!</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Key Metrics</div>
+                        <ul class="info-card-list">
+                            <li>Silhouette: Measures how well points fit in clusters</li>
+                            <li>Range: -1 to +1 (higher is better)</li>
+                            <li>Calinski-Harabasz: Between-cluster vs within-cluster variance</li>
+                            <li>Range: 0 to ∞ (higher is better)</li>
+                        </ul>
+                    </div>
+
+                    <h3>Silhouette Coefficient</h3>
+                    <div class="formula">
+                        <strong>For each point:</strong><br>
+                        a = average distance to points in SAME cluster<br>
+                        b = average distance to points in NEAREST cluster<br>
+                        <br>
+                        Silhouette = (b - a) / max(a, b)<br>
+                        <br>
+                        <strong>Interpretation:</strong><br>
+                        +0.7 to +1.0: Excellent clustering<br>
+                        +0.5 to +0.7: Good clustering<br>
+                        +0.25 to +0.5: Weak clustering<br>
+                        &lt; +0.25: Poor or no clustering
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">Example Calculation</div>
+                        <div class="step-calculation">
+<strong>Point A in Cluster 1:</strong>
+  Distance to other points in Cluster 1: [0.1, 0.2]
+  a = average = <strong>0.15</strong>
+  
+  Distance to nearest points in Cluster 2: [1.5, 1.8]
+  b = average = <strong>1.65</strong>
+  
+  Silhouette(A) = (1.65 - 0.15) / 1.65
+                = 1.5 / 1.65
+                = <strong style="color: #7ef0d4;">0.909</strong> ✓ Excellent!
+                        </div>
+                    </div>
+
+                    <h3>Calinski-Harabasz Index</h3>
+                    <div class="formula">
+                        <strong>Formula:</strong><br>
+                        CH = (Between-cluster variance) / (Within-cluster variance)<br>
+                        <br>
+                        <strong>Interpretation:</strong><br>
+                        0-20: Poor clustering<br>
+                        20-50: Okay clustering<br>
+                        50-150: Good clustering<br>
+                        150-500: Very good clustering<br>
+                        &gt; 500: Excellent clustering
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="silhouette-plot-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 1:</strong> Silhouette plot showing score per cluster</p>
+                    </div>
+
+                    <div class="figure">
+                        <div class="figure-placeholder" style="height: 400px">
+                            <canvas id="ch-index-canvas"></canvas>
+                        </div>
+                        <p class="figure-caption"><strong>Figure 2:</strong> Calinski-Harabasz index vs number of clusters</p>
+                    </div>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 Choosing the Right Metric</div>
+                        <div class="callout-content">
+                            <strong>Silhouette:</strong> Best for interpretability, shows per-point quality<br>
+                            <strong>CH Index:</strong> Fast to compute, good for finding optimal k<br>
+                            <strong>Both together:</strong> Most reliable assessment!
+                        </div>
+                    </div>
                 </div>
             </div>
 

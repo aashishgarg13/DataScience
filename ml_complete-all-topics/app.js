@@ -236,6 +236,11 @@ function initSections() {
         if (section.id === 'boosting-adaboost') initBoostingAdaBoost();
         if (section.id === 'random-forest') initRandomForest();
         if (section.id === 'ensemble-methods') initEnsembleMethods();
+        if (section.id === 'gradient-boosting-classification') initGradientBoostingClassification();
+        if (section.id === 'xgboost-classification') initXGBoostClassification();
+        if (section.id === 'hierarchical-clustering') initHierarchicalClustering();
+        if (section.id === 'dbscan') initDBSCAN();
+        if (section.id === 'clustering-evaluation') initClusteringEvaluation();
         if (section.id === 'diagnostics') {
           // Wait for all visualizations to initialize
           setTimeout(showDiagnostics, 500);
@@ -6433,6 +6438,568 @@ function showDiagnosticDetails(filter) {
   
   html += '</tbody></table>';
   container.innerHTML = html;
+}
+
+// NEW VISUALIZATIONS FOR ADDED TOPICS
+
+// Gradient Boosting Classification
+function initGradientBoostingClassification() {
+  const canvas1 = document.getElementById('gb-class-sequential-canvas');
+  if (canvas1 && !canvas1.dataset.initialized) {
+    canvas1.dataset.initialized = 'true';
+    drawGBClassSequential();
+  }
+  
+  const canvas2 = document.getElementById('gb-class-gradients-canvas');
+  if (canvas2 && !canvas2.dataset.initialized) {
+    canvas2.dataset.initialized = 'true';
+    drawGBClassGradients();
+  }
+}
+
+function drawGBClassSequential() {
+  const canvas = document.getElementById('gb-class-sequential-canvas');
+  if (!canvas) return;
+  
+  const iterations = [0, 1, 2, 3, 4, 5, 10];
+  const house1 = [0.4, 0.39, 0.37, 0.35, 0.33, 0.31, 0.22];
+  const house4 = [0.4, 0.43, 0.47, 0.52, 0.57, 0.62, 0.78];
+  
+  createVerifiedVisualization('gb-class-sequential-canvas', {
+    type: 'line',
+    data: {
+      labels: iterations,
+      datasets: [
+        {
+          label: 'House 1 (y=0): Probability ↓',
+          data: house1,
+          borderColor: '#7ef0d4',
+          backgroundColor: 'rgba(126, 240, 212, 0.1)',
+          borderWidth: 3,
+          fill: true
+        },
+        {
+          label: 'House 4 (y=1): Probability ↑',
+          data: house4,
+          borderColor: '#6aa9ff',
+          backgroundColor: 'rgba(106, 169, 255, 0.1)',
+          borderWidth: 3,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Gradient Boosting Classification: Probability Updates',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: { labels: { color: '#a9b4c2' } }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Iteration', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          title: { display: true, text: 'P(y=1)', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' },
+          min: 0,
+          max: 1
+        }
+      }
+    }
+  }, 'GB Classification', 'Sequential Updates');
+}
+
+function drawGBClassGradients() {
+  const canvas = document.getElementById('gb-class-gradients-canvas');
+  if (!canvas) return;
+  
+  createVerifiedVisualization('gb-class-gradients-canvas', {
+    type: 'bar',
+    data: {
+      labels: ['House 1', 'House 2', 'House 3', 'House 4', 'House 5'],
+      datasets: [
+        {
+          label: 'Iteration 0 Gradients',
+          data: [0.4, 0.4, 0.4, -0.6, -0.6],
+          backgroundColor: '#ff8c6a'
+        },
+        {
+          label: 'Iteration 5 Gradients',
+          data: [0.1, 0.08, 0.09, -0.15, -0.12],
+          backgroundColor: '#7ef0d4'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Gradient Values: Shrinking Over Iterations',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: { labels: { color: '#a9b4c2' } }
+      },
+      scales: {
+        x: {
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          title: { display: true, text: 'Gradient (p - y)', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        }
+      }
+    }
+  }, 'GB Classification', 'Gradient Values');
+}
+
+// XGBoost Classification
+function initXGBoostClassification() {
+  const canvas = document.getElementById('xgb-class-hessian-canvas');
+  if (canvas && !canvas.dataset.initialized) {
+    canvas.dataset.initialized = 'true';
+    drawXGBClassHessian();
+  }
+}
+
+function drawXGBClassHessian() {
+  const canvas = document.getElementById('xgb-class-hessian-canvas');
+  if (!canvas) return;
+  
+  const houses = ['House 1', 'House 2', 'House 3', 'House 4', 'House 5'];
+  const gradients = [0.4, 0.4, 0.4, -0.6, -0.6];
+  const hessians = [0.24, 0.24, 0.24, 0.24, 0.24];
+  
+  createVerifiedVisualization('xgb-class-hessian-canvas', {
+    type: 'bar',
+    data: {
+      labels: houses,
+      datasets: [
+        {
+          label: 'Gradient (g)',
+          data: gradients,
+          backgroundColor: '#6aa9ff',
+          yAxisID: 'y'
+        },
+        {
+          label: 'Hessian (h)',
+          data: hessians,
+          backgroundColor: '#7ef0d4',
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'XGBoost: Gradient + Hessian Information',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: { labels: { color: '#a9b4c2' } }
+      },
+      scales: {
+        x: {
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          type: 'linear',
+          position: 'left',
+          title: { display: true, text: 'Gradient', color: '#6aa9ff' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          title: { display: true, text: 'Hessian', color: '#7ef0d4' },
+          grid: { display: false },
+          ticks: { color: '#a9b4c2' }
+        }
+      }
+    }
+  }, 'XGBoost Classification', 'Hessian Values');
+}
+
+// Hierarchical Clustering
+function initHierarchicalClustering() {
+  const canvas = document.getElementById('hierarchical-dendrogram-canvas');
+  if (canvas && !canvas.dataset.initialized) {
+    canvas.dataset.initialized = 'true';
+    drawHierarchicalDendrogram();
+  }
+}
+
+function drawHierarchicalDendrogram() {
+  const canvas = document.getElementById('hierarchical-dendrogram-canvas');
+  if (!canvas) {
+    logViz('Hierarchical Clustering', 'Dendrogram', 'failed', 'Canvas not found');
+    return;
+  }
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 450;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 60;
+  const numPoints = 6;
+  const pointSpacing = (width - 2 * padding) / numPoints;
+  const labels = ['A', 'B', 'C', 'D', 'E', 'F'];
+  
+  // Draw points at bottom
+  const pointY = height - 40;
+  labels.forEach((label, i) => {
+    const x = padding + i * pointSpacing + pointSpacing / 2;
+    
+    ctx.fillStyle = '#7ef0d4';
+    ctx.beginPath();
+    ctx.arc(x, pointY, 6, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    ctx.fillStyle = '#e8eef6';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x, pointY + 20);
+  });
+  
+  // Draw dendrogram merges
+  const merges = [
+    { points: [0, 1], height: 320 },
+    { points: [3, 4], height: 330 },
+    { points: [0, 1, 2], height: 220 },
+    { points: [3, 4, 5], height: 200 },
+    { points: [0, 1, 2, 3, 4, 5], height: 80 }
+  ];
+  
+  ctx.strokeStyle = '#6aa9ff';
+  ctx.lineWidth = 2;
+  
+  // Merge A-B
+  let x1 = padding + 0 * pointSpacing + pointSpacing / 2;
+  let x2 = padding + 1 * pointSpacing + pointSpacing / 2;
+  ctx.beginPath();
+  ctx.moveTo(x1, pointY);
+  ctx.lineTo(x1, merges[0].height);
+  ctx.lineTo(x2, merges[0].height);
+  ctx.lineTo(x2, pointY);
+  ctx.stroke();
+  
+  // Merge D-E
+  x1 = padding + 3 * pointSpacing + pointSpacing / 2;
+  x2 = padding + 4 * pointSpacing + pointSpacing / 2;
+  ctx.beginPath();
+  ctx.moveTo(x1, pointY);
+  ctx.lineTo(x1, merges[1].height);
+  ctx.lineTo(x2, merges[1].height);
+  ctx.lineTo(x2, pointY);
+  ctx.stroke();
+  
+  // Merge (A-B)-C
+  x1 = padding + 0.5 * pointSpacing + pointSpacing / 2;
+  x2 = padding + 2 * pointSpacing + pointSpacing / 2;
+  ctx.beginPath();
+  ctx.moveTo(x1, merges[0].height);
+  ctx.lineTo(x1, merges[2].height);
+  ctx.lineTo(x2, merges[2].height);
+  ctx.lineTo(x2, pointY);
+  ctx.stroke();
+  
+  // Merge (D-E)-F
+  x1 = padding + 3.5 * pointSpacing + pointSpacing / 2;
+  x2 = padding + 5 * pointSpacing + pointSpacing / 2;
+  ctx.beginPath();
+  ctx.moveTo(x1, merges[1].height);
+  ctx.lineTo(x1, merges[3].height);
+  ctx.lineTo(x2, merges[3].height);
+  ctx.lineTo(x2, pointY);
+  ctx.stroke();
+  
+  // Final merge
+  x1 = padding + 1.5 * pointSpacing;
+  x2 = padding + 4.5 * pointSpacing;
+  ctx.beginPath();
+  ctx.moveTo(x1, merges[2].height);
+  ctx.lineTo(x1, merges[4].height);
+  ctx.lineTo(x2, merges[4].height);
+  ctx.lineTo(x2, merges[3].height);
+  ctx.stroke();
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Dendrogram: Cluster Merging History', width / 2, 30);
+  
+  // Y-axis label
+  ctx.fillStyle = '#a9b4c2';
+  ctx.font = '12px sans-serif';
+  ctx.save();
+  ctx.translate(20, height / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Distance', 0, 0);
+  ctx.restore();
+  
+  logViz('Hierarchical Clustering', 'Dendrogram', 'success');
+}
+
+// DBSCAN
+function initDBSCAN() {
+  const canvas = document.getElementById('dbscan-clusters-canvas');
+  if (canvas && !canvas.dataset.initialized) {
+    canvas.dataset.initialized = 'true';
+    drawDBSCANClusters();
+  }
+}
+
+function drawDBSCANClusters() {
+  const canvas = document.getElementById('dbscan-clusters-canvas');
+  if (!canvas) {
+    logViz('DBSCAN', 'Clusters Visualization', 'failed', 'Canvas not found');
+    return;
+  }
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = 450;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#1a2332';
+  ctx.fillRect(0, 0, width, height);
+  
+  const padding = 60;
+  const chartWidth = width - 2 * padding;
+  const chartHeight = height - 2 * padding;
+  
+  const scaleX = (x) => padding + (x / 10) * chartWidth;
+  const scaleY = (y) => height - padding - (y / 10) * chartHeight;
+  
+  const eps = 1.5;
+  const epsPixels = (eps / 10) * chartWidth;
+  
+  // Core points (cluster 1)
+  const core1 = [{x: 1, y: 1}, {x: 1.2, y: 1.5}, {x: 1.5, y: 1.2}];
+  // Core points (cluster 2)
+  const core2 = [{x: 8, y: 8}, {x: 8.2, y: 8.5}, {x: 8.5, y: 8.2}];
+  // Border points
+  const border = [{x: 2.2, y: 2}];
+  // Outliers
+  const outliers = [{x: 5, y: 5}, {x: 4.5, y: 6}];
+  
+  // Draw eps circles around core points
+  ctx.strokeStyle = 'rgba(126, 240, 212, 0.3)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 3]);
+  core1.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(scaleX(p.x), scaleY(p.y), epsPixels, 0, 2 * Math.PI);
+    ctx.stroke();
+  });
+  ctx.setLineDash([]);
+  
+  // Draw core points
+  core1.forEach(p => {
+    ctx.fillStyle = '#7ef0d4';
+    ctx.beginPath();
+    ctx.arc(scaleX(p.x), scaleY(p.y), 10, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = '#1a2332';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+  
+  core2.forEach(p => {
+    ctx.fillStyle = '#6aa9ff';
+    ctx.beginPath();
+    ctx.arc(scaleX(p.x), scaleY(p.y), 10, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = '#1a2332';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+  
+  // Draw border points
+  border.forEach(p => {
+    ctx.fillStyle = '#ffb490';
+    ctx.beginPath();
+    ctx.arc(scaleX(p.x), scaleY(p.y), 8, 0, 2 * Math.PI);
+    ctx.fill();
+  });
+  
+  // Draw outliers
+  outliers.forEach(p => {
+    ctx.strokeStyle = '#ff8c6a';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(scaleX(p.x), scaleY(p.y), 8, 0, 2 * Math.PI);
+    ctx.stroke();
+  });
+  
+  // Legend
+  ctx.fillStyle = '#7ef0d4';
+  ctx.beginPath();
+  ctx.arc(padding + 20, 30, 8, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.fillStyle = '#e8eef6';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('Core points', padding + 35, 35);
+  
+  ctx.fillStyle = '#ffb490';
+  ctx.beginPath();
+  ctx.arc(padding + 140, 30, 8, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.fillStyle = '#e8eef6';
+  ctx.fillText('Border points', padding + 155, 35);
+  
+  ctx.strokeStyle = '#ff8c6a';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(padding + 270, 30, 8, 0, 2 * Math.PI);
+  ctx.stroke();
+  ctx.fillStyle = '#e8eef6';
+  ctx.fillText('Outliers', padding + 285, 35);
+  
+  // Title
+  ctx.fillStyle = '#7ef0d4';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('DBSCAN: Core, Border, and Outlier Points', width / 2, height - 10);
+  
+  logViz('DBSCAN', 'Clusters Visualization', 'success');
+}
+
+// Clustering Evaluation
+function initClusteringEvaluation() {
+  const canvas1 = document.getElementById('silhouette-plot-canvas');
+  if (canvas1 && !canvas1.dataset.initialized) {
+    canvas1.dataset.initialized = 'true';
+    drawSilhouettePlot();
+  }
+  
+  const canvas2 = document.getElementById('ch-index-canvas');
+  if (canvas2 && !canvas2.dataset.initialized) {
+    canvas2.dataset.initialized = 'true';
+    drawCHIndex();
+  }
+}
+
+function drawSilhouettePlot() {
+  const canvas = document.getElementById('silhouette-plot-canvas');
+  if (!canvas) return;
+  
+  createVerifiedVisualization('silhouette-plot-canvas', {
+    type: 'bar',
+    data: {
+      labels: ['Cluster 1 Avg', 'Cluster 2 Avg', 'Cluster 3 Avg', 'Overall'],
+      datasets: [{
+        label: 'Silhouette Coefficient',
+        data: [0.72, 0.68, 0.81, 0.74],
+        backgroundColor: ['#7ef0d4', '#6aa9ff', '#ffb490', '#ff8c6a'],
+        borderColor: ['#7ef0d4', '#6aa9ff', '#ffb490', '#ff8c6a'],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Silhouette Coefficients: All Above 0.7 = Excellent!',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: { display: false }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Silhouette Coefficient', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' },
+          min: 0,
+          max: 1
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#a9b4c2' }
+        }
+      }
+    }
+  }, 'Clustering Evaluation', 'Silhouette Plot');
+}
+
+function drawCHIndex() {
+  const canvas = document.getElementById('ch-index-canvas');
+  if (!canvas) return;
+  
+  const kValues = [2, 3, 4, 5, 6, 7, 8];
+  const chScores = [89, 234, 187, 145, 112, 95, 78];
+  
+  createVerifiedVisualization('ch-index-canvas', {
+    type: 'line',
+    data: {
+      labels: kValues,
+      datasets: [{
+        label: 'Calinski-Harabasz Index',
+        data: chScores,
+        borderColor: '#6aa9ff',
+        backgroundColor: 'rgba(106, 169, 255, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        pointRadius: kValues.map(k => k === 3 ? 10 : 6),
+        pointBackgroundColor: kValues.map(k => k === 3 ? '#7ef0d4' : '#6aa9ff'),
+        pointBorderWidth: kValues.map(k => k === 3 ? 3 : 2)
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Calinski-Harabasz Index: Optimal k = 3',
+          color: '#e8eef6',
+          font: { size: 16 }
+        },
+        legend: { labels: { color: '#a9b4c2' } }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Number of Clusters (k)', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' }
+        },
+        y: {
+          title: { display: true, text: 'CH Index (higher is better)', color: '#a9b4c2' },
+          grid: { color: '#2a3544' },
+          ticks: { color: '#a9b4c2' },
+          min: 0
+        }
+      }
+    }
+  }, 'Clustering Evaluation', 'CH Index');
 }
 
 // Handle window resize
