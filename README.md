@@ -191,5 +191,3 @@ This project welcomes contributions! Here's how you can help:
 Please check our [contribution guidelines](CONTRIBUTING.md) for detailed instructions.
 
 ## License
-
-Use or adapt however you like (no license file present; if you want one, tell me which license and I'll add it).
