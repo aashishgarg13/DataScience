@@ -282,6 +282,15 @@
 
                 <!-- Machine Learning Modules -->
                 <div class="module" data-subject="machine-learning" style="display: none;">
+                    <h4 class="module-title">Getting Started</h4>
+                    <ul class="topic-list">
+                        <li><a href="#ml-topic-0" class="topic-link" data-topic="ml-topic-0">ML-0. Google ML Crash
+                                Course</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="module" data-subject="machine-learning" style="display: none;">
                     <h4 class="module-title">Supervised Learning - Regression</h4>
                     <ul class="topic-list">
                         <li><a href="#ml-topic-1" class="topic-link" data-topic="ml-topic-1">ML-1. Linear Regression</a>
@@ -5258,6 +5267,7 @@
             </section>
 
             <!-- Topic 54: Eigenvectors -->
+            <!-- Topic 54: Eigenvectors & Eigenvalues -->
             <section class="topic-section" id="topic-54" data-subject="linear-algebra" style="display: none;">
                 <div class="topic-header">
                     <span class="topic-number">Topic 54</span>
@@ -5266,37 +5276,56 @@
                 </div>
 
                 <div class="content-card">
-                    <h3>Introduction</h3>
-                    <p><strong>What is it?</strong> An eigenvector of a matrix is a special vector that doesn't change
-                        direction during the transformation—it only gets scaled by its eigenvalue λ.</p>
-                    <p><strong>Why it matters:</strong> Eigenvectors reveal the fundamental directions of a
-                        transformation. Used in Google PageRank, quantum mechanics, and data science.</p>
+                    <h3>The Fundamental Equation</h3>
+                    <p>An <strong>eigenvector</strong> $\mathbf{v}$ of a square matrix $A$ is a non-zero vector that,
+                        when multiplied by $A$, yields a scalar multiple of itself. This scalar $\lambda$ is called the
+                        <strong>eigenvalue</strong>.
+                    </p>
+                    <div class="formula-card">
+                        <div style="font-size: 1.3em; margin: 15px 0;">
+                            $$A\mathbf{v} = \lambda\mathbf{v}$$
+                        </div>
+                    </div>
                 </div>
 
                 <div class="content-card">
-                    <h3>The Eigenvalue Equation</h3>
+                    <h3>✍️ How to Solve (Paper & Pen)</h3>
+                    <p><strong>Step 1: Set up the Characteristic Equation</strong><br>
+                        To find $\lambda$, we move everything to one side: $(A - \lambda I)\mathbf{v} = 0$. Since
+                        $\mathbf{v} \neq 0$, the matrix $(A - \lambda I)$ must be singular (squish space to zero area),
+                        meaning its determinant must be zero:</p>
                     <div class="formula-card">
-                        <div class="formula-header">Definition</div>
-                        <div class="formula-main">Av = λv</div>
-                        <p>A = matrix, v = eigenvector, λ = eigenvalue</p>
+                        <div style="font-size: 1.2em; margin: 15px 0;">
+                            $$\det(A - \lambda I) = 0$$
+                        </div>
                     </div>
-                    <div class="formula-card">
-                        <div class="formula-header">Finding Eigenvalues</div>
-                        <div class="formula-main">det(A - λI) = 0</div>
-                        <p>Characteristic equation: solve for λ</p>
-                    </div>
-                </div>
 
-                <div class="callout-box insight">
-                    <div class="callout-header">💡 GEOMETRIC MEANING</div>
-                    <p>Most vectors get knocked off their span during a transformation. But eigenvectors stay on their
-                        line—they just stretch or shrink!</p>
-                    <p><strong>Example:</strong> A rotation has no real eigenvectors (everything rotates). A scaling
-                        transformation has eigenvectors along the axes.</p>
+                    <div class="callout-box example">
+                        <div class="callout-header">WORKED EXAMPLE: FINDING EIGENVALUES</div>
+                        <p>Let $A = \begin{bmatrix} 3 & 1 \\ 0 & 2 \end{bmatrix}$. Solve $\det \begin{bmatrix} 3-\lambda
+                            & 1 \\ 0 & 2-\lambda \end{bmatrix} = 0$:</p>
+                        <p>$(3-\lambda)(2-\lambda) - (1 \times 0) = 0$<br>
+                            $(3-\lambda)(2-\lambda) = 0$<br>
+                            Roots: $\mathbf{\lambda_1 = 3, \lambda_2 = 2}$</p>
+                    </div>
+
+                    <p><strong>Step 2: Find the Eigenvectors</strong><br>
+                        For each $\lambda$, plug it back into $(A - \lambda I)\mathbf{v} = 0$ and solve for
+                        $\mathbf{v}$.</p>
+                    <div class="callout-box example">
+                        <div class="callout-header">WORKED EXAMPLE: FINDING EIGENVECTORS</div>
+                        <p>For $\lambda = 3$ in our matrix above:<br>
+                            $(A - 3I)\mathbf{v} = 0 \implies \begin{bmatrix} 3-3 & 1 \\ 0 & 2-3 \end{bmatrix}
+                            \begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}$<br>
+                            $\begin{bmatrix} 0 & 1 \\ 0 & -1 \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix} =
+                            \begin{bmatrix} 0 \\ 0 \end{bmatrix}$<br>
+                            This gives the equation $y = 0$. $x$ can be anything! So an eigenvector for $\lambda=3$ is
+                            $\mathbf{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$.</p>
+                    </div>
                 </div>
 
                 <div class="interactive-container">
-                    <h3>Eigenvector Visualization</h3>
+                    <h3>Visual Confirmation</h3>
                     <canvas id="canvas-54" width="600" height="400"></canvas>
                     <div class="controls">
                         <button class="btn btn-primary" id="btn54transform">Apply Transformation</button>
@@ -5304,24 +5333,13 @@
                     </div>
                 </div>
 
-                <div class="content-card">
-                    <h3>Applications</h3>
-                    <ul class="use-case-list">
-                        <li><strong>Google PageRank:</strong> Finds important web pages using eigenvectors</li>
-                        <li><strong>PCA (Principal Component Analysis):</strong> Data dimensionality reduction</li>
-                        <li><strong>Stability Analysis:</strong> Engineering systems (will it oscillate or stabilize?)
-                        </li>
-                        <li><strong>Quantum Mechanics:</strong> Energy states are eigenvectors</li>
-                    </ul>
-                </div>
-
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
-                        <li>Eigenvector: stays on its span, Av = λv</li>
-                        <li>Eigenvalue λ: scaling factor</li>
-                        <li>Find via det(A - λI) = 0</li>
-                        <li>Reveal fundamental directions of transformation</li>
+                        <li>Eigenvectors stay on their span (no rotation).</li>
+                        <li>Find eigenvalues by solving the polynomial $\det(A - \lambda I) = 0$.</li>
+                        <li>Find eigenvectors by solving $(A - \lambda I)\mathbf{v} = 0$.</li>
+                        <li>Critical for PCA, PageRank, and vibration analysis.</li>
                     </ul>
                 </div>
             </section>
@@ -5330,31 +5348,76 @@
             <section class="topic-section" id="topic-45" data-subject="linear-algebra" style="display: none;">
                 <div class="topic-header">
                     <span class="topic-number">Topic 45</span>
-                    <h2>🔗 Matrix Multiplication as Composition</h2>
-                    <p class="topic-subtitle">Successive transformations</p>
+                    <h2>🔗 Matrix Multiplication</h2>
+                    <p class="topic-subtitle">Composition of transformations and the row-column method</p>
                 </div>
                 <div class="content-card">
-                    <h3>Introduction</h3>
-                    <p><strong>What is it?</strong> Matrix multiplication represents applying one transformation after
-                        another (composition).</p>
-                    <p><strong>Why it matters:</strong> Understanding this geometrically makes matrix multiplication
-                        intuitive instead of just memorizing rules.</p>
+                    <h3>The Geometric Perspective</h3>
+                    <p>Matrix multiplication $C = AB$ represents applying transformation $B$ first, followed by
+                        transformation $A$. This is why we write them from right to left when applying to a vector:
+                        $A(B\mathbf{v})$.</p>
                 </div>
+
                 <div class="content-card">
-                    <h3>Formula</h3>
+                    <h3>The "Paper & Pen" Method (Row by Column)</h3>
+                    <p>To compute the entry $c_{ij}$ of the product matrix $C$, you take the <strong>dot
+                            product</strong> of the $i$-th row of $A$ and the $j$-th column of $B$.</p>
+
                     <div class="formula-card">
-                        <div class="formula-header">Matrix Multiplication</div>
-                        <div class="formula-main">(AB)v = A(Bv)</div>
-                        <p>Apply B first, then A - right to left!</p>
+                        <div class="formula-header">The General Formula</div>
+                        <div class="formula-main">
+                            $$c_{ij} = \sum_{k=1}^{n} a_{ik}b_{kj}$$
+                        </div>
+                        <p>Where $A$ is an $m \times n$ matrix and $B$ is an $n \times p$ matrix. The resulting matrix
+                            $C$ is $m \times p$.</p>
+                    </div>
+
+                    <div class="callout-box example">
+                        <div class="callout-header">✍️ STEP-BY-STEP CALCULATION</div>
+                        <p>Let's multiply two 2x2 matrices:</p>
+                        <div style="font-size: 1.2em; margin: 15px 0;">
+                            $$A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}, \quad B = \begin{bmatrix} 5 & 6 \\ 7 & 8
+                            \end{bmatrix}$$
+                        </div>
+                        <p><strong>Step 1: Top-Left Entry ($c_{11}$)</strong><br>
+                            Row 1 of $A$ "dots" Column 1 of $B$:<br>
+                            $(1 \times 5) + (2 \times 7) = 5 + 14 = \mathbf{19}$</p>
+
+                        <p><strong>Step 2: Top-Right Entry ($c_{12}$)</strong><br>
+                            Row 1 of $A$ "dots" Column 2 of $B$:<br>
+                            $(1 \times 6) + (2 \times 8) = 6 + 16 = \mathbf{22}$</p>
+
+                        <p><strong>Step 3: Bottom-Left Entry ($c_{21}$)</strong><br>
+                            Row 2 of $A$ "dots" Column 1 of $B$:<br>
+                            $(3 \times 5) + (4 \times 7) = 15 + 28 = \mathbf{43}$</p>
+
+                        <p><strong>Step 4: Bottom-Right Entry ($c_{22}$)</strong><br>
+                            Row 2 of $A$ "dots" Column 2 of $B$:<br>
+                            $(3 \times 6) + (4 \times 8) = 18 + 32 = \mathbf{50}$</p>
+
+                        <div style="font-size: 1.2em; margin: 15px 0;">
+                            $$AB = \begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix}$$
+                        </div>
                     </div>
                 </div>
+
+                <div class="callout-box warning">
+                    <div class="callout-header">⚠️ IMPORTANT RULES</div>
+                    <ul>
+                        <li><strong>Dimension Match:</strong> The number of columns in $A$ <em>must</em> equal the
+                            number of rows in $B$.</li>
+                        <li><strong>Order Matters:</strong> $AB$ is generally <strong>not</strong> equal to $BA$ (Matrix
+                            multiplication is non-commutative).</li>
+                    </ul>
+                </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
-                        <li>Matrix multiplication = composition of transformations</li>
-                        <li>Apply right-to-left: (AB)v means B first, then A</li>
-                        <li>Generally not commutative: AB ≠ BA</li>
-                        <li>Order matters!</li>
+                        <li>Geometric: Composition of transformations (right to left).</li>
+                        <li>Algebraic: Row-by-column dot products.</li>
+                        <li>Resulting dimensions: $(m \times n) \times (n \times p) \to (m \times p)$.</li>
+                        <li>Non-commutative: $AB \neq BA$.</li>
                     </ul>
                 </div>
             </section>
@@ -5399,35 +5462,75 @@
                     <p class="topic-subtitle">Measuring how transformations scale area/volume</p>
                 </div>
                 <div class="content-card">
-                    <h3>Introduction</h3>
-                    <p><strong>What is it?</strong> The determinant measures how much a transformation scales areas (2D)
-                        or volumes (3D).</p>
-                    <p><strong>Why it matters:</strong> Tells if transformation is invertible, changes orientation, and
-                        by how much space is scaled.</p>
+                    <h3>The Geometric Intuition</h3>
+                    <p>The determinant of a matrix $A$, denoted as $\det(A)$ or $|A|$, represents the <strong>factor by
+                            which the linear transformation scales area</strong> (in 2D) or <strong>volume</strong> (in
+                        3D).</p>
                 </div>
+
                 <div class="content-card">
-                    <h3>Formula</h3>
+                    <h3>2×2 Determinant</h3>
                     <div class="formula-card">
-                        <div class="formula-header">2×2 Determinant</div>
-                        <div class="formula-main">det([a b; c d]) = ad - bc</div>
+                        <div class="formula-header">Method</div>
+                        <div style="font-size: 1.2em; margin: 15px 0;">
+                            $$\det \begin{bmatrix} a & b \\ c & d \end{bmatrix} = ad - bc$$
+                        </div>
+                    </div>
+                    <div class="callout-box example">
+                        <div class="callout-header">✍️ 2x2 EXAMPLE</div>
+                        <p>Calculate $\det(A)$ for $A = \begin{bmatrix} 3 & 1 \\ 2 & 5 \end{bmatrix}$:</p>
+                        <p>$\det(A) = (3 \times 5) - (1 \times 2) = 15 - 2 = \mathbf{13}$</p>
+                        <p><em>Meaning: This transformation increases the area of any shape by a factor of 13.</em></p>
                     </div>
                 </div>
+
                 <div class="content-card">
-                    <h3>Interpretation</h3>
+                    <h3>3×3 Determinant (Expansion by Minors)</h3>
+                    <p>To calculate a 3x3 determinant, we "expand" along the first row using a checkerboard of signs ($+
+                        - +$).</p>
+                    <div class="formula-card">
+                        <div style="font-size: 1.1em; margin: 15px 0;">
+                            $$\det \begin{bmatrix} a & b & c \\ d & e & f \\ g & h & i \end{bmatrix} = a \det
+                            \begin{bmatrix} e & f \\ h & i \end{bmatrix} - b \det \begin{bmatrix} d & f \\ g & i
+                            \end{bmatrix} + c \det \begin{bmatrix} d & e \\ g & h \end{bmatrix}$$
+                        </div>
+                    </div>
+
+                    <div class="callout-box example">
+                        <div class="callout-header">✍️ 3x3 STEP-BY-STEP</div>
+                        <p>Calculate $\det(A)$ for $A = \begin{bmatrix} 1 & 2 & 3 \\ 0 & 4 & 5 \\ 1 & 0 & 6
+                            \end{bmatrix}$:</p>
+                        <ol>
+                            <li>$1 \times \det \begin{bmatrix} 4 & 5 \\ 0 & 6 \end{bmatrix} = 1 \times (24 - 0) = 24$
+                            </li>
+                            <li>$-2 \times \det \begin{bmatrix} 0 & 5 \\ 1 & 6 \end{bmatrix} = -2 \times (0 - 5) = 10$
+                            </li>
+                            <li>$3 \times \det \begin{bmatrix} 0 & 4 \\ 1 & 0 \end{bmatrix} = 3 \times (0 - 4) = -12$
+                            </li>
+                        </ol>
+                        <p>Total: $24 + 10 - 12 = \mathbf{22}$</p>
+                    </div>
+                </div>
+
+                <div class="callout-box insight">
+                    <div class="callout-header">💡 WHAT THE VALUE TELLS YOU</div>
                     <ul>
-                        <li><strong>|det| &gt; 1:</strong> Expands space</li>
-                        <li><strong>|det| &lt; 1:</strong> Compresses space</li>
-                        <li><strong>det = 0:</strong> Squishes to lower dimension (not invertible)</li>
-                        <li><strong>det &lt; 0:</strong> Flips orientation</li>
+                        <li><strong>$\det(A) = 0$</strong>: The transformation squishes space into a lower dimension (a
+                            line or a point). The matrix is <strong>singular</strong> (not invertible).</li>
+                        <li><strong>Negative Determinant</strong>: The transformation flips the orientation (like a
+                            mirror reflection).</li>
+                        <li><strong>$\det(A) = 1$</strong>: The transformation preserves area/volume (e.g., a pure
+                            rotation).</li>
                     </ul>
                 </div>
+
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
-                        <li>Determinant = area/volume scaling factor</li>
-                        <li>det = 0 means non-invertible (squishes space)</li>
-                        <li>Negative det means orientation flip</li>
-                        <li>Critical for understanding linear systems</li>
+                        <li>Determinant = area/volume scaling factor.</li>
+                        <li>2x2 formula: $ad - bc$.</li>
+                        <li>3x3 requires expansion by minors (or Sarrus' rule).</li>
+                        <li>$\det = 0$ means the matrix cannot be inverted.</li>
                     </ul>
                 </div>
             </section>
@@ -5871,148 +5974,61 @@
             <section class="topic-section" id="topic-60" data-subject="calculus" style="display: none;">
                 <div class="topic-header">
                     <span class="topic-number">Topic 60</span>
-                    <h2>📐 Derivative Formulas (Geometric)</h2>
-                    <p class="topic-subtitle">Power rule, sum rule, and more</p>
+                    <h2>📐 Derivative Formulas</h2>
+                    <p class="topic-subtitle">The toolkit for finding rates of change</p>
                 </div>
+
                 <div class="content-card">
-                    <h3>Introduction</h3>
-                    <p><strong>What is it?</strong> Standard rules for computing derivatives without using limits every
-                        time.</p>
-                    <p><strong>Why it matters:</strong> Makes calculus practical - we can quickly find derivatives of
-                        complex functions.</p>
+                    <h3>The Shortcut Rules</h3>
+                    <p>Instead of calculating the limit for every function, we use these standard rules derived once and
+                        for all.</p>
+
+                    <div class="two-column">
+                        <div class="column">
+                            <h4 style="color: #64ffda;">Basic Rules</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li><strong>Constant:</strong> $\frac{d}{dx}[c] = 0$</li>
+                                <li><strong>Power Rule:</strong> $\frac{d}{dx}[x^n] = nx^{n-1}$</li>
+                                <li><strong>Sum Rule:</strong> $\frac{d}{dx}[f + g] = f' + g'$</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h4 style="color: #ff6b6b;">Special Rules</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li><strong>Exponential:</strong> $\frac{d}{dx}[e^x] = e^x$</li>
+                                <li><strong>Logarithm:</strong> $\frac{d}{dx}[\ln(x)] = \frac{1}{x}$</li>
+                                <li><strong>Trig (sin):</strong> $\frac{d}{dx}[\sin(x)] = \cos(x)$</li>
+                                <li><strong>Trig (cos):</strong> $\frac{d}{dx}[\cos(x)] = -\sin(x)$</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="content-card">
-                    <h3>Common Derivative Rules</h3>
-                    <div class="formula-card">
-                        <div class="formula-header">Power Rule</div>
-                        <div class="formula-main">d/dx(xⁿ) = nxⁿ⁻¹</div>
-                    </div>
-                    <div class="formula-card">
-                        <div class="formula-header">Sum Rule</div>
-                        <div class="formula-main">d/dx[f(x) + g(x)] = f'(x) + g'(x)</div>
-                    </div>
-                    <div class="formula-card">
-                        <div class="formula-header">Constant Multiple</div>
-                        <div class="formula-main">d/dx[cf(x)] = c·f'(x)</div>
-                    </div>
-                </div>
-                <div class="callout-box example">
-                    <div class="callout-header">📊 EXAMPLE</div>
-                    <p><strong>f(x) = 3x⁴ - 2x² + 5</strong></p>
-                    <p>f'(x) = 3·4x³ - 2·2x + 0</p>
-                    <p>f'(x) = 12x³ - 4x</p>
-                </div>
-                <!-- WORKED EXAMPLE SECTION -->
-                <div class="content-block worked-example-section">
-                    <h3>📝 Worked Example - Step by Step</h3>
+                    <h3>✍️ Worked Example - Step by Step</h3>
+                    <p><strong>Problem:</strong> Find the derivative of $f(x) = 3x^4 - 2x^2 + 5x - 7$</p>
 
-                    <div class="example-problem">
-                        <h4>Problem:</h4>
-                        <p class="problem-statement">Find the derivative of f(x) = 3x⁴ - 2x³ + 5x - 7</p>
-                    </div>
-
-                    <div class="example-solution">
-                        <h4>Solution:</h4>
-
-                        <div class="solution-step">
-                            <div class="step-number">Step 1:</div>
-                            <div class="step-content">
-                                <p class="step-description">Identify the Power Rule</p>
-                                <div class="step-work">
-                                    <code>Power Rule: d/dx(xⁿ) = n·xⁿ⁻¹</code><br>
-                                    <code>Apply to each term separately</code>
-                                </div>
-                                <p class="step-explanation">The power rule works term by term</p>
+                    <div class="solution-step">
+                        <div class="step-number">Step 1:</div>
+                        <div class="step-content">
+                            <p>Apply the power rule to each term individually.</p>
+                            <div
+                                style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; font-family: 'JetBrains Mono';">
+                                $\frac{d}{dx}(3x^4) = 3 \cdot 4x^3 = 12x^3$<br>
+                                $\frac{d}{dx}(-2x^2) = -2 \cdot 2x^1 = -4x$<br>
+                                $\frac{d}{dx}(5x) = 5 \cdot 1x^0 = 5$<br>
+                                $\frac{d}{dx}(-7) = 0$
                             </div>
-                        </div>
-
-                        <div class="solution-step">
-                            <div class="step-number">Step 2:</div>
-                            <div class="step-content">
-                                <p class="step-description">Derivative of First Term: 3x⁴</p>
-                                <div class="step-work">
-                                    <code>Coefficient stays: 3</code><br>
-                                    <code>Exponent: 4 → multiply by 4 and decrease exponent</code><br>
-                                    <code>Result: 3 × 4 × x³ = 12x³</code>
-                                </div>
-                                <p class="step-explanation">Bring down the 4, multiply by coefficient 3</p>
-                            </div>
-                        </div>
-
-                        <div class="solution-step">
-                            <div class="step-number">Step 3:</div>
-                            <div class="step-content">
-                                <p class="step-description">Derivative of Second Term: -2x³</p>
-                                <div class="step-work">
-                                    <code>Result: -2 × 3 × x² = -6x²</code>
-                                </div>
-                                <p class="step-explanation">Same process, keep the negative sign</p>
-                            </div>
-                        </div>
-
-                        <div class="solution-step">
-                            <div class="step-number">Step 4:</div>
-                            <div class="step-content">
-                                <p class="step-description">Derivative of Third Term: 5x</p>
-                                <div class="step-work">
-                                    <code>5x = 5x¹</code><br>
-                                    <code>Result: 5 × 1 × x⁰ = 5</code>
-                                </div>
-                                <p class="step-explanation">x⁰ = 1, so we just get the coefficient</p>
-                            </div>
-                        </div>
-
-                        <div class="solution-step">
-                            <div class="step-number">Step 5:</div>
-                            <div class="step-content">
-                                <p class="step-description">Derivative of Fourth Term: -7</p>
-                                <div class="step-work">
-                                    <code>Constant → derivative is 0</code>
-                                </div>
-                                <p class="step-explanation">Constants disappear when we take the derivative</p>
-                            </div>
-                        </div>
-
-                        <div class="solution-step">
-                            <div class="step-number">Step 6:</div>
-                            <div class="step-content">
-                                <p class="step-description">Combine All Terms</p>
-                                <div class="step-work">
-                                    <code>f'(x) = 12x³ - 6x² + 5 + 0</code><br>
-                                    <code>f'(x) = 12x³ - 6x² + 5</code>
-                                </div>
-                                <p class="step-explanation">Sum the derivatives of each term</p>
-                            </div>
-                        </div>
-
-                        <div class="final-answer">
-                            <strong>Final Answer:</strong>
-                            <span class="answer-highlight">f'(x) = 12x³ - 6x² + 5</span>
-                        </div>
-
-                        <div class="verification">
-                            <strong>✓ Check:</strong>
-                            <p>At x=1: f'(1) = 12(1) - 6(1) + 5 = 11. This is the slope of the tangent line at x=1.</p>
                         </div>
                     </div>
 
-                    <div class="practice-problems">
-                        <h4>💪 Try These:</h4>
-                        <ol>
-                            <li>Find f'(x) for f(x) = 2x³ + 4x² - 3</li>
-                            <li>Find the derivative of g(x) = 5x⁴ - x</li>
-                            <li>What is d/dx(7x² + 2x + 8)?</li>
-                        </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
-                            Answers</button>
-                        <div class="practice-answers" style="display: none;">
-                            <p><strong>Answers:</strong></p>
-                            <ol>
-                                <li>f'(x) = 6x² + 8x</li>
-                                <li>g'(x) = 20x³ - 1</li>
-                                <li>14x + 2</li>
-                            </ol>
+                    <div class="solution-step">
+                        <div class="step-number">Step 2:</div>
+                        <div class="step-content">
+                            <p>Combine the results.</p>
+                            <div class="final-answer">
+                                $f'(x) = 12x^3 - 4x + 5$
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -6020,10 +6036,10 @@
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
-                        <li>Power rule: bring down exponent, subtract 1</li>
-                        <li>Sum rule: derivative of sum = sum of derivatives</li>
-                        <li>Constant multiple: constant comes out front</li>
-                        <li>Makes computing derivatives fast and easy</li>
+                        <li>$e^x$ is unique because it is its own slope.</li>
+                        <li>The derivative of a constant is 0 (it doesn't change).</li>
+                        <li>Memory trick: Derivative of 'co' functions ($\cos$, $\cot$, $\csc$) always have a negative
+                            sign.</li>
                     </ul>
                 </div>
             </section>
@@ -8033,6 +8049,60 @@
             </section>
 
             <!-- MACHINE LEARNING ALGORITHMS START HERE -->
+
+            <!-- ML-0: Google Machine Learning Crash Course -->
+            <section class="topic-section ml-section" id="ml-topic-0" data-subject="machine-learning"
+                style="display: none;">
+                <div class="topic-header">
+                    <span class="topic-number ml-resource" style="background: var(--primary); color: white;">Learning
+                        Resource</span>
+                    <h2>🚀 Google ML Crash Course</h2>
+                    <p class="topic-subtitle">Google's fast-paced introduction to machine learning</p>
+                </div>
+
+                <div class="content-card">
+                    <h3>📚 Overview</h3>
+                    <p>The <strong>Machine Learning Crash Course (MLCC)</strong> is a self-paced guide developed by
+                        Google engineers. It is designed to help you learn the core concepts of machine learning through
+                        a mix of theory and practical exercises.</p>
+                    <p><strong>Perfect for:</strong> Beginners looking for a structured path and developers wanting to
+                        apply ML using TensorFlow.</p>
+                </div>
+
+                <div class="callout-box insight">
+                    <div class="callout-header">💡 Why Google MLCC?</div>
+                    <p>It includes over 25 lessons, 15+ hours of content, and hands-on exercises using
+                        <strong>Colab</strong> and <strong>TensorFlow</strong>. It's a gold standard for practical
+                        machine learning education.
+                    </p>
+                </div>
+
+                <div class="content-card">
+                    <h3>🔗 Key Links</h3>
+                    <ul class="use-case-list" style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 12px;">🌍 <a
+                                href="https://developers.google.com/machine-learning/crash-course" target="_blank"
+                                style="color: var(--accent); font-weight: bold; text-decoration: underline;">Official ML
+                                Crash Course ↗</a></li>
+                        <li style="margin-bottom: 12px;">📖 <a
+                                href="https://developers.google.com/machine-learning/glossary" target="_blank"
+                                style="color: var(--accent); text-decoration: underline;">ML Glossary & Terms ↗</a></li>
+                        <li>🛠️ <a href="https://developers.google.com/machine-learning/problem-framing" target="_blank"
+                                style="color: var(--accent); text-decoration: underline;">Problem Framing Guide ↗</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="summary-card">
+                    <h3>🎯 Recommended Steps</h3>
+                    <ul>
+                        <li>Understand "Loss" and "Gradient Descent" first.</li>
+                        <li>Follow the coding exercises in Google Colab.</li>
+                        <li>Pay close attention to "Feature Engineering" (Crucial for DS!).</li>
+                        <li>Complete the "ML Engineering" modules for production tips.</li>
+                    </ul>
+                </div>
+            </section>
 
             <!-- ML-1: Linear Regression -->
             <section class="topic-section ml-section" id="ml-topic-1" data-subject="machine-learning"
@@ -10274,6 +10344,59 @@ optimizer.step()</code>
                     <p>Binary classification using sigmoid: P(y=1) = 1/(1+e^(-z)) where z = β₀+β₁x. Despite name, it's
                         for classification!</p>
                 </div>
+
+                <div class="worked-example-section">
+                    <h3>📝 Paper & Pen: How to Solve Manually</h3>
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Given a model with Intercept (β₀) = -2.0 and Slope (β₁) = 0.5,
+                            predict if a student passes (y=1) if they study for 6 hours (x=6).</p>
+                    </div>
+
+                    <div class="example-solution">
+                        <h4>Solution Steps:</h4>
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Log-Odds (z)</p>
+                                <div class="step-work">
+                                    <code>z = β₀ + β₁x</code><br>
+                                    <code>z = -2.0 + 0.5(6)</code><br>
+                                    <code>z = -2.0 + 3.0 = 1.0</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Apply Sigmoid Function</p>
+                                <div class="step-work">
+                                    <code>P(y=1) = 1 / (1 + e^-z)</code><br>
+                                    <code>P(y=1) = 1 / (1 + e^-1)</code><br>
+                                    <code>P(y=1) = 1 / (1 + 0.368) ≈ 0.731</code>
+                                </div>
+                                <p class="step-explanation">The probability of passing is 73.1%</p>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Apply Decision Threshold</p>
+                                <div class="step-work">
+                                    <code>Threshold = 0.5</code><br>
+                                    <code>0.731 > 0.5 → Classify as 1 (Pass)</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="final-answer">
+                            <strong>✓ Final Result:</strong>
+                            <span class="answer-highlight">Prediction: PASS (P=0.73)</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="content-card">
                     <h3>💻 Python Implementation</h3>
                     <div class="code-block">
@@ -10302,6 +10425,61 @@ optimizer.step()</code>
                     <h3>📚 What is SVM?</h3>
                     <p>SVM finds hyperplane that maximally separates classes. Uses support vectors (closest points) and
                         kernel trick for non-linear boundaries.</p>
+                </div>
+
+                <div class="worked-example-section">
+                    <h3>📝 Paper & Pen: Distance to Hyperplane</h3>
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Given a 2D decision boundary (hyperplane) defined by:
+                            <br><strong>Equation: 3x₁ + 4x₂ - 10 = 0</strong>
+                            <br>Calculate the distance of point <strong>P(4, 5)</strong> to this boundary. Is it on the
+                            "positive" or "negative" side?
+                        </p>
+                    </div>
+
+                    <div class="example-solution">
+                        <h4>Solution Steps:</h4>
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Plug Point into Equation</p>
+                                <div class="step-work">
+                                    <code>Value = 3(4) + 4(5) - 10</code><br>
+                                    <code>Value = 12 + 20 - 10 = 22</code>
+                                </div>
+                                <p class="step-explanation">Since 22 > 0, the point is on the <strong>positive
+                                        side</strong> of the hyperplane.</p>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Distance Formula Numerator</p>
+                                <div class="step-work">
+                                    <code>Numerator = |Ax₁ + Bx₂ + C|</code><br>
+                                    <code>Numerator = |22| = 22</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Denominator (Norm of Weights)</p>
+                                <div class="step-work">
+                                    <code>Denominator = √(A² + B²)</code><br>
+                                    <code>Denominator = √(3² + 4²) = √25 = 5</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="final-answer">
+                            <strong>✓ Final Result:</strong>
+                            <span class="answer-highlight">Distance = 22 / 5 = 4.4 units</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="content-card">
                     <h3>💻 Python Implementation</h3>
@@ -10335,6 +10513,75 @@ optimizer.step()</code>
                     <h3>📚 What is Naive Bayes?</h3>
                     <p>Applies Bayes' Theorem with "naive" independence assumption. P(y|x) ∝ P(y)ΠP(xᵢ|y). Extremely
                         fast for text classification.</p>
+                </div>
+
+                <div class="worked-example-section">
+                    <h3>📝 Paper & Pen: How to Solve Manually</h3>
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Classify if an email is <strong>Spam</strong> or
+                            <strong>Ham</strong> based on the word "Free".
+                            <br>Data:
+                        <ul>
+                            <li>Total Emails: 100</li>
+                            <li>Spam: 20 (10 contain "Free")</li>
+                            <li>Ham: 80 (5 contain "Free")</li>
+                        </ul>
+                        </p>
+                    </div>
+
+                    <div class="example-solution">
+                        <h4>Solution Steps:</h4>
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Priors P(C)</p>
+                                <div class="step-work">
+                                    <code>P(Spam) = 20/100 = 0.2</code><br>
+                                    <code>P(Ham) = 80/100 = 0.8</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Likelihoods P(Free|C)</p>
+                                <div class="step-work">
+                                    <code>P(Free|Spam) = 10/20 = 0.5</code><br>
+                                    <code>P(Free|Ham) = 5/80 = 0.0625</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Posterior Numerators</p>
+                                <div class="step-work">
+                                    <code>Score(Spam) = P(Spam) × P(Free|Spam) = 0.2 × 0.5 = 0.10</code><br>
+                                    <code>Score(Ham) = P(Ham) × P(Free|Ham) = 0.8 × 0.0625 = 0.05</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Normalize & Compare</p>
+                                <div class="step-work">
+                                    <code>Total = 0.10 + 0.05 = 0.15</code><br>
+                                    <code>P(Spam|Free) = 0.10 / 0.15 = 0.667 (67%)</code><br>
+                                    <code>P(Ham|Free) = 0.05 / 0.15 = 0.333 (33%)</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="final-answer">
+                            <strong>✓ Final Result:</strong>
+                            <span class="answer-highlight">Classify as SPAM (67% probability)</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="content-card">
                     <h3>💻 Python Implementation</h3>
@@ -10430,6 +10677,52 @@ optimizer.step()</code>
                     <h3>📚 What are Neural Networks?</h3>
                     <p>Layers of connected neurons. Each neuron: z = Σwᵢxᵢ + b, then activation function σ(z). Trained
                         via backpropagation + gradient descent.</p>
+                </div>
+
+                <div class="worked-example-section">
+                    <h3>📝 Paper & Pen: Single Neuron Forward Pass</h3>
+                    <div class="example-problem">
+                        <h4>Problem:</h4>
+                        <p class="problem-statement">Calculate the output of a single neuron with 2 inputs.
+                            <br>Inputs: x₁=0.5, x₂=1.0
+                            <br>Weights: w₁=0.4, w₂=-0.2
+                            <br>Bias: b=0.1
+                            <br>Activation: ReLU (Output = max(0, z))
+                        </p>
+                    </div>
+
+                    <div class="example-solution">
+                        <h4>Solution Steps:</h4>
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Weighted Sum (z)</p>
+                                <div class="step-work">
+                                    <code>z = (x₁w₁ + x₂w₂) + b</code><br>
+                                    <code>z = (0.5 × 0.4 + 1.0 × -0.2) + 0.1</code><br>
+                                    <code>z = (0.2 - 0.2) + 0.1 = 0.1</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Apply Activation Function (ReLU)</p>
+                                <div class="step-work">
+                                    <code>Output = f(z) = max(0, z)</code><br>
+                                    <code>Output = max(0, 0.1) = 0.1</code>
+                                </div>
+                                <p class="step-explanation">If z was negative, the output would be 0 (deactivated
+                                    neuron).</p>
+                            </div>
+                        </div>
+
+                        <div class="final-answer">
+                            <strong>✓ Final Result:</strong>
+                            <span class="answer-highlight">Neuron Output = 0.1</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="content-card">
                     <h3>💻 Python Implementation</h3>
