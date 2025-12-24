@@ -602,6 +602,31 @@
                     </div>
                 </div>
 
+                <div class="toc-category">
+                    <div class="toc-category-header" data-category="nlp">
+                        <span class="category-icon">🗣️</span>
+                        <span class="category-title">NLP & GENAI</span>
+                        <span class="category-toggle">▼</span>
+                    </div>
+                    <div class="toc-category-content" id="nlp-content">
+                        <div class="toc-subcategory">
+                            <div class="toc-subcategory-title">Basic NLP</div>
+                            <a href="#nlp-preprocessing" class="toc-link toc-sub">Text Preprocessing</a>
+                            <a href="#word-embeddings" class="toc-link toc-sub">Word Embeddings (Word2Vec)</a>
+                        </div>
+                        <div class="toc-subcategory">
+                            <div class="toc-subcategory-title">Advanced NLP</div>
+                            <a href="#rnn-lstm" class="toc-link toc-sub">RNN & LSTM</a>
+                            <a href="#transformers" class="toc-link toc-sub">Transformers</a>
+                        </div>
+                        <div class="toc-subcategory">
+                            <div class="toc-subcategory-title">Generative AI</div>
+                            <a href="#genai-intro" class="toc-link toc-sub">GenAI & LLMs</a>
+                            <a href="#vectordb-rag" class="toc-link toc-sub">VectorDB & RAG</a>
+                        </div>
+                    </div>
+                </div>
+
                 <a href="#algorithm-comparison" class="toc-link">📊 Algorithm Comparison</a>
             </nav>
         </aside>
@@ -6201,7 +6226,204 @@ plt.show()
                 </div>
             </div>
 
-            <!-- Section 18: Algorithm Comparison Tool -->
+            <!-- ========================================
+                 NLP & GENAI SECTIONS (Module 13, 16-19)
+                 ======================================== -->
+
+            <!-- Section 14: NLP Preprocessing -->
+            <div class="section" id="nlp-preprocessing">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(232, 238, 246, 0.3); color: #e8eef6;">🗣️ NLP -
+                            Basic</span> Text Preprocessing</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Before machine learning models can process human language, the text must be cleaned and converted
+                        into a numerical format. This process is called <strong>Text Preprocessing</strong>.</p>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Core Techniques (Module 13)</div>
+                        <ul class="info-card-list">
+                            <li><strong>Tokenization:</strong> Splitting text into individual words or tokens.</li>
+                            <li><strong>Stopwords Removal:</strong> Removing common words (the, is, at) that don't add
+                                much meaning.</li>
+                            <li><strong>Stemming/Lemmatization:</strong> Reducing words to their root form (e.g.,
+                                "running" → "run").</li>
+                            <li><strong>POS Tagging:</strong> Identifying grammatical parts of speech (Nouns, Verbs,
+                                etc.).</li>
+                        </ul>
+                    </div>
+
+                    <h3>Paper & Pen Example: Tokenization & Stopwords</h3>
+                    <div class="step">
+                        <div class="step-title">Step 1: Input Raw Text</div>
+                        <div class="step-calculation">Text: "The quick brown fox is jumping over the lazy dog."</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-title">Step 2: Remove Stopwords (NLTK English list)</div>
+                        <div class="step-calculation">Stopwords: "The", "is", "over", "the"
+                            Cleaned: "quick", "brown", "fox", "jumping", "lazy", "dog"</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-title">Step 3: Lemmatization</div>
+                        <div class="step-calculation">"jumping" → "jump"
+                            Root tokens: ["quick", "brown", "fox", "jump", "lazy", "dog"]</div>
+                    </div>
+
+                    <div class="callout info">
+                        <div class="callout-title">💡 Why POS Tagging Matters?</div>
+                        <div class="callout-content">
+                            Part-of-Speech tagging helps models understand context. For example, "Bank" can be a
+                            <strong>Noun</strong> (river bank) or a <strong>Verb</strong> (to bank on someone).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 15: Word Embeddings -->
+            <div class="section" id="word-embeddings">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(232, 238, 246, 0.3); color: #e8eef6;">🗣️ NLP -
+                            Embeddings</span> Word Embeddings (Word2Vec)</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Word Embeddings are dense vector representations of words where words with similar meanings are
+                        indexed closer to each other in vector space. <strong>Word2Vec</strong> is a seminal algorithm
+                        for this.</p>
+
+                    <div class="formula">
+                        <strong>Word Similarity (Cosine Similarity):</strong>
+                        cos(θ) = (A · B) / (||A|| ||B||)
+                        <br><small>Measures the angle between two word vectors. Closer to 1 = more similar.</small>
+                    </div>
+
+                    <h3>Working Intuition</h3>
+                    <p>Word2Vec learns context by predicting a word from its neighbors (CBOW) or predicting neighbors
+                        from a word (Skip-gram). This captures semantic relationships like:</p>
+                    <div class="callout success">
+                        <div class="callout-title">✓ Vector Mathematics</div>
+                        <div class="callout-content">
+                            <strong>King - Man + Woman ≈ Queen</strong>
+                            <br>The model learns that the relational "distance" between King and Man is similar to that
+                            between Queen and Woman.
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-card-title">Implementation Resources</div>
+                        <ul class="info-card-list">
+                            <li><strong>Google Colab:</strong> <a
+                                    href="https://colab.research.google.com/drive/1cIg1tqNvU0Cl9E7-grrF7l8FQj-_efxF"
+                                    target="_blank" style="color: #7ef0d4;">NLP for ML Practice Notebook</a></li>
+                            <li><strong>GitHub Repo:</strong> <a href="https://github.com/sourangshupal/NLP-for-ML"
+                                    target="_blank" style="color: #7ef0d4;">sourangshupal/NLP-for-ML</a></li>
+                            <li><strong>Kaggle Dataset:</strong> <a
+                                    href="https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews"
+                                    target="_blank" style="color: #7ef0d4;">IMDB 50K Movie Reviews</a></li>
+                            <li><strong>Research Paper:</strong> <a href="https://arxiv.org/abs/1301.3781"
+                                    target="_blank" style="color: #7ef0d4;">Word2Vec (Mikolov et al.)</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 16: Advanced NLP -->
+            <div class="section" id="rnn-lstm">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(106, 169, 255, 0.3); color: #6aa9ff;">🧠
+                            Strategic</span> RNN & LSTM</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Recurrent Neural Networks (RNNs) are designed for sequential data (like text). They have "memory"
+                        that allows information to persist.</p>
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Vanishing Gradient Problem</div>
+                        <div class="callout-content">
+                            Standard RNNs struggle to remember long-term dependencies. <strong>LSTM (Long Short-Term
+                                Memory)</strong> units were designed to fix this using "gates" that control information
+                            flow.
+                        </div>
+                    </div>
+                    <h3>LSTM Architecture</h3>
+                    <p>An LSTM neuron has three main gates:</p>
+                    <ul>
+                        <li><strong>Forget Gate:</strong> Decides which info to discard.</li>
+                        <li><strong>Input Gate:</strong> Decides which new info to store.</li>
+                        <li><strong>Output Gate:</strong> Decides which part of the memory to output.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Section 17: Transformers -->
+            <div class="section" id="transformers">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(106, 169, 255, 0.3); color: #6aa9ff;">🧠
+                            Strategic</span> Transformers</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>The Transformer architecture (from "Attention is All You Need") revolutionized NLP by removing
+                        recurrence and using <strong>Self-Attention</strong> mechanisms.</p>
+                    <div class="info-card">
+                        <div class="info-card-title">Key Advantages</div>
+                        <ul class="info-card-list">
+                            <li><strong>Parallelization:</strong> Unlike RNNs, Transformers can process entire sentences
+                                at once.</li>
+                            <li><strong>Global Context:</strong> Self-attention allows the model to look at every word
+                                in a sentence simultaneously.</li>
+                            <li><strong>Foundation for LLMs:</strong> This architecture powers BERT, GPT, and Claude.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 18: Generative AI & LLMs -->
+            <div class="section" id="genai-intro">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(255, 140, 106, 0.3); color: #ff8c6a;">🪄
+                            GenAI</span> Generative AI & LLMs</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>Generative AI refers to models that can create new content (text, images, code). Large Language
+                        Models (LLMs) are the pinnacle of this for text.</p>
+                    <h3>Training Paradigm</h3>
+                    <ol>
+                        <li><strong>Pre-training:</strong> Predict next word on massive datasets (Internet scale).</li>
+                        <li><strong>Fine-tuning:</strong> Adapting the model to specific tasks (e.g., chat, coding).
+                        </li>
+                        <li><strong>RLHF:</strong> Reinforcement Learning from Human Feedback to align model behavior.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Section 19: VectorDB & RAG -->
+            <div class="section" id="vectordb-rag">
+                <div class="section-header">
+                    <h2><span class="badge" style="background: rgba(255, 140, 106, 0.3); color: #ff8c6a;">🪄
+                            GenAI</span> VectorDB & RAG</h2>
+                    <button class="section-toggle">▼</button>
+                </div>
+                <div class="section-body">
+                    <p>To ground LLMs in private or fresh data, we use <strong>Retrieval-Augmented Generation
+                            (RAG)</strong>.</p>
+                    <div class="step">
+                        <div class="step-title">The RAG Workflow</div>
+                        <div class="step-calculation">1. <strong>Chunk:</strong> Break documents into small pieces.
+                            2. <strong>Embed:</strong> Convert chunks into vectors.
+                            3. <strong>Store:</strong> Save vectors in a <strong>Vector Database</strong> (Pinecone,
+                            Milvus, Chroma).
+                            4. <strong>Retrieve:</strong> Find relevant chunks for a user query.
+                            5. <strong>Generate:</strong> Pass chunks to LLM as context for the answer.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 20: Algorithm Comparison Tool -->
             <div class="section" id="algorithm-comparison">
                 <div class="section-header">
                     <h2><span class="badge" style="background: rgba(126, 240, 212, 0.3); color: #7ef0d4;">🔄
