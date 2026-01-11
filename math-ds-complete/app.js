@@ -31,6 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initKeyboardShortcuts();
     initLazyLoading();
 
+    // Fix Show Answer buttons (Remove inline handlers to avoid conflicts)
+    document.querySelectorAll('.show-answers-btn, .show-answer-btn').forEach(btn => {
+        btn.removeAttribute('onclick');
+    });
+
     // Show initial subject
     switchSubject('statistics');
 
@@ -502,7 +507,14 @@ function initializeAllVisualizations() {
     initVectorCanvas();
     initSpanCanvas();
     initTransformationGrid();
-    initEigenvectorCanvas();
+    initEigenvectorCanvas(); // This now calls the updated version
+
+    // Advanced Stats (New)
+    initSkewnessVisualization();
+    initCovarianceVisualization();
+    initPDFCDFVisualization();
+    initNormalRuleVisualization();
+    initCorrelationVisualization();
 
     // Calculus visualizations
     initCircleAreaCanvas();
@@ -517,6 +529,9 @@ function initializeAllVisualizations() {
     initPCACanvas();
     initGradientDescentCanvas();
     initLossLandscapeCanvas();
+
+    // Machine Learning (New)
+    initDecisionTreeVisualization();
 
     // Machine Learning visualizations
     initMLLinearRegressionCanvas();
@@ -1008,6 +1023,7 @@ function initTransformationGrid() {
     drawGrid(false);
 }
 
+// ===== EIGENVECTOR VISUALIZATION (UPDATED) =====
 function initEigenvectorCanvas() {
     const canvas = document.getElementById('canvas-54');
     if (!canvas) return;
@@ -1015,37 +1031,84 @@ function initEigenvectorCanvas() {
     const ctx = canvas.getContext('2d');
     let transformed = false;
 
+    // Matrix A = [[2, 0], [0, 1]]
+    const matrix = [[2, 0], [0, 1]];
+
+    // Test vectors
+    const vectors = [
+        { x: 1, y: 1, color: '#4a90e2', label: '[1,1] Not Eigenvector', isEigen: false },
+        { x: 1, y: 0, color: '#51cf66', label: '[1,0] Eigenvector \u03bb=2', isEigen: true, lambda: 2 },
+        { x: 0, y: 1, color: '#ffd93d', label: '[0,1] Eigenvector \u03bb=1', isEigen: true, lambda: 1 }
+    ];
+
+    function applyMatrix(v) {
+        return {
+            x: matrix[0][0] * v.x + matrix[0][1] * v.y,
+            y: matrix[1][0] * v.x + matrix[1][1] * v.y
+        };
+    }
+
     function draw() {
         clearCanvas(ctx, canvas);
 
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
-        const scale = 50;
+        const scale = 80;
+
+        // Title
+        drawText(ctx, transformed ? 'After: A \u00d7 v (Matrix Applied)' : 'Before: Original Vectors', centerX, 25, 16, COLORS.cyan);
+        drawText(ctx, 'Matrix A = [[2, 0], [0, 1]] \u2014 Stretches x-axis by 2', centerX, 45, 12, COLORS.textSecondary);
+
+        // Draw grid
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 1;
+        for (let i = -4; i <= 4; i++) {
+            drawLine(ctx, centerX + i * scale, 60, centerX + i * scale, canvas.height - 40, 'rgba(255,255,255,0.1)', 1);
+            drawLine(ctx, 40, centerY + i * scale, canvas.width - 40, centerY + i * scale, 'rgba(255,255,255,0.1)', 1);
+        }
 
         // Draw axes
-        drawLine(ctx, 0, centerY, canvas.width, centerY, '#555', 1);
-        drawLine(ctx, centerX, 0, centerX, canvas.height, '#555', 1);
+        drawLine(ctx, 40, centerY, canvas.width - 40, centerY, COLORS.text, 2);
+        drawLine(ctx, centerX, 60, centerX, canvas.height - 40, COLORS.text, 2);
 
-        // Matrix [[2, 0], [0, 1]] - scaling transformation
-        // Eigenvectors: [1, 0] with eigenvalue 2, [0, 1] with eigenvalue 1
+        // Draw vectors
+        vectors.forEach((v, idx) => {
+            let displayV = transformed ? applyMatrix(v) : v;
 
-        const e1Scale = transformed ? 2 : 1;
-        const e2Scale = 1;
+            const endX = centerX + displayV.x * scale;
+            const endY = centerY - displayV.y * scale;
 
-        // Draw regular vectors (affected)
-        const regularVecs = [[2, 2], [1, 2], [-2, 1]];
-        regularVecs.forEach(([x, y]) => {
-            const endX = transformed ? centerX + 2 * x * scale : centerX + x * scale;
-            const endY = centerY - y * scale;
-            drawLine(ctx, centerX, centerY, endX, endY, '#666', 2);
+            // Draw vector arrow
+            ctx.beginPath();
+            ctx.strokeStyle = v.color;
+            ctx.lineWidth = 3;
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+
+            // Arrow head
+            const angle = Math.atan2(centerY - endY, endX - centerX);
+            ctx.beginPath();
+            ctx.fillStyle = v.color;
+            ctx.moveTo(endX, endY);
+            ctx.lineTo(endX - 15 * Math.cos(angle - 0.3), endY + 15 * Math.sin(angle - 0.3));
+            ctx.lineTo(endX - 15 * Math.cos(angle + 0.3), endY + 15 * Math.sin(angle + 0.3));
+            ctx.closePath();
+            ctx.fill();
+
+            // Label
+            const labelX = endX + 20;
+            const labelY = endY - 10;
+            drawText(ctx, `[${displayV.x.toFixed(1)}, ${displayV.y.toFixed(1)}]`, labelX, labelY, 11, v.color, 'left');
         });
 
-        // Draw eigenvectors (special - stay on their line)
-        drawLine(ctx, centerX, centerY, centerX + e1Scale * 2 * scale, centerY, COLORS.cyan, 4);
-        drawLine(ctx, centerX, centerY, centerX, centerY - 2 * scale, COLORS.orange, 4);
-
-        drawText(ctx, 'Eigenvector 1 (λ=2)', centerX + e1Scale * 2 * scale + 10, centerY - 10, 12, COLORS.cyan, 'left');
-        drawText(ctx, 'Eigenvector 2 (λ=1)', centerX + 10, centerY - 2 * scale - 10, 12, COLORS.orange, 'left');
+        // Legend
+        const legendY = canvas.height - 25;
+        vectors.forEach((v, idx) => {
+            const x = 80 + idx * 220;
+            drawCircle(ctx, x, legendY, 6, v.color);
+            drawText(ctx, v.label, x + 15, legendY + 4, 10, COLORS.text, 'left');
+        });
     }
 
     const transformBtn = document.getElementById('btn54transform');
@@ -2432,3 +2495,946 @@ function navigateTopics(direction) {
 console.log('%c📊 Ultimate Learning Platform Loaded', 'color: #64ffda; font-size: 16px; font-weight: bold;');
 console.log('%cReady to explore 125+ comprehensive topics across 5 subjects!', 'color: #4a90e2; font-size: 14px;');
 console.log('%c✓ Statistics (41) ✓ Linear Algebra (16) ✓ Calculus (12) ✓ Data Science (16) ✓ Machine Learning (40+)', 'color: #51cf66; font-size: 12px;');
+
+// ===== TOGGLE ANSWER FUNCTION =====
+/**
+ * toggleAnswer - Robust Show/Hide Answer Function for practice problems
+ * @param {string} answerId - The ID of the answer element to toggle
+ */
+function toggleAnswer(answerId) {
+    const answerElement = document.getElementById(answerId);
+
+    if (!answerElement) {
+        console.warn(`Element with ID "${answerId}" not found.`);
+        return;
+    }
+
+    // Find the button that triggered this
+    const allButtons = document.querySelectorAll('.show-answer-btn');
+    let triggerButton = null;
+
+    allButtons.forEach(btn => {
+        const onclickAttr = btn.getAttribute('onclick');
+        if (onclickAttr && onclickAttr.includes(answerId)) {
+            triggerButton = btn;
+        }
+    });
+
+    // Toggle display
+    const isHidden = answerElement.style.display === 'none' ||
+        getComputedStyle(answerElement).display === 'none' ||
+        answerElement.style.display === '';
+
+    if (isHidden) {
+        answerElement.style.display = 'block';
+        if (triggerButton) {
+            triggerButton.textContent = 'Hide Answers';
+            triggerButton.classList.add('active');
+        }
+    } else {
+        answerElement.style.display = 'none';
+        if (triggerButton) {
+            triggerButton.textContent = 'Show Answers';
+            triggerButton.classList.remove('active');
+        }
+    }
+}
+
+// ===== FIX ALL SHOW ANSWER BUTTONS (EVENT DELEGATION) =====
+document.addEventListener('DOMContentLoaded', function () {
+    // Use event delegation to handle all show answer buttons
+    document.addEventListener('click', function (e) {
+        // Check if clicked element is a show-answers button
+        if (e.target.classList.contains('show-answers-btn') ||
+            e.target.classList.contains('show-answer-btn')) {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const btn = e.target;
+            const answerDiv = btn.nextElementSibling;
+
+            if (answerDiv && (answerDiv.classList.contains('practice-answers') ||
+                answerDiv.classList.contains('answer-content') ||
+                answerDiv.id && answerDiv.id.includes('answer'))) {
+
+                // Toggle display
+                if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
+                    answerDiv.style.display = 'block';
+                    btn.textContent = 'Hide Answers';
+                    btn.classList.add('active');
+                } else {
+                    answerDiv.style.display = 'none';
+                    btn.textContent = 'Show Answers';
+                    btn.classList.remove('active');
+                }
+            }
+        }
+    });
+
+    // Ensure all answer divs start hidden
+    document.querySelectorAll('.practice-answers, .answer-content').forEach(el => {
+        el.style.display = 'none';
+    });
+
+    // Fix button text (remove line breaks)
+    document.querySelectorAll('.show-answers-btn, .show-answer-btn').forEach(btn => {
+        const text = btn.textContent.trim();
+        if (text.includes('Show') && text.includes('Answers')) {
+            btn.textContent = 'Show Answers';
+        }
+    });
+
+    console.log('%c✓ Show Answer Buttons Fixed', 'color: #51cf66;');
+});
+
+// ===== TOPIC 10: SKEWNESS VISUALIZATION =====
+function initSkewnessVisualization() {
+    const canvas = document.getElementById('skewnessCanvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let animating = false;
+
+    function normalPDF(x, mean, std) {
+        return Math.exp(-0.5 * Math.pow((x - mean) / std, 2)) / (std * Math.sqrt(2 * Math.PI));
+    }
+
+    function betaPDF(x, alpha, beta) {
+        if (x <= 0 || x >= 1) return 0;
+        const B = (Math.pow(x, alpha - 1) * Math.pow(1 - x, beta - 1));
+        return B * 3; // Scale for visibility
+    }
+
+    function draw() {
+        clearCanvas(ctx, canvas);
+
+        const padding = 50;
+        const chartWidth = (canvas.width - padding * 4) / 3;
+        const chartHeight = canvas.height - padding * 3;
+
+        // Title
+        drawText(ctx, 'Types of Skewness: Where Mean, Median, and Mode Fall', canvas.width / 2, 25, 16, COLORS.cyan);
+
+        const charts = [
+            { title: 'NEGATIVE (Left) Skew', color: '#64ffda', type: 'left', meanPos: 0.35, medianPos: 0.5, modePos: 0.65 },
+            { title: 'SYMMETRIC (No Skew)', color: '#4a90e2', type: 'symmetric', meanPos: 0.5, medianPos: 0.5, modePos: 0.5 },
+            { title: 'POSITIVE (Right) Skew', color: '#ff6b6b', type: 'right', meanPos: 0.65, medianPos: 0.5, modePos: 0.35 }
+        ];
+
+        charts.forEach((chart, i) => {
+            const startX = padding + i * (chartWidth + padding);
+            const startY = padding + 30;
+
+            // Draw axes
+            drawLine(ctx, startX, startY + chartHeight, startX + chartWidth, startY + chartHeight, COLORS.text, 2);
+
+            // Draw distribution curve
+            ctx.beginPath();
+            ctx.strokeStyle = chart.color;
+            ctx.lineWidth = 3;
+
+            for (let px = 0; px <= chartWidth; px++) {
+                const x = px / chartWidth;
+                let y;
+
+                if (chart.type === 'left') {
+                    y = betaPDF(x, 5, 2);
+                } else if (chart.type === 'right') {
+                    y = betaPDF(x, 2, 5);
+                } else {
+                    y = normalPDF(x, 0.5, 0.15) * 0.15;
+                }
+
+                const plotX = startX + px;
+                const plotY = startY + chartHeight - y * chartHeight * 0.8;
+
+                if (px === 0) ctx.moveTo(plotX, plotY);
+                else ctx.lineTo(plotX, plotY);
+            }
+            ctx.stroke();
+
+            // Fill under curve
+            ctx.globalAlpha = 0.2;
+            ctx.fillStyle = chart.color;
+            ctx.lineTo(startX + chartWidth, startY + chartHeight);
+            ctx.lineTo(startX, startY + chartHeight);
+            ctx.closePath();
+            ctx.fill();
+            ctx.globalAlpha = 1;
+
+            // Draw Mean, Median, Mode lines
+            const measures = [
+                { pos: chart.modePos, label: 'Mode', color: '#ff6b6b', dash: [5, 5] },
+                { pos: chart.medianPos, label: 'Median', color: '#ffd93d', dash: [10, 5] },
+                { pos: chart.meanPos, label: 'Mean', color: '#51cf66', dash: [2, 2] }
+            ];
+
+            measures.forEach((m, idx) => {
+                const lineX = startX + m.pos * chartWidth;
+                ctx.setLineDash(m.dash);
+                drawLine(ctx, lineX, startY + 20, lineX, startY + chartHeight, m.color, 2);
+                ctx.setLineDash([]);
+                drawText(ctx, m.label, lineX, startY + 10 + idx * 12, 10, m.color);
+            });
+
+            // Title
+            drawText(ctx, chart.title, startX + chartWidth / 2, startY + chartHeight + 25, 12, chart.color);
+
+            // Relationship text
+            let relText = '';
+            if (chart.type === 'left') relText = 'Mean < Median < Mode';
+            else if (chart.type === 'right') relText = 'Mode < Median < Mean';
+            else relText = 'Mean = Median = Mode';
+            drawText(ctx, relText, startX + chartWidth / 2, startY + chartHeight + 45, 10, COLORS.text);
+        });
+    }
+
+    const animateBtn = document.getElementById('skewnessAnimateBtn');
+    const resetBtn = document.getElementById('skewnessResetBtn');
+
+    if (animateBtn) animateBtn.addEventListener('click', draw);
+    if (resetBtn) resetBtn.addEventListener('click', draw);
+
+    draw();
+}
+
+// ===== TOPIC 20: PDF vs CDF VISUALIZATION =====
+function initPDFCDFVisualization() {
+    const canvas = document.getElementById('pdfCdfCanvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let rangeStart = 3, rangeEnd = 7;
+
+    function draw() {
+        clearCanvas(ctx, canvas);
+
+        const padding = 60;
+        const chartWidth = (canvas.width - padding * 3) / 2;
+        const chartHeight = canvas.height - padding * 2.5;
+
+        // Title
+        drawText(ctx, 'PDF vs CDF: Uniform Distribution [0, 10]', canvas.width / 2, 25, 16, COLORS.cyan);
+
+        // PDF (Left side)
+        const pdfStartX = padding;
+        const pdfStartY = padding + 20;
+
+        drawText(ctx, 'PDF: Probability Density Function', pdfStartX + chartWidth / 2, pdfStartY - 5, 14, '#64ffda');
+
+        // Axes
+        drawLine(ctx, pdfStartX, pdfStartY + chartHeight, pdfStartX + chartWidth, pdfStartY + chartHeight, COLORS.text, 2);
+        drawLine(ctx, pdfStartX, pdfStartY, pdfStartX, pdfStartY + chartHeight, COLORS.text, 2);
+
+        // X-axis labels
+        for (let i = 0; i <= 10; i += 2) {
+            const x = pdfStartX + (i / 10) * chartWidth;
+            drawText(ctx, i.toString(), x, pdfStartY + chartHeight + 15, 10, COLORS.textSecondary);
+        }
+
+        // PDF rectangle (height = 0.1 for uniform [0,10])
+        const pdfHeight = chartHeight * 0.4;
+        ctx.fillStyle = 'rgba(100, 255, 218, 0.2)';
+        ctx.fillRect(pdfStartX, pdfStartY + chartHeight - pdfHeight, chartWidth, pdfHeight);
+        ctx.strokeStyle = '#64ffda';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(pdfStartX, pdfStartY + chartHeight - pdfHeight, chartWidth, pdfHeight);
+
+        // Shade the selected range
+        const rangeX1 = pdfStartX + (rangeStart / 10) * chartWidth;
+        const rangeX2 = pdfStartX + (rangeEnd / 10) * chartWidth;
+        ctx.fillStyle = 'rgba(255, 107, 107, 0.5)';
+        ctx.fillRect(rangeX1, pdfStartY + chartHeight - pdfHeight, rangeX2 - rangeX1, pdfHeight);
+
+        // Labels
+        drawText(ctx, 'Height = 0.1', pdfStartX + chartWidth + 10, pdfStartY + chartHeight - pdfHeight / 2, 10, COLORS.cyan, 'left');
+        const prob = ((rangeEnd - rangeStart) / 10).toFixed(2);
+        drawText(ctx, `P(${rangeStart} ≤ X ≤ ${rangeEnd}) = ${prob}`, pdfStartX + chartWidth / 2, pdfStartY + chartHeight - pdfHeight - 15, 12, '#ff6b6b');
+        drawText(ctx, `Area = (${rangeEnd}-${rangeStart}) × 0.1 = ${prob}`, pdfStartX + chartWidth / 2, pdfStartY + chartHeight - pdfHeight / 2, 11, '#ff6b6b');
+
+        // CDF (Right side)
+        const cdfStartX = padding * 2 + chartWidth;
+        const cdfStartY = pdfStartY;
+
+        drawText(ctx, 'CDF: Cumulative Distribution Function', cdfStartX + chartWidth / 2, cdfStartY - 5, 14, '#ff6b6b');
+
+        // Axes
+        drawLine(ctx, cdfStartX, cdfStartY + chartHeight, cdfStartX + chartWidth, cdfStartY + chartHeight, COLORS.text, 2);
+        drawLine(ctx, cdfStartX, cdfStartY, cdfStartX, cdfStartY + chartHeight, COLORS.text, 2);
+
+        // X-axis labels
+        for (let i = 0; i <= 10; i += 2) {
+            const x = cdfStartX + (i / 10) * chartWidth;
+            drawText(ctx, i.toString(), x, cdfStartY + chartHeight + 15, 10, COLORS.textSecondary);
+        }
+
+        // Y-axis labels
+        for (let i = 0; i <= 1; i += 0.2) {
+            const y = cdfStartY + chartHeight - i * chartHeight;
+            drawText(ctx, i.toFixed(1), cdfStartX - 20, y + 4, 10, COLORS.textSecondary);
+        }
+
+        // CDF ramp line
+        ctx.beginPath();
+        ctx.strokeStyle = '#ff6b6b';
+        ctx.lineWidth = 3;
+        ctx.moveTo(cdfStartX, cdfStartY + chartHeight);
+        ctx.lineTo(cdfStartX + chartWidth, cdfStartY);
+        ctx.stroke();
+
+        // Mark points for selected range
+        const cdfY1 = cdfStartY + chartHeight - (rangeStart / 10) * chartHeight;
+        const cdfY2 = cdfStartY + chartHeight - (rangeEnd / 10) * chartHeight;
+        const cdfX1 = cdfStartX + (rangeStart / 10) * chartWidth;
+        const cdfX2 = cdfStartX + (rangeEnd / 10) * chartWidth;
+
+        drawCircle(ctx, cdfX1, cdfY1, 6, '#ffd93d');
+        drawCircle(ctx, cdfX2, cdfY2, 6, '#ffd93d');
+
+        // Dashed lines to points
+        ctx.setLineDash([5, 5]);
+        drawLine(ctx, cdfX1, cdfY1, cdfX1, cdfStartY + chartHeight, '#ffd93d', 1);
+        drawLine(ctx, cdfX2, cdfY2, cdfX2, cdfStartY + chartHeight, '#ffd93d', 1);
+        drawLine(ctx, cdfStartX, cdfY1, cdfX1, cdfY1, '#ffd93d', 1);
+        drawLine(ctx, cdfStartX, cdfY2, cdfX2, cdfY2, '#ffd93d', 1);
+        ctx.setLineDash([]);
+
+        drawText(ctx, `F(${rangeStart}) = ${(rangeStart / 10).toFixed(1)}`, cdfX1 + 10, cdfY1 - 10, 10, '#ffd93d', 'left');
+        drawText(ctx, `F(${rangeEnd}) = ${(rangeEnd / 10).toFixed(1)}`, cdfX2 + 10, cdfY2 - 10, 10, '#ffd93d', 'left');
+
+        // Relationship
+        drawText(ctx, `P(${rangeStart}≤X≤${rangeEnd}) = F(${rangeEnd}) - F(${rangeStart}) = ${prob}`,
+            cdfStartX + chartWidth / 2, cdfStartY + chartHeight / 2, 11, '#64ffda');
+
+        // Key insight
+        drawText(ctx, '💡 Area under PDF = Height on CDF', canvas.width / 2, canvas.height - 20, 14, COLORS.cyan);
+    }
+
+    const slider1 = document.getElementById('pdfRangeSlider');
+    const slider2 = document.getElementById('pdfRangeSlider2');
+    const label = document.getElementById('pdfRangeLabel');
+    const animateBtn = document.getElementById('pdfCdfAnimateBtn');
+
+    function updateSliders() {
+        rangeStart = parseFloat(slider1.value);
+        rangeEnd = parseFloat(slider2.value);
+        if (rangeEnd < rangeStart) {
+            const temp = rangeStart;
+            rangeStart = rangeEnd;
+            rangeEnd = temp;
+        }
+        if (label) label.textContent = `[${rangeStart}, ${rangeEnd}]`;
+        draw();
+    }
+
+    if (slider1) slider1.addEventListener('input', updateSliders);
+    if (slider2) slider2.addEventListener('input', updateSliders);
+    if (animateBtn) animateBtn.addEventListener('click', draw);
+
+    draw();
+}
+
+// ===== TOPIC 24: NORMAL DISTRIBUTION 68-95-99.7 RULE =====
+function initNormalRuleVisualization() {
+    const canvas = document.getElementById('normalRuleCanvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let showLevel = 'all'; // '1', '2', '3', or 'all'
+
+    function normalPDF(x) {
+        return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
+    }
+
+    function draw() {
+        clearCanvas(ctx, canvas);
+
+        const padding = 60;
+        const width = canvas.width - padding * 2;
+        const height = canvas.height - padding * 2;
+        const centerX = canvas.width / 2;
+        const centerY = padding + height * 0.85;
+        const scale = width / 8; // -4 to +4 std devs
+
+        // Title
+        drawText(ctx, 'The 68-95-99.7 Rule (Empirical Rule)', canvas.width / 2, 25, 18, COLORS.cyan);
+
+        // Draw axes
+        drawLine(ctx, padding, centerY, canvas.width - padding, centerY, COLORS.text, 2);
+
+        // Draw standard deviation markers
+        for (let i = -3; i <= 3; i++) {
+            const x = centerX + i * scale;
+            const label = i === 0 ? 'μ' : (i > 0 ? `+${i}σ` : `${i}σ`);
+            drawLine(ctx, x, centerY, x, centerY + 10, COLORS.text, 1);
+            drawText(ctx, label, x, centerY + 25, 12, i === 0 ? '#ffd93d' : COLORS.textSecondary);
+        }
+
+        // Fill regions based on showLevel
+        const regions = [
+            { sigma: 3, color: 'rgba(153, 102, 255, 0.3)', percent: '99.7%', show: showLevel === '3' || showLevel === 'all' },
+            { sigma: 2, color: 'rgba(255, 107, 107, 0.4)', percent: '95%', show: showLevel === '2' || showLevel === 'all' },
+            { sigma: 1, color: 'rgba(100, 255, 218, 0.5)', percent: '68%', show: showLevel === '1' || showLevel === 'all' }
+        ];
+
+        regions.forEach(region => {
+            if (!region.show) return;
+
+            ctx.beginPath();
+            ctx.fillStyle = region.color;
+
+            for (let px = -region.sigma * scale; px <= region.sigma * scale; px++) {
+                const x = px / scale;
+                const y = normalPDF(x);
+                const plotX = centerX + px;
+                const plotY = centerY - y * height * 2;
+
+                if (px === -region.sigma * scale) {
+                    ctx.moveTo(plotX, centerY);
+                    ctx.lineTo(plotX, plotY);
+                } else {
+                    ctx.lineTo(plotX, plotY);
+                }
+            }
+            ctx.lineTo(centerX + region.sigma * scale, centerY);
+            ctx.closePath();
+            ctx.fill();
+        });
+
+        // Draw the curve
+        ctx.beginPath();
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 3;
+
+        for (let px = -4 * scale; px <= 4 * scale; px++) {
+            const x = px / scale;
+            const y = normalPDF(x);
+            const plotX = centerX + px;
+            const plotY = centerY - y * height * 2;
+
+            if (px === -4 * scale) ctx.moveTo(plotX, plotY);
+            else ctx.lineTo(plotX, plotY);
+        }
+        ctx.stroke();
+
+        // Draw percentage labels
+        const labelY = centerY - height * 0.4;
+        if (showLevel === '1' || showLevel === 'all') {
+            drawText(ctx, '68%', centerX, labelY + 60, 24, '#64ffda');
+        }
+        if (showLevel === '2' || showLevel === 'all') {
+            drawText(ctx, '95%', centerX, labelY + 30, 18, '#ff6b6b');
+        }
+        if (showLevel === '3' || showLevel === 'all') {
+            drawText(ctx, '99.7%', centerX, labelY, 14, '#9966ff');
+        }
+
+        // Legend
+        const legendY = canvas.height - 40;
+        drawRect(ctx, padding, legendY, 15, 15, 'rgba(100, 255, 218, 0.5)');
+        drawText(ctx, '±1σ = 68%', padding + 25, legendY + 12, 11, COLORS.text, 'left');
+
+        drawRect(ctx, padding + 120, legendY, 15, 15, 'rgba(255, 107, 107, 0.4)');
+        drawText(ctx, '±2σ = 95%', padding + 145, legendY + 12, 11, COLORS.text, 'left');
+
+        drawRect(ctx, padding + 240, legendY, 15, 15, 'rgba(153, 102, 255, 0.3)');
+        drawText(ctx, '±3σ = 99.7%', padding + 265, legendY + 12, 11, COLORS.text, 'left');
+
+        // Example
+        drawText(ctx, 'Example: IQ (μ=100, σ=15) → 68% between 85-115', canvas.width - padding - 150, legendY + 12, 11, '#ffd93d');
+    }
+
+    const show68Btn = document.getElementById('normalShow68Btn');
+    const show95Btn = document.getElementById('normalShow95Btn');
+    const show997Btn = document.getElementById('normalShow997Btn');
+    const showAllBtn = document.getElementById('normalShowAllBtn');
+
+    if (show68Btn) show68Btn.addEventListener('click', () => { showLevel = '1'; draw(); });
+    if (show95Btn) show95Btn.addEventListener('click', () => { showLevel = '2'; draw(); });
+    if (show997Btn) show997Btn.addEventListener('click', () => { showLevel = '3'; draw(); });
+    if (showAllBtn) showAllBtn.addEventListener('click', () => { showLevel = 'all'; draw(); });
+
+    draw();
+}
+
+// ===== ML-10: DECISION TREE VISUALIZATION =====
+function initDecisionTreeVisualization() {
+    const canvas = document.getElementById('decisionTreeCanvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let testHeight = 175;
+    let classifying = false;
+    let classificationPath = null;
+
+    function draw() {
+        clearCanvas(ctx, canvas);
+
+        const centerX = canvas.width / 2;
+
+        // Title
+        drawText(ctx, 'Decision Tree: Is a Person Tall? (Height > 170 cm)', centerX, 30, 18, COLORS.cyan);
+
+        // Root node (decision node)
+        const rootX = centerX, rootY = 100;
+        const nodeWidth = 180, nodeHeight = 60;
+
+        // Draw root node
+        ctx.fillStyle = classifying ? '#21262d' : '#1a365d';
+        ctx.strokeStyle = COLORS.cyan;
+        ctx.lineWidth = 3;
+        roundRect(ctx, rootX - nodeWidth / 2, rootY - nodeHeight / 2, nodeWidth, nodeHeight, 10, true, true);
+
+        drawText(ctx, 'Height > 170?', rootX, rootY - 5, 16, COLORS.cyan);
+        drawText(ctx, '(Root Node)', rootX, rootY + 15, 11, COLORS.textSecondary);
+
+        // Branches
+        const leafY = 280;
+        const leftX = centerX - 180;
+        const rightX = centerX + 180;
+
+        // Left branch (NO)
+        ctx.strokeStyle = classificationPath === 'left' ? '#ff6b6b' : COLORS.text;
+        ctx.lineWidth = classificationPath === 'left' ? 4 : 2;
+        ctx.beginPath();
+        ctx.moveTo(rootX - nodeWidth / 4, rootY + nodeHeight / 2);
+        ctx.lineTo(leftX, leafY - nodeHeight / 2);
+        ctx.stroke();
+
+        drawText(ctx, 'NO (≤ 170)', leftX + 40, rootY + 80, 14, '#ff6b6b');
+
+        // Right branch (YES)
+        ctx.strokeStyle = classificationPath === 'right' ? '#51cf66' : COLORS.text;
+        ctx.lineWidth = classificationPath === 'right' ? 4 : 2;
+        ctx.beginPath();
+        ctx.moveTo(rootX + nodeWidth / 4, rootY + nodeHeight / 2);
+        ctx.lineTo(rightX, leafY - nodeHeight / 2);
+        ctx.stroke();
+
+        drawText(ctx, 'YES (> 170)', rightX - 40, rootY + 80, 14, '#51cf66');
+
+        // Left leaf node (NOT TALL)
+        const leafActive = classificationPath === 'left';
+        ctx.fillStyle = leafActive ? '#4a1c1c' : '#21262d';
+        ctx.strokeStyle = '#ff6b6b';
+        ctx.lineWidth = leafActive ? 4 : 2;
+        roundRect(ctx, leftX - nodeWidth / 2, leafY - nodeHeight / 2, nodeWidth, nodeHeight, 10, true, true);
+
+        drawText(ctx, '🔴 Class: 0', leftX, leafY - 8, 16, '#ff6b6b');
+        drawText(ctx, 'NOT TALL', leftX, leafY + 12, 12, '#ff6b6b');
+
+        // Right leaf node (TALL)
+        const rightActive = classificationPath === 'right';
+        ctx.fillStyle = rightActive ? '#1c4a1c' : '#21262d';
+        ctx.strokeStyle = '#51cf66';
+        ctx.lineWidth = rightActive ? 4 : 2;
+        roundRect(ctx, rightX - nodeWidth / 2, leafY - nodeHeight / 2, nodeWidth, nodeHeight, 10, true, true);
+
+        drawText(ctx, '🟢 Class: 1', rightX, leafY - 8, 16, '#51cf66');
+        drawText(ctx, 'TALL', rightX, leafY + 12, 12, '#51cf66');
+
+        // Show test input
+        if (classifying) {
+            const resultText = testHeight > 170 ? `${testHeight} cm → TALL (Class 1)` : `${testHeight} cm → NOT TALL (Class 0)`;
+            const resultColor = testHeight > 170 ? '#51cf66' : '#ff6b6b';
+            drawText(ctx, `Test Input: ${testHeight} cm`, centerX, 380, 16, COLORS.text);
+            drawText(ctx, `Result: ${resultText}`, centerX, 410, 18, resultColor);
+        }
+
+        // Legend
+        drawText(ctx, '📋 Components: Root Node (Question) → Branches (Yes/No) → Leaf Nodes (Predictions)', centerX, canvas.height - 20, 12, COLORS.textSecondary);
+    }
+
+    function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+        if (fill) ctx.fill();
+        if (stroke) ctx.stroke();
+    }
+
+    const slider = document.getElementById('heightTestSlider');
+    const label = document.getElementById('heightTestLabel');
+    const classifyBtn = document.getElementById('treeClassifyBtn');
+    const resetBtn = document.getElementById('treeResetBtn');
+
+    if (slider) {
+        slider.addEventListener('input', (e) => {
+            testHeight = parseInt(e.target.value);
+            if (label) label.textContent = testHeight;
+        });
+    }
+
+    if (classifyBtn) {
+        classifyBtn.addEventListener('click', () => {
+            classifying = true;
+            classificationPath = testHeight > 170 ? 'right' : 'left';
+            draw();
+        });
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            classifying = false;
+            classificationPath = null;
+            draw();
+        });
+    }
+
+    draw();
+}
+
+
+
+// ===== TOPIC 12: CORRELATION VISUALIZATION =====
+function initCorrelationVisualization() {
+    const canvas = document.getElementById('correlationCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let r = 0.7;
+
+    function generateCorrelatedData(rho) {
+        const data = [];
+        const n = 50;
+        for (let i = 0; i < n; i++) {
+            const x = (Math.random() - 0.5) * 2;
+            const noise = (Math.random() - 0.5) * 2;
+            const y = rho * x + Math.sqrt(1 - rho * rho) * noise;
+            data.push({ x: x * 40 + 50, y: y * 40 + 50 });
+        }
+        return data;
+    }
+
+    function draw() {
+        clearCanvas(ctx, canvas);
+        const padding = 60, width = canvas.width - padding * 2, height = canvas.height - padding * 2;
+        const data = generateCorrelatedData(r);
+
+        let statusText = '';
+        let color = '#fff';
+        if (r > 0.7) { statusText = 'Strong Positive'; color = '#51cf66'; }
+        else if (r > 0.3) { statusText = 'Moderate Positive'; color = '#64ffda'; }
+        else if (r > -0.3) { statusText = 'Weak / No Correlation'; color = '#ffd93d'; }
+        else if (r > -0.7) { statusText = 'Moderate Negative'; color = '#ffa94d'; }
+        else { statusText = 'Strong Negative'; color = '#ff6b6b'; }
+
+        drawText(ctx, `r = ${r.toFixed(2)} (${statusText})`, canvas.width / 2, 30, 20, color);
+
+        // Axes
+        drawLine(ctx, padding, height + padding, width + padding, height + padding, COLORS.text, 2);
+        drawLine(ctx, padding, padding, padding, height + padding, COLORS.text, 2);
+
+        data.forEach(p => {
+            const px = padding + (p.x / 100) * width;
+            const py = padding + height - (p.y / 100) * height;
+            drawCircle(ctx, px, py, 5, color);
+        });
+
+        drawText(ctx, 'Standardized X', canvas.width / 2, canvas.height - 15, 12, COLORS.textSecondary);
+    }
+    const s = document.getElementById('corrSlider'), l = document.getElementById('corrLabel');
+    if (s) s.addEventListener('input', (e) => {
+        r = e.target.value / 100;
+        if (l) l.textContent = r.toFixed(2);
+        draw();
+    });
+    draw();
+}
+
+console.log('%c\u2713 Ultimate Learning Platform Fully Initialized', 'color: #51cf66; font-size: 14px; font-weight: bold;');
+
+
+// ===== TOPIC 10: SKEWNESS VISUALIZATION =====
+function initSkewnessVisualization() {
+    const canvas = document.getElementById('skewnessCanvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+
+    function normalPDF(x, mean, std) {
+        return Math.exp(-0.5 * Math.pow((x - mean) / std, 2)) / (std * Math.sqrt(2 * Math.PI));
+    }
+
+    function betaPDF(x, alpha, beta) {
+        if (x <= 0 || x >= 1) return 0;
+        const B = (Math.pow(x, alpha - 1) * Math.pow(1 - x, beta - 1));
+        return B * 3; // Scale for visibility
+    }
+
+    function draw() {
+        clearCanvas(ctx, canvas);
+
+        const padding = 50;
+        const chartWidth = (canvas.width - padding * 4) / 3;
+        const chartHeight = canvas.height - 120;
+
+        const charts = [
+            { type: 'negative', title: 'Negative Skew (Left Skewed)', color: '#ff6b6b', alpha: 5, beta: 2 },
+            { type: 'symmetric', title: 'Symmetric (Normal)', color: '#64ffda', mean: 0.5, std: 0.15 },
+            { type: 'positive', title: 'Positive Skew (Right Skewed)', color: '#51cf66', alpha: 2, beta: 5 }
+        ];
+
+        charts.forEach((chart, idx) => {
+            const startX = padding + idx * (chartWidth + padding);
+            const centerY = canvas.height - 40;
+
+            drawText(ctx, chart.title, startX + chartWidth / 2, 40, 14, chart.color);
+            drawLine(ctx, startX, centerY, startX + chartWidth, centerY, COLORS.text, 2);
+            drawLine(ctx, startX, centerY - chartHeight, startX, centerY, COLORS.text, 2);
+
+            ctx.beginPath();
+            ctx.strokeStyle = chart.color;
+            ctx.lineWidth = 3;
+
+            for (let i = 0; i <= 100; i++) {
+                const x = i / 100;
+                let y = chart.type === 'symmetric' ? normalPDF(x, chart.mean, chart.std) : betaPDF(x, chart.alpha, chart.beta);
+                const px = startX + x * chartWidth;
+                const py = centerY - y * chartHeight / 3;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            let modePos, medianPos, meanPos;
+            if (chart.type === 'negative') { modePos = 0.75; medianPos = 0.65; meanPos = 0.55; }
+            else if (chart.type === 'positive') { modePos = 0.25; medianPos = 0.35; meanPos = 0.45; }
+            else { modePos = medianPos = meanPos = 0.5; }
+
+            if (chart.type === 'symmetric') {
+                const x = startX + 0.5 * chartWidth;
+                drawLine(ctx, x, centerY, x, centerY - chartHeight * 0.8, '#fff', 1);
+                drawText(ctx, 'Mean=Median=Mode', x, centerY + 20, 10, '#fff');
+            } else {
+                const ann = [
+                    { pos: modePos, label: 'Mode', color: '#ff6b6b' },
+                    { pos: medianPos, label: 'Median', color: '#ffd93d' },
+                    { pos: meanPos, label: 'Mean', color: '#4a90e2' }
+                ];
+                ann.forEach((a, i) => {
+                    const x = startX + a.pos * chartWidth;
+                    const h = centerY - (chart.type === 'negative' ? betaPDF(a.pos, 5, 2) : betaPDF(a.pos, 2, 5)) * chartHeight / 3;
+                    drawLine(ctx, x, centerY, x, h, a.color, 1);
+                    drawText(ctx, a.label, x, centerY + 15 + (i * 12), 10, a.color);
+                });
+            }
+        });
+        drawText(ctx, 'Rule: Skew pulls Mean towards the tail!', canvas.width / 2, canvas.height - 10, 12, COLORS.textSecondary);
+    }
+    const btn = document.getElementById('skewnessAnimateBtn');
+    if (btn) btn.addEventListener('click', draw);
+    draw();
+}
+
+// ===== TOPIC 20: PDF VS CDF VISUALIZATION =====
+function initPDFCDFVisualization() {
+    const canvas = document.getElementById('pdfCdfCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let rangeStart = 2, rangeEnd = 6;
+
+    function draw() {
+        clearCanvas(ctx, canvas);
+        const padding = 60;
+        const chartWidth = (canvas.width - padding * 3) / 2;
+        const chartHeight = canvas.height - 150;
+        const pdfStartX = padding, cdfStartX = padding * 2 + chartWidth, chartStartY = 100;
+
+        drawText(ctx, 'PDF: Relative Likelihood (height)', pdfStartX + chartWidth / 2, 50, 16, COLORS.cyan);
+        drawLine(ctx, pdfStartX, chartStartY + chartHeight, pdfStartX + chartWidth, chartStartY + chartHeight, COLORS.text, 2);
+        drawLine(ctx, pdfStartX, chartStartY, pdfStartX, chartStartY + chartHeight, COLORS.text, 2);
+        ctx.fillStyle = 'rgba(100, 255, 218, 0.2)';
+        ctx.fillRect(pdfStartX, chartStartY + chartHeight * 0.7, chartWidth, chartHeight * 0.3);
+        ctx.strokeStyle = COLORS.cyan;
+        ctx.strokeRect(pdfStartX, chartStartY + chartHeight * 0.7, chartWidth, chartHeight * 0.3);
+
+        const shadeX1 = pdfStartX + (rangeStart / 10) * chartWidth;
+        const shadeX2 = pdfStartX + (rangeEnd / 10) * chartWidth;
+        ctx.fillStyle = 'rgba(255, 107, 107, 0.5)';
+        ctx.fillRect(shadeX1, chartStartY + chartHeight * 0.7, shadeX2 - shadeX1, chartHeight * 0.3);
+        drawText(ctx, 'Area = Probability', (shadeX1 + shadeX2) / 2, chartStartY + chartHeight * 0.85, 12, '#ff6b6b');
+
+        drawText(ctx, 'CDF: Cumulative Probability (area)', cdfStartX + chartWidth / 2, 50, 16, COLORS.orange);
+        drawLine(ctx, cdfStartX, chartStartY + chartHeight, cdfStartX + chartWidth, chartStartY + chartHeight, COLORS.text, 2);
+        drawLine(ctx, cdfStartX, chartStartY, cdfStartX, chartStartY + chartHeight, COLORS.text, 2);
+        ctx.beginPath();
+        ctx.strokeStyle = COLORS.orange; ctx.lineWidth = 3;
+        ctx.moveTo(cdfStartX, chartStartY + chartHeight); ctx.lineTo(cdfStartX + chartWidth, chartStartY);
+        ctx.stroke();
+
+        const cdfX1 = cdfStartX + (rangeStart / 10) * chartWidth;
+        const cdfY1 = chartStartY + chartHeight - (rangeStart / 10) * chartHeight;
+        const cdfX2 = cdfStartX + (rangeEnd / 10) * chartWidth;
+        const cdfY2 = chartStartY + chartHeight - (rangeEnd / 10) * chartHeight;
+        drawCircle(ctx, cdfX1, cdfY1, 6, '#ffd93d');
+        drawCircle(ctx, cdfX2, cdfY2, 6, '#ffd93d');
+        ctx.setLineDash([5, 5]);
+        drawLine(ctx, cdfX1, cdfY1, cdfX1, chartStartY + chartHeight, '#ffd93d', 1);
+        drawLine(ctx, cdfX2, cdfY2, cdfX2, chartStartY + chartHeight, '#ffd93d', 1);
+        ctx.setLineDash([]);
+        drawText(ctx, `F(${rangeStart}) = ${(rangeStart / 10).toFixed(1)}`, cdfX1, cdfY1 - 10, 10, '#ffd93d');
+        drawText(ctx, `F(${rangeEnd}) = ${(rangeEnd / 10).toFixed(1)}`, cdfX2, cdfY2 - 10, 10, '#ffd93d');
+    }
+    const s1 = document.getElementById('pdfRangeSlider'), s2 = document.getElementById('pdfRangeSlider2'), l = document.getElementById('pdfRangeLabel');
+    const update = () => { rangeStart = Math.min(s1.value, s2.value); rangeEnd = Math.max(s1.value, s2.value); if (l) l.textContent = `Range: [${rangeStart}, ${rangeEnd}]`; draw(); };
+    if (s1) s1.addEventListener('input', update); if (s2) s2.addEventListener('input', update);
+    draw();
+}
+
+// ===== TOPIC 24: NORMAL DISTRIBUTION 68-95-99.7 RULE =====
+function initNormalRuleVisualization() {
+    const canvas = document.getElementById('normalRuleCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let showLevel = 'all';
+
+    function normalPDF(x) { return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI); }
+
+    function draw() {
+        clearCanvas(ctx, canvas);
+        const padding = 60, width = canvas.width - padding * 2, height = canvas.height - padding * 2;
+        const centerX = canvas.width / 2, centerY = padding + height * 0.85, scale = width / 8;
+
+        drawText(ctx, 'The 68-95-99.7 Rule (Empirical Rule)', centerX, 25, 18, COLORS.cyan);
+        drawLine(ctx, padding, centerY, canvas.width - padding, centerY, COLORS.text, 2);
+
+        for (let i = -3; i <= 3; i++) {
+            const x = centerX + i * scale;
+            const label = i === 0 ? '\u03bc' : (i > 0 ? `+${i}\u03c3` : `${i}\u03c3`);
+            drawLine(ctx, x, centerY, x, centerY + 10, COLORS.text, 1);
+            drawText(ctx, label, x, centerY + 25, 12, i === 0 ? '#ffd93d' : COLORS.textSecondary);
+        }
+
+        const regions = [
+            { sigma: 3, color: 'rgba(153, 102, 255, 0.3)', show: showLevel === '3' || showLevel === 'all' },
+            { sigma: 2, color: 'rgba(255, 107, 107, 0.4)', show: showLevel === '2' || showLevel === 'all' },
+            { sigma: 1, color: 'rgba(100, 255, 218, 0.5)', show: showLevel === '1' || showLevel === 'all' }
+        ];
+
+        regions.forEach(r => {
+            if (!r.show) return;
+            ctx.beginPath(); ctx.fillStyle = r.color;
+            for (let px = -r.sigma * scale; px <= r.sigma * scale; px++) {
+                const x = px / scale, y = normalPDF(x);
+                const plotX = centerX + px, plotY = centerY - y * height * 2;
+                if (px === -r.sigma * scale) ctx.moveTo(plotX, centerY);
+                ctx.lineTo(plotX, plotY);
+            }
+            ctx.lineTo(centerX + r.sigma * scale, centerY); ctx.closePath(); ctx.fill();
+        });
+
+        ctx.beginPath(); ctx.strokeStyle = 'white'; ctx.lineWidth = 3;
+        for (let px = -4 * scale; px <= 4 * scale; px++) {
+            const x = px / scale, y = normalPDF(x);
+            const plotX = centerX + px, plotY = centerY - y * height * 2;
+            if (px === -4 * scale) ctx.moveTo(plotX, plotY);
+            else ctx.lineTo(plotX, plotY);
+        }
+        ctx.stroke();
+    }
+    const b1 = document.getElementById('normalShow68Btn'), b2 = document.getElementById('normalShow95Btn'), b3 = document.getElementById('normalShow997Btn'), b4 = document.getElementById('normalShowAllBtn');
+    if (b1) b1.addEventListener('click', () => { showLevel = '1'; draw(); });
+    if (b2) b2.addEventListener('click', () => { showLevel = '2'; draw(); });
+    if (b3) b3.addEventListener('click', () => { showLevel = '3'; draw(); });
+    if (b4) b4.addEventListener('click', () => { showLevel = 'all'; draw(); });
+    draw();
+}
+
+// ===== ML-10: DECISION TREE VISUALIZATION =====
+function initDecisionTreeVisualization() {
+    const canvas = document.getElementById('decisionTreeCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let testHeight = 165, classifying = false, classificationPath = null;
+
+    function draw() {
+        clearCanvas(ctx, canvas);
+        const centerX = canvas.width / 2, rootY = 80, leafY = 280, leftX = centerX - 180, rightX = centerX + 180;
+        const nodeWidth = 140, nodeHeight = 60;
+
+        drawLine(ctx, centerX, rootY, leftX, leafY, COLORS.textSecondary, 2);
+        drawLine(ctx, centerX, rootY, rightX, leafY, COLORS.textSecondary, 2);
+
+        ctx.fillStyle = '#21262d'; ctx.strokeStyle = COLORS.cyan; ctx.lineWidth = 3;
+        roundRect(ctx, centerX - nodeWidth / 2, rootY - nodeHeight / 2, nodeWidth, nodeHeight, 10, true, true);
+        drawText(ctx, 'ROOT NODE: Height > 170?', centerX, rootY + 5, 14, '#fff');
+
+        const lActive = classificationPath === 'left', rActive = classificationPath === 'right';
+        ctx.fillStyle = lActive ? '#4a1c1c' : '#21262d'; ctx.strokeStyle = '#ff6b6b';
+        roundRect(ctx, leftX - nodeWidth / 2, leafY - nodeHeight / 2, nodeWidth, nodeHeight, 10, true, true);
+        drawText(ctx, 'Class 0: NOT TALL', leftX, leafY + 5, 14, '#ff6b6b');
+
+        ctx.fillStyle = rActive ? '#1c4a1c' : '#21262d'; ctx.strokeStyle = '#51cf66';
+        roundRect(ctx, rightX - nodeWidth / 2, leafY - nodeHeight / 2, nodeWidth, nodeHeight, 10, true, true);
+        drawText(ctx, 'Class 1: TALL', rightX, leafY + 5, 14, '#51cf66');
+
+        if (classifying) {
+            drawText(ctx, `Test: ${testHeight} cm \u2192 ${testHeight > 170 ? 'TALL' : 'NOT TALL'}`, centerX, 400, 18, COLORS.cyan);
+        }
+    }
+
+    function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+        ctx.beginPath(); ctx.moveTo(x + radius, y); ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius); ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height); ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius); ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y); ctx.closePath();
+        if (fill) ctx.fill(); if (stroke) ctx.stroke();
+    }
+
+    const s = document.getElementById('heightTestSlider'), b = document.getElementById('treeClassifyBtn');
+    if (s) s.addEventListener('input', (e) => { testHeight = e.target.value; draw(); });
+    if (b) b.addEventListener('click', () => { classifying = true; classificationPath = testHeight > 170 ? 'right' : 'left'; draw(); });
+    draw();
+}
+
+// ===== TOPIC 11: COVARIANCE VISUALIZATION =====
+function initCovarianceVisualization() {
+    const canvas = document.getElementById('covarianceCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let covType = 'positive';
+
+    function generateData(type) {
+        let data = [];
+        for (let i = 0; i < 30; i++) {
+            let x = Math.random() * 80 + 10, y;
+            if (type === 'positive') y = x + (Math.random() - 0.5) * 30;
+            else if (type === 'negative') y = 100 - x + (Math.random() - 0.5) * 30;
+            else y = Math.random() * 80 + 10;
+            data.push({ x, y });
+        }
+        return data;
+    }
+
+    function draw() {
+        clearCanvas(ctx, canvas);
+        const padding = 60, width = canvas.width - padding * 2, height = canvas.height - padding * 2;
+        const data = generateData(covType);
+        const meanX = data.reduce((s, p) => s + p.x, 0) / data.length;
+        const meanY = data.reduce((s, p) => s + p.y, 0) / data.length;
+        const cov = data.reduce((s, p) => s + (p.x - meanX) * (p.y - meanY), 0) / (data.length - 1);
+
+        drawText(ctx, `${covType.toUpperCase()} Covariance: ${cov.toFixed(2)}`, canvas.width / 2, 25, 18, COLORS.cyan);
+        drawLine(ctx, padding, height + padding, width + padding, height + padding, COLORS.text, 2);
+        drawLine(ctx, padding, padding, padding, height + padding, COLORS.text, 2);
+
+        data.forEach(p => {
+            drawCircle(ctx, padding + (p.x / 100) * width, padding + height - (p.y / 100) * height, 6, COLORS.cyan);
+        });
+    }
+    const b1 = document.getElementById('covPositiveBtn'), b2 = document.getElementById('covNegativeBtn'), b3 = document.getElementById('covZeroBtn');
+    if (b1) b1.addEventListener('click', () => { covType = 'positive'; draw(); });
+    if (b2) b2.addEventListener('click', () => { covType = 'negative'; draw(); });
+    if (b3) b3.addEventListener('click', () => { covType = 'zero'; draw(); });
+    draw();
+}

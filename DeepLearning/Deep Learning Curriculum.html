@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Deep Learning & Computer Vision Curriculum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0f1419;
+            --surface: #1a1f2e;
+            --text: #e4e6eb;
+            --text-dim: #b0b7c3;
+            --cyan: #00d4ff;
+            --orange: #ff6b35;
+            --green: #00ff88;
+            --yellow: #ffa500;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            border-bottom: 2px solid var(--cyan);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, var(--cyan), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1.1em;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 53, 0.1));
+            border: 2px solid var(--cyan);
+            border-radius: 12px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+            border-color: var(--orange);
+        }
+
+        .card-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            color: var(--cyan);
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: var(--text-dim);
+            font-size: 0.95em;
+        }
+
+        .category-label {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 12px;
+            background: rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.85em;
+            color: var(--green);
+        }
+
+        .module {
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .btn-back {
+            padding: 10px 20px;
+            background: var(--orange);
+            color: var(--bg);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--cyan);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            padding-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: var(--surface);
+            color: var(--text);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--cyan);
+        }
+
+        .tab-btn.active {
+            background: var(--cyan);
+            color: var(--bg);
+            border-color: var(--cyan);
+        }
+
+        .tab {
+            display: none;
+        }
+
+        .tab.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+        }
+
+        h2 {
+            color: var(--cyan);
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: var(--orange);
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        h4 {
+            color: var(--green);
+            font-size: 1.1em;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 53, 0.1));
+            border: 1px solid var(--cyan);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .box-title {
+            color: var(--orange);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .box-content {
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .formula {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--cyan);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            line-height: 1.8;
+            color: var(--cyan);
+        }
+
+        .callout {
+            border-left: 4px solid;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .callout.tip {
+            border-left-color: var(--green);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .callout.warning {
+            border-left-color: var(--yellow);
+            background: rgba(255, 165, 0, 0.05);
+        }
+
+        .callout.insight {
+            border-left-color: var(--cyan);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .callout-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .list-item {
+            display: flex;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 12px;
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid var(--cyan);
+            border-radius: 4px;
+        }
+
+        .list-num {
+            color: var(--orange);
+            font-weight: 700;
+            min-width: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        th {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--cyan);
+            font-weight: 700;
+        }
+
+        .viz-container {
+            background: rgba(0, 212, 255, 0.02);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .viz-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-viz {
+            padding: 10px 20px;
+            background: var(--cyan);
+            color: var(--bg);
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-viz:hover {
+            background: var(--orange);
+            transform: scale(1.05);
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                width: 100%;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            canvas {
+                width: 100% !important;
+                height: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- MAIN DASHBOARD -->
+        <div id="dashboard" class="dashboard active">
+            <header>
+                <h1>🧠 Complete Deep Learning & Computer Vision</h1>
+                <p class="subtitle">Comprehensive Curriculum | Foundations to Advanced Applications</p>
+            </header>
+
+            <div style="text-align: center; margin-bottom: 40px;">
+                <p style="color: var(--text-dim); font-size: 1.1em;">
+                    Master all aspects of deep learning and computer vision. 25+ modules covering neural networks, CNNs,
+                    object detection, GANs, and more.
+                </p>
+            </div>
+
+            <div class="grid" id="modulesGrid"></div>
+        </div>
+
+        <!-- MODULES CONTAINER -->
+        <div id="modulesContainer"></div>
+    </div>
+
+    <script>
+        const modules = [
+            // Module 1: Deep Learning Foundations
+            {
+                id: "nn-basics",
+                title: "Introduction to Neural Networks",
+                icon: "🧬",
+                category: "Foundations",
+                color: "#0088ff",
+                description: "Biological vs. Artificial neurons and network architecture"
+            },
+            {
+                id: "perceptron",
+                title: "The Perceptron",
+                icon: "⚙️",
+                category: "Foundations",
+                color: "#0088ff",
+                description: "Single layer networks and their limitations"
+            },
+            {
+                id: "mlp",
+                title: "Multi-Layer Perceptron (MLP)",
+                icon: "🏗️",
+                category: "Foundations",
+                color: "#0088ff",
+                description: "Hidden layers and deep architectures"
+            },
+            {
+                id: "activation",
+                title: "Activation Functions",
+                icon: "⚡",
+                category: "Foundations",
+                color: "#0088ff",
+                description: "Sigmoid, ReLU, Tanh, Leaky ReLU, ELU, Softmax"
+            },
+            {
+                id: "weight-init",
+                title: "Weight Initialization",
+                icon: "🎯",
+                category: "Foundations",
+                color: "#0088ff",
+                description: "Xavier, He, Random initialization strategies"
+            },
+            {
+                id: "loss",
+                title: "Loss Functions",
+                icon: "📉",
+                category: "Foundations",
+                color: "#0088ff",
+                description: "MSE, Binary Cross-Entropy, Categorical Cross-Entropy"
+            },
+            {
+                id: "optimizers",
+                title: "Optimizers",
+                icon: "🎯",
+                category: "Training",
+                color: "#00ff00",
+                description: "SGD, Momentum, Adam, Adagrad, RMSprop"
+            },
+            {
+                id: "backprop",
+                title: "Forward & Backpropagation",
+                icon: "⬅️",
+                category: "Training",
+                color: "#00ff00",
+                description: "Chain rule and gradient computation"
+            },
+            {
+                id: "regularization",
+                title: "Regularization",
+                icon: "🛡️",
+                category: "Training",
+                color: "#00ff00",
+                description: "L1/L2, Dropout, Early Stopping, Batch Norm"
+            },
+            {
+                id: "batch-norm",
+                title: "Batch Normalization",
+                icon: "⚙️",
+                category: "Training",
+                color: "#00ff00",
+                description: "Stabilizing and speeding up training"
+            },
+            // Module 2: Computer Vision Fundamentals
+            {
+                id: "cv-intro",
+                title: "CV Fundamentals",
+                icon: "👁️",
+                category: "Computer Vision",
+                color: "#ff6b35",
+                description: "Why ANNs fail with images, parameter explosion"
+            },
+            {
+                id: "conv-layer",
+                title: "Convolutional Layers",
+                icon: "🖼️",
+                category: "Computer Vision",
+                color: "#ff6b35",
+                description: "Kernels, filters, feature maps, stride, padding"
+            },
+            {
+                id: "pooling",
+                title: "Pooling Layers",
+                icon: "📦",
+                category: "Computer Vision",
+                color: "#ff6b35",
+                description: "Max pooling, average pooling, spatial reduction"
+            },
+            {
+                id: "cnn-basics",
+                title: "CNN Architecture",
+                icon: "🏗️",
+                category: "Computer Vision",
+                color: "#ff6b35",
+                description: "Combining conv, pooling, and fully connected layers"
+            },
+            {
+                id: "viz-filters",
+                title: "Visualizing CNNs",
+                icon: "🔍",
+                category: "Computer Vision",
+                color: "#ff6b35",
+                description: "What filters learn: edges → shapes → objects"
+            },
+            // Module 3: Advanced CNN Architectures
+            {
+                id: "lenet",
+                title: "LeNet-5",
+                icon: "🔢",
+                category: "CNN Architectures",
+                color: "#ff00ff",
+                description: "Classic digit recognizer (MNIST)"
+            },
+            {
+                id: "alexnet",
+                title: "AlexNet",
+                icon: "🌟",
+                category: "CNN Architectures",
+                color: "#ff00ff",
+                description: "The breakthrough in deep computer vision (2012)"
+            },
+            {
+                id: "vgg",
+                title: "VGGNet",
+                icon: "📊",
+                category: "CNN Architectures",
+                color: "#ff00ff",
+                description: "VGG-16/19: Deep networks with small filters"
+            },
+            {
+                id: "resnet",
+                title: "ResNet",
+                icon: "🌉",
+                category: "CNN Architectures",
+                color: "#ff00ff",
+                description: "Skip connections, solving vanishing gradients"
+            },
+            {
+                id: "inception",
+                title: "InceptionNet (GoogLeNet)",
+                icon: "🎯",
+                category: "CNN Architectures",
+                color: "#ff00ff",
+                description: "1x1 convolutions, multi-scale feature extraction"
+            },
+            {
+                id: "mobilenet",
+                title: "MobileNet",
+                icon: "📱",
+                category: "CNN Architectures",
+                color: "#ff00ff",
+                description: "Depth-wise separable convolutions for efficiency"
+            },
+            {
+                id: "transfer-learning",
+                title: "Transfer Learning",
+                icon: "🔄",
+                category: "CNN Architectures",
+                color: "#ff00ff",
+                description: "Fine-tuning and leveraging pre-trained models"
+            },
+            // Module 4: Object Detection & Segmentation
+            {
+                id: "localization",
+                title: "Object Localization",
+                icon: "📍",
+                category: "Detection",
+                color: "#00ff00",
+                description: "Bounding boxes and classification together"
+            },
+            {
+                id: "rcnn",
+                title: "R-CNN Family",
+                icon: "🎯",
+                category: "Detection",
+                color: "#00ff00",
+                description: "R-CNN, Fast R-CNN, Faster R-CNN"
+            },
+            {
+                id: "yolo",
+                title: "YOLO",
+                icon: "⚡",
+                category: "Detection",
+                color: "#00ff00",
+                description: "Real-time object detection (v3, v5, v8)"
+            },
+            {
+                id: "ssd",
+                title: "SSD",
+                icon: "🚀",
+                category: "Detection",
+                color: "#00ff00",
+                description: "Single Shot MultiBox Detector"
+            },
+            {
+                id: "semantic-seg",
+                title: "Semantic Segmentation",
+                icon: "🖌️",
+                category: "Segmentation",
+                color: "#00ff00",
+                description: "Pixel-level classification (U-Net)"
+            },
+            {
+                id: "instance-seg",
+                title: "Instance Segmentation",
+                icon: "👥",
+                category: "Segmentation",
+                color: "#00ff00",
+                description: "Mask R-CNN and separate object instances"
+            },
+            {
+                id: "face-recog",
+                title: "Face Recognition",
+                icon: "👤",
+                category: "Segmentation",
+                color: "#00ff00",
+                description: "Siamese networks and triplet loss"
+            },
+            // Module 5: Generative Models
+            {
+                id: "autoencoders",
+                title: "Autoencoders",
+                icon: "🔀",
+                category: "Generative",
+                color: "#ffaa00",
+                description: "Encoder-decoder, latent space, denoising"
+            },
+            {
+                id: "gans",
+                title: "GANs (Generative Adversarial Networks)",
+                icon: "🎮",
+                category: "Generative",
+                color: "#ffaa00",
+                description: "Generator vs. Discriminator, DCGAN"
+            },
+            {
+                id: "diffusion",
+                title: "Diffusion Models",
+                icon: "🌊",
+                category: "Generative",
+                color: "#ffaa00",
+                description: "Foundation of Stable Diffusion and DALL-E"
+            },
+            // Additional Advanced Topics
+            {
+                id: "rnn",
+                title: "RNNs & LSTMs",
+                icon: "🔄",
+                category: "Sequence",
+                color: "#ff6b35",
+                description: "Recurrent networks for sequential data"
+            },
+            {
+                id: "transformers",
+                title: "Transformers",
+                icon: "🔗",
+                category: "Sequence",
+                color: "#ff6b35",
+                description: "Attention mechanisms and modern architectures"
+            },
+            {
+                id: "bert",
+                title: "BERT & NLP Transformers",
+                icon: "📚",
+                category: "NLP",
+                color: "#ff6b35",
+                description: "Bidirectional transformers for language"
+            },
+            {
+                id: "gpt",
+                title: "GPT & Language Models",
+                icon: "💬",
+                category: "NLP",
+                color: "#ff6b35",
+                description: "Autoregressive models and text generation"
+            },
+            {
+                id: "vit",
+                title: "Vision Transformers (ViT)",
+                icon: "🎨",
+                category: "Vision",
+                color: "#ff6b35",
+                description: "Transformers applied to image data"
+            }
+        ];
+
+        function createModuleHTML(module) {
+            return `
+                <div class="module" id="${module.id}-module">
+                    <button class="btn-back" onclick="switchTo('dashboard')">← Back to Dashboard</button>
+                    <header>
+                        <h1>${module.icon} ${module.title}</h1>
+                        <p class="subtitle">${module.description}</p>
+                    </header>
+
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab(event, '${module.id}-overview')">Overview</button>
+                        <button class="tab-btn" onclick="switchTab(event, '${module.id}-concepts')">Key Concepts</button>
+                        <button class="tab-btn" onclick="switchTab(event, '${module.id}-visualization')">📊 Visualization</button>
+                        <button class="tab-btn" onclick="switchTab(event, '${module.id}-math')">Math</button>
+                        <button class="tab-btn" onclick="switchTab(event, '${module.id}-applications')">Applications</button>
+                        <button class="tab-btn" onclick="switchTab(event, '${module.id}-summary')">Summary</button>
+                    </div>
+
+                    <div id="${module.id}-overview" class="tab active">
+                        <div class="section">
+                            <h2>📖 Overview</h2>
+                            <p>Complete coverage of ${module.title.toLowerCase()}. Learn the fundamentals, mathematics, real-world applications, and implementation details.</p>
+                            <div class="info-box">
+                                <div class="box-title">Learning Objectives</div>
+                                <div class="box-content">
+                                    ✓ Understand core concepts and theory<br>
+                                    ✓ Master mathematical foundations<br>
+                                    ✓ Learn practical applications<br>
+                                    ✓ Implement and experiment
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="${module.id}-concepts" class="tab">
+                        <div class="section">
+                            <h2>🎯 Key Concepts</h2>
+                            <p>Fundamental concepts and building blocks for ${module.title.toLowerCase()}.</p>
+                            <div class="callout insight">
+                                <div class="callout-title">💡 Main Ideas</div>
+                                This section covers the core ideas you need to understand before diving into mathematics.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="${module.id}-visualization" class="tab">
+                        <div class="section">
+                            <h2>📊 Interactive Visualization</h2>
+                            <p>Visual representation to help understand ${module.title.toLowerCase()} concepts intuitively.</p>
+                            <div id="${module.id}-viz" class="viz-container">
+                                <canvas id="${module.id}-canvas" width="800" height="400" style="border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; background: rgba(0, 212, 255, 0.02);"></canvas>
+                            </div>
+                            <div class="viz-controls">
+                                <button onclick="drawVisualization('${module.id}')" class="btn-viz">🔄 Refresh Visualization</button>
+                                <button onclick="toggleVizAnimation('${module.id}')" class="btn-viz">▶️ Animate</button>
+                                <button onclick="downloadViz('${module.id}')" class="btn-viz">⬇️ Save Image</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="${module.id}-math" class="tab">
+                        <div class="section">
+                            <h2>📐 Mathematical Foundation</h2>
+                            <p>Rigorous mathematical treatment of ${module.title.toLowerCase()}.</p>
+                            <div class="formula">
+                                Mathematical formulas and derivations go here
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h2>📊 Mathematical Visualization</h2>
+                            <div id="${module.id}-math-viz" class="viz-container">
+                                <canvas id="${module.id}-math-canvas" width="800" height="400" style="border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; background: rgba(0, 212, 255, 0.02);"></canvas>
+                            </div>
+                            <div class="viz-controls">
+                                <button onclick="drawMathVisualization('${module.id}')" class="btn-viz">🔄 Visualize Equations</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="${module.id}-applications" class="tab">
+                        <div class="section">
+                            <h2>🌍 Real-World Applications</h2>
+                            <p>How ${module.title.toLowerCase()} is used in practice across different industries.</p>
+                            <div class="info-box">
+                                <div class="box-title">Use Cases</div>
+                                <div class="box-content">
+                                    Common applications and practical examples
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h2>📊 Application Scenarios Visualization</h2>
+                            <div id="${module.id}-app-viz" class="viz-container">
+                                <canvas id="${module.id}-app-canvas" width="800" height="400" style="border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; background: rgba(0, 212, 255, 0.02);"></canvas>
+                            </div>
+                            <div class="viz-controls">
+                                <button onclick="drawApplicationVisualization('${module.id}')" class="btn-viz">🔄 Show Applications</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="${module.id}-summary" class="tab">
+                        <div class="section">
+                            <h2>✅ Summary</h2>
+                            <div class="info-box">
+                                <div class="box-title">Key Takeaways</div>
+                                <div class="box-content">
+                                    ✓ Essential concepts covered<br>
+                                    ✓ Mathematical foundations understood<br>
+                                    ✓ Real-world applications identified<br>
+                                    ✓ Ready for implementation
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initDashboard() {
+            const grid = document.getElementById("modulesGrid");
+            const container = document.getElementById("modulesContainer");
+
+            modules.forEach(module => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.style.borderColor = module.color;
+                card.onclick = () => switchTo(module.id + "-module");
+                card.innerHTML = `
+                    <div class="card-icon">${module.icon}</div>
+                    <h3>${module.title}</h3>
+                    <p>${module.description}</p>
+                    <span class="category-label">${module.category}</span>
+                `;
+                grid.appendChild(card);
+
+                const moduleHTML = createModuleHTML(module);
+                container.innerHTML += moduleHTML;
+            });
+        }
+
+        function switchTo(target) {
+            document.querySelectorAll('.dashboard, .module').forEach(el => {
+                el.classList.remove('active');
+            });
+            const elem = document.getElementById(target);
+            if (elem) elem.classList.add('active');
+        }
+
+        function switchTab(e, tabId) {
+            const module = e.target.closest('.module');
+            if (!module) return;
+
+            module.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            module.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+            const tab = document.getElementById(tabId);
+            if (tab) tab.classList.add('active');
+            e.target.classList.add('active');
+
+            // Trigger visualization when tabs are clicked
+            setTimeout(() => {
+                const moduleId = tabId.split('-')[0];
+                if (tabId.includes('-concepts')) {
+                    drawConceptsVisualization(moduleId);
+                } else if (tabId.includes('-visualization')) {
+                    drawConceptsVisualization(moduleId);
+                } else if (tabId.includes('-math')) {
+                    drawMathVisualization(moduleId);
+                } else if (tabId.includes('-applications')) {
+                    drawApplicationVisualization(moduleId);
+                }
+            }, 150);
+        }
+
+        // Visualization Functions - Concepts Tab
+        function drawConceptsVisualization(moduleId) {
+            const canvas = document.getElementById(moduleId + '-canvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0f1419';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const vizMap = {
+                'nn-basics': drawNeuronAnimation,
+                'perceptron': drawDecisionBoundary,
+                'mlp': drawNetworkGraph,
+                'activation': drawActivationFunctions,
+                'weight-init': drawWeightDistribution,
+                'loss': drawLossLandscape,
+                'optimizers': drawConvergencePaths,
+                'backprop': drawGradientFlow,
+                'regularization': drawOverfitComparison,
+                'batch-norm': drawBatchNormalization,
+                'cv-intro': drawImageMatrix,
+                'conv-layer': drawConvolutionAnimation,
+                'pooling': drawPoolingDemo,
+                'cnn-basics': drawCNNArchitecture,
+                'viz-filters': drawLearnedFilters,
+                'lenet': drawLeNetArchitecture,
+                'alexnet': drawAlexNetArchitecture,
+                'vgg': drawVGGArchitecture,
+                'resnet': drawResNetArchitecture,
+                'inception': drawInceptionModule,
+                'mobilenet': drawMobileNetArchitecture,
+                'transfer-learning': drawTransferLearning,
+                'localization': drawBoundingBoxes,
+                'rcnn': drawRCNNPipeline,
+                'yolo': drawYOLOGrid,
+                'ssd': drawSSDDetector,
+                'semantic-seg': drawSemanticSegmentation,
+                'instance-seg': drawInstanceSegmentation,
+                'face-recog': drawFaceEmbeddings,
+                'autoencoders': drawAutoencoderArchitecture,
+                'gans': drawGANsGame,
+                'diffusion': drawDiffusionProcess,
+                'rnn': drawRNNUnrolled,
+                'transformers': drawAttentionMatrix,
+                'bert': drawBERTProcess,
+                'gpt': drawGPTGeneration,
+                'vit': drawVisionTransformer
+            };
+
+            if (vizMap[moduleId]) {
+                vizMap[moduleId](ctx, canvas);
+            } else {
+                drawDefaultVisualization(ctx, canvas);
+            }
+        }
+
+        // Default Visualization
+        function drawDefaultVisualization(ctx, canvas) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            ctx.fillStyle = 'rgba(0, 212, 255, 0.2)';
+            ctx.fillRect(centerX - 120, centerY - 60, 240, 120);
+            ctx.strokeStyle = '#00d4ff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(centerX - 120, centerY - 60, 240, 120);
+
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('📊 Interactive Visualization', centerX, centerY - 20);
+            ctx.font = '13px Arial';
+            ctx.fillText('Custom visualization for this topic', centerX, centerY + 20);
+            ctx.font = '11px Arial';
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('Click Refresh to render', centerX, centerY + 45);
+        }
+
+        // Default Math Visualization
+        function drawDefaultMathVisualization(ctx, canvas) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            ctx.fillStyle = 'rgba(255, 107, 53, 0.2)';
+            ctx.fillRect(centerX - 120, centerY - 60, 240, 120);
+            ctx.strokeStyle = '#ff6b35';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(centerX - 120, centerY - 60, 240, 120);
+
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('📐 Mathematical Formulas', centerX, centerY - 20);
+            ctx.font = '13px Arial';
+            ctx.fillText('Visual equation derivations', centerX, centerY + 20);
+            ctx.font = '11px Arial';
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('Click Visualize to render', centerX, centerY + 45);
+        }
+
+        // Default Application Visualization
+        function drawDefaultApplicationVisualization(ctx, canvas) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            ctx.fillStyle = 'rgba(0, 255, 136, 0.2)';
+            ctx.fillRect(centerX - 120, centerY - 60, 240, 120);
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(centerX - 120, centerY - 60, 240, 120);
+
+            ctx.fillStyle = '#00ff88';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🌍 Real-World Applications', centerX, centerY - 20);
+            ctx.font = '13px Arial';
+            ctx.fillText('Practical use cases and examples', centerX, centerY + 20);
+            ctx.font = '11px Arial';
+            ctx.fillStyle = '#ffa500';
+            ctx.fillText('Click Show Applications to render', centerX, centerY + 45);
+        }
+
+        // Activation Functions Visualization
+        function drawActivationFunctions(ctx, canvas) {
+            const width = canvas.width;
+            const height = canvas.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const scale = 40;
+
+            // Draw grid
+            ctx.strokeStyle = 'rgba(0, 212, 255, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = -5; i <= 5; i += 1) {
+                const x = centerX + i * scale;
+                ctx.beginPath();
+                ctx.moveTo(x, centerY - 5 * scale);
+                ctx.lineTo(x, centerY + 5 * scale);
+                ctx.stroke();
+            }
+
+            // Draw axes
+            ctx.strokeStyle = '#00d4ff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(centerX - 6 * scale, centerY);
+            ctx.lineTo(centerX + 6 * scale, centerY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY - 6 * scale);
+            ctx.lineTo(centerX, centerY + 6 * scale);
+            ctx.stroke();
+
+            // Draw activation functions
+            const functions = [
+                { name: 'ReLU', color: '#ff6b35', fn: x => Math.max(0, x) },
+                { name: 'Sigmoid', color: '#00ff88', fn: x => 1 / (1 + Math.exp(-x)) },
+                { name: 'Tanh', color: '#ffa500', fn: x => Math.tanh(x) }
+            ];
+
+            functions.forEach(func => {
+                ctx.strokeStyle = func.color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (let x = -5; x <= 5; x += 0.1) {
+                    const y = func.fn(x);
+                    const canvasX = centerX + x * scale;
+                    const canvasY = centerY - y * scale;
+                    if (x === -5) ctx.moveTo(canvasX, canvasY);
+                    else ctx.lineTo(canvasX, canvasY);
+                }
+                ctx.stroke();
+            });
+
+            // Legend
+            ctx.font = 'bold 12px Arial';
+            functions.forEach((func, i) => {
+                ctx.fillStyle = func.color;
+                ctx.fillRect(10, 10 + i * 20, 10, 10);
+                ctx.fillStyle = '#e4e6eb';
+                ctx.fillText(func.name, 25, 19 + i * 20);
+            });
+        }
+
+        // Neural Network Graph
+        function drawNetworkGraph(ctx, canvas) {
+            const layers = [2, 3, 3, 1];
+            const width = canvas.width;
+            const height = canvas.height;
+            const layerWidth = width / (layers.length + 1);
+
+            ctx.fillStyle = 'rgba(0, 212, 255, 0.05)';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw neurons and connections
+            const neuronPositions = [];
+
+            layers.forEach((numNeurons, layerIdx) => {
+                const x = (layerIdx + 1) * layerWidth;
+                const positions = [];
+
+                for (let i = 0; i < numNeurons; i++) {
+                    const y = height / (numNeurons + 1) * (i + 1);
+                    positions.push({ x, y });
+
+                    // Draw connections to next layer
+                    if (layerIdx < layers.length - 1) {
+                        const nextLayerPositions = [];
+                        const nextX = (layerIdx + 2) * layerWidth;
+                        for (let j = 0; j < layers[layerIdx + 1]; j++) {
+                            const nextY = height / (layers[layerIdx + 1] + 1) * (j + 1);
+                            nextLayerPositions.push({ x: nextX, y: nextY });
+                        }
+
+                        nextLayerPositions.forEach(next => {
+                            ctx.strokeStyle = 'rgba(0, 212, 255, 0.2)';
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(x, y);
+                            ctx.lineTo(next.x, next.y);
+                            ctx.stroke();
+                        });
+                    }
+                }
+
+                // Draw neurons
+                positions.forEach(pos => {
+                    ctx.fillStyle = '#00d4ff';
+                    ctx.beginPath();
+                    ctx.arc(pos.x, pos.y, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                neuronPositions.push(positions);
+            });
+
+            // Labels
+            ctx.fillStyle = '#e4e6eb';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Input', layerWidth, height - 10);
+            ctx.fillText('Hidden 1', layerWidth * 2, height - 10);
+            ctx.fillText('Hidden 2', layerWidth * 3, height - 10);
+            ctx.fillText('Output', layerWidth * 4, height - 10);
+        }
+
+        // Convolution Animation
+        function drawConvolutionAnimation(ctx, canvas) {
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // Draw input image
+            ctx.fillStyle = 'rgba(0, 212, 255, 0.1)';
+            ctx.fillRect(20, 20, 150, 150);
+            ctx.strokeStyle = '#00d4ff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(20, 20, 150, 150);
+
+            // Draw filter
+            ctx.fillStyle = 'rgba(255, 107, 53, 0.1)';
+            const filterPos = 60 + Math.sin(Date.now() / 1000) * 40;
+            ctx.fillRect(filterPos, 60, 60, 60);
+            ctx.strokeStyle = '#ff6b35';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(filterPos, 60, 60, 60);
+
+            // Draw output
+            ctx.fillStyle = 'rgba(0, 255, 136, 0.1)';
+            ctx.fillRect(width - 170, 20, 150, 150);
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(width - 170, 20, 150, 150);
+
+            // Draw feature map
+            for (let i = 0; i < 5; i++) {
+                for (let j = 0; j < 5; j++) {
+                    const intensity = Math.random() * 100;
+                    ctx.fillStyle = `rgba(0, 212, 255, ${intensity / 100})`;
+                    ctx.fillRect(width - 160 + i * 25, 30 + j * 25, 20, 20);
+                }
+            }
+
+            // Labels
+            ctx.fillStyle = '#e4e6eb';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('Input Image', 20, 190);
+            ctx.fillText('Filter', filterPos, 140);
+            ctx.fillText('Feature Map', width - 170, 190);
+        }
+
+        // Loss Landscape
+        function drawLossLandscape(ctx, canvas) {
+            const width = canvas.width;
+            const height = canvas.height;
+
+            for (let x = 0; x < width; x += 20) {
+                for (let y = 0; y < height; y += 20) {
+                    const nx = (x - width / 2) / (width / 4);
+                    const ny = (y - height / 2) / (height / 4);
+                    const loss = nx * nx + ny * ny;
+                    const intensity = Math.min(255, loss * 50);
+                    ctx.fillStyle = `rgb(${intensity}, ${100}, ${255 - intensity})`;
+                    ctx.fillRect(x, y, 20, 20);
+                }
+            }
+
+            // Draw descent path
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            const startX = width / 2 + 80;
+            const startY = height / 2 + 80;
+            ctx.moveTo(startX, startY);
+
+            for (let i = 0; i < 20; i++) {
+                const angle = Math.atan2(startY - height / 2, startX - width / 2);
+                const newX = startX - Math.cos(angle) * 15;
+                const newY = startY - Math.sin(angle) * 15;
+                ctx.lineTo(newX, newY);
+            }
+            ctx.stroke();
+
+            // Minimum point
+            ctx.fillStyle = '#00ff88';
+            ctx.beginPath();
+            ctx.arc(width / 2, height / 2, 8, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // YOLO Grid
+        function drawYOLOGrid(ctx, canvas) {
+            const width = canvas.width;
+            const height = canvas.height;
+            const gridSize = 7;
+            const cellWidth = width / gridSize;
+            const cellHeight = height / gridSize;
+
+            // Draw grid
+            ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= gridSize; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * cellWidth, 0);
+                ctx.lineTo(i * cellWidth, height);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(0, i * cellHeight);
+                ctx.lineTo(width, i * cellHeight);
+                ctx.stroke();
+            }
+
+            // Draw detected objects
+            const detections = [
+                { x: 2, y: 2, w: 2, h: 2, conf: 0.95 },
+                { x: 4, y: 5, w: 1.5, h: 1.5, conf: 0.87 }
+            ];
+
+            detections.forEach(det => {
+                ctx.fillStyle = `rgba(255, 107, 53, ${det.conf * 0.5})`;
+                ctx.fillRect(det.x * cellWidth, det.y * cellHeight, det.w * cellWidth, det.h * cellHeight);
+                ctx.strokeStyle = '#ff6b35';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(det.x * cellWidth, det.y * cellHeight, det.w * cellWidth, det.h * cellHeight);
+
+                ctx.fillStyle = '#ff6b35';
+                ctx.font = 'bold 12px Arial';
+                ctx.fillText((det.conf * 100).toFixed(0) + '%', det.x * cellWidth + 5, det.y * cellHeight + 15);
+            });
+        }
+
+        // Attention Matrix
+        function drawAttentionMatrix(ctx, canvas) {
+            const size = 8;
+            const cellSize = Math.min(canvas.width, canvas.height) / size;
+
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    const distance = Math.abs(i - j);
+                    const attention = Math.exp(-distance / 2);
+                    const intensity = Math.floor(attention * 255);
+                    ctx.fillStyle = `rgb(${intensity}, 100, ${200 - intensity})`;
+                    ctx.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
+                }
+            }
+
+            // Add labels
+            ctx.fillStyle = '#e4e6eb';
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'center';
+            for (let i = 0; i < size; i++) {
+                ctx.fillText('w' + i, i * cellSize + cellSize / 2, canvas.height - 5);
+            }
+        }
+
+        // Math Visualization
+        function drawMathVisualization(moduleId) {
+            const canvas = document.getElementById(moduleId + '-math-canvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0f1419';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const mathVizMap = {
+                'nn-basics': () => drawNNMath(ctx, canvas),
+                'activation': () => drawActivationDerivatives(ctx, canvas),
+                'loss': () => drawLossComparison(ctx, canvas),
+                'optimizers': () => drawOptimizerSteps(ctx, canvas),
+                'backprop': () => drawChainRule(ctx, canvas),
+                'conv-layer': () => drawConvolutionMath(ctx, canvas),
+                'pooling': () => drawPoolingMath(ctx, canvas),
+                'regularization': () => drawRegularizationMath(ctx, canvas),
+                'transformers': () => drawAttentionMath(ctx, canvas),
+                'rnn': () => drawRNNMath(ctx, canvas)
+            };
+
+            if (mathVizMap[moduleId]) {
+                mathVizMap[moduleId]();
+            } else {
+                drawDefaultMathVisualization(ctx, canvas);
+            }
+        }
+
+        // Application Visualization
+        function drawApplicationVisualization(moduleId) {
+            const canvas = document.getElementById(moduleId + '-app-canvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0f1419';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const appVizMap = {
+                'nn-basics': () => drawNNApplications(ctx, canvas),
+                'cnn-basics': () => drawCNNApplications(ctx, canvas),
+                'conv-layer': () => drawConvolutionApplications(ctx, canvas),
+                'yolo': () => drawYOLOApplications(ctx, canvas),
+                'semantic-seg': () => drawSegmentationApplications(ctx, canvas),
+                'instance-seg': () => drawInstanceSegmentationApps(ctx, canvas),
+                'face-recog': () => drawFaceRecognitionApps(ctx, canvas),
+                'transformers': () => drawTransformerApps(ctx, canvas),
+                'bert': () => drawBERTApplications(ctx, canvas),
+                'gpt': () => drawGPTApplications(ctx, canvas),
+                'gans': () => drawGANApplications(ctx, canvas),
+                'diffusion': () => drawDiffusionApplications(ctx, canvas)
+            };
+
+            if (appVizMap[moduleId]) {
+                appVizMap[moduleId]();
+            } else {
+                drawDefaultApplicationVisualization(ctx, canvas);
+            }
+        }
+
+        // Math visualization helper functions
+        function drawNNMath(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Forward Pass: y = σ(Wx + b)', canvas.width / 2, 50);
+            ctx.font = '14px Arial';
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('Linear combination + Non-linearity', canvas.width / 2, 100);
+            ctx.fillStyle = '#ffa500';
+            ctx.fillText('W: weights, b: bias, σ: activation', canvas.width / 2, 150);
+        }
+
+        function drawActivationDerivatives(ctx, canvas) {
+            const width = canvas.width;
+            const height = canvas.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const scale = 40;
+
+            ctx.strokeStyle = 'rgba(0, 212, 255, 0.2)';
+            ctx.lineWidth = 1;
+            for (let i = -5; i <= 5; i += 1) {
+                ctx.beginPath();
+                ctx.moveTo(centerX + i * scale, centerY - 5 * scale);
+                ctx.lineTo(centerX + i * scale, centerY + 5 * scale);
+                ctx.stroke();
+            }
+
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let x = -5; x <= 5; x += 0.1) {
+                const y = 1 / (1 + Math.exp(-x)) * (1 - 1 / (1 + Math.exp(-x)));
+                const canvasX = centerX + x * scale;
+                const canvasY = centerY - y * scale * 10;
+                if (x === -5) ctx.moveTo(canvasX, canvasY);
+                else ctx.lineTo(canvasX, canvasY);
+            }
+            ctx.stroke();
+
+            ctx.fillStyle = '#00ff88';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText("Sigmoid Derivative: σ'(x) = σ(x)(1-σ(x))", canvas.width / 2, 30);
+        }
+
+        function drawLossComparison(ctx, canvas) {
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // MSE
+            ctx.fillStyle = 'rgba(0, 212, 255, 0.2)';
+            ctx.fillRect(20, 60, width / 2 - 30, height - 100);
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('MSE Loss', width / 4, 45);
+            ctx.font = '12px Arial';
+            ctx.fillText('L = (1/n)Σ(y-ŷ)²', width / 4, 90);
+            ctx.fillText('Regression', width / 4, 115);
+
+            // Cross-Entropy
+            ctx.fillStyle = 'rgba(255, 107, 53, 0.2)';
+            ctx.fillRect(width / 2 + 10, 60, width / 2 - 30, height - 100);
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('Cross-Entropy Loss', width * 3 / 4, 45);
+            ctx.font = '12px Arial';
+            ctx.fillText('L = -Σ(y·log(ŷ))', width * 3 / 4, 90);
+            ctx.fillText('Classification', width * 3 / 4, 115);
+        }
+
+        function drawOptimizerSteps(ctx, canvas) {
+            const width = canvas.width;
+            const height = canvas.height;
+            const centerY = height / 2;
+
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('SGD', width / 4, 50);
+            ctx.font = '12px Arial';
+            ctx.fillText('w = w - α·∇L', width / 4, 100);
+
+            ctx.fillStyle = '#00ff88';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('Momentum', width / 2, 50);
+            ctx.font = '12px Arial';
+            ctx.fillText('v = β·v + (1-β)·∇L', width / 2, 100);
+
+            ctx.fillStyle = '#ffa500';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('Adam', width * 3 / 4, 50);
+            ctx.font = '12px Arial';
+            ctx.fillText('Adaptive learning rate', width * 3 / 4, 100);
+        }
+
+        function drawChainRule(ctx, canvas) {
+            const width = canvas.width;
+            ctx.fillStyle = '#00ff88';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Backpropagation Chain Rule', width / 2, 50);
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#00d4ff';
+            ctx.fillText('dL/dW = dL/dŷ · dŷ/da · da/dz · dz/dW', width / 2, 100);
+            ctx.fillStyle = '#ffa500';
+            ctx.fillText('Compute gradient by multiplying partial derivatives', width / 2, 150);
+        }
+
+        function drawConvolutionMath(ctx, canvas) {
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Convolution Operation', canvas.width / 2, 50);
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#00d4ff';
+            ctx.fillText('y[i,j] = Σ Σ w[m,n] * x[i+m,j+n] + b', canvas.width / 2, 100);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('Sliding window element-wise multiplication and summation', canvas.width / 2, 150);
+        }
+
+        function drawPoolingMath(ctx, canvas) {
+            const width = canvas.width;
+            ctx.fillStyle = '#00ff88';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Max Pooling', width / 3, 50);
+            ctx.font = '12px Arial';
+            ctx.fillText('y = max(neighborhood)', width / 3, 100);
+
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('Average Pooling', width * 2 / 3, 50);
+            ctx.font = '12px Arial';
+            ctx.fillText('y = avg(neighborhood)', width * 2 / 3, 100);
+
+            ctx.fillStyle = '#ffa500';
+            ctx.font = '11px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Reduces spatial dimensions', width / 2, 150);
+        }
+
+        function drawRegularizationMath(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('L1 Regularization: L = Loss + λΣ|w|', canvas.width / 2, 60);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('L2 Regularization: L = Loss + λΣw²', canvas.width / 2, 110);
+            ctx.fillStyle = '#ffa500';
+            ctx.fillText('Prevents overfitting by penalizing large weights', canvas.width / 2, 160);
+        }
+
+        function drawAttentionMath(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Attention Mechanism', canvas.width / 2, 50);
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('Attention(Q,K,V) = softmax(QK^T/√d_k) · V', canvas.width / 2, 100);
+            ctx.fillStyle = '#ffa500';
+            ctx.fillText('Query-Key matching determines how much to focus on each value', canvas.width / 2, 150);
+        }
+
+        function drawRNNMath(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('RNN Hidden State Update', canvas.width / 2, 50);
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('h_t = σ(W_h·h_(t-1) + W_x·x_t + b)', canvas.width / 2, 100);
+            ctx.fillStyle = '#ffa500';
+            ctx.fillText('Processes sequences step-by-step with recurrent connections', canvas.width / 2, 150);
+        }
+
+        // Application visualization helper functions
+        function drawNNApplications(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('📱 Stock Price Prediction', canvas.width / 4, 60);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('🏥 Medical Diagnosis', canvas.width / 2, 60);
+            ctx.fillStyle = '#ffa500';
+            ctx.fillText('🎮 Game AI', canvas.width * 3 / 4, 60);
+
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = '12px Arial';
+            ctx.fillText('Fraud Detection', canvas.width / 4, 120);
+            ctx.fillStyle = '#00d4ff';
+            ctx.fillText('Recommendation Systems', canvas.width / 2, 120);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('Credit Scoring', canvas.width * 3 / 4, 120);
+        }
+
+        function drawCNNApplications(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Image Classification', canvas.width / 3, 60);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('Object Detection', canvas.width * 2 / 3, 60);
+
+            ctx.fillStyle = '#ffa500';
+            ctx.font = '12px Arial';
+            ctx.fillText('Deep Learning Backbone', canvas.width / 2, 150);
+        }
+
+        function drawConvolutionApplications(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('📷 Image Feature Extraction', canvas.width / 3, 60);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('🔍 Edge Detection', canvas.width * 2 / 3, 60);
+
+            ctx.fillStyle = '#ffa500';
+            ctx.font = '12px Arial';
+            ctx.fillText('Foundation of Computer Vision', canvas.width / 2, 150);
+        }
+
+        function drawYOLOApplications(ctx, canvas) {
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🚗 Autonomous Driving', canvas.width / 3, 60);
+            ctx.fillStyle = '#00d4ff';
+            ctx.fillText('📹 Real-time Video Detection', canvas.width * 2 / 3, 60);
+
+            ctx.fillStyle = '#00ff88';
+            ctx.font = '12px Arial';
+            ctx.fillText('Ultra-fast inference for live applications', canvas.width / 2, 150);
+        }
+
+        function drawSegmentationApplications(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🏥 Medical Imaging', canvas.width / 3, 60);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('🚗 Autonomous Vehicles', canvas.width * 2 / 3, 60);
+
+            ctx.fillStyle = '#ffa500';
+            ctx.font = '12px Arial';
+            ctx.fillText('Pixel-level understanding of scenes', canvas.width / 2, 150);
+        }
+
+        function drawInstanceSegmentationApps(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('👥 Person Detection & Tracking', canvas.width / 3, 60);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('🍎 Object Instance Counting', canvas.width * 2 / 3, 60);
+
+            ctx.fillStyle = '#ffa500';
+            ctx.font = '12px Arial';
+            ctx.fillText('Separates overlapping objects', canvas.width / 2, 150);
+        }
+
+        function drawFaceRecognitionApps(ctx, canvas) {
+            ctx.fillStyle = '#ffa500';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('📱 Phone Unlock', canvas.width / 3, 60);
+            ctx.fillStyle = '#00d4ff';
+            ctx.fillText('🔒 Security Systems', canvas.width * 2 / 3, 60);
+
+            ctx.fillStyle = '#00ff88';
+            ctx.font = '12px Arial';
+            ctx.fillText('Identity verification and access control', canvas.width / 2, 150);
+        }
+
+        function drawTransformerApps(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('💬 ChatGPT / LLMs', canvas.width / 3, 60);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('🌐 Machine Translation', canvas.width * 2 / 3, 60);
+
+            ctx.fillStyle = '#ffa500';
+            ctx.font = '12px Arial';
+            ctx.fillText('Foundation of modern NLP and beyond', canvas.width / 2, 150);
+        }
+
+        function drawBERTApplications(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🔍 Semantic Search', canvas.width / 3, 60);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('❓ Question Answering', canvas.width * 2 / 3, 60);
+
+            ctx.fillStyle = '#ffa500';
+            ctx.font = '12px Arial';
+            ctx.fillText('Deep language understanding', canvas.width / 2, 150);
+        }
+
+        function drawGPTApplications(ctx, canvas) {
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('✍️ Text Generation', canvas.width / 3, 60);
+            ctx.fillStyle = '#00d4ff';
+            ctx.fillText('💡 Idea Assistance', canvas.width * 2 / 3, 60);
+
+            ctx.fillStyle = '#00ff88';
+            ctx.font = '12px Arial';
+            ctx.fillText('Powerful autoregressive language models', canvas.width / 2, 150);
+        }
+
+        function drawGANApplications(ctx, canvas) {
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🎨 Image Generation', canvas.width / 3, 60);
+            ctx.fillStyle = '#00d4ff';
+            ctx.fillText('🎭 Style Transfer', canvas.width * 2 / 3, 60);
+
+            ctx.fillStyle = '#00ff88';
+            ctx.font = '12px Arial';
+            ctx.fillText('Creative content generation and enhancement', canvas.width / 2, 150);
+        }
+
+        function drawDiffusionApplications(ctx, canvas) {
+            ctx.fillStyle = '#ffa500';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🖼️ Image Synthesis', canvas.width / 3, 60);
+            ctx.fillStyle = '#00d4ff';
+            ctx.fillText('🎬 Stable Diffusion', canvas.width * 2 / 3, 60);
+
+            ctx.fillStyle = '#00ff88';
+            ctx.font = '12px Arial';
+            ctx.fillText('State-of-the-art generative AI', canvas.width / 2, 150);
+        }
+
+        // Missing visualization stub functions
+        function drawNeuronAnimation(ctx, canvas) {
+            drawNetworkGraph(ctx, canvas);
+        }
+
+        function drawDecisionBoundary(ctx, canvas) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            // Draw decision boundary line
+            ctx.strokeStyle = '#ff6b35';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(canvas.width, centerY);
+            ctx.stroke();
+
+            // Draw sample points
+            for (let i = 0; i < 20; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                ctx.fillStyle = y < centerY ? '#00d4ff' : '#00ff88';
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function drawWeightDistribution(ctx, canvas) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            // Draw Gaussian distribution
+            ctx.strokeStyle = '#00d4ff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let x = -100; x <= 100; x += 2) {
+                const y = Math.exp(-(x * x) / 500) * 80;
+                const canvasX = centerX + x;
+                const canvasY = centerY - y;
+                if (x === -100) ctx.moveTo(canvasX, canvasY);
+                else ctx.lineTo(canvasX, canvasY);
+            }
+            ctx.stroke();
+
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Weight Distribution (Xavier/He Init)', centerX, 50);
+        }
+
+        function drawConvergencePaths(ctx, canvas) {
+            drawLossLandscape(ctx, canvas);
+        }
+
+        function drawGradientFlow(ctx, canvas) {
+            drawChainRule(ctx, canvas);
+        }
+
+        function drawOverfitComparison(ctx, canvas) {
+            const width = canvas.width;
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Without Regularization', width / 4, 40);
+            ctx.fillStyle = '#ff6b35';
+            ctx.fillText('With Regularization', width * 3 / 4, 40);
+
+            // Draw wavy overfit line
+            ctx.strokeStyle = '#00d4ff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let x = 0; x < width / 2 - 20; x += 5) {
+                const y = 100 + Math.sin(x / 10) * 30 + Math.random() * 20;
+                if (x === 0) ctx.moveTo(x + 20, y);
+                else ctx.lineTo(x + 20, y);
+            }
+            ctx.stroke();
+
+            // Draw smooth regularized line
+            ctx.strokeStyle = '#ff6b35';
+            ctx.beginPath();
+            for (let x = 0; x < width / 2 - 20; x += 5) {
+                const y = 100 + Math.sin(x / 20) * 15;
+                if (x === 0) ctx.moveTo(x + width / 2 + 20, y);
+                else ctx.lineTo(x + width / 2 + 20, y);
+            }
+            ctx.stroke();
+        }
+
+        function drawBatchNormalization(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Batch Normalization: μ=0, σ²=1', canvas.width / 2, 50);
+
+            // Draw before/after distributions
+            ctx.fillStyle = '#ffa500';
+            ctx.fillText('Input Distribution', canvas.width / 4, 100);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('Normalized Distribution', canvas.width * 3 / 4, 100);
+        }
+
+        function drawImageMatrix(ctx, canvas) {
+            const cellSize = 20;
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    const intensity = Math.random();
+                    ctx.fillStyle = `rgba(0, 212, 255, ${intensity})`;
+                    ctx.fillRect(i * cellSize + 100, j * cellSize + 100, cellSize, cellSize);
+                }
+            }
+            ctx.fillStyle = '#e4e6eb';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Image as Matrix (Pixel Values)', canvas.width / 2, 50);
+        }
+
+        function drawPoolingDemo(ctx, canvas) {
+            const cellSize = 30;
+            const matrix = [[12, 20, 30, 0], [8, 12, 2, 0], [34, 70, 37, 4], [112, 100, 25, 12]];
+
+            ctx.fillStyle = '#e4e6eb';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Max Pooling Demo (2x2)', canvas.width / 2, 30);
+
+            // Draw input matrix
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    ctx.strokeStyle = '#00d4ff';
+                    ctx.strokeRect(50 + j * cellSize, 50 + i * cellSize, cellSize, cellSize);
+                    ctx.fillStyle = '#e4e6eb';
+                    ctx.font = '10px Arial';
+                    ctx.fillText(matrix[i][j], 50 + j * cellSize + cellSize / 2, 50 + i * cellSize + cellSize / 2 + 4);
+                }
+            }
+
+            // Draw output (max pooled)
+            const pooled = [[20, 30], [112, 37]];
+            for (let i = 0; i < 2; i++) {
+                for (let j = 0; j < 2; j++) {
+                    ctx.strokeStyle = '#00ff88';
+                    ctx.strokeRect(250 + j * cellSize * 1.5, 70 + i * cellSize * 1.5, cellSize * 1.5, cellSize * 1.5);
+                    ctx.fillStyle = '#00ff88';
+                    ctx.font = 'bold 12px Arial';
+                    ctx.fillText(pooled[i][j], 250 + j * cellSize * 1.5 + cellSize * 0.75, 70 + i * cellSize * 1.5 + cellSize * 0.75 + 5);
+                }
+            }
+        }
+
+        function drawCNNArchitecture(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Input', 60, 200);
+            ctx.fillText('Conv', 160, 200);
+            ctx.fillText('Pool', 260, 200);
+            ctx.fillText('Conv', 360, 200);
+            ctx.fillText('Pool', 460, 200);
+            ctx.fillText('FC', 560, 200);
+            ctx.fillText('Output', 660, 200);
+
+            // Draw blocks
+            const blocks = [60, 160, 260, 360, 460, 560, 660];
+            blocks.forEach((x, i) => {
+                const height = i === 0 ? 100 : (i < blocks.length - 2 ? 80 - i * 10 : 60);
+                ctx.strokeStyle = '#00d4ff';
+                ctx.strokeRect(x - 30, 100, 60, height);
+            });
+        }
+
+        function drawLearnedFilters(ctx, canvas) {
+            ctx.fillStyle = '#e4e6eb';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('CNN Learned Filters', canvas.width / 2, 30);
+
+            const labels = ['Edges', 'Textures', 'Patterns', 'Objects'];
+            labels.forEach((label, i) => {
+                const x = (i + 1) * canvas.width / 5;
+                ctx.fillStyle = '#ff6b35';
+                ctx.font = 'bold 12px Arial';
+                ctx.fillText(label, x, 80);
+
+                // Draw filter representation
+                for (let j = 0; j < 3; j++) {
+                    for (let k = 0; k < 3; k++) {
+                        const intensity = Math.random();
+                        ctx.fillStyle = `rgba(0, 212, 255, ${intensity})`;
+                        ctx.fillRect(x - 20 + k * 12, 100 + j * 12, 10, 10);
+                    }
+                }
+            });
+        }
+
+        function drawLeNetArchitecture(ctx, canvas) { drawCNNArchitecture(ctx, canvas); }
+        function drawAlexNetArchitecture(ctx, canvas) { drawCNNArchitecture(ctx, canvas); }
+        function drawVGGArchitecture(ctx, canvas) { drawCNNArchitecture(ctx, canvas); }
+        function drawResNetArchitecture(ctx, canvas) { drawCNNArchitecture(ctx, canvas); }
+        function drawInceptionModule(ctx, canvas) { drawCNNArchitecture(ctx, canvas); }
+        function drawMobileNetArchitecture(ctx, canvas) { drawCNNArchitecture(ctx, canvas); }
+        function drawTransferLearning(ctx, canvas) { drawCNNArchitecture(ctx, canvas); }
+
+        function drawBoundingBoxes(ctx, canvas) {
+            // Draw sample image
+            ctx.fillStyle = 'rgba(0, 212, 255, 0.1)';
+            ctx.fillRect(50, 50, 300, 300);
+
+            // Draw bounding boxes
+            ctx.strokeStyle = '#ff6b35';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(100, 100, 150, 150);
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('Dog 95%', 105, 95);
+
+            ctx.strokeStyle = '#00ff88';
+            ctx.strokeRect(180, 200, 100, 80);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('Cat 87%', 185, 195);
+        }
+
+        function drawRCNNPipeline(ctx, canvas) { drawBoundingBoxes(ctx, canvas); }
+        function drawSSDDetector(ctx, canvas) { drawBoundingBoxes(ctx, canvas); }
+
+        function drawSemanticSegmentation(ctx, canvas) {
+            const cellSize = 15;
+            const colors = ['rgba(0, 212, 255, 0.5)', 'rgba(255, 107, 53, 0.5)', 'rgba(0, 255, 136, 0.5)'];
+
+            for (let i = 0; i < 20; i++) {
+                for (let j = 0; j < 20; j++) {
+                    ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                    ctx.fillRect(i * cellSize + 100, j * cellSize + 50, cellSize, cellSize);
+                }
+            }
+
+            ctx.fillStyle = '#e4e6eb';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Pixel-wise Classification', canvas.width / 2, 30);
+        }
+
+        function drawInstanceSegmentation(ctx, canvas) { drawSemanticSegmentation(ctx, canvas); }
+
+        function drawFaceEmbeddings(ctx, canvas) {
+            ctx.fillStyle = '#e4e6eb';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Face Embedding Space', canvas.width / 2, 30);
+
+            // Draw embedding vectors
+            const faces = 5;
+            for (let i = 0; i < faces; i++) {
+                const x = 100 + Math.random() * (canvas.width - 200);
+                const y = 100 + Math.random() * 200;
+                ctx.fillStyle = '#00d4ff';
+                ctx.beginPath();
+                ctx.arc(x, y, 10, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function drawAutoencoderArchitecture(ctx, canvas) {
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'center';
+
+            const stages = ['Input', 'Encoder', 'Latent', 'Decoder', 'Output'];
+            stages.forEach((label, i) => {
+                const x = (i + 1) * canvas.width / 6;
+                ctx.fillText(label, x, 50);
+                const height = i === 2 ? 40 : (i === 0 || i === 4 ? 100 : 70);
+                ctx.strokeStyle = '#00d4ff';
+                ctx.strokeRect(x - 30, 100, 60, height);
+            });
+        }
+
+        function drawGANsGame(ctx, canvas) {
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Generator', canvas.width / 3, 50);
+            ctx.fillStyle = '#00d4ff';
+            ctx.fillText('Discriminator', canvas.width * 2 / 3, 50);
+
+            // DrawGenerator
+            ctx.strokeStyle = '#ff6b35';
+            ctx.strokeRect(canvas.width / 3 - 50, 100, 100, 100);
+
+            // Draw Discriminator
+            ctx.strokeStyle = '#00d4ff';
+            ctx.strokeRect(canvas.width * 2 / 3 - 50, 100, 100, 100);
+
+            // Draw arrow
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(canvas.width / 3 + 50, 150);
+            ctx.lineTo(canvas.width * 2 / 3 - 50, 150);
+            ctx.stroke();
+        }
+
+        function drawDiffusionProcess(ctx, canvas) {
+            const steps = 5;
+            const stepWidth = canvas.width / (steps + 1);
+
+            ctx.fillStyle = '#e4e6eb';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Diffusion Process: From Noise to Image', canvas.width / 2, 30);
+
+            for (let i = 0; i < steps; i++) {
+                const x = (i + 1) * stepWidth;
+                const noise = 1 - (i / steps);
+                ctx.fillStyle = `rgba(0, 212, 255, ${1 - noise})`;
+                ctx.fillRect(x - 40, 100, 80, 80);
+                ctx.strokeStyle = '#00d4ff';
+                ctx.strokeRect(x - 40, 100, 80, 80);
+            }
+        }
+
+        function drawRNNUnrolled(ctx, canvas) {
+            const cells = 5;
+            const cellWidth = canvas.width / (cells + 1);
+
+            ctx.fillStyle = '#e4e6eb';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Unrolled RNN', canvas.width / 2, 30);
+
+            for (let i = 0; i < cells; i++) {
+                const x = (i + 1) * cellWidth;
+                ctx.strokeStyle = '#00d4ff';
+                ctx.strokeRect(x - 30, 100, 60, 60);
+
+                if (i < cells - 1) {
+                    ctx.strokeStyle = '#ff6b35';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(x + 30, 130);
+                    ctx.lineTo(x + cellWidth - 30, 130);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        function drawBERTProcess(ctx, canvas) { drawAttentionMatrix(ctx, canvas); }
+        function drawGPTGeneration(ctx, canvas) { drawAttentionMatrix(ctx, canvas); }
+        function drawVisionTransformer(ctx, canvas) { drawAttentionMatrix(ctx, canvas); }
+
+        function drawVisualization(moduleId) {
+            drawConceptsVisualization(moduleId);
+        }
+
+        // Animation and download utilities
+        function toggleVizAnimation(moduleId) {
+            window.vizAnimating = !window.vizAnimating;
+            if (window.vizAnimating) {
+                animateVisualization(moduleId);
+            }
+        }
+
+        function animateVisualization(moduleId) {
+            if (!window.vizAnimating) return;
+            drawConceptsVisualization(moduleId);
+            setTimeout(() => animateVisualization(moduleId), 150);
+        }
+
+        function downloadViz(moduleId) {
+            const canvas = document.getElementById(moduleId + '-canvas');
+            if (!canvas) return;
+
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = moduleId + '-visualization.png';
+            link.click();
+        }
+
+        initDashboard();
+    </script>
+</body>
+
+</html>
