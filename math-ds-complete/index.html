@@ -1103,8 +1103,7 @@
                             <li>What's the median of: [3, 1, 4, 1, 5]?</li>
                             <li>Find the mode of: [2, 2, 3, 4, 4, 4, 5]</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -1344,8 +1343,7 @@
                             <li>Calculate the standard deviation of: [2, 4, 6, 8]</li>
                             <li>Find the variance of: [10, 12, 14, 16, 18]</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -1490,6 +1488,16 @@
                     </div>
                 </div>
 
+                <!-- Interactive Skewness Visualization -->
+                <div class="interactive-container">
+                    <h3>📊 Visual: Types of Skewness</h3>
+                    <canvas id="skewnessCanvas" width="900" height="350"></canvas>
+                    <div class="controls">
+                        <button class="btn btn-primary" id="skewnessAnimateBtn">Animate</button>
+                        <button class="btn btn-secondary" id="skewnessResetBtn">Reset</button>
+                    </div>
+                </div>
+
                 <!-- WORKED EXAMPLE SECTION -->
                 <div class="content-block worked-example-section">
                     <h3>📝 Worked Example - Step by Step</h3>
@@ -1578,8 +1586,7 @@
                             <li>Data with left tail - positive or negative skew?</li>
                             <li>If mean &lt; median, what type of skew?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -1634,6 +1641,17 @@
                         <li><strong>Zero:</strong> No linear relationship</li>
                         <li><strong>Problem:</strong> Scale-dependent, hard to interpret magnitude</li>
                     </ul>
+                </div>
+
+                <!-- Interactive Covariance Visualization -->
+                <div class="interactive-container">
+                    <h3>📊 Visual: Understanding Covariance</h3>
+                    <canvas id="covarianceCanvas" width="900" height="350"></canvas>
+                    <div class="controls">
+                        <button class="btn btn-primary" id="covPositiveBtn">Positive Cov</button>
+                        <button class="btn btn-secondary" id="covNegativeBtn">Negative Cov</button>
+                        <button class="btn btn-secondary" id="covZeroBtn">Zero Cov</button>
+                    </div>
                 </div>
 
                 <!-- WORKED EXAMPLE SECTION -->
@@ -1763,8 +1781,7 @@
                             <li>If Cov(X,Y) = -5, what does this tell you about the relationship?</li>
                             <li>Find Cov(X,Y) for X=[5, 5, 5] and Y=[1, 2, 3]. What do you notice?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -1826,6 +1843,30 @@
                         <li><strong>r = -0.7 to -0.9:</strong> Strong negative</li>
                         <li><strong>r = -1:</strong> Perfect negative correlation</li>
                     </ul>
+                </div>
+
+                <!-- Interactive Correlation Visualization -->
+                <div class="interactive-container">
+                    <h3>📊 Visual: Correlation Strength & Direction</h3>
+                    <p>Standard covariance (Cov / σ_x σ_y)</p>
+                    <canvas id="correlationCanvas" width="900" height="400"></canvas>
+                    <div class="controls">
+                        <div class="slider-group">
+                            <label>Correlation (r): <span id="corrLabel">0.70</span></label>
+                            <input type="range" id="corrSlider" min="-100" max="100" value="70" class="slider">
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline"
+                                onclick="document.getElementById('corrSlider').value=100; document.getElementById('corrSlider').dispatchEvent(new Event('input'))">Perfect
+                                +1</button>
+                            <button class="btn btn-sm btn-outline"
+                                onclick="document.getElementById('corrSlider').value=0; document.getElementById('corrSlider').dispatchEvent(new Event('input'))">Zero
+                                0</button>
+                            <button class="btn btn-sm btn-outline"
+                                onclick="document.getElementById('corrSlider').value=-100; document.getElementById('corrSlider').dispatchEvent(new Event('input'))">Perfect
+                                -1</button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="callout-box insight">
@@ -1941,8 +1982,7 @@
                             <li>What does r = -0.8 indicate about the relationship?</li>
                             <li>Can correlation be greater than 1? Why or why not?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -2106,8 +2146,7 @@
                             <li>Can r = 1.5? Why or why not?</li>
                             <li>If r = 0, does that mean no relationship at all?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -2298,8 +2337,7 @@
                             <li>If P(A∪B)=0.8, P(A)=0.5, P(B)=0.4, find P(A∩B)</li>
                             <li>100 students: 60 like pizza, 40 like burgers, 20 like both. How many like neither?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -2494,8 +2532,7 @@
                             <li>Coin flip: P(Heads) and P(Tails). Independent?</li>
                             <li>Drawing two cards without replacement. Independent?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -2641,8 +2678,7 @@
                             <li>What if the disease affects 10% of the population instead? Recalculate P(A|B)</li>
                             <li>If the test was 95% accurate instead of 99%, what would P(A|B) be?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -2734,6 +2770,22 @@
                     </ul>
                 </div>
 
+                <!-- Interactive PDF vs CDF Visualization -->
+                <div class="interactive-container">
+                    <h3>📊 Visual: PDF vs CDF (Uniform Distribution)</h3>
+                    <canvas id="pdfCdfCanvas" width="900" height="400"></canvas>
+                    <div class="controls">
+                        <div class="slider-group">
+                            <label>Select Range: <span id="pdfRangeLabel">[3, 7]</span></label>
+                            <input type="range" id="pdfRangeSlider" min="0" max="10" value="3" step="0.5"
+                                class="slider">
+                            <input type="range" id="pdfRangeSlider2" min="0" max="10" value="7" step="0.5"
+                                class="slider">
+                        </div>
+                        <button class="btn btn-primary" id="pdfCdfAnimateBtn">Show Relationship</button>
+                    </div>
+                </div>
+
                 <!-- WORKED EXAMPLE SECTION -->
                 <div class="content-block worked-example-section">
                     <h3>📝 Worked Example - Step by Step</h3>
@@ -2822,8 +2874,7 @@
                             <li>For above, find P(8 ≤ X ≤ 12)</li>
                             <li>Why is P(X = 7) = 0 for continuous distributions?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -2972,8 +3023,7 @@
                             <li>What is P(X &gt; 7) using the CDF?</li>
                             <li>If F(x) = 0.75, what does this mean?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -3120,8 +3170,7 @@
                             <li>Free throw: 80% success rate. Model as Bernoulli</li>
                             <li>When is Var(X) maximized for Bernoulli?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -3232,6 +3281,18 @@
                     <p>99.7% have IQ between 55-145</p>
                 </div>
 
+                <!-- Interactive 68-95-99.7 Rule Visualization -->
+                <div class="interactive-container">
+                    <h3>📊 Visual: The 68-95-99.7 Rule</h3>
+                    <canvas id="normalRuleCanvas" width="900" height="400"></canvas>
+                    <div class="controls">
+                        <button class="btn btn-primary" id="normalShow68Btn">Show ±1σ (68%)</button>
+                        <button class="btn btn-secondary" id="normalShow95Btn">Show ±2σ (95%)</button>
+                        <button class="btn btn-secondary" id="normalShow997Btn">Show ±3σ (99.7%)</button>
+                        <button class="btn btn-secondary" id="normalShowAllBtn">Show All</button>
+                    </div>
+                </div>
+
                 <!-- WORKED EXAMPLE SECTION -->
                 <div class="content-block worked-example-section">
                     <h3>📝 Worked Example - Step by Step</h3>
@@ -3322,8 +3383,7 @@
                             <li>What IQ scores contain the middle 95% of people?</li>
                             <li>If z = -2, what percentile is this?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -4097,8 +4157,7 @@
                             <li>If z = 2.5, α = 0.01, find p-value and decide</li>
                             <li>When do we reject H₀ using p-value method?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -4263,8 +4322,7 @@
                             <li>Claim: μ &gt; 50. One-tailed or two-tailed?</li>
                             <li>Claim: μ ≠ 100. Which test?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -4423,8 +4481,7 @@
                             <li>n = 25, x̄ = 100, s = 15, test μ = 95 at α = 0.01</li>
                             <li>Why use t-test instead of z-test?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -4565,8 +4622,7 @@
                             <li>Sample size 100, find df for t-test</li>
                             <li>5×3 table, find df for chi-squared</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -4737,8 +4793,7 @@
                             <li>Security scanner: H₀ = "Safe". Describe Type I/II errors</li>
                             <li>If α = 0.01, what's P(Type I error)?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -5267,79 +5322,298 @@
             </section>
 
             <!-- Topic 54: Eigenvectors -->
-            <!-- Topic 54: Eigenvectors & Eigenvalues -->
+            <!-- Topic 54: Eigenvectors & Eigenvalues - PAPER AND PAIN APPROACH -->
             <section class="topic-section" id="topic-54" data-subject="linear-algebra" style="display: none;">
                 <div class="topic-header">
                     <span class="topic-number">Topic 54</span>
                     <h2>🎯 Eigenvectors and Eigenvalues</h2>
-                    <p class="topic-subtitle">Special vectors that only get scaled</p>
+                    <p class="topic-subtitle">Special vectors that only get scaled (not rotated) by a matrix</p>
                 </div>
 
                 <div class="content-card">
-                    <h3>The Fundamental Equation</h3>
-                    <p>An <strong>eigenvector</strong> $\mathbf{v}$ of a square matrix $A$ is a non-zero vector that,
-                        when multiplied by $A$, yields a scalar multiple of itself. This scalar $\lambda$ is called the
-                        <strong>eigenvalue</strong>.
-                    </p>
-                    <div class="formula-card">
-                        <div style="font-size: 1.3em; margin: 15px 0;">
-                            $$A\mathbf{v} = \lambda\mathbf{v}$$
+                    <h3>🤔 The Big Idea (Intuition First)</h3>
+                    <p>When you multiply a matrix by a vector, the vector usually <strong>changes direction</strong>.
+                        But some special vectors only get <strong>stretched or shrunk</strong>—they stay on the same
+                        line.
+                        These are <strong>eigenvectors</strong>.</p>
+
+                    <div class="callout-box insight">
+                        <div class="callout-header">💡 KEY INSIGHT</div>
+                        <p><strong>Eigenvector:</strong> A vector that keeps its direction when multiplied by a matrix.
+                        </p>
+                        <p><strong>Eigenvalue:</strong> How much the eigenvector gets stretched (or shrunk).</p>
+                        <p style="font-size: 1.2em; margin-top: 10px;">$$A\mathbf{v} = \lambda\mathbf{v}$$</p>
+                        <p style="color: #8b949e; font-style: italic;">
+                            "Apply matrix A to vector v, and you just get λ times v back!"
+                        </p>
+                    </div>
+                </div>
+
+                <!-- PAPER AND PAIN SECTION -->
+                <div class="content-block worked-example-section">
+                    <h3>✍️ Paper and Pain: Manual Calculation</h3>
+
+                    <div class="example-problem">
+                        <h4>Our Test Matrix:</h4>
+                        <p class="problem-statement">Let's use a simple diagonal matrix:</p>
+                        <div style="font-size: 1.4em; text-align: center; margin: 20px 0; color: #64ffda;">
+                            $$A = \begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix}$$
+                        </div>
+                        <p><strong>What does this matrix do?</strong> It stretches the x-axis by 2, and leaves the
+                            y-axis alone.</p>
+                    </div>
+
+                    <h4 style="color: #ff6b6b; margin-top: 30px;">❌ Test 1: Is v = [1, 1] an eigenvector?</h4>
+
+                    <div class="example-solution">
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Set up the Matrix-Vector Multiplication</p>
+                                <div class="step-work" style="font-size: 1.1em;">
+                                    <code>A × v = ?</code><br>
+                                    <code style="font-size: 1.2em;">
+                                    $$\begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix} \times \begin{bmatrix} 1 \\ 1 \end{bmatrix} = ?$$
+                                    </code>
+                                </div>
+                                <p class="step-explanation">We multiply the matrix A by the vector v = [1, 1]</p>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Row 1 (Top of Result)</p>
+                                <div class="step-work">
+                                    <code>Row 1 of A • v = (2×1) + (0×1)</code><br>
+                                    <code style="color: #64ffda;">= 2 + 0 = <strong>2</strong></code>
+                                </div>
+                                <p class="step-explanation">First row [2, 0] dotted with [1, 1]</p>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Row 2 (Bottom of Result)</p>
+                                <div class="step-work">
+                                    <code>Row 2 of A • v = (0×1) + (1×1)</code><br>
+                                    <code style="color: #64ffda;">= 0 + 1 = <strong>1</strong></code>
+                                </div>
+                                <p class="step-explanation">Second row [0, 1] dotted with [1, 1]</p>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">Combine the Results</p>
+                                <div class="step-work" style="font-size: 1.1em;">
+                                    <code style="font-size: 1.2em;">
+                                    $$A \times v = \begin{bmatrix} 2 \\ 1 \end{bmatrix}$$
+                                    </code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Compare: Did the Vector Stay on Its Line?</p>
+                                <div class="step-work">
+                                    <code>Original v = [1, 1] → Points at 45° angle (slope = 1/1 = 1)</code><br>
+                                    <code>Result Av = [2, 1] → Points at different angle (slope = 1/2 = 0.5)</code><br><br>
+                                    <code style="color: #ff6b6b; font-weight: bold;">❌ DIRECTION CHANGED!</code>
+                                </div>
+                                <p class="step-explanation">The vector rotated from 45° to a shallower angle</p>
+                            </div>
+                        </div>
+
+                        <div class="final-answer"
+                            style="background: linear-gradient(135deg, #ff6b6b22, #ff6b6b11); border-left: 4px solid #ff6b6b;">
+                            <strong>❌ Conclusion:</strong>
+                            <span class="answer-highlight" style="color: #ff6b6b;">v = [1, 1] is NOT an
+                                eigenvector!</span>
+                            <p style="margin-top: 10px;">The matrix didn't just stretch it — it <em>changed its
+                                    direction</em>.</p>
+                        </div>
+                    </div>
+
+                    <h4 style="color: #51cf66; margin-top: 40px;">✓ Test 2: Is v = [1, 0] an eigenvector?</h4>
+
+                    <div class="example-solution">
+                        <div class="solution-step">
+                            <div class="step-number">Step 1:</div>
+                            <div class="step-content">
+                                <p class="step-description">Set up the Matrix-Vector Multiplication</p>
+                                <div class="step-work" style="font-size: 1.1em;">
+                                    <code style="font-size: 1.2em;">
+                                    $$\begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix} \times \begin{bmatrix} 1 \\ 0 \end{bmatrix} = ?$$
+                                    </code>
+                                </div>
+                                <p class="step-explanation">Multiply A by v = [1, 0] (the x-axis unit vector)</p>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 2:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Row 1</p>
+                                <div class="step-work">
+                                    <code>Row 1: (2×1) + (0×0) = 2 + 0 = <strong style="color: #64ffda;">2</strong></code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 3:</div>
+                            <div class="step-content">
+                                <p class="step-description">Calculate Row 2</p>
+                                <div class="step-work">
+                                    <code>Row 2: (0×1) + (1×0) = 0 + 0 = <strong style="color: #64ffda;">0</strong></code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 4:</div>
+                            <div class="step-content">
+                                <p class="step-description">The Result</p>
+                                <div class="step-work" style="font-size: 1.1em;">
+                                    <code style="font-size: 1.2em;">
+                                    $$A \times v = \begin{bmatrix} 2 \\ 0 \end{bmatrix} = 2 \times \begin{bmatrix} 1 \\ 0 \end{bmatrix}$$
+                                    </code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="solution-step">
+                            <div class="step-number">Step 5:</div>
+                            <div class="step-content">
+                                <p class="step-description">Compare: Did the Vector Stay on Its Line?</p>
+                                <div class="step-work">
+                                    <code>Original v = [1, 0] → Points along x-axis (→)</code><br>
+                                    <code>Result Av = [2, 0] → STILL points along x-axis! (→→)</code><br><br>
+                                    <code
+                                        style="color: #51cf66; font-weight: bold;">✓ SAME DIRECTION! Just 2× longer!</code>
+                                </div>
+                                <p class="step-explanation">It doubled in length but stayed on the x-axis</p>
+                            </div>
+                        </div>
+
+                        <div class="final-answer"
+                            style="background: linear-gradient(135deg, #51cf6622, #51cf6611); border-left: 4px solid #51cf66;">
+                            <strong>✓ Conclusion:</strong>
+                            <span class="answer-highlight" style="color: #51cf66;">v = [1, 0] IS an eigenvector!</span>
+                            <p style="margin-top: 10px;">
+                                <strong>Eigenvector:</strong> [1, 0]<br>
+                                <strong>Eigenvalue:</strong> λ = 2 (the stretching factor)
+                            </p>
+                        </div>
+                    </div>
+
+                    <h4 style="color: #51cf66; margin-top: 40px;">✓ Test 3: Is v = [0, 1] an eigenvector?</h4>
+
+                    <div class="example-solution">
+                        <div class="solution-step">
+                            <div class="step-number">Quick Check:</div>
+                            <div class="step-content">
+                                <div class="step-work" style="font-size: 1.1em;">
+                                    <code style="font-size: 1.2em;">
+                                    $$\begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix} \times \begin{bmatrix} 0 \\ 1 \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix} = 1 \times \begin{bmatrix} 0 \\ 1 \end{bmatrix}$$
+                                    </code>
+                                </div>
+                                <p class="step-explanation">The y-axis vector stays on the y-axis! λ = 1</p>
+                            </div>
+                        </div>
+
+                        <div class="final-answer"
+                            style="background: linear-gradient(135deg, #51cf6622, #51cf6611); border-left: 4px solid #51cf66;">
+                            <strong>✓ Yes!</strong>
+                            <span class="answer-highlight" style="color: #51cf66;">[0, 1] is also an eigenvector with λ
+                                = 1</span>
                         </div>
                     </div>
                 </div>
 
+                <!-- Visual Summary -->
+                <div class="callout-box insight">
+                    <div class="callout-header">📊 The Full Picture</div>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Vector</th>
+                                <th>A × v Result</th>
+                                <th>Direction Changed?</th>
+                                <th>Eigenvector?</th>
+                                <th>Eigenvalue (λ)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>[1, 1]</td>
+                                <td>[2, 1]</td>
+                                <td style="color: #ff6b6b;">YES ❌</td>
+                                <td style="color: #ff6b6b;">NO</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>[1, 0]</td>
+                                <td>[2, 0]</td>
+                                <td style="color: #51cf66;">NO ✓</td>
+                                <td style="color: #51cf66;">YES</td>
+                                <td>λ = 2</td>
+                            </tr>
+                            <tr>
+                                <td>[0, 1]</td>
+                                <td>[0, 1]</td>
+                                <td style="color: #51cf66;">NO ✓</td>
+                                <td style="color: #51cf66;">YES</td>
+                                <td>λ = 1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Interactive Visualization -->
+                <div class="interactive-container">
+                    <h3>🎮 Interactive: Watch Vectors Transform</h3>
+                    <canvas id="canvas-54" width="700" height="400"></canvas>
+                    <div class="controls">
+                        <button class="btn btn-primary" id="btn54transform">Apply Matrix A</button>
+                        <button class="btn btn-secondary" id="btn54reset">Reset</button>
+                    </div>
+                    <p style="color: #8b949e; font-size: 0.9em; margin-top: 10px;">
+                        🔵 Blue [1,1]: Changes direction → NOT eigenvector<br>
+                        🟢 Green [1,0]: Just stretches → IS eigenvector (λ=2)<br>
+                        🟡 Yellow [0,1]: Stays same → IS eigenvector (λ=1)
+                    </p>
+                </div>
+
+                <!-- The Mathematical Method -->
                 <div class="content-card">
-                    <h3>✍️ How to Solve (Paper & Pen)</h3>
-                    <p><strong>Step 1: Set up the Characteristic Equation</strong><br>
-                        To find $\lambda$, we move everything to one side: $(A - \lambda I)\mathbf{v} = 0$. Since
-                        $\mathbf{v} \neq 0$, the matrix $(A - \lambda I)$ must be singular (squish space to zero area),
-                        meaning its determinant must be zero:</p>
+                    <h3>📐 The Formal Method (For Finding Eigenvectors)</h3>
+                    <p>Once you understand the concept, here's how to find eigenvectors systematically:</p>
+
                     <div class="formula-card">
+                        <div class="formula-header">The Characteristic Equation</div>
                         <div style="font-size: 1.2em; margin: 15px 0;">
                             $$\det(A - \lambda I) = 0$$
                         </div>
-                    </div>
-
-                    <div class="callout-box example">
-                        <div class="callout-header">WORKED EXAMPLE: FINDING EIGENVALUES</div>
-                        <p>Let $A = \begin{bmatrix} 3 & 1 \\ 0 & 2 \end{bmatrix}$. Solve $\det \begin{bmatrix} 3-\lambda
-                            & 1 \\ 0 & 2-\lambda \end{bmatrix} = 0$:</p>
-                        <p>$(3-\lambda)(2-\lambda) - (1 \times 0) = 0$<br>
-                            $(3-\lambda)(2-\lambda) = 0$<br>
-                            Roots: $\mathbf{\lambda_1 = 3, \lambda_2 = 2}$</p>
-                    </div>
-
-                    <p><strong>Step 2: Find the Eigenvectors</strong><br>
-                        For each $\lambda$, plug it back into $(A - \lambda I)\mathbf{v} = 0$ and solve for
-                        $\mathbf{v}$.</p>
-                    <div class="callout-box example">
-                        <div class="callout-header">WORKED EXAMPLE: FINDING EIGENVECTORS</div>
-                        <p>For $\lambda = 3$ in our matrix above:<br>
-                            $(A - 3I)\mathbf{v} = 0 \implies \begin{bmatrix} 3-3 & 1 \\ 0 & 2-3 \end{bmatrix}
-                            \begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}$<br>
-                            $\begin{bmatrix} 0 & 1 \\ 0 & -1 \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix} =
-                            \begin{bmatrix} 0 \\ 0 \end{bmatrix}$<br>
-                            This gives the equation $y = 0$. $x$ can be anything! So an eigenvector for $\lambda=3$ is
-                            $\mathbf{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$.</p>
-                    </div>
-                </div>
-
-                <div class="interactive-container">
-                    <h3>Visual Confirmation</h3>
-                    <canvas id="canvas-54" width="600" height="400"></canvas>
-                    <div class="controls">
-                        <button class="btn btn-primary" id="btn54transform">Apply Transformation</button>
-                        <button class="btn btn-secondary" id="btn54reset">Reset</button>
+                        <p>Solve this polynomial to find eigenvalues λ, then plug each λ back to find eigenvectors.</p>
                     </div>
                 </div>
 
                 <div class="summary-card">
                     <h3>🎯 Key Takeaways</h3>
                     <ul>
-                        <li>Eigenvectors stay on their span (no rotation).</li>
-                        <li>Find eigenvalues by solving the polynomial $\det(A - \lambda I) = 0$.</li>
-                        <li>Find eigenvectors by solving $(A - \lambda I)\mathbf{v} = 0$.</li>
-                        <li>Critical for PCA, PageRank, and vibration analysis.</li>
+                        <li><strong>Eigenvectors</strong> are special vectors that <em>don't rotate</em> when multiplied
+                            by a matrix—they only stretch or shrink.</li>
+                        <li><strong>Eigenvalues</strong> tell you <em>how much</em> the eigenvector stretches (λ > 1) or
+                            shrinks (λ < 1).</li>
+                        <li>If λ is negative, the vector flips direction (but still stays on the same line!).</li>
+                        <li><strong>Why it matters:</strong> Critical for PCA (dimensionality reduction), Google
+                            PageRank, quantum mechanics, and stability analysis.</li>
                     </ul>
                 </div>
             </section>
@@ -6304,8 +6578,7 @@
                             <li>Find ∫₀² (3x² + 2) dx</li>
                             <li>Evaluate ∫₁³ (4x - 1) dx</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -6790,8 +7063,7 @@
                             <li>Using y=2+3x, predict y when x=6</li>
                             <li>If b=2 and the line passes through (3,10), find a</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -7661,8 +7933,7 @@
                             <li>Find the minimum of f(x) = (x-3)² using calculus (no GD)</li>
                             <li>If gradient is positive, which direction should we move?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -8291,8 +8562,7 @@
                             <li>If price is $275k, estimate the house size</li>
                             <li>What does the slope 0.10 mean in real terms?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -8597,8 +8867,7 @@
                             <li>If distances were 0.5(Setosa), 0.6(Setosa), 0.7(Versicolor), predict class</li>
                             <li>Why is K usually chosen as odd number?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -8732,6 +9001,20 @@
                         <div class="formula-header">Gini Impurity (Alternative)</div>
                         <div class="formula-main">Gini = 1 - Σ pᵢ²</div>
                         <p>Used by CART algorithm. Faster to compute.</p>
+                    </div>
+                </div>
+
+                <!-- Interactive Decision Tree Visualization -->
+                <div class="interactive-container">
+                    <h3>📊 Visual: Simple Decision Tree - "Is a Person Tall?"</h3>
+                    <canvas id="decisionTreeCanvas" width="900" height="450"></canvas>
+                    <div class="controls">
+                        <div class="slider-group">
+                            <label>Test Height: <span id="heightTestLabel">175</span> cm</label>
+                            <input type="range" id="heightTestSlider" min="150" max="200" value="175" class="slider">
+                        </div>
+                        <button class="btn btn-primary" id="treeClassifyBtn">Classify</button>
+                        <button class="btn btn-secondary" id="treeResetBtn">Reset</button>
                     </div>
                 </div>
 
@@ -8895,8 +9178,7 @@
                             <li>If split gives H_left=0 and H_right=0.5, which is better split?</li>
                             <li>Why might deep trees overfit?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -9146,8 +9428,7 @@
                             <li>How would you choose optimal K value?</li>
                             <li>What happens if we use K=3 instead?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -9395,8 +9676,7 @@
                             <li>3-fold CV gives: 0.80, 0.85, 0.90. Find mean.</li>
                             <li>When should you use stratified K-fold?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -11075,8 +11355,7 @@ optimizer.step()</code>
                             <li>Why use ε-greedy exploration?</li>
                             <li>Calculate Q-update: current Q=2, r=-1, max next Q=5, α=0.1, γ=0.9</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
@@ -11543,8 +11822,7 @@ for episode in range(1000):<br>
                             <li>What are advantages of policy gradient vs Q-learning?</li>
                             <li>What problem occurs if your learning rate is too high?</li>
                         </ol>
-                        <button class="show-answers-btn"
-                            onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Show Answers' ? 'Hide Answers' : 'Show Answers'">Show
+                        <button class="show-answers-btn">Show
                             Answers</button>
                         <div class="practice-answers" style="display: none;">
                             <p><strong>Answers:</strong></p>
