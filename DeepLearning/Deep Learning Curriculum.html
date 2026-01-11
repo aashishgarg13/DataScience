@@ -880,6 +880,52 @@
                         • Try <strong>Leaky ReLU</strong> or <strong>ELU</strong> if ReLU neurons are dying<br>
                         • Avoid Sigmoid/Tanh in deep networks (gradient vanishing)
                     </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🧠 Neural Network Design</div>
+                        <div class="box-content">
+                            Critical choice for every neural network - affects training speed, convergence, and final accuracy
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🎯 Task-Specific Selection</div>
+                        <div class="box-content">
+                            Different tasks need different outputs: Sigmoid for binary, Softmax for multi-class, Linear for regression
+                        </div>
+                    </div>
+                `,
+                math: `
+                    <h3>Derivatives: The Backprop Fuel</h3>
+                    <p>Activation functions must be differentiable for backpropagation to work. Let's look at the derivatives on paper:</p>
+                    
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Sigmoid:</strong> σ(z) = 1 / (1 + e⁻ᶻ)<br>
+                        <strong>Derivative:</strong> σ'(z) = σ(z)(1 - σ(z))<br>
+                        <span class="formula-caption">Max gradient is 0.25 (at z=0). This is why deep networks vanish!</span></div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Tanh:</strong> tanh(z) = (eᶻ - e⁻ᶻ) / (eᶻ + e⁻ᶻ)<br>
+                        <strong>Derivative:</strong> tanh'(z) = 1 - tanh²(z)<br>
+                        <span class="formula-caption">Max gradient is 1.0 (at z=0). Better than Sigmoid, but still vanishes.</span></div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>ReLU:</strong> max(0, z)<br>
+                        <strong>Derivative:</strong> 1 if z > 0, else 0<br>
+                        <span class="formula-caption">Gradient is 1.0 for all positive z. No vanishing! But 0 for negative (Dying ReLU).</span></div>
+                    </div>
+
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: The Chain Effect</div>
+                        Each layer multiplies the gradient by σ'(z). <br>
+                        For 10 Sigmoid layers: Total gradient ≈ (0.25)¹⁰ ≈ <strong>0.00000095</strong><br>
+                        This is the mathematical proof of the Vanishing Gradient Problem!
+                    </div>
                 `
             },
             "conv-layer": {
@@ -1214,6 +1260,1530 @@
                             <strong>CodeGen, AlphaCode:</strong> Automated coding, bug detection
                         </div>
                     </div>
+                `,
+                math: `
+                    <h3>Scaled Dot-Product Attention</h3>
+                    <p>The "heart" of the Transformer. It computes how much "attention" to pay to different parts of the input sequence.</p>
+                    
+                    <div class="formula" style="font-size: 1.3rem; text-align: center; margin: 20px 0; background: rgba(0, 212, 255, 0.05); padding: 20px; border-radius: 8px;">
+                        Attention(Q, K, V) = softmax( (QKᵀ) / √dₖ ) V
+                    </div>
+
+                    <h3>Step-by-Step Derivation</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Dot Product (QKᵀ):</strong> Compute raw similarity scores between Queries (what we want) and Keys (what we have)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Scaling (1/√dₖ):</strong> Divide by square root of key dimension. <strong>Why?</strong> With high dimensions, dot products grow large, pushing softmax into regions with vanishing gradients. Scaling prevents this.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Softmax:</strong> Convert similarity scores into probabilities (attention weights) that sum to 1</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Weighted Sum (×V):</strong> Use attention weights to pull information from Values.</div>
+                    </div>
+
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Multi-Head Attention</div>
+                        Instead of one big attention, we split Q, K, V into <em>h</em> heads:<br>
+                        1. Heads learn <strong>different aspects</strong> (e.g., syntax vs semantics)<br>
+                        2. Concat all heads: MultiHead = Concat(head₁, ..., headₕ)Wᴼ<br>
+                        3. Complexity: <strong>O(n² · d)</strong> - This is why long sequences are hard!
+                    </div>
+
+                    <div class="callout warning">
+                        <div class="callout-title">📐 Sinusoidal Positional Encoding</div>
+                        PE(pos, 2i) = sin(pos / 10000^{2i/d})<br>
+                        PE(pos, 2i+1) = cos(pos / 10000^{2i/d})<br>
+                        This allows the model to learn relative positions since PE(pos+k) is a linear function of PE(pos).
+                    </div>
+                `
+            },
+            "perceptron": {
+                overview: `
+                    <h3>What is a Perceptron?</h3>
+                    <p>The perceptron is the simplest neural network, invented in 1958. It's a binary linear classifier that makes predictions based on weighted inputs.</p>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">✅ Advantages</div>
+                        • Simple and fast<br>
+                        • Guaranteed convergence for linearly separable data<br>
+                        • Interpretable weights
+                    </div>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Key Limitation</div>
+                        <strong>Cannot solve XOR:</strong> Limited to linear decision boundaries only
+                    </div>
+                `,
+                concepts: `
+                    <h3>How Perceptron Works</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Weighted Sum:</strong> z = w₁x₁ + w₂x₂ + ... + b</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Step Function:</strong> Output = 1 if z ≥ 0, else 0</div>
+                    </div>
+                    <div class="formula">
+                        Learning Rule: w_new = w_old + α(y_true - y_pred)x
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">📚 Educational</div>
+                        <div class="box-content">
+                            Historical importance - first trainable neural model. Perfect for teaching ML fundamentals
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🔬 Simple Classification</div>
+                        <div class="box-content">
+                            Linearly separable problems: basic pattern recognition, simple binary decisions
+                        </div>
+                    </div>
+                `
+            },
+            "mlp": {
+                overview: `
+                    <h3>Multi-Layer Perceptron (MLP)</h3>
+                    <p>MLP adds hidden layers between input and output, enabling non-linear decision boundaries and solving the XOR problem that single perceptrons cannot.</p>
+                    
+                    <h3>Why MLPs?</h3>
+                    <ul>
+                        <li><strong>Universal Approximation:</strong> Can approximate any continuous function</li>
+                        <li><strong>Non-Linear Learning:</strong> Solves complex problems</li>
+                        <li><strong>Feature Extraction:</strong> Hidden layers learn hierarchical features</li>
+                    </ul>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">💡 The XOR Breakthrough</div>
+                        Single perceptron: Cannot solve XOR<br>
+                        MLP with 1 hidden layer (2 neurons): Solves XOR!<br>
+                        This proves the power of depth.
+                    </div>
+                `,
+                concepts: `
+                    <h3>Architecture Components</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Input Layer:</strong> Raw features (no computation)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Hidden Layers:</strong> Extract progressively abstract features</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Output Layer:</strong> Final predictions</div>
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">📊 Tabular Data</div>
+                        <div class="box-content">Credit scoring, fraud detection, customer churn, sales forecasting</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🏭 Manufacturing</div>
+                        <div class="box-content">Quality control, predictive maintenance, demand forecasting</div>
+                    </div>
+                `,
+                math: `
+                    <h3>Neural Network Forward Pass (Matrix Form)</h3>
+                    <p>Vectorization is key to modern deep learning. We process entire layers as matrix multiplications.</p>
+                    
+                    <div class="formula">
+                        Layer 1: z⁽¹⁾ = W⁽¹⁾x + b⁽¹⁾ | a⁽¹⁾ = σ(z⁽¹⁾)<br>
+                        Layer 2: z⁽²⁾ = W⁽²⁾a⁽¹⁾ + b⁽²⁾ | a⁽²⁾ = σ(z⁽²⁾)<br>
+                        ...<br>
+                        Layer L: ŷ = Softmax(W⁽ᴸ⁾a⁽ᴸ⁻¹⁾ + b⁽ᴸ⁾)
+                    </div>
+
+                    <h3>Paper & Pain: Dimensionality Audit</h3>
+                    <p>Understanding tensor shapes is the #1 skill for debugging neural networks.</p>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Input x:</strong> [n_features, 1]</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Weights W⁽¹⁾:</strong> [n_hidden, n_features]</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Bias b⁽¹⁾:</strong> [n_hidden, 1]</div>
+                    </div>
+
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Solving XOR</div>
+                        Input: [0,1], Target: 1<br>
+                        Layer 1 (2 neurons):<br>
+                        z₁ = 10x₁ + 10x₂ - 5 &nbsp; | &nbsp; a₁ = σ(z₁)<br>
+                        z₂ = 10x₁ + 10x₂ - 15 | &nbsp; a₂ = σ(z₂)<br>
+                        Layer 2 (1 neuron):<br>
+                        y = σ(20a₁ - 20a₂ - 10)<br>
+                        <strong>Try it on paper!</strong> This specific configuration correctly outputs XOR values.
+                    </div>
+                `
+            },
+            "weight-init": {
+                overview: `
+                    <h3>Weight Initialization Strategies</h3>
+                    <table>
+                        <tr>
+                            <th>Method</th>
+                            <th>Best For</th>
+                            <th>Formula</th>
+                        </tr>
+                        <tr>
+                            <td>Xavier/Glorot</td>
+                            <td>Sigmoid, Tanh</td>
+                            <td>N(0, √(2/(n_in+n_out)))</td>
+                        </tr>
+                        <tr>
+                            <td>He/Kaiming</td>
+                            <td>ReLU</td>
+                            <td>N(0, √(2/n_in))</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Never Initialize to Zero!</div>
+                        All neurons learn identical features (symmetry problem)
+                    </div>
+                `,
+                concepts: `
+                    <h3>Key Principles</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Variance Preservation:</strong> Keep activation variance similar across layers</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Symmetry Breaking:</strong> Different weights force different features</div>
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🎯 Critical for Deep Networks</div>
+                        <div class="box-content">
+                            Proper initialization is essential for training networks >10 layers. Wrong init = training failure
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">⚡ Faster Convergence</div>
+                        <div class="box-content">
+                            Good initialization reduces training time by 2-10×, especially with modern optimizers
+                        </div>
+                    </div>
+                `,
+                math: `
+                    <h3>The Variance Preservation Principle</h3>
+                    <p>To prevent gradients from vanishing or exploding, we want the variance of the activations to remain constant across layers.</p>
+                    
+                    <div class="formula">
+                        For a linear layer: y = Σ wᵢxᵢ<br>
+                        Var(y) = Var(Σ wᵢxᵢ) = Σ Var(wᵢxᵢ)<br>
+                        Assuming w and x are independent with mean 0:<br>
+                        Var(wᵢxᵢ) = E[wᵢ²]E[xᵢ²] - E[wᵢ]²E[xᵢ]² = Var(wᵢ)Var(xᵢ)<br>
+                        So, Var(y) = n_in × Var(w) × Var(x)
+                    </div>
+
+                    <h3>1. Xavier (Glorot) Initialization</h3>
+                    <p>Goal: Var(y) = Var(x) and Var(grad_out) = Var(grad_in)</p>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Forward Pass:</strong> n_in × Var(w) = 1  ⇒ Var(w) = 1/n_in</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Backward Pass:</strong> n_out × Var(w) = 1 ⇒ Var(w) = 1/n_out</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Compromise:</strong> Var(w) = 2 / (n_in + n_out)</div>
+                    </div>
+
+                    <h3>2. He (Kaiming) Initialization</h3>
+                    <p>For ReLU activation, half the neurons are inactive (output 0), which halves the variance. We must compensate.</p>
+                    <div class="formula">
+                        Var(ReLU(y)) = 1/2 × Var(y)<br>
+                        To keep Var(ReLU(y)) = Var(x):<br>
+                        1/2 × n_in × Var(w) = 1<br>
+                        <strong>Var(w) = 2 / n_in</strong>
+                    </div>
+
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain Calculation</div>
+                        If n_in = 256 and you use ReLU:<br>
+                        Weight Std Dev = √(2/256) = √(1/128) ≈ <strong>0.088</strong><br>
+                        Initializing with std=1.0 or std=0.01 would cause immediate failure in a deep net!
+                    </div>
+                `
+            },
+            "loss": {
+                overview: `
+                    <h3>Loss Functions Guide</h3>
+                    <table>
+                        <tr>
+                            <th>Task</th>
+                            <th>Loss Function</th>
+                        </tr>
+                        <tr>
+                            <td>Binary Classification</td>
+                            <td>Binary Cross-Entropy</td>
+                        </tr>
+                        <tr>
+                            <td>Multi-class</td>
+                            <td>Categorical Cross-Entropy</td>
+                        </tr>
+                        <tr>
+                            <td>Regression</td>
+                            <td>MSE or MAE</td>
+                        </tr>
+                    </table>
+                `,
+                concepts: `
+                    <h3>Common Loss Functions</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>MSE:</strong> (1/n)Σ(y - ŷ)² - Penalizes large errors</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Cross-Entropy:</strong> -Σ(y·log(ŷ)) - For classification</div>
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🎯 Task-Dependent Selection</div>
+                        <div class="box-content">
+                            Every ML task needs appropriate loss: classification (cross-entropy), regression (MSE/MAE), ranking (triplet loss)
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">📊 Custom Losses</div>
+                        <div class="box-content">
+                            Business-specific objectives: Focal Loss (imbalanced data), Dice Loss (segmentation), Contrastive Loss (similarity learning)
+                        </div>
+                    </div>
+                `,
+                math: `
+                    <h3>Binary Cross-Entropy (BCE) Derivation</h3>
+                    <p>Why do we use logs? BCE is derived from Maximum Likelihood Estimation (MLE) assuming a Bernoulli distribution.</p>
+                    
+                    <div class="formula">
+                        L(ŷ, y) = -(y log(ŷ) + (1-y) log(1-ŷ))
+                    </div>
+
+                    <h3>Paper & Pain: Why not MSE for Classification?</h3>
+                    <p>If we use MSE for sigmoid output, the gradient is:</p>
+                    <div class="formula">
+                        ∂L/∂w = (ŷ - y) <strong>σ'(z)</strong> x
+                    </div>
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ The Saturation Problem</div>
+                        If the model is very wrong (e.g., target 1, output 0.001), σ'(z) is near 0. <br>
+                        The gradient vanishes, and the model <strong>stops learning!</strong>.
+                    </div>
+
+                    <h3>The BCE Advantage</h3>
+                    <p>When using BCE, the σ'(z) term cancels out! The gradient becomes:</p>
+                    <div class="formula" style="font-size: 1.2rem; color: #00d4ff;">
+                        ∂L/∂w = (ŷ - y) x
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">💡</div>
+                        <div>This is beautiful: the gradient depends <strong>only on the error</strong> (ŷ-y), not on how saturated the neuron is. This enables much faster training.</div>
+                    </div>
+                `
+            },
+            "optimizers": {
+                overview: `
+                    <h3>Optimizer Selection Guide</h3>
+                    <table>
+                        <tr>
+                            <th>Optimizer</th>
+                            <th>When to Use</th>
+                        </tr>
+                        <tr>
+                            <td>Adam/AdamW</td>
+                            <td><strong>Default choice</strong> - works 90% of time</td>
+                        </tr>
+                        <tr>
+                            <td>SGD + Momentum</td>
+                            <td>CNNs (better final accuracy with patience)</td>
+                        </tr>
+                        <tr>
+                            <td>RMSprop</td>
+                            <td>RNNs</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="formula">
+                        Adam: m_t = β₁·m + (1-β₁)·∇L<br>
+                        v_t = β₂·v + (1-β₂)·(∇L)²<br>
+                        w = w - α·m_t/√(v_t)
+                    </div>
+                `,
+                concepts: `
+                    <h3>Optimizer Evolution</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>SGD:</strong> Simple but requires careful learning rate tuning</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Adam:</strong> Adaptive rates + momentum = works out-of-box</div>
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🚀 Training Acceleration</div>
+                        <div class="box-content">
+                            Modern optimizers (Adam) reduce training time by 5-10× compared to basic SGD
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🎯 Architecture-Specific</div>
+                        <div class="box-content">
+                            CNNs: SGD+Momentum | Transformers: AdamW | RNNs: RMSprop | Default: Adam
+                        </div>
+                    </div>
+                `
+            },
+            "backprop": {
+                overview: `
+                    <h3>Backpropagation Algorithm</h3>
+                    <p>Backprop efficiently computes gradients by applying the chain rule from output to input, enabling training of deep networks.</p>
+                    
+                    <h3>Why Backpropagation?</h3>
+                    <ul>
+                        <li><strong>Efficient:</strong> Computes all gradients in single backward pass</li>
+                        <li><strong>Scalable:</strong> Works for networks of any depth</li>
+                        <li><strong>Automatic:</strong> Modern frameworks do it automatically</li>
+                    </ul>
+                `,
+                concepts: `
+                    <div class="formula">
+                        Chain Rule:<br>
+                        ∂L/∂w = ∂L/∂y × ∂y/∂z × ∂z/∂w<br>
+                        <br>
+                        For layer l:<br>
+                        δˡ = (W^(l+1))^T δ^(l+1) ⊙ σ'(z^l)<br>
+                        ∂L/∂W^l = δ^l (a^(l-1))^T
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🧠 Universal Training Method</div>
+                        <div class="box-content">
+                            Every modern neural network uses backprop - from CNNs to Transformers to GANs
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🔧 Automatic Differentiation</div>
+                        <div class="box-content">
+                            PyTorch, TensorFlow implement automatic backprop - you define forward pass, framework does backward
+                        </div>
+                    </div>
+                `,
+                math: `
+                    <h3>The 4 Fundamental Equations of Backprop</h3>
+                    <p>Backpropagation is essentially the chain rule applied iteratively. We define the error signal δ = ∂L/∂z.</p>
+                    
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Error at Output Layer (L):</strong><br>
+                        δᴸ = ∇ₐL ⊙ σ'(zᴸ)<br>
+                        <span class="formula-caption">Example for MSE: (aᴸ - y) ⊙ σ'(zᴸ)</span></div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Error at Layer l (Backwards):</strong><br>
+                        δˡ = ((Wˡ⁺¹)ᵀ δˡ⁺¹) ⊙ σ'(zˡ)</div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Gradient w.r.t Bias:</strong><br>
+                        ∂L / ∂bˡ = δˡ</div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Gradient w.r.t Weights:</strong><br>
+                        ∂L / ∂Wˡ = δˡ (aˡ⁻¹)ᵀ</div>
+                    </div>
+
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain Walkthrough</div>
+                        Suppose single neuron: z = wx + b, Loss L = (σ(z) - y)²/2<br>
+                        1. <strong>Forward:</strong> z=2, a=σ(2)≈0.88, y=1, L=0.007<br>
+                        2. <strong>Backward:</strong><br>
+                        &nbsp;&nbsp;&nbsp;∂L/∂a = (a-y) = -0.12<br>
+                        &nbsp;&nbsp;&nbsp;∂a/∂z = σ(z)(1-σ(z)) = 0.88 * 0.12 = 0.1056<br>
+                        &nbsp;&nbsp;&nbsp;δ = ∂L/∂z = -0.12 * 0.1056 = -0.01267<br>
+                        &nbsp;&nbsp;&nbsp;<strong>∂L/∂w = δ * x</strong> | <strong>∂L/∂b = δ</strong>
+                    </div>
+                `
+            },
+            "regularization": {
+                overview: `
+                    <h3>Regularization Techniques</h3>
+                    <table>
+                        <tr>
+                            <th>Method</th>
+                            <th>How It Works</th>
+                            <th>When to Use</th>
+                        </tr>
+                        <tr>
+                            <td>L2 (Ridge)</td>
+                            <td>Adds λΣw² to loss</td>
+                            <td>Keeps all features, reduces magnitude</td>
+                        </tr>
+                        <tr>
+                            <td>L1 (Lasso)</td>
+                            <td>Adds λΣ|w| to loss</td>
+                            <td>Feature selection (zeros out weights)</td>
+                        </tr>
+                        <tr>
+                            <td>Dropout</td>
+                            <td>Randomly drops neurons (p=0.5 typical)</td>
+                            <td><strong>Most effective for deep networks</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Early Stopping</td>
+                            <td>Stop when validation loss increases</td>
+                            <td>Prevents overfitting during training</td>
+                        </tr>
+                        <tr>
+                            <td>Data Augmentation</td>
+                            <td>Artificially expand dataset</td>
+                            <td>Computer vision (rotations, flips, crops)</td>
+                        </tr>
+                    </table>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🎯 Best Practices</div>
+                        <div class="box-content">
+                            • Start with Dropout (0.5) for hidden layers<br>
+                            • Add L2 if still overfitting (λ=0.01, 0.001)<br>
+                            • Always use Early Stopping<br>
+                            • Data Augmentation for images
+                        </div>
+                    </div>
+                `
+            },
+            "batch-norm": {
+                overview: `
+                    <h3>Batch Normalization</h3>
+                    <p>Normalizes layer inputs to have mean=0 and variance=1, stabilizing and accelerating training.</p>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">✅ Benefits</div>
+                        • <strong>Faster Training:</strong> Allows higher learning rates<br>
+                        • <strong>Reduces Vanishing Gradients:</strong> Better gradient flow<br>
+                        • <strong>Regularization Effect:</strong> Adds slight noise<br>
+                        • <strong>Less Sensitive to Init:</strong> Reduces initialization impact
+                    </div>
+                `,
+                math: `
+                    <h3>The 4 Steps of Batch Normalization</h3>
+                    <p>Calculated per mini-batch B = {x₁, ..., xₘ}:</p>
+                    
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Mini-Batch Mean:</strong> μ_B = (1/m) Σ xᵢ</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Mini-Batch Variance:</strong> σ²_B = (1/m) Σ (xᵢ - μ_B)²</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Normalize:</strong> x̂ᵢ = (xᵢ - μ_B) / √(σ²_B + ε)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Scale and Shift:</strong> yᵢ = γ x̂ᵢ + β</div>
+                    </div>
+
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Why γ and β?</div>
+                        If we only normalized to (0,1), we might restrict the representation power of the network. <br>
+                        γ and β allow the network to <strong>undo</strong> the normalization if that's optimal: <br>
+                        If γ = √(σ²) and β = μ, we get the original data back!
+                    </div>
+                `
+            },
+            "cv-intro": {
+                overview: `
+                    <h3>Why Computer Vision Needs Special Architectures</h3>
+                    <p><strong>Problem:</strong> Images have huge dimensionality</p>
+                    <ul>
+                        <li>224×224 RGB image = 150,528 input features</li>
+                        <li>Fully connected layer with 1000 neurons = 150M parameters!</li>
+                        <li>Result: Overfitting, slow training, memory issues</li>
+                    </ul>
+                    
+                    <h3>Solution: Convolutional Neural Networks</h3>
+                    <ul>
+                        <li><strong>Weight Sharing:</strong> Same filter applied everywhere (1000x fewer parameters)</li>
+                        <li><strong>Local Connectivity:</strong> Neurons see small patches</li>
+                        <li><strong>Translation Invariance:</strong> Detect cat anywhere in image</li>
+                    </ul>
+                `,
+                concepts: `
+                    <h3>Why CNNs Beat Fully Connected</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Parameter Efficiency:</strong> 1000× fewer parameters through weight sharing</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Translation Equivariance:</strong> Same object → same activation regardless of position</div>
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">📸 All Computer Vision Tasks</div>
+                        <div class="box-content">
+                            Image classification, object detection, segmentation, face recognition, OCR, medical imaging
+                        </div>
+                    </div>
+                `
+            },
+            "pooling": {
+                overview: `
+                    <h3>Pooling Layers</h3>
+                    <p>Pooling reduces spatial dimensions while retaining important information.</p>
+                    
+                    <table>
+                        <tr>
+                            <th>Type</th>
+                            <th>Operation</th>
+                            <th>Use Case</th>
+                        </tr>
+                        <tr>
+                            <td>Max Pooling</td>
+                            <td>Take maximum value</td>
+                            <td><strong>Most common</strong> - preserves strong activations</td>
+                        </tr>
+                        <tr>
+                            <td>Average Pooling</td>
+                            <td>Take average</td>
+                            <td>Smoother, less common (used in final layers)</td>
+                        </tr>
+                        <tr>
+                            <td>Global Pooling</td>
+                            <td>Pool entire feature map</td>
+                            <td>Replace FC layers (reduces parameters)</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">✅ Benefits</div>
+                        • Reduces spatial size (faster computation)<br>
+                        • Adds translation invariance<br>
+                        • Prevents overfitting<br>
+                        • Typical: 2×2 window, stride 2 (halves dimensions)
+                    </div>
+                `,
+                concepts: `
+                    <h3>Pooling Mechanics</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Downsampling:</strong> Reduces H×W by pooling factor (typically 2×)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>No Learnable Parameters:</strong> Fixed operation (max/average)</div>
+                    </div>
+                    <div class="formula">
+                        Example: 4×4 input → 2×2 max pooling → 2×2 output
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🎯 Standard CNN Component</div>
+                        <div class="box-content">
+                            Used after conv layers in AlexNet, VGG, and most classic CNNs to progressively reduce spatial dimensions
+                        </div>
+                    </div>
+                `
+            },
+            "cnn-basics": {
+                overview: `
+                    <h3>CNN Architecture Pattern</h3>
+                    <div class="formula">
+                        Input → [Conv → ReLU → Pool] × N → Flatten → FC → Softmax
+                    </div>
+                    
+                    <h3>Typical Layering Strategy</h3>
+                    <ul>
+                        <li><strong>Early Layers:</strong> Detect low-level features (edges, textures) - small filters (3×3)</li>
+                        <li><strong>Middle Layers:</strong> Combine into patterns, parts - more filters, same size</li>
+                        <li><strong>Deep Layers:</strong> High-level concepts (faces, objects) - many filters</li>
+                        <li><strong>Final FC Layers:</strong> Classification based on learned features</li>
+                    </ul>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">💡 Filter Progression</div>
+                        Layer 1: 32 filters (edges)<br>
+                        Layer 2: 64 filters (textures)<br>
+                        Layer 3: 128 filters (patterns)<br>
+                        Layer 4: 256 filters (parts)<br>
+                        Common pattern: double filters after each pooling
+                    </div>
+                `,
+                concepts: `
+                    <h3>Module Design Principles</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Spatial Reduction:</strong> Progressively downsample (224→112→56→28...)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Channel Expansion:</strong> Increase filters as spatial dims decrease</div>
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🎯 All Modern Vision Models</div>
+                        <div class="box-content">
+                            This pattern forms the backbone of ResNet, MobileNet, EfficientNet - fundamental CNN design
+                        </div>
+                    </div>
+                `,
+                math: `
+                    <h3>1. The Golden Formula for Output Size</h3>
+                    <p>Given Input (W), Filter Size (F), Padding (P), and Stride (S):</p>
+                    <div class="formula" style="font-size: 1.2rem; text-align: center; margin: 20px 0;">
+                        Output Size = ⌊(W - F + 2P) / S⌋ + 1
+                    </div>
+
+                    <h3>2. Parameter Count Calculation</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Parameters PER Filter:</strong> (F × F × C_in) + 1 (bias)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Total Parameters:</strong> N_filters × ((F × F × C_in) + 1)</div>
+                    </div>
+
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain Calculation</div>
+                        <strong>Input:</strong> 224x224x3 | <strong>Layer:</strong> 64 filters of 3x3 | <strong>Stride:</strong> 1 | <strong>Padding:</strong> 1<br>
+                        1. <strong>Output Size:</strong> (224 - 3 + 2(1))/1 + 1 = 224 (Same Padding)<br>
+                        2. <strong>Params:</strong> 64 * (3 * 3 * 3 + 1) = 64 * 28 = <strong>1,792 parameters</strong><br>
+                        3. <strong>FLOPs:</strong> 224 * 224 * 1792 ≈ <strong>90 Million operations</strong> per image!
+                    </div>
+                `
+            },
+            "viz-filters": {
+                overview: `
+                    <h3>What CNNs Learn</h3>
+                    <p>CNN filters automatically learn hierarchical visual features:</p>
+                    
+                    <h3>Layer-by-Layer Visualization</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Layer 1:</strong> Edges and colors (horizontal, vertical, diagonal lines)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Layer 2:</strong> Textures and patterns (corners, curves, simple shapes)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Layer 3:</strong> Object parts (eyes, wheels, windows)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Layer 4-5:</strong> Whole objects (faces, cars, animals)</div>
+                    </div>
+                `,
+                concepts: `
+                    <h3>Visualization Techniques</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Activation Maximization:</strong> Find input that maximizes filter response</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Grad-CAM:</strong> Highlight important regions for predictions</div>
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🔍 Model Interpretability</div>
+                        <div class="box-content">
+                            Understanding what CNNs learn helps debug failures, build trust, and improve architecture design
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🎨 Art & Style Transfer</div>
+                        <div class="box-content">
+                            Filter visualizations inspired neural style transfer (VGG features)
+                        </div>
+                    </div>
+                `
+            },
+            "lenet": {
+                overview: `
+                    <h3>LeNet-5 (1998) - The Pioneer</h3>
+                    <p>First successful CNN for digit recognition (MNIST). Introduced the Conv → Pool → Conv → Pool pattern still used today.</p>
+                    
+                    <h3>Architecture</h3>
+                    <div class="formula">
+                        Input 32×32 → Conv(6 filters, 5×5) → AvgPool → Conv(16 filters, 5×5) → AvgPool → FC(120) → FC(84)→ FC(10)
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">🏆 Historical Impact</div>
+                        • Used by US Postal Service for zip code recognition<br>
+                        • Proved CNNs work for real-world tasks<br>
+                        • Template for modern architectures
+                    </div>
+                `,
+                concepts: `
+                    <h3>Key Innovations</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Layered Architecture:</strong> Hierarchical feature extraction</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Shared Weights:</strong> Convolutional parameter sharing</div>
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">✉️ Handwriting Recognition</div>
+                        <div class="box-content">
+                            USPS mail sorting, check processing, form digitization
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">📚 Educational Foundation</div>
+                        <div class="box-content">
+                            Perfect starting point for learning CNNs - simple enough to understand, complex enough to be useful
+                        </div>
+                    </div>
+                `
+            },
+            "alexnet": {
+                overview: `
+                    <h3>AlexNet (2012) - The Deep Learning Revolution</h3>
+                    <p>Won ImageNet 2012 by huge margin (15.3% vs 26.2% error), igniting the deep learning revolution.</p>
+                    
+                    <h3>Key Innovations</h3>
+                    <ul>
+                        <li><strong>ReLU Activation:</strong> Faster training than sigmoid/tanh</li>
+                        <li><strong>Dropout:</strong> Prevents overfitting (p=0.5)</li>
+                        <li><strong>Data Augmentation:</strong> Random crops/flips</li>
+                        <li><strong>GPU Training:</strong> Used 2 GTX580 GPUs</li>
+                        <li><strong>Deep:</strong> 8 layers (5 conv + 3 FC), 60M parameters</li>
+                    </ul>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">💡 Why So Important?</div>
+                        First to show that deeper networks + more data + GPU compute = breakthrough performance
+                    </div>
+                `,
+                concepts: `
+                    <h3>Technical Contributions</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>ReLU:</strong> Solved vanishing gradients, enabled deeper networks</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Dropout:</strong> First major regularization for deep nets</div>
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🎯 ImageNet Challenge</div>
+                        <div class="box-content">
+                            Shattered records on 1000-class classification, proving deep learning superiority
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🚀 Industry Catalyst</div>
+                        <div class="box-content">
+                            Sparked AI renaissance - Google, Facebook, Microsoft pivoted to deep learning after AlexNet
+                        </div>
+                    </div>
+                `
+            },
+            "vgg": {
+                overview: `
+                    <h3>VGGNet (2014) - The Power of Depth</h3>
+                    <p>VGG showed that depth matters - 16-19 layers using only small 3×3 filters.</p>
+                    
+                    <h3>Key Insight: Stacking Small Filters</h3>
+                    <p>Two 3×3 conv layers = same receptive field as one 5×5, but:</p>
+                    <ul>
+                        <li><strong>Fewer Parameters:</strong> 2×(3²) = 18 vs 5² = 25</li>
+                        <li><strong>More Non-linearity:</strong> Two ReLUs instead of one</li>
+                        <li><strong>Deeper Network:</strong> Better feature learning</li>
+                    </ul>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Limitation</div>
+                        138M parameters (VGG-16) - very memory intensive for deployment
+                    </div>
+                `
+            },
+            "resnet": {
+                overview: `
+                    <h3>ResNet (2015) - Residual Connections</h3>
+                    <p><strong>Problem:</strong> Very deep networks (>20 layers) had degradation - training accuracy got worse!</p>
+                    
+                    <h3>Solution: Skip Connections</h3>
+                    <div class="formula">
+                        Instead of learning H(x), learn residual F(x) = H(x) - x<br>
+                        Output: y = F(x) + x  (shortcut connection)
+                    </div>
+                    
+                    <h3>Why Skip Connections Work</h3>
+                    <ul>
+                        <li><strong>Gradient Flow:</strong> Gradients flow directly through shortcuts</li>
+                        <li><strong>Identity Mapping:</strong> Easy to learn identity (just set F(x)=0)</li>
+                        <li><strong>Feature Reuse:</strong> Earlier features directly available to later layers</li>
+                    </ul>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">🏆 Impact</div>
+                        • Enabled training of 152-layer networks (even 1000+ layers)<br>
+                        • Won ImageNet 2015<br>
+                        • Skip connections now used everywhere (U-Net, Transformers, etc.)
+                    </div>
+                `
+            },
+            "inception": {
+                overview: `
+                    <h3>Inception/GoogLeNet (2014) - Going Wider</h3>
+                    <p>Instead of going deeper, Inception modules go wider - using multiple filter sizes in parallel.</p>
+                    
+                    <h3>Inception Module</h3>
+                    <div class="formula">
+                        Input → [1×1 conv] ⊕ [3×3 conv] ⊕ [5×5 conv] ⊕ [3×3 pool] → Concatenate
+                    </div>
+                    
+                    <h3>Key Innovation: 1×1 Convolutions</h3>
+                    <ul>
+                        <li><strong>Dimensionality Reduction:</strong> Reduce channels before expensive 3×3, 5×5</li>
+                        <li><strong>Non-linearity:</strong> Add extra ReLU</li>
+                        <li><strong>Bottleneck Design:</strong> Reduces FLOPs by 10×</li>
+                    </ul>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">💡 Efficiency</div>
+                        22 layers but only 5M parameters (27× less than AlexNet!)
+                    </div>
+                `
+            },
+            "mobilenet": {
+                overview: `
+                    <h3>MobileNet - CNNs for Mobile Devices</h3>
+                    <p>Designed for mobile/embedded vision using depthwise separable convolutions.</p>
+                    
+                    <h3>Depthwise Separable Convolution</h3>
+                    <div class="formula">
+                        Standard Conv = Depthwise Conv + Pointwise (1×1) Conv
+                    </div>
+                    
+                    <h3>Computation Reduction</h3>
+                    <table>
+                        <tr>
+                            <th>Method</th>
+                            <th>Parameters</th>
+                            <th>FLOPs</th>
+                        </tr>
+                        <tr>
+                            <td>Standard 3×3 Conv</td>
+                            <td>3×3×C_in×C_out</td>
+                            <td>High</td>
+                        </tr>
+                        <tr>
+                            <td>Depthwise Separable</td>
+                            <td>3×3×C_in + C_in×C_out</td>
+                            <td><strong>8-9× less!</strong></td>
+                        </tr>
+                    </table>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">✅ Applications</div>
+                        • Real-time mobile apps (camera filters, AR)<br>
+                        • Edge devices (drones, IoT)<br>
+                        • Latency-critical systems<br>
+                        • Good accuracy with 10-20× speedup
+                    </div>
+                `
+            },
+            "transfer-learning": {
+                overview: `
+                    <h3>Transfer Learning - Don't Train from Scratch!</h3>
+                    <p>Use pre-trained models (ImageNet) as feature extractors for your custom task.</p>
+                    
+                    <h3>Two Strategies</h3>
+                    <table>
+                        <tr>
+                            <th>Approach</th>
+                            <th>When to Use</th>
+                            <th>How</th>
+                        </tr>
+                        <tr>
+                            <td>Feature Extraction</td>
+                            <td><strong>Small dataset</strong> (<10K images)</td>
+                            <td>Freeze all layers, train only final FC layer</td>
+                        </tr>
+                        <tr>
+                            <td>Fine-tuning</td>
+                            <td><strong>Medium dataset</strong> (10K-100K)</td>
+                            <td>Freeze early layers, train last few + FC</td>
+                        </tr>
+                        <tr>
+                            <td>Full Training</td>
+                            <td><strong>Large dataset</strong> (>1M images)</td>
+                            <td>Use pre-trained as initialization, train all</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">💡 Best Practices</div>
+                        • Use pre-trained models when dataset < 100K images<br>
+                        • Start with low learning rate (1e-4) for fine-tuning<br>
+                        • Popular backbones: ResNet50, EfficientNet, ViT
+                    </div>
+                `
+            },
+            "localization": {
+                overview: `
+                    <h3>Object Localization</h3>
+                    <p>Predict both class and bounding box for a single object in image.</p>
+                    
+                    <h3>Multi-Task Loss</h3>
+                    <div class="formula">
+                        Total Loss = L_classification + λ × L_bbox<br>
+                        <br>
+                        Where:<br>
+                        L_classification = Cross-Entropy<br>
+                        L_bbox = Smooth L1 or IoU loss<br>
+                        λ = balance term (typically 1-10)
+                    </div>
+                    
+                    <h3>Bounding Box Representation</h3>
+                    <ul>
+                        <li><strong>Option 1:</strong> (x_min, y_min, x_max, y_max)</li>
+                        <li><strong>Option 2:</strong> (x_center, y_center, width, height) ← Most common</li>
+                    </ul>
+                `
+            },
+            "rcnn": {
+                overview: `
+                    <h3>R-CNN Family Evolution</h3>
+                    <table>
+                        <tr>
+                            <th>Model</th>
+                            <th>Year</th>
+                            <th>Speed (FPS)</th>
+                            <th>Key Innovation</th>
+                        </tr>
+                        <tr>
+                            <td>R-CNN</td>
+                            <td>2014</td>
+                            <td>0.05</td>
+                            <td>Selective Search + CNN features</td>
+                        </tr>
+                        <tr>
+                            <td>Fast R-CNN</td>
+                            <td>2015</td>
+                            <td>0.5</td>
+                            <td>RoI Pooling (share conv features)</td>
+                        </tr>
+                        <tr>
+                            <td>Faster R-CNN</td>
+                            <td>2015</td>
+                            <td>7</td>
+                            <td>Region Proposal Network (RPN)</td>
+                        </tr>
+                        <tr>
+                            <td>Mask R-CNN</td>
+                            <td>2017</td>
+                            <td>5</td>
+                            <td>+ Instance Segmentation masks</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">💡 When to Use</div>
+                        Faster R-CNN: Best accuracy for detection (not real-time)<br>
+                        Mask R-CNN: Detection + instance segmentation
+                    </div>
+                `
+            },
+            "ssd": {
+                overview: `
+                    <h3>SSD (Single Shot MultiBox Detector)</h3>
+                    <p>Balances speed and accuracy by predicting boxes at multiple scales.</p>
+                    
+                    <h3>Key Ideas</h3>
+                    <ul>
+                        <li><strong>Multi-Scale:</strong> Predictions from different layers (early = small objects, deep = large)</li>
+                        <li><strong>Default Boxes (Anchors):</strong> Pre-defined boxes of various aspects ratios</li>
+                        <li><strong>Single Pass:</strong> No separate region proposal step</li>
+                    </ul>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📊 Performance</div>
+                        SSD300: 59 FPS, 74.3% mAP<br>
+                        SSD512: 22 FPS, 76.8% mAP<br>
+                        <br>
+                        Sweet spot between YOLO (faster) and Faster R-CNN (more accurate)
+                    </div>
+                `
+            },
+            "semantic-seg": {
+                overview: `
+                    <h3>Semantic Segmentation</h3>
+                    <p>Classify every pixel in the image (pixel-wise classification).</p>
+                    
+                    <h3>Popular Architectures</h3>
+                    <table>
+                        <tr>
+                            <th>Model</th>
+                            <th>Key Feature</th>
+                        </tr>
+                        <tr>
+                            <td>FCN</td>
+                            <td>Fully Convolutional (no FC layers)</td>
+                        </tr>
+                        <tr>
+                            <td>U-Net</td>
+                            <td>Skip connections from encoder to decoder</td>
+                        </tr>
+                        <tr>
+                            <td>DeepLab</td>
+                            <td>Atrous (dilated) convolutions + ASPP</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="formula">
+                        U-Net Pattern:<br>
+                        Input → Encoder (downsample) → Bottleneck → Decoder (upsample) → Pixel-wise Output<br>
+                        With skip connections from encoder to decoder at each level
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🏥 Medical Imaging</div>
+                        <div class="box-content">Tumor segmentation, organ delineation, cell analysis</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🚗 Autonomous Driving</div>
+                        <div class="box-content">Road segmentation, free space detection, drivable area</div>
+                    </div>
+                `
+            },
+            "instance-seg": {
+                overview: `
+                    <h3>Instance Segmentation</h3>
+                    <p>Detect AND segment each individual object (combines object detection + semantic segmentation).</p>
+                    
+                    <h3>Difference from Semantic Segmentation</h3>
+                    <ul>
+                        <li><strong>Semantic:</strong> All "person" pixels get same label</li>
+                        <li><strong>Instance:</strong> Person #1, Person #2, Person #3 (separate instances)</li>
+                    </ul>
+                    
+                    <h3>Main Approach: Mask R-CNN</h3>
+                    <div class="formula">
+                        Faster R-CNN + Segmentation Branch<br>
+                        <br>
+                        For each RoI:<br>
+                        1. Bounding box regression<br>
+                        2. Class prediction<br>
+                        3. <strong>Binary mask for the object</strong>
+                    </div>
+                `
+            },
+            "face-recog": {
+                overview: `
+                    <h3>Face Recognition with Siamese Networks</h3>
+                    <p>Learn similarity between faces using metric learning instead of classification.</p>
+                    
+                    <h3>Triplet Loss Training</h3>
+                    <div class="formula">
+                        Loss = max(||f(A) - f(P)||² - ||f(A) - f(N)||² + margin, 0)<br>
+                        <br>
+                        Where:<br>
+                        A = Anchor (reference face)<br>
+                        P = Positive (same person)<br>
+                        N = Negative (different person)<br>
+                        margin = minimum separation (e.g., 0.2)
+                    </div>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">💡 One-Shot Learning</div>
+                        After training, recognize new people with just 1-2 photos!<br>
+                        No retraining needed - just compare embeddings.
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">📱 Phone Unlock</div>
+                        <div class="box-content">Face ID, biometric authentication</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🔒 Security</div>
+                        <div class="box-content">Access control, surveillance, identity verification</div>
+                    </div>
+                `
+            },
+            "autoencoders": {
+                overview: `
+                    <h3>Autoencoders</h3>
+                    <p>Unsupervised learning to compress data into latent representation and reconstruct it.</p>
+                    
+                    <h3>Architecture</h3>
+                    <div class="formula">
+                        Input → Encoder → Latent Code (bottleneck) → Decoder → Reconstruction<br>
+                        <br>
+                        Loss = ||Input - Reconstruction||² (MSE)
+                    </div>
+                    
+                    <h3>Variants</h3>
+                    <ul>
+                        <li><strong>Vanilla:</strong> Basic autoencoder</li>
+                        <li><strong>Denoising:</strong> Input corrupted, output clean (learns robust features)</li>
+                        <li><strong>Variational (VAE):</strong> Probabilistic latent space (for generation)</li>
+                        <li><strong>Sparse:</strong> Encourage sparse activations</li>
+                    </ul>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🗜️ Compression</div>
+                        <div class="box-content">Dimensionality reduction, data compression, feature extraction</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🔍 Anomaly Detection</div>
+                        <div class="box-content">High reconstruction error = anomaly (fraud detection, defect detection)</div>
+                    </div>
+                `
+            },
+            "gans": {
+                overview: `
+                    <h3>GANs (Generative Adversarial Networks)</h3>
+                    <p>Two networks compete: Generator creates fake data, Discriminator tries to detect fakes.</p>
+                    
+                    <h3>The GAN Game</h3>
+                    <div class="formula">
+                        Generator: Creates fake images from random noise<br>
+                        Goal: Fool discriminator<br>
+                        <br>
+                        Discriminator: Classifies real vs fake<br>
+                        Goal: Correctly identify fakes<br>
+                        <br>
+                        Minimax Loss:<br>
+                        min_G max_D E[log D(x)] + E[log(1 - D(G(z)))]
+                    </div>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Training Challenges</div>
+                        • Mode collapse (Generator produces limited variety)<br>
+                        • Training instability (careful tuning needed)<br>
+                        • Convergence issues<br>
+                        • Solutions: Wasserstein GAN, Spectral Normalization, StyleGAN improvements
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🎨 Image Generation</div>
+                        <div class="box-content">
+                            <strong>StyleGAN:</strong> Photorealistic faces, art generation<br>
+                            <strong>DCGAN:</strong> Bedroom images, object generation
+                        </div>
+                    </div>
+                `,
+                math: `
+                    <h3>The Minimax Game Objective</h3>
+                    <p>The original GAN objective from Ian Goodfellow (2014) is a zero-sum game between Discriminator (D) and Generator (G).</p>
+                    
+                    <div class="formula" style="font-size: 1.1rem; padding: 20px;">
+                        min_G max_D V(D, G) = E_x∼p_data[log D(x)] + E_z∼p_z[log(1 - D(G(z)))]
+                    </div>
+
+                    <h3>Paper & Pain: Finding the Optimal Discriminator</h3>
+                    <p>For a fixed Generator, the optimal Discriminator D* is:</p>
+                    <div class="formula">
+                        D*(x) = p_data(x) / (p_data(x) + p_g(x))
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Theoretical Insight</div>
+                        When the Discriminator is optimal, the Generator's task is essentially to minimize the <strong>Jensen-Shannon Divergence (JSD)</strong> between the data distribution and the model distribution. <br>
+                        <strong>Problem:</strong> JSD is "flat" when distributions don't overlap, leading to vanishing gradients. This is why <strong>Wasserstein GAN (WGAN)</strong> was invented—using Earth Mover's distance instead!
+                    </div>
+
+                    <h3>Generator Gradient Problem</h3>
+                    <p>Early in training, D(G(z)) is near 0. The term log(1-D(G(z))) has a very small gradient. </p>
+                    <div class="list-item">
+                        <div class="list-num">💡</div>
+                        <div><strong>Heuristic Fix:</strong> Instead of minimizing log(1-D(G(z))), we maximize <strong>log D(G(z))</strong>. This provides much stronger gradients early on!</div>
+                    </div>
+                `
+            },
+            "diffusion": {
+                overview: `
+                    <h3>Diffusion Models</h3>
+                    <p>Learn to reverse a gradual noising process, generating high-quality images.</p>
+                    
+                    <h3>How Diffusion Works</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Forward Process:</strong> Gradually add Gaussian noise over T steps (x₀ → x₁ → ... → x_T = pure noise)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Reverse Process:</strong> Train neural network to denoise (x_T → x_{T-1} → ... → x₀ = clean image)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Generation:</strong> Start from random noise, iteratively denoise T steps</div>
+                    </div>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">✅ Advantages over GANs</div>
+                        • More stable training (no adversarial dynamics)<br>
+                        • Better sample quality and diversity<br>
+                        • Mode coverage (no mode collapse)<br>
+                        • Controllable generation (text-to-image)
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🖼️ Text-to-Image</div>
+                        <div class="box-content">
+                            <strong>Stable Diffusion:</strong> Open-source, runs on consumer GPUs<br>
+                            <strong>DALL-E 2:</strong> OpenAI's photorealistic generator<br>
+                            <strong>Midjourney:</strong> Artistic image generation
+                        </div>
+                    </div>
+                `
+            },
+            "rnn": {
+                overview: `
+                    <h3>RNNs & LSTMs</h3>
+                    <p>Process sequences by maintaining hidden state that captures past information.</p>
+                    
+                    <h3>The Vanishing Gradient Problem</h3>
+                    <p><strong>Problem:</strong> Standard RNNs can't learn long-term dependencies (gradients vanish over many time steps)</p>
+                    <p><strong>Solution:</strong> LSTM (Long Short-Term Memory) with gating mechanisms</p>
+                    
+                    <h3>LSTM Gates</h3>
+                    <ul>
+                        <li><strong>Forget Gate:</strong> What to remove from cell state</li>
+                        <li><strong>Input Gate:</strong> What new information to add</li>
+                        <li><strong>Output Gate:</strong> What to output as hidden state</li>
+                    </ul>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Limitation</div>
+                        Sequential processing (can't parallelize) - Transformers solved this!
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">📝 Text Generation</div>
+                        <div class="box-content">Character-level generation, autocomplete (before Transformers)</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🎵 Time Series</div>
+                        <div class="box-content">Stock prediction, weather forecasting, music generation</div>
+                    </div>
+                `,
+                math: `
+                    <h3>RNN State Equations</h3>
+                    <p>Standard RNN processes a sequence x₁, x₂, ..., xₜ using a recurring hidden state hₜ.</p>
+                    
+                    <div class="formula">
+                        hₜ = tanh(Wₕₕhₜ₋₁ + Wₓₕxₜ + bₕ)<br>
+                        yₜ = Wₕᵧhₜ + bᵧ
+                    </div>
+
+                    <h3>Paper & Pain: The Vanishing Gradient Derivation</h3>
+                    <p>Why do RNNs fail on long sequences? Let's check the gradient ∂L/∂h₁:</p>
+                    <div class="formula">
+                        ∂L/∂h₁ = (∂L/∂hₜ) × (∂hₜ/∂hₜ₋₁) × (∂hₜ₋₁/∂hₜ₋₂) × ... × (∂h₂/∂h₁)<br>
+                        <br>
+                        Where ∂hⱼ/∂hⱼ₋₁ = Wₕₕᵀ diag(tanh'(zⱼ))
+                    </div>
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ The Power Effect</div>
+                        If the largest eigenvalue of Wₕₕ < 1: Gradients <strong>shrink exponentially</strong> (0.9¹⁰⁰ ≈ 0.00002).<br>
+                        If > 1: Gradients <strong>explode</strong>.<br>
+                        <strong>LSTM Solution:</strong> The "Constant Error Carousel" (CEC) ensures gradients flow via the cell state without multiplication.
+                    </div>
+
+                    <h3>LSTM Gating Math</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div>Forget Gate: fₜ = σ(W_f[hₜ₋₁, xₜ] + b_f)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div>Input Gate: iₜ = σ(W_i[hₜ₋₁, xₜ] + b_i)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div>Cell State Update: cₜ = fₜcₜ₋₁ + iₜtanh(W_c[hₜ₋₁, xₜ] + b_c)</div>
+                    </div>
+                `
+            },
+            "bert": {
+                overview: `
+                    <h3>BERT (Bidirectional Encoder Representations from Transformers)</h3>
+                    <p>Pre-trained encoder-only Transformer for understanding language (not generation).</p>
+                    
+                    <h3>Key Innovation: Bidirectional Context</h3>
+                    <p>Unlike GPT (left-to-right), BERT sees both left AND right context simultaneously.</p>
+                    
+                    <h3>Pre-training Tasks</h3>
+                    <ul>
+                        <li><strong>Masked Language Modeling:</strong> Mask 15% of tokens, predict them (e.g., "The cat [MASK] on the mat" → predict "sat")</li>
+                        <li><strong>Next Sentence Prediction:</strong> Predict if sentence B follows A</li>
+                    </ul>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">💡 Fine-tuning BERT</div>
+                        1. Start with pre-trained BERT (trained on billions of words)<br>
+                        2. Add task-specific head (classification, QA, NER)<br>
+                        3. Fine-tune on your dataset (10K-100K examples)<br>
+                        4. Achieves SOTA with minimal data!
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🔍 Search & QA</div>
+                        <div class="box-content">
+                            <strong>Google Search:</strong> Uses BERT for understanding queries<br>
+                            Question answering systems, document retrieval
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">📊 Text Classification</div>
+                        <div class="box-content">Sentiment analysis, topic classification, spam detection</div>
+                    </div>
+                `
+            },
+            "gpt": {
+                overview: `
+                    <h3>GPT (Generative Pre-trained Transformer)</h3>
+                    <p>Decoder-only Transformer trained to predict next token (autoregressive language modeling).</p>
+                    
+                    <h3>GPT Evolution</h3>
+                    <table>
+                        <tr>
+                            <th>Model</th>
+                            <th>Params</th>
+                            <th>Training Data</th>
+                            <th>Capability</th>
+                        </tr>
+                        <tr>
+                            <td>GPT-1</td>
+                            <td>117M</td>
+                            <td>BooksCorpus</td>
+                            <td>Basic text generation</td>
+                        </tr>
+                        <tr>
+                            <td>GPT-2</td>
+                            <td>1.5B</td>
+                            <td>WebText (40GB)</td>
+                            <td>Coherent paragraphs</td>
+                        </tr>
+                        <tr>
+                            <td>GPT-3</td>
+                            <td>175B</td>
+                            <td>570GB text</td>
+                            <td>Few-shot learning</td>
+                        </tr>
+                        <tr>
+                            <td>GPT-4</td>
+                            <td>~1.8T</td>
+                            <td>Multi-modal</td>
+                            <td>Reasoning, coding, images</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">🚀 Emergent Abilities</div>
+                        As models scale, new capabilities emerge:<br>
+                        • In-context learning (learn from prompts)<br>
+                        • Chain-of-thought reasoning<br>
+                        • Code generation<br>
+                        • Multi-step problem solving
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">💬 ChatGPT & Assistants</div>
+                        <div class="box-content">
+                            Conversational AI, customer support, tutoring, brainstorming
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">💻 Code Generation</div>
+                        <div class="box-content">
+                            GitHub Copilot, code completion, bug fixing, documentation
+                        </div>
+                    </div>
+                `
+            },
+            "vit": {
+                overview: `
+                    <h3>Vision Transformer (ViT)</h3>
+                    <p>Apply Transformer architecture directly to images by treating them as sequences of patches.</p>
+                    
+                    <h3>How ViT Works</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Patchify:</strong> Split 224×224 image into 16×16 patches (14×14 = 196 patches)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Linear Projection:</strong> Flatten each patch → linear embedding (like word embeddings)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Positional Encoding:</strong> Add position information</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Transformer Encoder:</strong> Standard Transformer (self-attention, FFN)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">05</div>
+                        <div><strong>Classification:</strong> Use [CLS] token for final prediction</div>
+                    </div>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">💡 When ViT Shines</div>
+                        • <strong>Large Datasets:</strong> Needs 10M+ images (or pre-training on ImageNet-21K)<br>
+                        • <strong>Transfer Learning:</strong> Pre-trained ViT beats CNNs on many tasks<br>
+                        • <strong>Long-Range Dependencies:</strong> Global attention vs CNN's local receptive field
+                    </div>
                 `
             }
         };
@@ -1287,19 +2857,12 @@
                     <div id="${module.id}-math" class="tab">
                         <div class="section">
                             <h2>📐 Mathematical Foundation</h2>
-                            <p>Rigorous mathematical treatment of ${module.title.toLowerCase()}.</p>
-                            <div class="formula">
-                                Mathematical formulas and derivations go here
-                            </div>
-                        </div>
-                        <div class="section">
-                            <h2>📊 Mathematical Visualization</h2>
-                            <div id="${module.id}-math-viz" class="viz-container">
-                                <canvas id="${module.id}-math-canvas" width="800" height="400" style="border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; background: rgba(0, 212, 255, 0.02);"></canvas>
-                            </div>
-                            <div class="viz-controls">
-                                <button onclick="drawMathVisualization('${module.id}')" class="btn-viz">🔄 Visualize Equations</button>
-                            </div>
+                            ${content.math || `
+                                <p>Rigorous mathematical treatment of ${module.title.toLowerCase()}.</p>
+                                <div class="formula">
+                                    Mathematical formulas and derivations go here
+                                </div>
+                            `}
                         </div>
                     </div>
 
@@ -1315,15 +2878,6 @@
                                     </div>
                                 </div>
                             `}
-                        </div>
-                        <div class="section">
-                            <h2>📊 Application Scenarios Visualization</h2>
-                            <div id="${module.id}-app-viz" class="viz-container">
-                                <canvas id="${module.id}-app-canvas" width="800" height="400" style="border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; background: rgba(0, 212, 255, 0.02);"></canvas>
-                            </div>
-                            <div class="viz-controls">
-                                <button onclick="drawApplicationVisualization('${module.id}')" class="btn-viz">🔄 Show Applications</button>
-                            </div>
                         </div>
                     </div>
 

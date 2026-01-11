@@ -8,6 +8,7 @@ Visit our courses directly in your browser:
 
 - [📈 Interactive Statistics Course](https://aashishgarg13.github.io/DataScience/complete-statistics/)
 - [🤖 Machine Learning Guide](https://aashishgarg13.github.io/DataScience/ml_complete-all-topics/)
+- [🧠 Deep Learning Masterclass](https://aashishgarg13.github.io/DataScience/DeepLearning/Deep%20Learning%20Curriculum.html)
 - [📊 Data Visualization](https://aashishgarg13.github.io/DataScience/Visualization/)
 - [🔢 Mathematics for Data Science](https://aashishgarg13.github.io/DataScience/math-ds-complete/)
 - [⚙️ Feature Engineering Guide](https://aashishgarg13.github.io/DataScience/feature-engineering/)
@@ -41,6 +42,16 @@ Essential resources for mastering AI prompt engineering:
   - Interactive Demonstrations
   - Visual Learning Aids
   - Step-by-Step Explanations
+
+### 🧠 Deep Learning Masterclass
+- **Location:** `DeepLearning/`
+- **Features:**
+  - **"Paper & Pain" Methodology:** Rigorous mathematical derivations
+  - Neural Network Foundations (MLP, Backprop, Optimizers)
+  - Convolutional Neural Networks (CNNs) & Computer Vision
+  - Generative AI (GANs, Diffusion Models)
+  - Transformers & Large Language Models (LLMs)
+  - Interactive Canvas Visualizations
 
 ### 📊 Data Visualization
 - **Location:** `Visualization/`
@@ -82,6 +93,7 @@ The repository supports automatic updates for:
 Visit our GitHub Pages hosted versions:
 1. [Statistics Course](https://aashishgarg13.github.io/DataScience/complete-statistics/)
 2. [Machine Learning Guide](https://aashishgarg13.github.io/DataScience/ml_complete-all-topics/)
+3. [Deep Learning Masterclass](https://aashishgarg13.github.io/DataScience/DeepLearning/Deep%20Learning%20Curriculum.html)
 
 ### Option B: Run Locally (Recommended for Development)
 
@@ -128,6 +140,12 @@ ml_complete-all-topics/
 ├── index.html  # Main guide interface
 ├── style.css   # Guide styling
 └── app.js      # Interactive components
+```
+
+### Deep Learning Masterclass
+```
+DeepLearning/
+└── Deep Learning Curriculum.html  # All-in-one interactive curriculum
 ```
 
 ### Data Visualization
