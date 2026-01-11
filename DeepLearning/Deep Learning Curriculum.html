@@ -995,6 +995,48 @@
                         W_out = floor((W_in + 2×padding - kernel_size) / stride) + 1<br>
                         H_out = floor((H_in + 2×padding - kernel_size) / stride) + 1
                     </div>
+                `,
+                math: `
+                    <h3>The Mathematical Operation: Cross-Correlation</h3>
+                    <p>In deep learning, what we call "convolution" is mathematically "cross-correlation". It is a local dot product of the kernel and image patch.</p>
+                    
+                    <div class="formula">
+                        S(i, j) = (I * K)(i, j) = Σ_m Σ_n I(i+m, j+n) K(m, n)
+                    </div>
+
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Manual Convolution</div>
+                        **Input (3x3):**<br>
+                        [1 2 0]<br>
+                        [0 1 1]<br>
+                        [1 0 2]<br>
+                        <br>
+                        **Kernel (2x2):**<br>
+                        [1 0]<br>
+                        [0 1]<br>
+                        <br>
+                        **Calculation:**<br>
+                        Step 1 (Top-Left): (1x1) + (2x0) + (0x0) + (1x1) = <strong>2</strong><br>
+                        Step 2 (Top-Right): (2x1) + (0x0) + (1x0) + (1x1) = <strong>3</strong><br>
+                        ... Output is a 2x2 matrix.
+                    </div>
+
+                    <h3>Backprop through Conv</h3>
+                    <p>Calculated using the same formula but with the kernel flipped vertically and horizontally (true convolution)!</p>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🔍 Feature Extraction</div>
+                        <div class="box-content">
+                            Early layers learn edges (Gabor-like filters), middle layers learn textures, deep layers learn specific object parts (eyes, wheels).
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🎨 Image Processing</div>
+                        <div class="box-content">
+                            Blurring, sharpening, and edge detection in Photoshop/GIMP are all done with 2D convolutions using fixed kernels.
+                        </div>
+                    </div>
                 `
             },
             "yolo": {
@@ -1112,6 +1154,28 @@
                         <div class="box-content">
                             Tumor localization, cell counting, anatomical structure detection in X-rays/CT scans
                         </div>
+                    </div>
+                `,
+                math: `
+                    <h3>Intersection over Union (IoU)</h3>
+                    <p>How do we measure if a predicted box is correct? We use the geometric ratio of intersection and union.</p>
+                    <div class="formula">
+                        IoU = Area of Overlap / Area of Union
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Manual IoU</div>
+                        **Box A (GT):** [0,0,10,10] (Area=100)<br>
+                        **Box B (Pred):** [5,5,15,15] (Area=100)<br>
+                        1. **Intersection:** Area between [5,5] and [10,10] = 5x5 = 25<br>
+                        2. **Union:** Area A + Area B - Intersection = 100 + 100 - 25 = 175<br>
+                        3. **IoU:** 25 / 175 ≈ <strong>0.142</strong> (Poor match!)
+                    </div>
+
+                    <h3>YOLO Multi-Part Loss</h3>
+                    <p>YOLO uses a composite loss function combining localization, confidence, and classification errors.</p>
+                    <div class="formula">
+                        L = λ_coord Σ(Localization Loss) + Σ(Confidence Loss) + Σ(Classification Loss)
                     </div>
                 `
             },
@@ -1854,10 +1918,33 @@
                 `,
                 applications: `
                     <div class="info-box">
-                        <div class="box-title">📸 All Computer Vision Tasks</div>
+                        <div class="box-title">📸 Real-World CV</div>
                         <div class="box-content">
-                            Image classification, object detection, segmentation, face recognition, OCR, medical imaging
+                            Face ID, medical imaging (MRI/CT), autonomous drone navigation, manufacturing defect detection, and satellite imagery analysis
                         </div>
+                    </div>
+                `,
+                math: `
+                    <h3>The Parameter Explosion Problem</h3>
+                    <p>Why do standard Neural Networks fail on images? Let's calculate the parameters for a small image.</p>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: MLP vs Images</div>
+                        1. **Input:** 224 × 224 pixels with 3 color channels (RGB)<br>
+                        2. **Input Size:** 224 × 224 × 3 = <strong>150,528 features</strong><br>
+                        3. **Hidden Layer:** Suppose we want just 1000 neurons.<br>
+                        4. **Matrix size:** [1000, 150528]<br>
+                        5. **Total Weights:** 1000 × 150528 ≈ <strong>150 Million parameters</strong> for just ONE layer!
+                    </div>
+
+                    <h3>The CNN Solution: Weight Sharing</h3>
+                    <p>Instead of every neuron looking at every pixel, we use <strong>translation invariance</strong>. If an edge detector works in the top-left, it should work in the bottom-right.</p>
+                    
+                    <div class="formula">
+                        Total Params = (Kernel_H × Kernel_W × Input_Channels) × Num_Filters<br>
+                        <br>
+                        For a 3x3 filter: (3 × 3 × 3) × 64 = <strong>1,728 parameters</strong><br>
+                        Reduction: 150M / 1.7k ≈ <strong>86,000× more efficient!</strong>
                     </div>
                 `
             },
@@ -1917,6 +2004,37 @@
                         <div class="box-content">
                             Used after conv layers in AlexNet, VGG, and most classic CNNs to progressively reduce spatial dimensions
                         </div>
+                    </div>
+                `,
+                math: `
+                    <h3>Max Pooling: Winning Signal Selection</h3>
+                    <p>Pooling operations are non-parametric (no weights). They simply select or average values within a local window.</p>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: 2x2 Max Pooling</div>
+                        **Input (4x4):**<br>
+                        [1 3 | 2 1]<br>
+                        [5 1 | 0 2]<br>
+                        -----------<br>
+                        [1 1 | 8 2]<br>
+                        [0 2 | 4 1]<br>
+                        <br>
+                        **Output (2x2):**<br>
+                        Step 1: max(1, 3, 5, 1) = <strong>5</strong><br>
+                        Step 2: max(2, 1, 0, 2) = <strong>2</strong><br>
+                        Step 3: max(1, 1, 0, 2) = <strong>2</strong><br>
+                        Step 4: max(8, 2, 4, 1) = <strong>8</strong><br>
+                        **Final:** [5 2] / [2 8]
+                    </div>
+
+                    <h3>Backprop through Pooling</h3>
+                    <div class="list-item">
+                        <div class="list-num">💡</div>
+                        <div><strong>Max Pooling:</strong> Gradient is routed ONLY to the neuron that had the maximum value. All others get 0.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">💡</div>
+                        <div><strong>Average Pooling:</strong> Gradient is distributed evenly among all neurons in the window.</div>
                     </div>
                 `
             },
@@ -2124,24 +2242,56 @@
                             Sparked AI renaissance - Google, Facebook, Microsoft pivoted to deep learning after AlexNet
                         </div>
                     </div>
+                `,
+                math: `
+                    <h3>Paper & Pain: Parameter Counting</h3>
+                    <p>Understanding AlexNet's 60M parameters:</p>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Conv Layers:</strong> Only ~2.3 Million parameters. They do most of the work with small memory!</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>FC Layers:</strong> Over **58 Million parameters**. The first FC layer (FC6) takes 4096 * (6*6*256) ≈ 37M params!</div>
+                    </div>
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ The Design Flaw</div>
+                        FC layers are the memory bottleneck. Modern models (ResNet, Inception) replace these with Global Average Pooling to save 90% parameters.
+                    </div>
                 `
             },
             "vgg": {
                 overview: `
                     <h3>VGGNet (2014) - The Power of Depth</h3>
                     <p>VGG showed that depth matters - 16-19 layers using only small 3×3 filters.</p>
-                    
-                    <h3>Key Insight: Stacking Small Filters</h3>
-                    <p>Two 3×3 conv layers = same receptive field as one 5×5, but:</p>
-                    <ul>
-                        <li><strong>Fewer Parameters:</strong> 2×(3²) = 18 vs 5² = 25</li>
-                        <li><strong>More Non-linearity:</strong> Two ReLUs instead of one</li>
-                        <li><strong>Deeper Network:</strong> Better feature learning</li>
-                    </ul>
-                    
-                    <div class="callout warning">
-                        <div class="callout-title">⚠️ Limitation</div>
-                        138M parameters (VGG-16) - very memory intensive for deployment
+                `,
+                concepts: `
+                    <h3>Small Filters, Receptive Field</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Uniformity:</strong> Uses 3×3 filters everywhere with stride 1, padding 1.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Pooling Pattern:</strong> 2×2 max pooling after every 2-3 conv layers.</div>
+                    </div>
+                `,
+                math: `
+                    <h3>The 5×5 vs 3×3+3×3 Equivalence</h3>
+                    <p>Why stack 3x3 filters instead of one large filter?</p>
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Paramount Efficiency</div>
+                        1. **Receptive Field:** Two 3x3 layers cover 5x5 area. Three 3x3 layers cover 7x7 area.<br>
+                        2. **Param Count (C filters):**<br>
+                        • One 7x7 layer: 7² × C² = 49C² parameters.<br>
+                        • Three 3x3 layers: 3 × (3² × C²) = 27C² parameters.<br>
+                        **Result:** 45% reduction in weights for the SAME "view" of the image!
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🖼️ Feature Backbone</div>
+                        VGG is the preferred architectural backbone for Neural Style Transfer and early GANs due to its simple, clean feature extraction properties.
                     </div>
                 `
             },
@@ -2169,6 +2319,35 @@
                         • Won ImageNet 2015<br>
                         • Skip connections now used everywhere (U-Net, Transformers, etc.)
                     </div>
+                `,
+                concepts: `
+                    <h3>Identity & Projection Shortcuts</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Identity Shortcut:</strong> Used when dimensions match. y = F(x, {W}) + x</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Projection Shortcut (1×1 Conv):</strong> Used when dimensions change. y = F(x, {W}) + W_s x</div>
+                    </div>
+                `,
+                math: `
+                    <h3>The Vanishing Gradient Solution</h3>
+                    <p>Why do skip connections help? Let's differentiate the output y = F(x) + x:</p>
+                    <div class="formula">
+                        ∂y/∂x = ∂F/∂x + 1
+                    </div>
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Gradient Flow</div>
+                        The "+1" term acts as a **gradient highway**. Even if the weights in F(x) are small (causing ∂F/∂x → 0), the gradient can still flow through the +1 term. <br>
+                        This prevents the gradient from vanishing even in networks with 1000+ layers!
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🏗️ Modern Vision Backbones</div>
+                        <div class="box-content">ResNet is the default starting point for nearly all computer vision tasks today (Mask R-CNN, YOLO, etc.).</div>
+                    </div>
                 `
             },
             "inception": {
@@ -2180,17 +2359,35 @@
                     <div class="formula">
                         Input → [1×1 conv] ⊕ [3×3 conv] ⊕ [5×5 conv] ⊕ [3×3 pool] → Concatenate
                     </div>
-                    
-                    <h3>Key Innovation: 1×1 Convolutions</h3>
-                    <ul>
-                        <li><strong>Dimensionality Reduction:</strong> Reduce channels before expensive 3×3, 5×5</li>
-                        <li><strong>Non-linearity:</strong> Add extra ReLU</li>
-                        <li><strong>Bottleneck Design:</strong> Reduces FLOPs by 10×</li>
-                    </ul>
-                    
+                `,
+                concepts: `
+                    <h3>Core Innovations</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>1×1 Bottlenecks:</strong> Dimensionality reduction before expensive convolutions.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Auxiliary Classifiers:</strong> Used during training to combat gradient vanishing in middle layers.</div>
+                    </div>
+                `,
+                math: `
+                    <h3>1×1 Convolution Math (Network-in-Network)</h3>
+                    <p>A 1×1 convolution acts like a channel-wise MLP. It maps input channels C to output channels C' using 1×1×C parameters per filter.</p>
                     <div class="callout insight">
-                        <div class="callout-title">💡 Efficiency</div>
-                        22 layers but only 5M parameters (27× less than AlexNet!)
+                        <div class="callout-title">📝 Paper & Pain: Compression</div>
+                        Input: 28x28x256 | Target: 28x28x512 with 3x3 Filters.<br>
+                        **Direct:** 512 * (3*3*256) ≈ 1.1 Million params.<br>
+                        **Inception (1x1 bottleneck to 64):**<br>
+                        Step 1 (1x1): 64 * (1*1*256) = 16k params.<br>
+                        Step 2 (3x3): 512 * (3*3*64) = 294k params.<br>
+                        **Total:** 310k params. **~3.5× reduction in parameters!**
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🏎️ Computational Efficiency</div>
+                        Inception designs are optimized for running deep networks on limited compute budgets.
                     </div>
                 `
             },
@@ -2229,6 +2426,33 @@
                         • Edge devices (drones, IoT)<br>
                         • Latency-critical systems<br>
                         • Good accuracy with 10-20× speedup
+                    </div>
+                `,
+                concepts: `
+                    <h3>Efficiency Factors</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Width Multiplier (α):</strong> Thins the network by reducing channels.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Resolution Multiplier (ρ):</strong> Reduces input image size.</div>
+                    </div>
+                `,
+                math: `
+                    <h3>Depthwise Separable Math</h3>
+                    <p>Standard convolution complexity: F² × C_in × C_out × H × W</p>
+                    <p>Separable complexity: (F² × C_in + C_in × C_out) × H × W</p>
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: The 9× Speedup</div>
+                        Reduction ratio is roughly: 1/C_out + 1/F². <br>
+                        For 3x3 filters (F=3): Reduction is roughly **1/9th** the computation of standard conv!
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">📱 Edge Devices</div>
+                        <div class="box-content">Real-time object detection on smartphones, web browsers (TensorFlow.js), and IoT devices.</div>
                     </div>
                 `
             },
