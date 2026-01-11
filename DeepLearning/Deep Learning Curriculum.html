@@ -730,7 +730,497 @@
             }
         ];
 
+        // Comprehensive content for all modules
+        const MODULE_CONTENT = {
+            "nn-basics": {
+                overview: `
+                    <h3>What are Neural Networks?</h3>
+                    <p>Neural Networks are computational models inspired by the human brain's structure. They consist of interconnected nodes (neurons) organized in layers that process information through weighted connections.</p>
+                    
+                    <h3>Why Use Neural Networks?</h3>
+                    <ul>
+                        <li><strong>Universal Approximation:</strong> Can theoretically approximate any continuous function</li>
+                        <li><strong>Feature Learning:</strong> Automatically discover representations from raw data</li>
+                        <li><strong>Adaptability:</strong> Learn from examples without explicit programming</li>
+                        <li><strong>Parallel Processing:</strong> Highly parallelizable for modern hardware</li>
+                    </ul>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">✅ Advantages</div>
+                        • Non-linear problem solving<br>
+                        • Robust to noisy data<br>
+                        • Works with incomplete information<br>
+                        • Continuous learning capability
+                    </div>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Disadvantages</div>
+                        • Requires large amounts of training data<br>
+                        • Computationally expensive<br>
+                        • "Black box" - difficult to interpret<br>
+                        • Prone to overfitting without regularization
+                    </div>
+                `,
+                concepts: `
+                    <h3>Core Components</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Neurons (Nodes):</strong> Basic computational units that receive inputs, apply weights, add bias, and apply activation function</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Layers:</strong> Input layer (receives data), Hidden layers (feature extraction), Output layer (predictions)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Weights:</strong> Parameters learned during training that determine connection strength</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Bias:</strong> Allows shifting the activation function for better fitting</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">05</div>
+                        <div><strong>Activation Function:</strong> Introduces non-linearity (ReLU, Sigmoid, Tanh)</div>
+                    </div>
+                `,
+                applications: `
+                    <h3>Real-World Applications</h3>
+                    <div class="info-box">
+                        <div class="box-title">🏥 Healthcare</div>
+                        <div class="box-content">Disease diagnosis, medical image analysis, drug discovery, patient risk prediction</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">💰 Finance</div>
+                        <div class="box-content">Fraud detection, algorithmic trading, credit scoring, portfolio optimization</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🛒 E-commerce</div>
+                        <div class="box-content">Recommendation systems, demand forecasting, customer segmentation, price optimization</div>
+                    </div>
+                `
+            },
+            "activation": {
+                overview: `
+                    <h3>What are Activation Functions?</h3>
+                    <p>Activation functions introduce non-linearity into neural networks, enabling them to learn complex patterns. Without activation functions, a neural network would be just a linear regression model regardless of depth.</p>
+                    
+                    <h3>Why Do We Need Them?</h3>
+                    <ul>
+                        <li><strong>Non-linearity:</strong> Real-world problems are rarely linear</li>
+                        <li><strong>Complex Pattern Learning:</strong> Enable learning of intricate decision boundaries</li>
+                        <li><strong>Gradient Flow:</strong> Control how gradients propagate during backpropagation</li>
+                        <li><strong>Range Normalization:</strong> Keep activations in manageable ranges</li>
+                    </ul>
+                    
+                    <h3>Common Activation Functions Comparison</h3>
+                    <table>
+                        <tr>
+                            <th>Function</th>
+                            <th>Range</th>
+                            <th>Best Use</th>
+                            <th>Issue</th>
+                        </tr>
+                        <tr>
+                            <td>ReLU</td>
+                            <td>[0, ∞)</td>
+                            <td>Hidden layers (default)</td>
+                            <td>Dying ReLU problem</td>
+                        </tr>
+                        <tr>
+                            <td>Sigmoid</td>
+                            <td>(0, 1)</td>
+                            <td>Binary classification output</td>
+                            <td>Vanishing gradients</td>
+                        </tr>
+                        <tr>
+                            <td>Tanh</td>
+                            <td>(-1, 1)</td>
+                            <td>RNNs, zero-centered</td>
+                            <td>Vanishing gradients</td>
+                        </tr>
+                        <tr>
+                            <td>Leaky ReLU</td>
+                            <td>(-∞, ∞)</td>
+                            <td>Fixes dying ReLU</td>
+                            <td>Extra hyperparameter</td>
+                        </tr>
+                        <tr>
+                            <td>Softmax</td>
+                            <td>(0, 1) sum=1</td>
+                            <td>Multi-class output</td>
+                            <td>Computationally expensive</td>
+                        </tr>
+                    </table>
+                `,
+                concepts: `
+                    <h3>Key Properties</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Differentiability:</strong> Must have derivatives for backpropagation to work</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Monotonicity:</strong> Preferably monotonic for easier optimization</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Zero-Centered:</strong> Helps with faster convergence (Tanh)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Computational Efficiency:</strong> Should be fast to compute (ReLU wins)</div>
+                    </div>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">💡 Best Practices</div>
+                        • Use <strong>ReLU</strong> for hidden layers by default<br>
+                        • Use <strong>Sigmoid</strong> for binary classification output<br>
+                        • Use <strong>Softmax</strong> for multi-class classification<br>
+                        • Try <strong>Leaky ReLU</strong> or <strong>ELU</strong> if ReLU neurons are dying<br>
+                        • Avoid Sigmoid/Tanh in deep networks (gradient vanishing)
+                    </div>
+                `
+            },
+            "conv-layer": {
+                overview: `
+                    <h3>What are Convolutional Layers?</h3>
+                    <p>Convolutional layers are the fundamental building blocks of CNNs. They apply learnable filters (kernels) across input data to detect local patterns like edges, textures, and shapes.</p>
+                    
+                    <h3>Why Use Convolutions Instead of Fully Connected Layers?</h3>
+                    <ul>
+                        <li><strong>Parameter Efficiency:</strong> Share weights across spatial locations (fewer parameters)</li>
+                        <li><strong>Translation Invariance:</strong> Detect features regardless of position</li>
+                        <li><strong>Local Connectivity:</strong> Each neuron sees
+
+ only a small region (receptive field)</li>
+                        <li><strong>Hierarchical Learning:</strong> Build complex features from simple ones</li>
+                    </ul>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">🔍 Example: Parameter Comparison</div>
+                        For a 224×224 RGB image:<br>
+                        • <strong>Fully Connected:</strong> 224 × 224 × 3 × 1000 = 150M parameters (for 1000 neurons)<br>
+                        • <strong>Convolutional (3×3):</strong> 3 × 3 × 3 × 64 = 1,728 parameters (for 64 filters)<br>
+                        <strong>Result:</strong> 87,000x fewer parameters! 🚀
+                    </div>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">✅ Advantages</div>
+                        • Drastically reduced parameters<br>
+                        • Spatial hierarchy (edges → textures → parts → objects)<br>
+                        • GPU-friendly (highly parallelizable)<br>
+                        • Built-in translation equivariance
+                    </div>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Disadvantages</div>
+                        • Not rotation invariant (require data augmentation)<br>
+                        • Fixed receptive field size<br>
+                        • Memory intensive during training<br>
+                        • Require careful hyperparameter tuning (kernel size, stride, padding)
+                    </div>
+                `,
+                concepts: `
+                    <h3>Key Hyperparameters</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Kernel/Filter Size:</strong> Typically 3×3 or 5×5. Smaller = more layers needed, larger = more parameters</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Stride:</strong> Step size when sliding filter. Stride=1 (preserves size), Stride=2 (downsamples by 2×)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Padding:</strong> Add zeros around borders. 'SAME' keeps size, 'VALID' shrinks output</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Number of Filters:</strong> Each filter learns different features. More filters = more capacity but slower</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">05</div>
+                        <div><strong>Dilation:</strong> Spacing between kernel elements. Increases receptive field without adding parameters</div>
+                    </div>
+
+                    <div class="formula">
+                        Output Size Formula:<br>
+                        W_out = floor((W_in + 2×padding - kernel_size) / stride) + 1<br>
+                        H_out = floor((H_in + 2×padding - kernel_size) / stride) + 1
+                    </div>
+                `
+            },
+            "yolo": {
+                overview: `
+                    <h3>What is YOLO?</h3>
+                    <p>YOLO (You Only Look Once) treats object detection as a single regression problem, going directly from image pixels to bounding box coordinates and class probabilities in one forward pass.</p>
+                    
+                    <h3>Why YOLO Over R-CNN?</h3>
+                    <ul>
+                        <li><strong>Speed:</strong> 45+ FPS (real-time) vs R-CNN's ~0.05 FPS</li>
+                        <li><strong>Global Context:</strong> Sees entire image during training (fewer background errors)</li>
+                        <li><strong>One Network:</strong> Unlike R-CNN's multi-stage pipeline</li>
+                        <li><strong>End-to-End Training:</strong> Optimize detection directly</li>
+                    </ul>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">✅ Advantages</div>
+                        • <strong>Lightning Fast:</strong> Real-time inference (YOLOv8 at 100+ FPS)<br>
+                        • <strong>Simple Architecture:</strong> Single network, easy to train<br>
+                        • <strong>Generalizes Well:</strong> Works on natural images and artwork<br>
+                        • <strong>Small Model Size:</strong> Can run on edge devices (mobile, IoT)
+                    </div>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Disadvantages</div>
+                        • <strong>Struggles with Small Objects:</strong> Grid limitation affects tiny items<br>
+                        • <strong>Localization Errors:</strong> Less precise than two-stage detectors<br>
+                        • <strong>Limited Objects per Cell:</strong> Can't detect many close objects<br>
+                        • <strong>Aspect Ratio Issues:</strong> Struggles with unusual object shapes
+                    </div>
+                    
+                    <h3>YOLO Evolution</h3>
+                    <table>
+                        <tr>
+                            <th>Version</th>
+                            <th>Year</th>
+                            <th>Key Innovation</th>
+                            <th>mAP</th>
+                        </tr>
+                        <tr>
+                            <td>YOLOv1</td>
+                            <td>2015</td>
+                            <td>Original single-shot detector</td>
+                            <td>63.4%</td>
+                        </tr>
+                        <tr>
+                            <td>YOLOv3</td>
+                            <td>2018</td>
+                            <td>Multi-scale predictions</td>
+                            <td>57.9% (faster)</td>
+                        </tr>
+                        <tr>
+                            <td>YOLOv5</td>
+                            <td>2020</td>
+                            <td>PyTorch, Auto-augment</td>
+                            <td>~50% (optimized)</td>
+                        </tr>
+                        <tr>
+                            <td>YOLOv8</td>
+                            <td>2023</td>
+                            <td>Anchor-free, SOTA speed</td>
+                            <td>53.9% (real-time)</td>
+                        </tr>
+                    </table>
+                `,
+                concepts: `
+                    <h3>How YOLO Works (3 Steps)</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Grid Division:</strong> Divide image into S×S grid (e.g., 7×7). Each cell predicts B bounding boxes</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Predictions Per Cell:</strong> Each box predicts (x, y, w, h, confidence) + class probabilities</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Non-Max Suppression:</strong> Remove duplicate detections, keep highest confidence boxes</div>
+                    </div>
+                    
+                    <div class="formula">
+                        Output Tensor Shape (YOLOv1):<br>
+                        S × S × (B × 5 + C)<br>
+                        Example: 7 × 7 × (2 × 5 + 20) = 7 × 7 × 30<br>
+                        <br>
+                        Where:<br>
+                        • S = grid size (7)<br>
+                        • B = boxes per cell (2)<br>
+                        • 5 = (x, y, w, h, confidence)<br>
+                        • C = number of classes (20 for PASCAL VOC)
+                    </div>
+                `,
+                applications: `
+                    <h3>Industry Applications</h3>
+                    <div class="info-box">
+                        <div class="box-title">🚗 Autonomous Vehicles</div>
+                        <div class="box-content">
+                            Real-time detection of pedestrians, vehicles, traffic signs, and lane markings for self-driving cars
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🏭 Manufacturing</div>
+                        <div class="box-content">
+                            Quality control, defect detection on assembly lines, robot guidance, inventory management
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🛡️ Security & Surveillance</div>
+                        <div class="box-content">
+                            Intrusion detection, crowd monitoring, suspicious behavior analysis, license plate recognition
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🏥 Medical Imaging</div>
+                        <div class="box-content">
+                            Tumor localization, cell counting, anatomical structure detection in X-rays/CT scans
+                        </div>
+                    </div>
+                `
+            },
+            "transformers": {
+                overview: `
+                    <h3>What are Transformers?</h3>
+                    <p>Transformers are neural architectures based entirely on attention mechanisms, eliminating recurrence and convolutions. Introduced in "Attention is All You Need" (2017), they revolutionized NLP and are now conquering computer vision.</p>
+                    
+                    <h3>Why Transformers Over RNNs/LSTMs?</h3>
+                    <ul>
+                        <li><strong>Parallelization:</strong> Process entire sequence at once (vs sequential RNNs)</li>
+                        <li><strong>Long-Range Dependencies:</strong> Direct connections between any two positions</li>
+                        <li><strong>No Gradient Vanishing:</strong> Skip connections and attention bypass depth issues</li>
+                        <li><strong>Scalability:</strong> Performance improves with more data and compute</li>
+                    </ul>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">✅ Advantages</div>
+                        • <strong>Superior Performance:</strong> SOTA on nearly all NLP benchmarks<br>
+                        • <strong>Highly Parallelizable:</strong> Train 100× faster than RNNs on TPUs/GPUs<br>
+                        • <strong>Transfer Learning:</strong> Pre-train once, fine-tune for many tasks<br>
+                        • <strong>Interpretability:</strong> Attention weights show what model focuses on<br>
+                        • <strong>Multi-Modal:</strong> Works for text, images, audio, video
+                    </div>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Disadvantages</div>
+                        • <strong>Quadratic Complexity:</strong> O(n²) in sequence length (memory intensive)<br>
+                        • <strong>Massive Data Requirements:</strong> Need millions of examples to train from scratch<br>
+                        • <strong>Computational Cost:</strong> Training GPT-3 cost ~$4.6M<br>
+                        • <strong>Position Encoding:</strong> Require explicit positional information<br>
+                        • <strong>Limited Context:</strong> Most models cap at 512-4096 tokens
+                    </div>
+                    
+                    <h3>Transformer Variants</h3>
+                    <table>
+                        <tr>
+                            <th>Model</th>
+                            <th>Type</th>
+                            <th>Architecture</th>
+                            <th>Best For</th>
+                        </tr>
+                        <tr>
+                            <td>BERT</td>
+                            <td>Encoder-only</td>
+                            <td>Bidirectional</td>
+                            <td>Understanding (classification, QA)</td>
+                        </tr>
+                        <tr>
+                            <td>GPT</td>
+                            <td>Decoder-only</td>
+                            <td>Autoregressive</td>
+                            <td>Generation (text, code)</td>
+                        </tr>
+                        <tr>
+                            <td>T5</td>
+                            <td>Encoder-Decoder</td>
+                            <td>Full Transformer</td>
+                            <td>Text-to-text tasks (translation)</td>
+                        </tr>
+                        <tr>
+                            <td>ViT</td>
+                            <td>Encoder-only</td>
+                            <td>Patch embeddings</td>
+                            <td>Image classification</td>
+                        </tr>
+                    </table>
+                `,
+                concepts: `
+                    <h3>Core Components</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Self-Attention:</strong> Each token attends to all other tokens, learning contextual relationships</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Multi-Head Attention:</strong> Multiple attention mechanisms in parallel (8-16 heads), each learning different patterns</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Positional Encoding:</strong> Add position information since attention is permutation-invariant</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Feed-Forward Networks:</strong> Two-layer MLPs applied to each position independently</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">05</div>
+                        <div><strong>Layer Normalization:</strong> Stabilize training, applied before attention and FFN</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">06</div>
+                        <div><strong>Residual Connections:</strong> Skip connections around each sub-layer for gradient flow</div>
+                    </div>
+                    
+                    <div class="formula">
+                        Self-Attention Formula:<br>
+                        Attention(Q, K, V) = softmax(QK<sup>T</sup> / √d<sub>k</sub>) V<br>
+                        <br>
+                        Where:<br>
+                        • Q = Queries (what we're looking for)<br>
+                        • K = Keys (what each token represents)<br>
+                        • V = Values (actual information to aggregate)<br>
+                        • d<sub>k</sub> = dimension of keys (for scaling)<br>
+                        <br>
+                        Multi-Head Attention:<br>
+                        MultiHead(Q,K,V) = Concat(head₁,...,head<sub>h</sub>)W<sup>O</sup><br>
+                        where head<sub>i</sub> = Attention(QW<sub>i</sub><sup>Q</sup>, KW<sub>i</sub><sup>K</sup>, VW<sub>i</sub><sup>V</sup>)
+                    </div>
+                `,
+                applications: `
+                    <h3>Revolutionary Applications</h3>
+                    <div class="info-box">
+                        <div class="box-title">💬 Large Language Models</div>
+                        <div class="box-content">
+                            <strong>ChatGPT, GPT-4, Claude:</strong> Conversational AI, code generation, creative writing, reasoning<br>
+                            <strong>BERT, RoBERTa:</strong> Search engines (Google), question answering, sentiment analysis
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🌐 Machine Translation</div>
+                        <div class="box-content">
+                            <strong>Google Translate, DeepL:</strong> Transformers achieved human-level translation quality<br>
+                            Supports 100+ languages, real-time translation
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🎨 Multi-Modal AI</div>
+                        <div class="box-content">
+                            <strong>DALL-E, Midjourney:</strong> Text-to-image generation<br>
+                            <strong>CLIP:</strong> Image-text understanding<br>
+                            <strong>Whisper:</strong> Speech recognition
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🧬 Scientific Discovery</div>
+                        <div class="box-content">
+                            <strong>AlphaFold:</strong> Protein structure prediction (Nobel Prize-worthy breakthrough)<br>
+                            <strong>Drug Discovery:</strong> Molecule generation and property prediction
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">💻 Code Intelligence</div>
+                        <div class="box-content">
+                            <strong>GitHub Copilot:</strong> AI pair programmer<br>
+                            <strong>CodeGen, AlphaCode:</strong> Automated coding, bug detection
+                        </div>
+                    </div>
+                `
+            }
+        };
+
         function createModuleHTML(module) {
+            const content = MODULE_CONTENT[module.id] || {};
+
             return `
                 <div class="module" id="${module.id}-module">
                     <button class="btn-back" onclick="switchTo('dashboard')">← Back to Dashboard</button>
@@ -751,27 +1241,31 @@
                     <div id="${module.id}-overview" class="tab active">
                         <div class="section">
                             <h2>📖 Overview</h2>
-                            <p>Complete coverage of ${module.title.toLowerCase()}. Learn the fundamentals, mathematics, real-world applications, and implementation details.</p>
-                            <div class="info-box">
-                                <div class="box-title">Learning Objectives</div>
-                                <div class="box-content">
-                                    ✓ Understand core concepts and theory<br>
-                                    ✓ Master mathematical foundations<br>
-                                    ✓ Learn practical applications<br>
-                                    ✓ Implement and experiment
+                            ${content.overview || `
+                                <p>Complete coverage of ${module.title.toLowerCase()}. Learn the fundamentals, mathematics, real-world applications, and implementation details.</p>
+                                <div class="info-box">
+                                    <div class="box-title">Learning Objectives</div>
+                                    <div class="box-content">
+                                        ✓ Understand core concepts and theory<br>
+                                        ✓ Master mathematical foundations<br>
+                                        ✓ Learn practical applications<br>
+                                        ✓ Implement and experiment
+                                    </div>
                                 </div>
-                            </div>
+                            `}
                         </div>
                     </div>
 
                     <div id="${module.id}-concepts" class="tab">
                         <div class="section">
                             <h2>🎯 Key Concepts</h2>
-                            <p>Fundamental concepts and building blocks for ${module.title.toLowerCase()}.</p>
-                            <div class="callout insight">
-                                <div class="callout-title">💡 Main Ideas</div>
-                                This section covers the core ideas you need to understand before diving into mathematics.
-                            </div>
+                            ${content.concepts || `
+                                <p>Fundamental concepts and building blocks for ${module.title.toLowerCase()}.</p>
+                                <div class="callout insight">
+                                    <div class="callout-title">💡 Main Ideas</div>
+                                    This section covers the core ideas you need to understand before diving into mathematics.
+                                </div>
+                            `}
                         </div>
                     </div>
 
@@ -812,13 +1306,15 @@
                     <div id="${module.id}-applications" class="tab">
                         <div class="section">
                             <h2>🌍 Real-World Applications</h2>
-                            <p>How ${module.title.toLowerCase()} is used in practice across different industries.</p>
-                            <div class="info-box">
-                                <div class="box-title">Use Cases</div>
-                                <div class="box-content">
-                                    Common applications and practical examples
+                            ${content.applications || `
+                                <p>How ${module.title.toLowerCase()} is used in practice across different industries.</p>
+                                <div class="info-box">
+                                    <div class="box-title">Use Cases</div>
+                                    <div class="box-content">
+                                        Common applications and practical examples
+                                    </div>
                                 </div>
-                            </div>
+                            `}
                         </div>
                         <div class="section">
                             <h2>📊 Application Scenarios Visualization</h2>
