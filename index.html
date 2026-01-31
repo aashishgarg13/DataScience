@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Science & AI Masterclass | Aashish Garg</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-dl: #ff6b35;
+            /* Deep Learning Orange */
+            --accent-ml: #00d4ff;
+            /* ML Cyan */
+            --accent-math: #a371f7;
+            /* Math Purple */
+            --accent-stats: #2ecc71;
+            /* Stats Green */
+            --border: #30363d;
+            --hover-border: #8b949e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00d4ff, #a371f7, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--hover-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .arrow {
+            margin-left: auto;
+            transition: transform 0.2s;
+        }
+
+        .card:hover .arrow {
+            transform: translateX(5px);
+        }
+
+        /* Module Specific Styles */
+        .dl-card .badge {
+            background: rgba(255, 107, 53, 0.15);
+            color: #ff6b35;
+        }
+
+        .dl-card:hover {
+            border-color: #ff6b35;
+        }
+
+        .ml-card .badge {
+            background: rgba(0, 212, 255, 0.15);
+            color: #00d4ff;
+        }
+
+        .ml-card:hover {
+            border-color: #00d4ff;
+        }
+
+        .math-card .badge {
+            background: rgba(163, 113, 247, 0.15);
+            color: #a371f7;
+        }
+
+        .math-card:hover {
+            border-color: #a371f7;
+        }
+
+        .stats-card .badge {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+        }
+
+        .stats-card:hover {
+            border-color: #2ecc71;
+        }
+
+        .viz-card .badge {
+            background: rgba(255, 206, 86, 0.15);
+            color: #ffce56;
+        }
+
+        .viz-card:hover {
+            border-color: #ffce56;
+        }
+
+        .prompt-card .badge {
+            background: rgba(247, 113, 182, 0.15);
+            color: #f771b6;
+        }
+
+        .prompt-card:hover {
+            border-color: #f771b6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Data Science & AI Masterclass</h1>
+            <p class="subtitle">Comprehensive curriculum from Fundamentals to Deep Learning</p>
+        </header>
+
+        <div class="grid">
+            <!-- Deep Learning -->
+            <a href="DeepLearning/index.html" class="card dl-card">
+                <div>
+                    <span class="badge">🔥 Flagship Course</span>
+                    <h2>Deep Learning Masterclass</h2>
+                    <p>Complete Zero to Hero journey. CNNs, RNNs, LSTMs, Transformers, GANs, and Diffusion Models.
+                        Featuring rigorous "Paper & Pain" math and interactive visualizations.</p>
+                </div>
+                <div class="card-footer">
+                    <span style="color: var(--accent-dl)">Explore Curriculum</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Machine Learning -->
+            <a href="ml_complete-all-topics/index.html" class="card ml-card">
+                <div>
+                    <span class="badge">Core</span>
+                    <h2>Machine Learning Complete</h2>
+                    <p>The foundation. Regression, Classification, Clustering, SVMs, Decision Trees, and Ensembles.
+                        Master Scikit-Learn.</p>
+                </div>
+                <div class="card-footer">
+                    <span style="color: var(--accent-ml)">Start Learning</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+            <!-- ML Lab / Projects  -->
+            <a href="ML/index.html" class="card ml-card">
+                <div>
+                    <span class="badge">Lab</span>
+                    <h2>ML Experiments & Data</h2>
+                    <p>Hands-on laboratory for datasets, experimental scripts, and practical ML applications.</p>
+                </div>
+                <div class="card-footer">
+                    <span style="color: var(--accent-ml)">Enter Lab</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Math -->
+            <a href="math-ds-complete/index.html" class="card math-card">
+                <div>
+                    <span class="badge">Foundation</span>
+                    <h2>Mathematics for AI</h2>
+                    <p>Calculus, Linear Algebra, and Probability. The engine room of AI. Derivatives, Matrix Operations,
+                        and Eigenvalues.</p>
+                </div>
+                <div class="card-footer">
+                    <span style="color: var(--accent-math)">Study Math</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Statistics -->
+            <a href="complete-statistics/index.html" class="card stats-card">
+                <div>
+                    <span class="badge">Foundation</span>
+                    <h2>Statistics Complete</h2>
+                    <p>Descriptive and Inferential Statistics. Hypothesis testing, Distributions, P-values, and Bayesian
+                        concepts.</p>
+                </div>
+                <div class="card-footer">
+                    <span style="color: var(--accent-stats)">Analyze Data</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Feature Engineering -->
+            <a href="feature-engineering/index.html" class="card viz-card">
+                <div>
+                    <span class="badge">Skill</span>
+                    <h2>Feature Engineering</h2>
+                    <p>Data cleaning, transformation, scaling, encoding, and selection. The art of preparing data for
+                        models.</p>
+                </div>
+                <div class="card-footer">
+                    <span style="color: #ffce56">Master Data</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Visualization -->
+            <a href="Visualization/index.html" class="card viz-card">
+                <div>
+                    <span class="badge">Skill</span>
+                    <h2>Data Visualization</h2>
+                    <p>Matplotlib, Seaborn, Plotly. Communicating insights effectively through beautiful charts and
+                        dashboards.</p>
+                </div>
+                <div class="card-footer">
+                    <span style="color: #ffce56">Visualize</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Prompt Engineering -->
+            <a href="prompt-engineering-guide/index.html" class="card prompt-card">
+                <div>
+                    <span class="badge">New</span>
+                    <h2>Prompt Engineering</h2>
+                    <p>Mastering LLMs. Zero-shot, Few-shot, Chain-of-Thought, and advanced prompting strategies for
+                        GPT-4/Claude.</p>
+                </div>
+                <div class="card-footer">
+                    <span style="color: #f771b6">Learn Prompting</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</body>
+
+</html>

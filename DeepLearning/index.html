@@ -3315,70 +3315,104 @@
             },
             "rnn": {
                 overview: `
-                    <h3>RNNs & LSTMs</h3>
-                    <p>Process sequences by maintaining hidden state that captures past information.</p>
-                    
-                    <h3>The Vanishing Gradient Problem</h3>
-                    <p><strong>Problem:</strong> Standard RNNs can't learn long-term dependencies (gradients vanish over many time steps)</p>
-                    <p><strong>Solution:</strong> LSTM (Long Short-Term Memory) with gating mechanisms</p>
-                    
-                    <h3>LSTM Gates</h3>
-                    <ul>
-                        <li><strong>Forget Gate:</strong> What to remove from cell state</li>
-                        <li><strong>Input Gate:</strong> What new information to add</li>
-                        <li><strong>Output Gate:</strong> What to output as hidden state</li>
-                    </ul>
+                    <h3>The Problem of Long-Term Dependencies</h3>
+                    <p>Imagine trying to predict the last word in the text: "I grew up in France... [200 words] ... I speak fluent <strong>French</strong>."</p>
+                    <p>Standard RNNs fail here. As the gap grows, the gradient from "French" has to travel back 200 steps to "France".</p>
                     
                     <div class="callout warning">
-                        <div class="callout-title">⚠️ Limitation</div>
-                        Sequential processing (can't parallelize) - Transformers solved this!
+                        <div class="callout-title">⚠️ The Vanishing Gradient Failure</div>
+                        If the weight W < 1, the gradient shrinks exponentially: 0.9²⁰⁰ ≈ 0.0000000007.<br>
+                        The network literally "forgets" the context.
+                    </div>
+                    
+                    <h3>The LSTM Solution: "The Conveyor Belt"</h3>
+                    <p>The core idea of LSTM is the <strong>Cell State (C)</strong>. It runs straight down the entire chain, with only minor linear interactions. It's like a conveyor belt—information can flow along it unchanged.</p>
+                `,
+                concepts: `
+                    <h3>Step-by-Step LSTM Walkthrough</h3>
+                    <p>LSTMs control the cell state via "Gates".</p>
+                    
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Forget Gate layer:</strong> "What do we throw away?"<br>
+                        <span class="formula-caption">σ(W_f · [h_{t-1}, x_t] + b_f)</span><br>
+                        Output 0 = complete forget, 1 = keep everything.</div>
+                    </div>
+                    
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Input Gate layer:</strong> "What new info do we add?"<br>
+                        1. Sigmoid layer decides <strong>which values</strong> to update.<br>
+                        2. Tanh layer creates <strong>new candidate values</strong> (~C_t).</div>
+                    </div>
+                    
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Update Cell State:</strong> The Critical Step<br>
+                        <span class="formula" style="font-size:1.1rem">C_t = f_t * C_{t-1} + i_t * ~C_t</span><br>
+                        We multiply old state by f_t (forgetting things) and add i_t * ~C_t (adding new things).</div>
+                    </div>
+                    
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Output Gate:</strong> "What do we reveal?"<br>
+                        We filter the cell state: h_t = o_t * tanh(C_t).</div>
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">💡 Intuition: Sigmoid vs Tanh</div>
+                        • <strong>Sigmoid (0 to 1):</strong> Acts like a valve or gate. Open/Close.<br>
+                        • <strong>Tanh (-1 to 1):</strong> Creates content/information. Normalized centered data.
+                    </div>
+                `,
+                math: `
+                    <h3>Paper & Pain: Why LSTMs Don't Vanish</h3>
+                    <p>Let's look at the gradient flow in the Cell State equation:</p>
+                    <div class="formula">
+                        C_t = f_t \cdot C_{t-1} + i_t \cdot \tilde{C}_t
+                    </div>
+                    
+                    <p>During backpropagation (BPTT), the derivative of C_t with respect to C_{t-1} is:</p>
+                    <div class="formula" style="color: #00ff88;">
+                        \frac{\partial C_t}{\partial C_{t-1}} = f_t + \dots
+                    </div>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">✅ The Additive Gradient Highway</div>
+                        In standard RNNs, we had multiplicative gradients (W^t). <br>
+                        In LSTMs, the gradient is <strong>additive</strong>. If the Forget Gate f_t ≈ 1, the gradient passes through UNCHANGED (1.0).<br>
+                        The error signal can travel back 1000 steps without vanishing!
+                    </div>
+
+                    <h3>Paper & Pain: Manual "Echo" Task</h3>
+                    <p>Task: Input stream of 0s. If explicit "1" appears, remember it and output "1" 3 steps later.</p>
+                    <div class="list-item">
+                        <div class="list-num">📝</div>
+                        <div><strong>Strategy:</strong> Set Input Gate to Open (1) only on trigger. Set Forget Gate to Closed (1) to maintain memory.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">🧮</div>
+                        <div><strong>Weights:</strong> We can manually solve for weights that force i_t high only when x_t=1.</div>
                     </div>
                 `,
                 applications: `
                     <div class="info-box">
-                        <div class="box-title">📝 Text Generation</div>
-                        <div class="box-content">Character-level generation, autocomplete (before Transformers)</div>
+                        <div class="box-title">🗣️ Sequence-to-Sequence</div>
+                        <div class="box-content">
+                            <strong>Translation:</strong> Google Translate (pre-Transformer) used massive LSTM stacks (GNMT).
+                        </div>
                     </div>
                     <div class="info-box">
-                        <div class="box-title">🎵 Time Series</div>
-                        <div class="box-content">Stock prediction, weather forecasting, music generation</div>
+                        <div class="box-title">✍️ Handwriting Generation</div>
+                        <div class="box-content">
+                            <strong>Alex Graves (2013):</strong> LSTMs can generate realistic cursive handwriting by predicting pen coordinates.
+                        </div>
                     </div>
-                `,
-                math: `
-                    <h3>RNN State Equations</h3>
-                    <p>Standard RNN processes a sequence x₁, x₂, ..., xₜ using a recurring hidden state hₜ.</p>
-                    
-                    <div class="formula">
-                        hₜ = tanh(Wₕₕhₜ₋₁ + Wₓₕxₜ + bₕ)<br>
-                        yₜ = Wₕᵧhₜ + bᵧ
-                    </div>
-
-                    <h3>Paper & Pain: The Vanishing Gradient Derivation</h3>
-                    <p>Why do RNNs fail on long sequences? Let's check the gradient ∂L/∂h₁:</p>
-                    <div class="formula">
-                        ∂L/∂h₁ = (∂L/∂hₜ) × (∂hₜ/∂hₜ₋₁) × (∂hₜ₋₁/∂hₜ₋₂) × ... × (∂h₂/∂h₁)<br>
-                        <br>
-                        Where ∂hⱼ/∂hⱼ₋₁ = Wₕₕᵀ diag(tanh'(zⱼ))
-                    </div>
-                    <div class="callout warning">
-                        <div class="callout-title">⚠️ The Power Effect</div>
-                        If the largest eigenvalue of Wₕₕ < 1: Gradients <strong>shrink exponentially</strong> (0.9¹⁰⁰ ≈ 0.00002).<br>
-                        If > 1: Gradients <strong>explode</strong>.<br>
-                        <strong>LSTM Solution:</strong> The "Constant Error Carousel" (CEC) ensures gradients flow via the cell state without multiplication.
-                    </div>
-
-                    <h3>LSTM Gating Math</h3>
-                    <div class="list-item">
-                        <div class="list-num">01</div>
-                        <div>Forget Gate: fₜ = σ(W_f[hₜ₋₁, xₜ] + b_f)</div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-num">02</div>
-                        <div>Input Gate: iₜ = σ(W_i[hₜ₋₁, xₜ] + b_i)</div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-num">03</div>
-                        <div>Cell State Update: cₜ = fₜcₜ₋₁ + iₜtanh(W_c[hₜ₋₁, xₜ] + b_c)</div>
+                    <div class="info-box">
+                        <div class="box-title">🎵 Music Composition</div>
+                        <div class="box-content">
+                            Generating melody and chords where context (key signature, tempo) must be maintained for minutes.
+                        </div>
                     </div>
                 `
             },
@@ -5142,23 +5176,23 @@
                     ctx.beginPath();
                     ctx.arc(x, y, radius, 0, Math.PI * 2);
                     ctx.fill();
-                    
+
                     // Draw connections to next layer
                     if (layerIdx < layers.length - 1) {
                         const nextLayerHeight = canvas.height / (layers[layerIdx + 1] + 1);
                         const nextX = (layerIdx + 2) * layerWidth;
-                        
+
                         for (let j = 0; j < layers[layerIdx + 1]; j++) {
                             const nextY = (j + 1) * nextLayerHeight;
                             const signalProgress = ((time / 500) + layerIdx * 0.5) % 1;
-                            
+
                             ctx.strokeStyle = `rgba(0, 212, 255, ${0.3 + signalProgress * 0.3})`;
                             ctx.lineWidth = 1;
                             ctx.beginPath();
                             ctx.moveTo(x + radius, y);
                             ctx.lineTo(nextX - 12, nextY);
                             ctx.stroke();
-                            
+
                             // Animated signal dot
                             const dotX = x + radius + (nextX - 12 - x - radius) * signalProgress;
                             const dotY = y + (nextY - y) * signalProgress;
@@ -5170,13 +5204,13 @@
                     }
                 }
             });
-            
+
             ctx.fillStyle = '#00d4ff';
             ctx.font = 'bold 14px Arial';
             ctx.textAlign = 'center';
             ctx.fillText('🔄 Neural Network Animation', centerX, 25);
         }
-        
+
         // Animated GNN with message passing
         function drawAnimatedGNN(ctx, canvas, time) {
             ctx.fillStyle = '#9900ff';
@@ -5225,86 +5259,86 @@
                 ctx.fillText(i, n.x, n.y + 4);
             });
         }
-        
+
         // Animated attention matrix
         function drawAnimatedAttention(ctx, canvas, time) {
             const words = ['The', 'cat', 'sat', 'on', 'mat'];
             const cellSize = 50;
             const startX = (canvas.width - words.length * cellSize) / 2;
             const startY = 80;
-            
+
             ctx.fillStyle = '#00d4ff';
             ctx.font = 'bold 16px Arial';
             ctx.textAlign = 'center';
             ctx.fillText('Self-Attention Animation', canvas.width / 2, 30);
-            
+
             // Draw words
             ctx.font = '12px Arial';
             words.forEach((word, i) => {
                 ctx.fillStyle = '#e4e6eb';
-                ctx.fillText(word, startX + i * cellSize + cellSize/2, startY - 10);
+                ctx.fillText(word, startX + i * cellSize + cellSize / 2, startY - 10);
                 ctx.save();
-                ctx.translate(startX - 20, startY + i * cellSize + cellSize/2);
+                ctx.translate(startX - 20, startY + i * cellSize + cellSize / 2);
                 ctx.fillText(word, 0, 0);
                 ctx.restore();
             });
-            
+
             // Animated attention weights
             for (let i = 0; i < words.length; i++) {
                 for (let j = 0; j < words.length; j++) {
                     const baseWeight = i === j ? 0.8 : 0.2 + Math.abs(i - j) * 0.1;
                     const animatedWeight = baseWeight + Math.sin(time / 500 + i + j) * 0.2;
                     const alpha = Math.max(0.1, Math.min(1, animatedWeight));
-                    
+
                     ctx.fillStyle = `rgba(0, 212, 255, ${alpha})`;
                     ctx.fillRect(startX + j * cellSize + 2, startY + i * cellSize + 2, cellSize - 4, cellSize - 4);
-                    
+
                     ctx.fillStyle = '#e4e6eb';
                     ctx.font = '10px Arial';
-                    ctx.fillText(animatedWeight.toFixed(2), startX + j * cellSize + cellSize/2, startY + i * cellSize + cellSize/2 + 4);
+                    ctx.fillText(animatedWeight.toFixed(2), startX + j * cellSize + cellSize / 2, startY + i * cellSize + cellSize / 2 + 4);
                 }
             }
         }
-        
+
         // Animated gradient flow for backprop
         function drawAnimatedGradientFlow(ctx, canvas, time) {
             ctx.fillStyle = '#ff6b35';
             ctx.font = 'bold 16px Arial';
             ctx.textAlign = 'center';
             ctx.fillText('Backpropagation - Gradient Flow', canvas.width / 2, 30);
-            
+
             const layers = [2, 4, 4, 1];
             const layerWidth = canvas.width / (layers.length + 1);
-            
+
             // Forward pass (left to right) - blue
             const forwardProgress = (time / 2000) % 1;
-            
+
             layers.forEach((neurons, layerIdx) => {
                 const x = (layerIdx + 1) * layerWidth;
                 const layerHeight = canvas.height / (neurons + 1);
-                
+
                 for (let i = 0; i < neurons; i++) {
                     const y = (i + 1) * layerHeight;
-                    
+
                     // Pulse effect based on forward pass
                     const isActive = forwardProgress > layerIdx / layers.length;
                     const radius = isActive ? 15 + Math.sin(time / 200) * 3 : 12;
-                    
+
                     ctx.fillStyle = isActive ? '#00d4ff' : 'rgba(0, 212, 255, 0.3)';
                     ctx.beginPath();
                     ctx.arc(x, y, radius, 0, Math.PI * 2);
                     ctx.fill();
                 }
             });
-            
+
             // Backward pass (right to left) - orange/red gradients
             const backwardProgress = ((time / 2000) + 0.5) % 1;
-            
+
             for (let layerIdx = layers.length - 2; layerIdx >= 0; layerIdx--) {
                 const x1 = (layerIdx + 1) * layerWidth;
                 const x2 = (layerIdx + 2) * layerWidth;
                 const gradientActive = backwardProgress > (layers.length - 2 - layerIdx) / (layers.length - 1);
-                
+
                 if (gradientActive) {
                     const gradX = x2 - (x2 - x1) * ((backwardProgress * (layers.length - 1)) % 1);
                     ctx.fillStyle = '#ff6b35';
@@ -5313,44 +5347,44 @@
                     ctx.fill();
                 }
             }
-            
+
             ctx.fillStyle = '#e4e6eb';
             ctx.font = '12px Arial';
             ctx.fillText('Forward: Blue →  |  Backward: Orange ←', canvas.width / 2, canvas.height - 20);
         }
-        
+
         // Animated network for nn-basics
         function drawAnimatedNetwork(ctx, canvas, time) {
             drawDefaultAnimation(ctx, canvas, time);
         }
-        
+
         // Animated decision boundary for perceptron
         function drawAnimatedDecisionBoundary(ctx, canvas, time) {
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            
+
             ctx.fillStyle = '#ff6b35';
             ctx.font = 'bold 16px Arial';
             ctx.textAlign = 'center';
             ctx.fillText('Perceptron Decision Boundary', canvas.width / 2, 30);
-            
+
             // Animated rotating decision boundary
             const angle = time / 2000;
             const length = 200;
-            
+
             ctx.strokeStyle = '#ff6b35';
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.moveTo(centerX - Math.cos(angle) * length, centerY - Math.sin(angle) * length);
             ctx.lineTo(centerX + Math.cos(angle) * length, centerY + Math.sin(angle) * length);
             ctx.stroke();
-            
+
             // Fixed sample points
             const points = [
-                {x: 100, y: 80, c: 1}, {x: 150, y: 100, c: 1}, {x: 120, y: 150, c: 1},
-                {x: 400, y: 200, c: 0}, {x: 450, y: 180, c: 0}, {x: 380, y: 250, c: 0}
+                { x: 100, y: 80, c: 1 }, { x: 150, y: 100, c: 1 }, { x: 120, y: 150, c: 1 },
+                { x: 400, y: 200, c: 0 }, { x: 450, y: 180, c: 0 }, { x: 380, y: 250, c: 0 }
             ];
-            
+
             points.forEach(p => {
                 ctx.fillStyle = p.c === 1 ? '#00d4ff' : '#00ff88';
                 ctx.beginPath();
@@ -5358,25 +5392,25 @@
                 ctx.fill();
             });
         }
-        
+
         function drawAnimatedMLP(ctx, canvas, time) {
             drawDefaultAnimation(ctx, canvas, time);
         }
-        
+
         function drawAnimatedActivations(ctx, canvas, time) {
             drawActivationFunctions(ctx, canvas);
-            
+
             // Add animated input marker
             const x = Math.sin(time / 500) * 4;
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             const scale = 40;
-            
+
             ctx.fillStyle = '#ffffff';
             ctx.beginPath();
             ctx.arc(centerX + x * scale, centerY, 6, 0, Math.PI * 2);
             ctx.fill();
-            
+
             ctx.strokeStyle = '#ffffff';
             ctx.setLineDash([5, 5]);
             ctx.beginPath();
@@ -5385,45 +5419,45 @@
             ctx.stroke();
             ctx.setLineDash([]);
         }
-        
+
         function drawAnimatedConvolution(ctx, canvas, time) {
             drawConvolutionAnimation(ctx, canvas);
         }
-        
+
         function drawAnimatedGAN(ctx, canvas, time) {
             ctx.fillStyle = '#ffaa00';
             ctx.font = 'bold 16px Arial';
             ctx.textAlign = 'center';
             ctx.fillText('GAN Training Animation', canvas.width / 2, 30);
-            
+
             const phase = Math.floor(time / 1000) % 4;
-            
+
             // Generator
             ctx.fillStyle = phase <= 1 ? '#00ff88' : 'rgba(0, 255, 136, 0.3)';
             ctx.fillRect(50, 100, 100, 80);
             ctx.fillStyle = '#e4e6eb';
             ctx.font = '12px Arial';
             ctx.fillText('Generator', 100, 145);
-            
+
             // Fake image
             const noiseToFake = Math.sin(time / 300) * 0.5 + 0.5;
             ctx.fillStyle = `rgba(255, 170, 0, ${noiseToFake})`;
             ctx.fillRect(200, 110, 60, 60);
             ctx.fillStyle = '#e4e6eb';
             ctx.fillText('Fake', 230, 200);
-            
+
             // Discriminator
             ctx.fillStyle = phase >= 2 ? '#ff6b35' : 'rgba(255, 107, 53, 0.3)';
             ctx.fillRect(320, 100, 100, 80);
             ctx.fillStyle = '#e4e6eb';
             ctx.fillText('Discriminator', 370, 145);
-            
+
             // Output
             const output = phase === 3 ? 'Real?' : 'Fake?';
             ctx.fillStyle = '#00d4ff';
             ctx.font = 'bold 14px Arial';
             ctx.fillText(output, 370, 220);
-            
+
             // Arrows
             ctx.strokeStyle = '#e4e6eb';
             ctx.lineWidth = 2;
@@ -5436,29 +5470,29 @@
             ctx.lineTo(320, 140);
             ctx.stroke();
         }
-        
+
         function drawAnimatedDiffusion(ctx, canvas, time) {
             ctx.fillStyle = '#9900ff';
             ctx.font = 'bold 16px Arial';
             ctx.textAlign = 'center';
             ctx.fillText('Diffusion Process Animation', canvas.width / 2, 30);
-            
+
             const steps = 5;
             const stepWidth = canvas.width / (steps + 1);
-            
+
             const progress = (time / 3000) % 1;
             const currentStep = Math.floor(progress * steps);
-            
+
             for (let i = 0; i < steps; i++) {
                 const x = (i + 1) * stepWidth;
                 const y = 150;
                 const noiseLevel = i / (steps - 1);
                 const isActive = i <= currentStep;
-                
+
                 // Draw square with noise
                 ctx.fillStyle = isActive ? '#9900ff' : 'rgba(153, 0, 255, 0.3)';
                 ctx.fillRect(x - 30, y - 30, 60, 60);
-                
+
                 // Add noise dots
                 if (noiseLevel > 0) {
                     for (let j = 0; j < noiseLevel * 20; j++) {
@@ -5468,43 +5502,43 @@
                         ctx.fillRect(nx, ny, 2, 2);
                     }
                 }
-                
+
                 ctx.fillStyle = '#e4e6eb';
                 ctx.font = '10px Arial';
                 ctx.fillText(`t=${i}`, x, y + 50);
             }
-            
+
             ctx.fillStyle = '#e4e6eb';
             ctx.font = '12px Arial';
             ctx.fillText('Clean → Noisy (Forward) | Noisy → Clean (Reverse)', canvas.width / 2, canvas.height - 20);
         }
-        
+
         function drawAnimatedRNN(ctx, canvas, time) {
             ctx.fillStyle = '#00d4ff';
             ctx.font = 'bold 16px Arial';
             ctx.textAlign = 'center';
             ctx.fillText('RNN Unrolled Through Time', canvas.width / 2, 30);
-            
+
             const steps = 5;
             const stepWidth = canvas.width / (steps + 1);
             const progress = (time / 500) % steps;
             const activeStep = Math.floor(progress);
-            
+
             for (let i = 0; i < steps; i++) {
                 const x = (i + 1) * stepWidth;
                 const y = 150;
                 const isActive = i === activeStep;
-                
+
                 // Hidden state
                 ctx.fillStyle = isActive ? '#00d4ff' : 'rgba(0, 212, 255, 0.3)';
                 ctx.beginPath();
                 ctx.arc(x, y, 25, 0, Math.PI * 2);
                 ctx.fill();
-                
+
                 ctx.fillStyle = '#e4e6eb';
                 ctx.font = '10px Arial';
                 ctx.fillText(`h${i}`, x, y + 4);
-                
+
                 // Input arrow
                 ctx.strokeStyle = isActive ? '#00ff88' : 'rgba(0, 255, 136, 0.3)';
                 ctx.lineWidth = 2;
@@ -5513,7 +5547,7 @@
                 ctx.lineTo(x, y + 25);
                 ctx.stroke();
                 ctx.fillText(`x${i}`, x, y + 75);
-                
+
                 // Recurrent connection
                 if (i < steps - 1) {
                     ctx.strokeStyle = isActive ? '#ff6b35' : 'rgba(255, 107, 53, 0.3)';
@@ -5521,7 +5555,7 @@
                     ctx.moveTo(x + 25, y);
                     ctx.lineTo(x + stepWidth - 25, y);
                     ctx.stroke();
-                    
+
                     // Animated signal
                     if (isActive) {
                         const signalX = x + 25 + (stepWidth - 50) * (progress % 1);
