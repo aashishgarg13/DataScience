@@ -736,6 +736,22 @@
                 category: "Advanced",
                 color: "#9900ff",
                 description: "Deep learning on non-Euclidean graph data"
+            },
+            {
+                id: "seq2seq",
+                title: "Seq2Seq & Attention",
+                icon: "➡️",
+                category: "NLP",
+                color: "#ff6b35",
+                description: "Encoder-Decoder models and Attention mechanics"
+            },
+            {
+                id: "research-papers",
+                title: "Research Library",
+                icon: "🎓",
+                category: "Advanced",
+                color: "#9900ff",
+                description: "Curated collection of seminal deep learning papers"
             }
         ];
 
@@ -3692,6 +3708,185 @@
                     </div>
                 `
             },
+            "seq2seq": {
+                overview: `
+                    <h3>Seq2Seq with Attention</h3>
+                    <p>The architecture that revolutionized Machine Translation (before Transformers).</p>
+                    
+                    <h3>The Bottleneck Problem</h3>
+                    <p>Standard Encoder-Decoder models try to compress the entire sentence "I love deep learning" into a single vector (Context Vector).</p>
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Information Bottleneck</div>
+                        For long sentences (e.g., 50 words), the fixed-size vector forgets early details. Performance degrades rapidly with length.
+                    </div>
+                    
+                    <h3>The Attention Solution</h3>
+                    <p><strong>Idea:</strong> Don't just look at the last state. Let the Decoder "look back" at ALL Encoder states at every step.</p>
+                `,
+                concepts: `
+                    <h3>Visualizing Attention (Alammar Style)</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Encoder States:</strong> We keep all hidden states $h_1, h_2, h_3, h_4$.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Alignment Scores:</strong> Decoder asks: "How relevant is $h_i$ to what I'm translating now?"</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Context Vector:</strong> Weighted sum of relevant states. If attention is strong on $h_2$, the context vector looks a lot like $h_2$.</div>
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">💡 The "Searchlight" Analogy</div>
+                        Attention is like a searchlight. When generating "étudiant" (student), the light shines brightly on "student" in the input sentence.
+                    </div>
+                `,
+                math: `
+                    <h3>Attention Math (Bahdanau / Luong)</h3>
+                    <p>Let Decoder state be $s_{t-1}$ and Encoder states be $h_j$.</p>
+                    
+                    <div class="formula">
+                        1. Score: $e_{tj} = score(s_{t-1}, h_j)$ (e.g., Dot Product)<br>
+                        2. Weights: $\alpha_{tj} = softmax(e_{tj})$<br>
+                        3. Context: $c_t = \sum \alpha_{tj} h_j$<br>
+                        4. Output: $s_t = RNN(s_{t-1}, [y_{t-1}, c_t])$
+                    </div>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">📝 Paper & Pain: Dot Product vs Additive</div>
+                        • <strong>Dot Product (Luong):</strong> $s^T h$ (Fast, matrix mult)<br>
+                        • <strong>Additive (Bahdanau):</strong> $v^T tanh(W_1 s + W_2 h)$ (More parameters, originally better for large dim)
+                    </div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🗣️ Neural Machine Translation</div>
+                        <div class="box-content">Google Translate (2016) switched to GNMT (Attention-based), reducing errors by 60%.</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">📄 Text Summarization</div>
+                        <div class="box-content">Focusing on key sentences in a long document to generate a headline.</div>
+                    </div>
+                `
+            },
+            "research-papers": {
+                overview: `
+                    <h3>Seminal Papers Library</h3>
+                    <p>A curated collection of the most impactful papers in Deep Learning history, with "Paper & Pain" insights.</p>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">🎓 How to Read Papers</div>
+                        Don't just read the abstract. Look for the <strong>Objective Function</strong> and the <strong>Architecture Diagram</strong>. That's where the truth lies.
+                    </div>
+                `,
+                concepts: `
+                    <h3>Computer Vision Hall of Fame</h3>
+                    
+                    <div class="list-item">
+                        <div class="list-num">2012</div>
+                        <div><strong>AlexNet</strong> (Krizhevsky et al.)<br>
+                        <em>"ImageNet Classification with Deep Convolutional Neural Networks"</em><br>
+                        <span class="formula-caption">Insight: Relied on TWO GPUs because 3GB RAM wasn't enough. The split architecture was distinct.</span><br>
+                        <a href="https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf" target="_blank" style="color: #ff6b35;">📄 Read PDF</a></div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">2014</div>
+                        <div><strong>VGGNet</strong> (Simonyan & Zisserman)<br>
+                        <em>"Very Deep Convolutional Networks for Large-Scale Image Recognition"</em><br>
+                        <span class="formula-caption">Insight: 3x3 filters are all you need. Two 3x3 layers have the same receptive field as one 5x5 but fewer parameters.</span><br>
+                        <a href="https://arxiv.org/pdf/1409.1556.pdf" target="_blank" style="color: #ff6b35;">📄 Read PDF</a></div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">2015</div>
+                        <div><strong>U-Net</strong> (Ronneberger et al.)<br>
+                        <em>"Convolutional Networks for Biomedical Image Segmentation"</em><br>
+                        <span class="formula-caption">Insight: Skip connections concatenating features from encoder to decoder allow precise localization.</span><br>
+                        <a href="https://arxiv.org/pdf/1505.04597.pdf" target="_blank" style="color: #ff6b35;">📄 Read PDF</a></div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">2015</div>
+                        <div><strong>ResNet</strong> (He et al.)<br>
+                        <em>"Deep Residual Learning for Image Recognition"</em><br>
+                        <span class="formula-caption">Insight: It's easier to learn 0 than Identity. $f(x) = H(x) - x$.</span><br>
+                        <a href="https://arxiv.org/pdf/1512.03385.pdf" target="_blank" style="color: #ff6b35;">📄 Read PDF</a></div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">2016</div>
+                        <div><strong>YOLO</strong> (Redmon et al.)<br>
+                        <em>"You Only Look Once: Unified, Real-Time Object Detection"</em><br>
+                        <span class="formula-caption">Insight: Treated detection as a <strong>regression</strong> problem, not classification. Single forward pass.</span><br>
+                        <a href="https://arxiv.org/pdf/1506.02640.pdf" target="_blank" style="color: #ff6b35;">📄 Read PDF</a></div>
+                    </div>
+
+                    <hr style="border-color: #333; margin: 20px 0;">
+                    
+                    <h3>NLP & GenAI Hall of Fame</h3>
+
+                    <div class="list-item">
+                        <div class="list-num">2014</div>
+                        <div><strong>GANs</strong> (Goodfellow et al.)<br>
+                        <em>"Generative Adversarial Networks"</em><br>
+                        <span class="formula-caption">Insight: Training a generator by fighting a discriminator. The minimax game: $\min_G \max_D V(D, G)$.</span><br>
+                        <a href="https://arxiv.org/pdf/1406.2661.pdf" target="_blank" style="color: #a371f7;">📄 Read PDF</a></div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">2017</div>
+                        <div><strong>Attention Is All You Need</strong> (Vaswani et al.)<br>
+                        <em>"Transformers"</em><br>
+                        <span class="formula-caption">Insight: Sinusoidal Positional Embeddings allow the model to generalize to lengths unseen during training.</span><br>
+                        <a href="https://arxiv.org/pdf/1706.03762.pdf" target="_blank" style="color: #00d4ff;">📄 Read PDF</a></div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">2018</div>
+                        <div><strong>BERT</strong> (Devlin et al.)<br>
+                        <em>"Pre-training of Deep Bidirectional Transformers"</em><br>
+                        <span class="formula-caption">Insight: Masked LM (Cloze task) is inefficient (only 15% signal) but crucial for bidirectionality.</span><br>
+                        <a href="https://arxiv.org/pdf/1810.04805.pdf" target="_blank" style="color: #00d4ff;">📄 Read PDF</a></div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">2020</div>
+                        <div><strong>GPT-3</strong> (Brown et al.)<br>
+                        <em>"Language Models are Few-Shot Learners"</em><br>
+                        <span class="formula-caption">Insight: Scale is all you need. 175B parameters enable emergent behavior like in-context learning.</span><br>
+                        <a href="https://arxiv.org/pdf/2005.14165.pdf" target="_blank" style="color: #00d4ff;">📄 Read PDF</a></div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-num">2020</div>
+                        <div><strong>DDPM</strong> (Ho et al.)<br>
+                        <em>"Denoising Diffusion Probabilistic Models"</em><br>
+                        <span class="formula-caption">Insight: Predicting the noise $\epsilon$ is mathematically equivalent to predicting the score function (gradient of data density).</span><br>
+                        <a href="https://arxiv.org/pdf/2006.11239.pdf" target="_blank" style="color: #a371f7;">📄 Read PDF</a></div>
+                    </div>
+                `,
+                math: `
+                    <h3>The Formulas That Changed AI</h3>
+                    
+                    <p><strong>ResNet Residual:</strong></p>
+                    <div class="formula">y = F(x, \{W_i\}) + x</div>
+                    
+                    <p><strong>Scaled Dot-Product Attention:</strong></p>
+                    <div class="formula">Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V</div>
+                    
+                    <p><strong>Diffusion Reverse Process:</strong></p>
+                    <div class="formula">p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t))</div>
+                `,
+                applications: `
+                    <div class="info-box">
+                        <div class="box-title">🚀 Impact</div>
+                        <div class="box-content">These papers form the foundation of ChatGPT, Midjourney, Self-Driving Cars, and Facial Recognition.</div>
+                    </div>
+                `
+            },
             "gnn": {
                 overview: `
                     <h3>Graph Neural Networks (GNNs)</h3>
@@ -3986,7 +4181,9 @@
                 'bert': drawBERTProcess,
                 'gpt': drawGPTGeneration,
                 'vit': drawVisionTransformer,
-                'gnn': drawGraphNetwork
+                'gnn': drawGraphNetwork,
+                'seq2seq': drawSeq2SeqAttention,
+                'research-papers': drawDefaultVisualization
             };
 
             if (vizMap[moduleId]) {
