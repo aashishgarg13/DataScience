@@ -1,3 +1,12 @@
+---
+title: Data Science Masterclass
+emoji: 🚀
+colorFrom: blue
+colorTo: purple
+sdk: static
+pinned: false
+---
+
 # 📊 DataScience Learning Hub
 
 Welcome to a comprehensive collection of educational web projects for learning data science! This repository contains multiple interactive courses and resources covering statistics, machine learning, visualization, mathematics, and feature engineering.
