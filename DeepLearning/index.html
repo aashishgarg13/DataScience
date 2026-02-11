@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complete Deep Learning & Computer Vision Curriculum</title>
+
+    <!-- Shared Design System -->
+    <link rel="stylesheet" href="../shared/css/design-system.css">
+    <link rel="stylesheet" href="../shared/css/components.css">
+
     <style>
         * {
             margin: 0;
@@ -703,7 +708,7 @@
                 icon: "🔗",
                 category: "Sequence",
                 color: "#ff6b35",
-                description: "Attention mechanisms and modern architectures"
+                description: "\"Attention Is All You Need\" - Complete paper breakdown with math"
             },
             {
                 id: "bert",
@@ -822,6 +827,68 @@
                     <div class="info-box">
                         <div class="box-title">🛒 E-commerce</div>
                         <div class="box-content">Recommendation systems, demand forecasting, customer segmentation, price optimization</div>
+                    </div>
+                `,
+                math: `
+                    <h3>The Fundamental Equations of a Neuron</h3>
+                    <p>A single neuron performs a weighted sum followed by an activation function. This is the atomic building block of all neural networks.</p>
+                    
+                    <div class="formula" style="font-size: 1.2rem; text-align: center; margin: 20px 0; background: rgba(0, 212, 255, 0.08); padding: 25px; border-radius: 8px;">
+                        <strong>z = Σ(wᵢxᵢ) + b = w₁x₁ + w₂x₂ + ... + wₙxₙ + b</strong><br>
+                        <strong>a = σ(z)</strong>
+                    </div>
+                    
+                    <h4>Step-by-Step: Single Neuron Forward Pass</h4>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div>
+                            <strong>Weighted Sum (Linear):</strong><br>
+                            z = wᵀx + b = Σᵢ wᵢxᵢ + b<br>
+                            <span class="formula-caption">This is a dot product plus bias - pure linear algebra</span>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div>
+                            <strong>Activation (Non-Linear):</strong><br>
+                            a = σ(z) where σ can be ReLU, Sigmoid, Tanh, etc.<br>
+                            <span class="formula-caption">This introduces non-linearity, enabling complex functions</span>
+                        </div>
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Manual Forward Pass</div>
+                        <strong>Inputs:</strong> x = [2, 3], <strong>Weights:</strong> w = [0.5, -0.3], <strong>Bias:</strong> b = 0.1<br><br>
+                        <strong>Step 1 - Weighted Sum:</strong><br>
+                        z = (0.5 × 2) + (-0.3 × 3) + 0.1<br>
+                        z = 1.0 - 0.9 + 0.1 = <strong>0.2</strong><br><br>
+                        <strong>Step 2 - ReLU Activation:</strong><br>
+                        a = max(0, 0.2) = <strong>0.2</strong><br><br>
+                        <strong>Step 2 (alt) - Sigmoid Activation:</strong><br>
+                        a = 1 / (1 + e⁻⁰·²) = 1 / 1.819 ≈ <strong>0.55</strong>
+                    </div>
+                    
+                    <h3>Network Layer in Matrix Form</h3>
+                    <p>For a layer with n inputs and m neurons, we use matrices for efficiency:</p>
+                    
+                    <div class="formula">
+                        <strong>Z = WX + b</strong><br>
+                        <strong>A = σ(Z)</strong><br><br>
+                        Where:<br>
+                        • W ∈ ℝᵐˣⁿ (weight matrix: m neurons, n inputs)<br>
+                        • X ∈ ℝⁿˣ¹ (input vector)<br>
+                        • b ∈ ℝᵐˣ¹ (bias vector)<br>
+                        • Z ∈ ℝᵐˣ¹ (pre-activation)<br>
+                        • A ∈ ℝᵐˣ¹ (activation output)
+                    </div>
+                    
+                    <h3>Parameter Count Formula</h3>
+                    <div class="formula">
+                        For a layer: n_in → n_out<br>
+                        <strong>Parameters = n_in × n_out + n_out</strong><br>
+                        (weights) + (biases)<br><br>
+                        Example: Layer 784 → 128<br>
+                        Params = 784 × 128 + 128 = 100,480
                     </div>
                 `
             },
@@ -1206,36 +1273,49 @@
             },
             "transformers": {
                 overview: `
-                    <h3>What are Transformers?</h3>
-                    <p>Transformers are neural architectures based entirely on attention mechanisms, eliminating recurrence and convolutions. Introduced in "Attention is All You Need" (2017), they revolutionized NLP and are now conquering computer vision.</p>
+                    <h3>📜 "Attention Is All You Need" (Vaswani et al., 2017)</h3>
+                    <div class="callout insight">
+                        <div class="callout-title">📄 Paper Reference</div>
+                        <strong>Authors:</strong> Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, Illia Polosukhin<br>
+                        <strong>Published:</strong> NeurIPS 2017 | <strong>Citations:</strong> 100,000+<br>
+                        <strong>Link:</strong> <a href="https://arxiv.org/abs/1706.03762" target="_blank" style="color: var(--cyan);">arxiv.org/abs/1706.03762</a>
+                    </div>
                     
-                    <h3>Why Transformers Over RNNs/LSTMs?</h3>
+                    <h3>What are Transformers?</h3>
+                    <p>Transformers are neural architectures based <strong>entirely on attention mechanisms</strong>, completely eliminating recurrence and convolutions. This groundbreaking paper introduced the architecture that now powers GPT-4, Claude, BERT, and virtually all modern AI.</p>
+                    
+                    <h3>The Problem with RNNs/LSTMs</h3>
                     <ul>
-                        <li><strong>Parallelization:</strong> Process entire sequence at once (vs sequential RNNs)</li>
-                        <li><strong>Long-Range Dependencies:</strong> Direct connections between any two positions</li>
-                        <li><strong>No Gradient Vanishing:</strong> Skip connections and attention bypass depth issues</li>
-                        <li><strong>Scalability:</strong> Performance improves with more data and compute</li>
+                        <li><strong>Sequential Processing:</strong> RNNs must process tokens one-by-one, preventing parallelization</li>
+                        <li><strong>Memory Bottleneck:</strong> Hidden state must compress entire history into fixed-size vector</li>
+                        <li><strong>Long-Range Dependencies:</strong> Gradients vanish/explode over long sequences</li>
+                        <li><strong>Slow Training:</strong> Cannot leverage GPU parallelism effectively</li>
+                    </ul>
+                    
+                    <h3>The Transformer Solution</h3>
+                    <ul>
+                        <li><strong>Parallelization:</strong> Process entire sequence at once (O(1) sequential operations)</li>
+                        <li><strong>Direct Connections:</strong> Any position can attend to any other position directly</li>
+                        <li><strong>No Vanishing Gradients:</strong> Attention + residual connections maintain gradient flow</li>
+                        <li><strong>Massive Scalability:</strong> Performance scales with compute and data</li>
                     </ul>
                     
                     <div class="callout tip">
-                        <div class="callout-title">✅ Advantages</div>
-                        • <strong>Superior Performance:</strong> SOTA on nearly all NLP benchmarks<br>
-                        • <strong>Highly Parallelizable:</strong> Train 100× faster than RNNs on TPUs/GPUs<br>
-                        • <strong>Transfer Learning:</strong> Pre-train once, fine-tune for many tasks<br>
-                        • <strong>Interpretability:</strong> Attention weights show what model focuses on<br>
-                        • <strong>Multi-Modal:</strong> Works for text, images, audio, video
+                        <div class="callout-title">✅ Paper's Key Results</div>
+                        • <strong>WMT 2014 English-to-German:</strong> 28.4 BLEU (new SOTA, +2 over previous best)<br>
+                        • <strong>WMT 2014 English-to-French:</strong> 41.8 BLEU (single model SOTA)<br>
+                        • <strong>Training Time:</strong> 3.5 days on 8 GPUs (fraction of previous models)<br>
+                        • <strong>English Constituency Parsing:</strong> Generalizes beyond translation
                     </div>
                     
                     <div class="callout warning">
-                        <div class="callout-title">⚠️ Disadvantages</div>
-                        • <strong>Quadratic Complexity:</strong> O(n²) in sequence length (memory intensive)<br>
-                        • <strong>Massive Data Requirements:</strong> Need millions of examples to train from scratch<br>
-                        • <strong>Computational Cost:</strong> Training GPT-3 cost ~$4.6M<br>
-                        • <strong>Position Encoding:</strong> Require explicit positional information<br>
-                        • <strong>Limited Context:</strong> Most models cap at 512-4096 tokens
+                        <div class="callout-title">⚠️ Limitations Acknowledged in Paper</div>
+                        • <strong>Quadratic Complexity:</strong> O(n²) memory for sequence length n<br>
+                        • <strong>No Positional Bias:</strong> Must explicitly inject position information<br>
+                        • <strong>Data Hungry:</strong> Requires large datasets to train from scratch
                     </div>
                     
-                    <h3>Transformer Variants</h3>
+                    <h3>Transformer Variants (Evolution)</h3>
                     <table>
                         <tr>
                             <th>Model</th>
@@ -1244,151 +1324,467 @@
                             <th>Best For</th>
                         </tr>
                         <tr>
-                            <td>BERT</td>
+                            <td>Original Transformer</td>
+                            <td>Encoder-Decoder</td>
+                            <td>Full (6+6 layers)</td>
+                            <td>Machine Translation</td>
+                        </tr>
+                        <tr>
+                            <td>BERT (2018)</td>
                             <td>Encoder-only</td>
                             <td>Bidirectional</td>
-                            <td>Understanding (classification, QA)</td>
+                            <td>Understanding (NLU)</td>
                         </tr>
                         <tr>
-                            <td>GPT</td>
+                            <td>GPT (2018-2023)</td>
                             <td>Decoder-only</td>
                             <td>Autoregressive</td>
-                            <td>Generation (text, code)</td>
+                            <td>Generation (NLG)</td>
                         </tr>
                         <tr>
-                            <td>T5</td>
+                            <td>T5 (2019)</td>
                             <td>Encoder-Decoder</td>
-                            <td>Full Transformer</td>
-                            <td>Text-to-text tasks (translation)</td>
+                            <td>Text-to-Text</td>
+                            <td>All NLP tasks</td>
                         </tr>
                         <tr>
-                            <td>ViT</td>
+                            <td>ViT (2020)</td>
                             <td>Encoder-only</td>
-                            <td>Patch embeddings</td>
-                            <td>Image classification</td>
+                            <td>Image patches</td>
+                            <td>Computer Vision</td>
                         </tr>
                     </table>
                 `,
                 concepts: `
+                    <h3>🏗️ Complete Architecture Overview</h3>
+                    <p>The Transformer follows an <strong>Encoder-Decoder</strong> structure, but each component uses only attention mechanisms.</p>
+                    
+                    <div class="info-box">
+                        <div class="box-title">📦 Model Hyperparameters (Base Model)</div>
+                        <div class="box-content">
+                            • <strong>d_model = 512:</strong> Embedding dimension<br>
+                            • <strong>d_ff = 2048:</strong> Feed-forward hidden dimension<br>
+                            • <strong>h = 8:</strong> Number of attention heads<br>
+                            • <strong>d_k = d_v = 64:</strong> Key/Value dimensions (d_model / h)<br>
+                            • <strong>N = 6:</strong> Number of encoder AND decoder layers<br>
+                            • <strong>Total Parameters:</strong> ~65 million
+                        </div>
+                    </div>
+                    
                     <h3>Core Components</h3>
                     <div class="list-item">
                         <div class="list-num">01</div>
-                        <div><strong>Self-Attention:</strong> Each token attends to all other tokens, learning contextual relationships</div>
+                        <div><strong>Input Embedding:</strong> Convert tokens to d_model dimensional vectors, scaled by √d_model</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">02</div>
-                        <div><strong>Multi-Head Attention:</strong> Multiple attention mechanisms in parallel (8-16 heads), each learning different patterns</div>
+                        <div><strong>Positional Encoding:</strong> Add sinusoidal position signals so attention knows token order</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">03</div>
-                        <div><strong>Positional Encoding:</strong> Add position information since attention is permutation-invariant</div>
+                        <div><strong>Multi-Head Self-Attention:</strong> h parallel attention heads, each computing different relationships</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">04</div>
-                        <div><strong>Feed-Forward Networks:</strong> Two-layer MLPs applied to each position independently</div>
+                        <div><strong>Add & Norm:</strong> Residual connection followed by Layer Normalization</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">05</div>
-                        <div><strong>Layer Normalization:</strong> Stabilize training, applied before attention and FFN</div>
+                        <div><strong>Feed-Forward Network:</strong> Two linear layers with ReLU: FFN(x) = max(0, xW₁ + b₁)W₂ + b₂</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">06</div>
-                        <div><strong>Residual Connections:</strong> Skip connections around each sub-layer for gradient flow</div>
+                        <div><strong>Masked Attention (Decoder):</strong> Prevent attending to future tokens during training</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">07</div>
+                        <div><strong>Encoder-Decoder Attention:</strong> Decoder attends to encoder output (cross-attention)</div>
                     </div>
                     
+                    <h3>Encoder Stack (N=6 layers)</h3>
                     <div class="formula">
-                        Self-Attention Formula:<br>
-                        Attention(Q, K, V) = softmax(QK<sup>T</sup> / √d<sub>k</sub>) V<br>
+                        Each encoder layer:<br>
+                        sublayer_1 = LayerNorm(x + MultiHeadAttention(x, x, x))<br>
+                        sublayer_2 = LayerNorm(sublayer_1 + FFN(sublayer_1))<br>
                         <br>
-                        Where:<br>
-                        • Q = Queries (what we're looking for)<br>
-                        • K = Keys (what each token represents)<br>
-                        • V = Values (actual information to aggregate)<br>
-                        • d<sub>k</sub> = dimension of keys (for scaling)<br>
+                        The encoder processes the input sequence bidirectionally.<br>
+                        All positions can attend to all positions.
+                    </div>
+                    
+                    <h3>Decoder Stack (N=6 layers)</h3>
+                    <div class="formula">
+                        Each decoder layer has THREE sub-layers:<br>
+                        1. Masked Self-Attention (prevent looking ahead)<br>
+                        2. Encoder-Decoder Attention (attend to encoder output)<br>
+                        3. Feed-Forward Network<br>
                         <br>
-                        Multi-Head Attention:<br>
-                        MultiHead(Q,K,V) = Concat(head₁,...,head<sub>h</sub>)W<sup>O</sup><br>
-                        where head<sub>i</sub> = Attention(QW<sub>i</sub><sup>Q</sup>, KW<sub>i</sub><sup>K</sup>, VW<sub>i</sub><sup>V</sup>)
+                        Output: LayerNorm(x + sublayer(x)) for each
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">💡 Key Insight: Residual Connections</div>
+                        Every sub-layer has a residual connection: <strong>output = x + Sublayer(x)</strong><br>
+                        This is crucial for:<br>
+                        1. Training very deep models (gradient highway)<br>
+                        2. Preserving information across layers<br>
+                        3. Enabling optional "skipping" of transformations
                     </div>
                 `,
                 applications: `
-                    <h3>Revolutionary Applications</h3>
+                    <h3>🌍 Revolutionary Applications</h3>
+                    
                     <div class="info-box">
                         <div class="box-title">💬 Large Language Models</div>
                         <div class="box-content">
-                            <strong>ChatGPT, GPT-4, Claude:</strong> Conversational AI, code generation, creative writing, reasoning<br>
-                            <strong>BERT, RoBERTa:</strong> Search engines (Google), question answering, sentiment analysis
+                            <strong>GPT-4, Claude, Gemini:</strong> The most capable AI systems ever built<br>
+                            <strong>ChatGPT:</strong> 100M+ users in 2 months (fastest product adoption ever)<br>
+                            <strong>BERT:</strong> Powers Google Search for 70+ languages
                         </div>
                     </div>
+                    
                     <div class="info-box">
-                        <div class="box-title">🌐 Machine Translation</div>
+                        <div class="box-title">🌐 Machine Translation (Original Use Case)</div>
                         <div class="box-content">
-                            <strong>Google Translate, DeepL:</strong> Transformers achieved human-level translation quality<br>
-                            Supports 100+ languages, real-time translation
+                            <strong>Google Translate:</strong> Switched to Transformers in 2017<br>
+                            <strong>DeepL:</strong> Transformer-based, often beats Google<br>
+                            <strong>NLLB-200:</strong> Meta's model translates 200 languages
                         </div>
                     </div>
+                    
                     <div class="info-box">
                         <div class="box-title">🎨 Multi-Modal AI</div>
                         <div class="box-content">
-                            <strong>DALL-E, Midjourney:</strong> Text-to-image generation<br>
-                            <strong>CLIP:</strong> Image-text understanding<br>
-                            <strong>Whisper:</strong> Speech recognition
+                            <strong>DALL-E 3, Midjourney, Stable Diffusion:</strong> Text-to-image generation<br>
+                            <strong>GPT-4V, Gemini:</strong> Vision + Language understanding<br>
+                            <strong>Whisper:</strong> State-of-the-art speech recognition<br>
+                            <strong>Sora:</strong> Text-to-video generation
                         </div>
                     </div>
+                    
                     <div class="info-box">
-                        <div class="box-title">🧬 Scientific Discovery</div>
+                        <div class="box-title">🧬 Scientific Breakthroughs</div>
                         <div class="box-content">
-                            <strong>AlphaFold:</strong> Protein structure prediction (Nobel Prize-worthy breakthrough)<br>
-                            <strong>Drug Discovery:</strong> Molecule generation and property prediction
+                            <strong>AlphaFold 2:</strong> Solved 50-year protein folding problem (Nobel Prize 2024)<br>
+                            <strong>ESMFold:</strong> Meta's protein predictor<br>
+                            <strong>Drug Discovery:</strong> Accelerating molecule design
                         </div>
                     </div>
+                    
                     <div class="info-box">
-                        <div class="box-title">💻 Code Intelligence</div>
+                        <div class="box-title">💻 Code & Development</div>
                         <div class="box-content">
-                            <strong>GitHub Copilot:</strong> AI pair programmer<br>
-                            <strong>CodeGen, AlphaCode:</strong> Automated coding, bug detection
+                            <strong>GitHub Copilot:</strong> AI pair programmer (used by millions of devs)<br>
+                            <strong>Claude Code, Cursor:</strong> AI coding assistants<br>
+                            <strong>AlphaCode:</strong> Competitive programming solver
                         </div>
+                    </div>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">📈 Impact Statistics</div>
+                        • Paper has 100,000+ citations (one of most cited CS papers ever)<br>
+                        • Spawned multi-trillion dollar industry<br>
+                        • Every major AI lab now uses Transformer variants<br>
+                        • Considered the "ImageNet moment" for NLP
                     </div>
                 `,
                 math: `
-                    <h3>Scaled Dot-Product Attention</h3>
-                    <p>The "heart" of the Transformer. It computes how much "attention" to pay to different parts of the input sequence.</p>
+                    <h3>📐 Paper & Pain: Complete Mathematical Derivation</h3>
+                    <p>Let's derive every formula from the paper with step-by-step calculations.</p>
                     
-                    <div class="formula" style="font-size: 1.3rem; text-align: center; margin: 20px 0; background: rgba(0, 212, 255, 0.05); padding: 20px; border-radius: 8px;">
-                        Attention(Q, K, V) = softmax( (QKᵀ) / √dₖ ) V
+                    <h3>1. Scaled Dot-Product Attention</h3>
+                    <div class="formula" style="font-size: 1.2rem; text-align: center; margin: 20px 0; background: rgba(0, 212, 255, 0.08); padding: 25px; border-radius: 8px;">
+                        <strong>Attention(Q, K, V) = softmax(QKᵀ / √dₖ) V</strong>
                     </div>
-
-                    <h3>Step-by-Step Derivation</h3>
+                    
+                    <h4>Step-by-Step Derivation:</h4>
                     <div class="list-item">
                         <div class="list-num">01</div>
-                        <div><strong>Dot Product (QKᵀ):</strong> Compute raw similarity scores between Queries (what we want) and Keys (what we have)</div>
+                        <div>
+                            <strong>Create Q, K, V matrices:</strong><br>
+                            Given input X ∈ ℝⁿˣᵈ (n tokens, d dimensions)<br>
+                            Q = XWᵠ, K = XWᴷ, V = XWⱽ<br>
+                            where Wᵠ, Wᴷ ∈ ℝᵈˣᵈᵏ and Wⱽ ∈ ℝᵈˣᵈᵛ
+                        </div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">02</div>
-                        <div><strong>Scaling (1/√dₖ):</strong> Divide by square root of key dimension. <strong>Why?</strong> With high dimensions, dot products grow large, pushing softmax into regions with vanishing gradients. Scaling prevents this.</div>
+                        <div>
+                            <strong>Compute Attention Scores:</strong><br>
+                            scores = QKᵀ ∈ ℝⁿˣⁿ<br>
+                            Each score[i,j] = dot product of query_i and key_j<br>
+                            Measures "how much should position i attend to position j"
+                        </div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">03</div>
-                        <div><strong>Softmax:</strong> Convert similarity scores into probabilities (attention weights) that sum to 1</div>
+                        <div>
+                            <strong>Scale by √dₖ:</strong><br>
+                            scaled_scores = QKᵀ / √dₖ<br>
+                            <em>Why scale?</em> Dot products grow with dimension. If dₖ = 64:<br>
+                            E[qᵀk] = 0, Var[qᵀk] = dₖ = 64<br>
+                            Without scaling, softmax saturates → vanishing gradients!
+                        </div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">04</div>
-                        <div><strong>Weighted Sum (×V):</strong> Use attention weights to pull information from Values.</div>
+                        <div>
+                            <strong>Apply Softmax:</strong><br>
+                            attention_weights = softmax(scaled_scores) ∈ ℝⁿˣⁿ<br>
+                            Each row sums to 1 (probability distribution over positions)
+                        </div>
                     </div>
-
+                    <div class="list-item">
+                        <div class="list-num">05</div>
+                        <div>
+                            <strong>Weighted Sum of Values:</strong><br>
+                            output = attention_weights × V ∈ ℝⁿˣᵈᵛ<br>
+                            Each output[i] is a weighted combination of all values
+                        </div>
+                    </div>
+                    
+                    <h3>2. Multi-Head Attention</h3>
+                    <div class="formula" style="background: rgba(255, 107, 53, 0.08); padding: 20px; border-radius: 8px;">
+                        MultiHead(Q, K, V) = Concat(head₁, ..., headₕ)Wᴼ<br>
+                        where headᵢ = Attention(QWᵢᵠ, KWᵢᴷ, VWᵢⱽ)<br><br>
+                        
+                        <strong>Paper's values:</strong><br>
+                        h = 8 heads, dₖ = dᵥ = d_model/h = 512/8 = 64<br>
+                        Wᴼ ∈ ℝ⁽ʰ·ᵈᵛ⁾ˣᵈᵐᵒᵈᵉˡ = ℝ⁵¹²ˣ⁵¹²
+                    </div>
+                    
                     <div class="callout insight">
-                        <div class="callout-title">📝 Paper & Pain: Multi-Head Attention</div>
-                        Instead of one big attention, we split Q, K, V into <em>h</em> heads:<br>
-                        1. Heads learn <strong>different aspects</strong> (e.g., syntax vs semantics)<br>
-                        2. Concat all heads: MultiHead = Concat(head₁, ..., headₕ)Wᴼ<br>
-                        3. Complexity: <strong>O(n² · d)</strong> - This is why long sequences are hard!
+                        <div class="callout-title">💡 Why Multiple Heads?</div>
+                        Each head can learn <strong>different relationships</strong>:<br>
+                        • Head 1: Syntactic dependencies (subject-verb)<br>
+                        • Head 2: Pronoun resolution (he → John)<br>
+                        • Head 3: Semantic similarity<br>
+                        • Head 4-8: Other patterns<br>
+                        <br>
+                        <strong>Computation:</strong> Same cost as single-head with full dₖ!<br>
+                        8 heads × 64 dim = 1 head × 512 dim (same FLOPs)
                     </div>
-
+                    
+                    <h3>3. Positional Encoding (Sinusoidal)</h3>
+                    <div class="formula" style="background: rgba(46, 204, 113, 0.08); padding: 20px; border-radius: 8px;">
+                        PE(pos, 2i) = sin(pos / 10000^(2i/d_model))<br>
+                        PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))<br><br>
+                        
+                        pos = position in sequence (0, 1, 2, ...)<br>
+                        i = dimension index (0, 1, ..., d_model/2 - 1)
+                    </div>
+                    
+                    <h4>Worked Example (d_model = 4):</h4>
+                    <div class="formula" style="background: var(--surface); padding: 15px;">
+                        For position pos = 0:<br>
+                        PE(0, 0) = sin(0) = 0<br>
+                        PE(0, 1) = cos(0) = 1<br>
+                        PE(0, 2) = sin(0) = 0<br>
+                        PE(0, 3) = cos(0) = 1<br>
+                        → PE₀ = [0, 1, 0, 1]<br><br>
+                        
+                        For position pos = 1:<br>
+                        PE(1, 0) = sin(1/10000⁰) = sin(1) ≈ 0.84<br>
+                        PE(1, 1) = cos(1/10000⁰) = cos(1) ≈ 0.54<br>
+                        PE(1, 2) = sin(1/100) ≈ 0.01<br>
+                        PE(1, 3) = cos(1/100) ≈ 1.00<br>
+                        → PE₁ = [0.84, 0.54, 0.01, 1.00]
+                    </div>
+                    
                     <div class="callout warning">
-                        <div class="callout-title">📐 Sinusoidal Positional Encoding</div>
-                        PE(pos, 2i) = sin(pos / 10000^{2i/d})<br>
-                        PE(pos, 2i+1) = cos(pos / 10000^{2i/d})<br>
-                        This allows the model to learn relative positions since PE(pos+k) is a linear function of PE(pos).
+                        <div class="callout-title">🔑 Key Property: Relative Positions</div>
+                        PE(pos + k) can be expressed as a <strong>linear function</strong> of PE(pos)!<br>
+                        This allows the model to easily learn relative position attention.<br>
+                        sin(a+b) = sin(a)cos(b) + cos(a)sin(b) ✓
+                    </div>
+                    
+                    <h3>4. Feed-Forward Network</h3>
+                    <div class="formula">
+                        FFN(x) = max(0, xW₁ + b₁)W₂ + b₂<br><br>
+                        
+                        W₁ ∈ ℝᵈᵐᵒᵈᵉˡ ˣ ᵈᶠᶠ = ℝ⁵¹² ˣ ²⁰⁴⁸ (expand 4×)<br>
+                        W₂ ∈ ℝᵈᶠᶠ ˣ ᵈᵐᵒᵈᵉˡ = ℝ²⁰⁴⁸ ˣ ⁵¹² (project back)<br><br>
+                        
+                        This is a 2-layer MLP with ReLU, applied to each position independently.
+                    </div>
+                    
+                    <h3>5. Layer Normalization</h3>
+                    <div class="formula">
+                        LayerNorm(x) = γ ⊙ (x - μ) / √(σ² + ε) + β<br><br>
+                        
+                        μ = (1/d) Σᵢ xᵢ (mean across features)<br>
+                        σ² = (1/d) Σᵢ (xᵢ - μ)² (variance)<br>
+                        γ, β: learnable scale and shift (per feature)
+                    </div>
+                    
+                    <h3>6. Training Details from Paper</h3>
+                    <div class="info-box">
+                        <div class="box-title">⚙️ Optimization Settings</div>
+                        <div class="box-content">
+                            <strong>Optimizer:</strong> Adam with β₁=0.9, β₂=0.98, ε=10⁻⁹<br>
+                            <strong>Learning Rate Schedule:</strong><br>
+                            lr = d_model⁻⁰·⁵ × min(step⁻⁰·⁵, step × warmup_steps⁻¹·⁵)<br>
+                            warmup_steps = 4000<br><br>
+                            <strong>Regularization:</strong><br>
+                            • Dropout = 0.1 (on sublayers and embeddings)<br>
+                            • Label Smoothing = 0.1
+                        </div>
+                    </div>
+                    
+                    <h3>7. Complexity Analysis</h3>
+                    <table>
+                        <tr>
+                            <th>Layer Type</th>
+                            <th>Complexity per Layer</th>
+                            <th>Sequential Ops</th>
+                            <th>Max Path Length</th>
+                        </tr>
+                        <tr>
+                            <td>Self-Attention</td>
+                            <td>O(n² · d)</td>
+                            <td>O(1)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Recurrent (RNN)</td>
+                            <td>O(n · d²)</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>Convolutional</td>
+                            <td>O(k · n · d²)</td>
+                            <td>O(1)</td>
+                            <td>O(logₖ(n))</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">🎯 Key Insight from the Paper</div>
+                        Self-attention is the only architecture with <strong>O(1) path length</strong><br>
+                        between any two positions! This is why it handles long-range<br>
+                        dependencies so well. The tradeoff is O(n²) memory.
+                    </div>
+                `,
+                visualization: `
+                    <h3>🎨 Interactive Transformer Visualization</h3>
+                    <p>Explore how attention mechanisms work in the Transformer architecture.</p>
+                    
+                    <div class="viz-container">
+                        <canvas id="transformerViz" width="800" height="600"></canvas>
+                    </div>
+                    
+                    <div class="viz-controls">
+                        <button class="btn-viz" onclick="visualizeAttention()">Show Attention Weights</button>
+                        <button class="btn-viz" onclick="visualizeMultiHead()">Multi-Head Attention</button>
+                        <button class="btn-viz" onclick="visualizePositional()">Positional Encoding</button>
+                        <button class="btn-viz" onclick="visualizeArchitecture()">Full Architecture</button>
+                    </div>
+                    
+                    <h3>Code: Self-Attention in PyTorch</h3>
+                    <div class="formula" style="font-family: 'Courier New', monospace; font-size: 0.9rem; background: #1e1e2e; padding: 20px; border-radius: 8px; overflow-x: auto;">
+<pre style="margin: 0; color: #cdd6f4;">
+<span style="color: #89b4fa;">import</span> torch
+<span style="color: #89b4fa;">import</span> torch.nn <span style="color: #89b4fa;">as</span> nn
+<span style="color: #89b4fa;">import</span> torch.nn.functional <span style="color: #89b4fa;">as</span> F
+<span style="color: #89b4fa;">import</span> math
+
+<span style="color: #89b4fa;">class</span> <span style="color: #f9e2af;">ScaledDotProductAttention</span>(nn.Module):
+    <span style="color: #a6e3a1;">\"\"\"Attention(Q, K, V) = softmax(QK^T / sqrt(d_k)) V\"\"\"</span>
+    
+    <span style="color: #89b4fa;">def</span> <span style="color: #f9e2af;">forward</span>(self, Q, K, V, mask=<span style="color: #fab387;">None</span>):
+        d_k = Q.size(-1)
+        
+        <span style="color: #6c7086;"># Step 1: Compute attention scores</span>
+        scores = torch.matmul(Q, K.transpose(-2, -1))
+        
+        <span style="color: #6c7086;"># Step 2: Scale by sqrt(d_k)</span>
+        scores = scores / math.sqrt(d_k)
+        
+        <span style="color: #6c7086;"># Step 3: Apply mask (for decoder)</span>
+        <span style="color: #89b4fa;">if</span> mask <span style="color: #89b4fa;">is not</span> <span style="color: #fab387;">None</span>:
+            scores = scores.masked_fill(mask == <span style="color: #fab387;">0</span>, <span style="color: #fab387;">-1e9</span>)
+        
+        <span style="color: #6c7086;"># Step 4: Apply softmax</span>
+        attention_weights = F.softmax(scores, dim=-1)
+        
+        <span style="color: #6c7086;"># Step 5: Weighted sum of values</span>
+        output = torch.matmul(attention_weights, V)
+        
+        <span style="color: #89b4fa;">return</span> output, attention_weights
+
+
+<span style="color: #89b4fa;">class</span> <span style="color: #f9e2af;">MultiHeadAttention</span>(nn.Module):
+    <span style="color: #a6e3a1;">\"\"\"Multi-Head Attention from 'Attention Is All You Need'\"\"\"</span>
+    
+    <span style="color: #89b4fa;">def</span> <span style="color: #f9e2af;">__init__</span>(self, d_model=<span style="color: #fab387;">512</span>, n_heads=<span style="color: #fab387;">8</span>):
+        <span style="color: #89b4fa;">super</span>().__init__()
+        self.d_model = d_model
+        self.n_heads = n_heads
+        self.d_k = d_model // n_heads  <span style="color: #6c7086;"># 64</span>
+        
+        <span style="color: #6c7086;"># Linear projections for Q, K, V</span>
+        self.W_Q = nn.Linear(d_model, d_model)
+        self.W_K = nn.Linear(d_model, d_model)
+        self.W_V = nn.Linear(d_model, d_model)
+        self.W_O = nn.Linear(d_model, d_model)
+        
+        self.attention = ScaledDotProductAttention()
+    
+    <span style="color: #89b4fa;">def</span> <span style="color: #f9e2af;">forward</span>(self, Q, K, V, mask=<span style="color: #fab387;">None</span>):
+        batch_size = Q.size(<span style="color: #fab387;">0</span>)
+        
+        <span style="color: #6c7086;"># 1. Linear projection and split into h heads</span>
+        Q = self.W_Q(Q).view(batch_size, -1, self.n_heads, self.d_k).transpose(1, 2)
+        K = self.W_K(K).view(batch_size, -1, self.n_heads, self.d_k).transpose(1, 2)
+        V = self.W_V(V).view(batch_size, -1, self.n_heads, self.d_k).transpose(1, 2)
+        
+        <span style="color: #6c7086;"># 2. Apply attention to all heads in parallel</span>
+        x, attn = self.attention(Q, K, V, mask)
+        
+        <span style="color: #6c7086;"># 3. Concat and final linear projection</span>
+        x = x.transpose(1, 2).contiguous().view(batch_size, -1, self.d_model)
+        
+        <span style="color: #89b4fa;">return</span> self.W_O(x), attn
+
+
+<span style="color: #89b4fa;">class</span> <span style="color: #f9e2af;">PositionalEncoding</span>(nn.Module):
+    <span style="color: #a6e3a1;">\"\"\"Sinusoidal Positional Encoding from the paper\"\"\"</span>
+    
+    <span style="color: #89b4fa;">def</span> <span style="color: #f9e2af;">__init__</span>(self, d_model=<span style="color: #fab387;">512</span>, max_len=<span style="color: #fab387;">5000</span>):
+        <span style="color: #89b4fa;">super</span>().__init__()
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(<span style="color: #fab387;">0</span>, max_len, dtype=torch.float).unsqueeze(<span style="color: #fab387;">1</span>)
+        div_term = torch.exp(torch.arange(<span style="color: #fab387;">0</span>, d_model, <span style="color: #fab387;">2</span>).float() * (-math.log(<span style="color: #fab387;">10000.0</span>) / d_model))
+        
+        pe[:, <span style="color: #fab387;">0</span>::<span style="color: #fab387;">2</span>] = torch.sin(position * div_term)
+        pe[:, <span style="color: #fab387;">1</span>::<span style="color: #fab387;">2</span>] = torch.cos(position * div_term)
+        pe = pe.unsqueeze(<span style="color: #fab387;">0</span>)  <span style="color: #6c7086;"># [1, max_len, d_model]</span>
+        
+        self.register_buffer(<span style="color: #a6e3a1;">'pe'</span>, pe)
+    
+    <span style="color: #89b4fa;">def</span> <span style="color: #f9e2af;">forward</span>(self, x):
+        <span style="color: #89b4fa;">return</span> x + self.pe[:, :x.size(<span style="color: #fab387;">1</span>)]
+
+
+<span style="color: #6c7086;"># Example usage:</span>
+batch_size, seq_len, d_model = <span style="color: #fab387;">2</span>, <span style="color: #fab387;">10</span>, <span style="color: #fab387;">512</span>
+x = torch.randn(batch_size, seq_len, d_model)
+
+mha = MultiHeadAttention(d_model=<span style="color: #fab387;">512</span>, n_heads=<span style="color: #fab387;">8</span>)
+pe = PositionalEncoding(d_model=<span style="color: #fab387;">512</span>)
+
+x = pe(x)  <span style="color: #6c7086;"># Add positional encoding</span>
+output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attention</span>
+
+<span style="color: #89b4fa;">print</span>(f<span style="color: #a6e3a1;">"Output shape: {output.shape}"</span>)  <span style="color: #6c7086;"># [2, 10, 512]</span>
+<span style="color: #89b4fa;">print</span>(f<span style="color: #a6e3a1;">"Attention shape: {attn_weights.shape}"</span>)  <span style="color: #6c7086;"># [2, 8, 10, 10]</span>
+</pre>
+                    </div>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">🎓 Run This Code!</div>
+                        Copy the code above and run it in a Jupyter notebook or Google Colab.<br>
+                        Experiment with different d_model, n_heads, and seq_len values!
                     </div>
                 `
             },
@@ -1775,6 +2171,85 @@
                             CNNs: SGD+Momentum | Transformers: AdamW | RNNs: RMSprop | Default: Adam
                         </div>
                     </div>
+                `,
+                math: `
+                    <h3>Gradient Descent: The Foundation</h3>
+                    <p>All optimizers are variations of gradient descent. The goal: minimize the loss function L(w).</p>
+                    
+                    <div class="formula" style="font-size: 1.2rem; text-align: center; margin: 20px 0; background: rgba(0, 212, 255, 0.08); padding: 25px; border-radius: 8px;">
+                        <strong>w = w - α × ∇L(w)</strong>
+                    </div>
+                    
+                    <h3>1. Stochastic Gradient Descent (SGD)</h3>
+                    <div class="formula">
+                        w_{t+1} = w_t - α × ∇L(w_t)<br><br>
+                        Where α = learning rate (typically 0.01 - 0.1)
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: SGD Step</div>
+                        <strong>Current w:</strong> 2.0, <strong>Gradient:</strong> ∇L = 0.5, <strong>α:</strong> 0.1<br><br>
+                        w_new = 2.0 - 0.1 × 0.5 = 2.0 - 0.05 = <strong>1.95</strong><br>
+                        The weight moved slightly toward lower loss!
+                    </div>
+                    
+                    <h3>2. SGD with Momentum</h3>
+                    <p>Adds a "velocity" term to accelerate through flat regions and dampen oscillations.</p>
+                    
+                    <div class="formula">
+                        v_{t+1} = β × v_t + ∇L(w_t)<br>
+                        w_{t+1} = w_t - α × v_{t+1}<br><br>
+                        Where β = momentum coefficient (typically 0.9)
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Momentum Step</div>
+                        <strong>v_t:</strong> 0.3, <strong>∇L:</strong> 0.5, <strong>β:</strong> 0.9, <strong>α:</strong> 0.1<br><br>
+                        v_new = 0.9 × 0.3 + 0.5 = 0.27 + 0.5 = <strong>0.77</strong><br>
+                        w_new = w - 0.1 × 0.77 = <strong>larger step!</strong><br>
+                        Momentum accumulates past gradients for faster convergence.
+                    </div>
+                    
+                    <h3>3. RMSprop</h3>
+                    <p>Adapts learning rate per-parameter using running average of squared gradients.</p>
+                    
+                    <div class="formula">
+                        v_t = β × v_{t-1} + (1-β) × (∇L)²<br>
+                        w_{t+1} = w_t - α × ∇L / √(v_t + ε)<br><br>
+                        β = 0.9, ε = 1e-8 (numerical stability)
+                    </div>
+                    
+                    <h3>4. Adam (Adaptive Moment Estimation)</h3>
+                    <p>Combines momentum AND adaptive learning rates. The most popular optimizer.</p>
+                    
+                    <div class="formula" style="background: rgba(255, 107, 53, 0.08); padding: 20px; border-radius: 8px;">
+                        <strong>Step 1 - First Moment (Momentum):</strong><br>
+                        m_t = β₁ × m_{t-1} + (1-β₁) × ∇L<br><br>
+                        <strong>Step 2 - Second Moment (RMSprop):</strong><br>
+                        v_t = β₂ × v_{t-1} + (1-β₂) × (∇L)²<br><br>
+                        <strong>Step 3 - Bias Correction:</strong><br>
+                        m̂_t = m_t / (1 - β₁ᵗ)<br>
+                        v̂_t = v_t / (1 - β₂ᵗ)<br><br>
+                        <strong>Step 4 - Update:</strong><br>
+                        w_{t+1} = w_t - α × m̂_t / (√v̂_t + ε)
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Adam Step-by-Step</div>
+                        <strong>Hyperparameters:</strong> α=0.001, β₁=0.9, β₂=0.999, ε=1e-8<br>
+                        <strong>t=2:</strong> ∇L = 0.5, m₁ = 0.05, v₁ = 0.00025<br><br>
+                        m₂ = 0.9 × 0.05 + 0.1 × 0.5 = 0.045 + 0.05 = 0.095<br>
+                        v₂ = 0.999 × 0.00025 + 0.001 × 0.25 = 0.000499<br><br>
+                        m̂₂ = 0.095 / (1 - 0.81) = 0.095 / 0.19 = 0.50<br>
+                        v̂₂ = 0.000499 / (1 - 0.998) = 0.2495<br><br>
+                        Δw = 0.001 × 0.50 / (√0.2495 + 1e-8) ≈ <strong>0.001</strong>
+                    </div>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Why Bias Correction?</div>
+                        m₀ = 0, v₀ = 0 initialization biases early estimates toward zero.<br>
+                        Dividing by (1 - βᵗ) compensates for this, especially in early training steps.
+                    </div>
                 `
             },
             "backprop": {
@@ -1899,6 +2374,73 @@
                             • Always use Early Stopping<br>
                             • Data Augmentation for images
                         </div>
+                    </div>
+                `,
+                math: `
+                    <h3>L2 Regularization (Weight Decay)</h3>
+                    <p>Add a penalty proportional to the squared magnitude of weights.</p>
+                    
+                    <div class="formula" style="font-size: 1.2rem; text-align: center; margin: 20px 0; background: rgba(0, 212, 255, 0.08); padding: 25px; border-radius: 8px;">
+                        <strong>L_total = L_data + λ × Σ w²</strong>
+                    </div>
+                    
+                    <h4>Gradient with L2:</h4>
+                    <div class="formula">
+                        ∂L_total/∂w = ∂L_data/∂w + 2λw<br><br>
+                        Update rule becomes:<br>
+                        w = w - α(∇L + 2λw) = w(1 - 2αλ) - α∇L
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: L2 Effect</div>
+                        <strong>Without L2:</strong> w = 5.0, ∇L = 0.1, α = 0.1<br>
+                        w_new = 5.0 - 0.1 × 0.1 = 4.99<br><br>
+                        <strong>With L2 (λ=0.01):</strong><br>
+                        w_new = 5.0 × (1 - 2×0.1×0.01) - 0.1 × 0.1<br>
+                        w_new = 5.0 × 0.998 - 0.01 = 4.99 - 0.01 = <strong>4.98</strong><br><br>
+                        The weight shrinks faster! Large weights shrink most.
+                    </div>
+                    
+                    <h3>L1 Regularization (Lasso)</h3>
+                    <p>Adds penalty proportional to absolute value of weights - encourages sparsity.</p>
+                    
+                    <div class="formula">
+                        L_total = L_data + λ × Σ |w|<br><br>
+                        Gradient: ∂L/∂w = ∇L_data + λ × sign(w)
+                    </div>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">💡 L1 vs L2</div>
+                        • <strong>L1:</strong> Creates sparse weights (many zeros) → Feature selection<br>
+                        • <strong>L2:</strong> Small but non-zero weights → More stable<br>
+                        • <strong>Elastic Net:</strong> λ₁|w| + λ₂w² (both!)
+                    </div>
+                    
+                    <h3>Dropout Mathematics</h3>
+                    <p>Randomly set neurons to zero with probability p during training.</p>
+                    
+                    <div class="formula">
+                        <strong>Training:</strong><br>
+                        r ~ Bernoulli(1-p)  [mask of 0s and 1s]<br>
+                        ã = a ⊙ r           [element-wise multiply]<br><br>
+                        <strong>Inference (scaling):</strong><br>
+                        ã = a × (1-p)       [scale by keep probability]
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Dropout Example</div>
+                        <strong>Layer output (4 neurons):</strong> a = [1.0, 2.0, 0.5, 1.5]<br>
+                        <strong>Dropout p = 0.5:</strong> r = [1, 0, 1, 0] (random mask)<br><br>
+                        <strong>Training output:</strong> ã = [1.0, 0, 0.5, 0]<br>
+                        <strong>Inference output:</strong> ã = [0.5, 1.0, 0.25, 0.75]<br><br>
+                        During inference, we scale by (1-p)=0.5 to maintain expected value!
+                    </div>
+                    
+                    <h3>Why Dropout Works</h3>
+                    <div class="formula">
+                        Dropout ≈ Training an ensemble of 2ⁿ sub-networks<br>
+                        (where n = number of neurons that can be dropped)<br><br>
+                        Each forward pass is a different architecture!
                     </div>
                 `
             },
@@ -2210,6 +2752,66 @@
                             Filter visualizations inspired neural style transfer (VGG features)
                         </div>
                     </div>
+                `,
+                math: `
+                    <h3>Activation Maximization</h3>
+                    <p>Find the input x* that maximizes a specific neuron's activation.</p>
+                    
+                    <div class="formula" style="font-size: 1.2rem; text-align: center; margin: 20px 0; background: rgba(0, 212, 255, 0.08); padding: 25px; border-radius: 8px;">
+                        <strong>x* = argmax_x [a_ij(x) - λ||x||²]</strong>
+                    </div>
+                    
+                    <h4>Gradient Ascent on Input:</h4>
+                    <div class="formula">
+                        x_{t+1} = x_t + α × ∂a_ij/∂x<br><br>
+                        Where:<br>
+                        • a_ij = activation of neuron (i,j) in layer l<br>
+                        • α = step size<br>
+                        • λ||x||² = regularization to keep input natural-looking
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Generate What a Filter "Sees"</div>
+                        <strong>Goal:</strong> Find image that maximally activates Conv1 filter #5<br><br>
+                        1. Start with x = random noise (224×224×3)<br>
+                        2. Forward pass → get activation a₅ at filter 5<br>
+                        3. Backward pass: ∂a₅/∂x (gradient of activation w.r.t. input)<br>
+                        4. Update: x = x + 0.01 × ∂a₅/∂x<br>
+                        5. Repeat 100-500 times<br><br>
+                        <strong>Result:</strong> Image showing what pattern the filter detects!
+                    </div>
+                    
+                    <h3>Grad-CAM (Gradient-weighted Class Activation Mapping)</h3>
+                    <p>Highlight which regions of the image were important for a specific class prediction.</p>
+                    
+                    <div class="formula" style="background: rgba(255, 107, 53, 0.08); padding: 20px; border-radius: 8px;">
+                        <strong>Step 1 - Global Average Pool the Gradients:</strong><br>
+                        αₖ = (1/Z) × Σᵢ Σⱼ (∂yᶜ/∂Aₖⁱʲ)<br><br>
+                        <strong>Step 2 - Weighted Sum of Feature Maps:</strong><br>
+                        L_Grad-CAM = ReLU(Σₖ αₖ × Aₖ)<br><br>
+                        Where:<br>
+                        • yᶜ = score for class c (before softmax)<br>
+                        • Aₖ = k-th feature map of last conv layer<br>
+                        • αₖ = importance weight of feature map k
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Grad-CAM Calculation</div>
+                        <strong>Last conv layer:</strong> 14×14×512 feature maps<br>
+                        <strong>Predicted class:</strong> "Dog" (class 5)<br><br>
+                        1. Get gradient ∂y₅/∂A for all 512 feature maps<br>
+                        2. Average each gradient map: α₁ = 0.8, α₂ = 0.1, α₃ = 0.5...<br>
+                        3. Weighted sum: L = 0.8×A₁ + 0.1×A₂ + 0.5×A₃ + ...<br>
+                        4. Apply ReLU (keep positive contributions only)<br>
+                        5. Upsample to input size (14×14 → 224×224)<br><br>
+                        <strong>Result:</strong> Heatmap showing dog's face/body highlighted!
+                    </div>
+                    
+                    <h3>Saliency Maps (Vanilla Gradient)</h3>
+                    <div class="formula">
+                        Saliency(x) = |∂yᶜ/∂x|<br><br>
+                        Take absolute value of gradient of class score w.r.t. input pixels.
+                    </div>
                 `
             },
             "lenet": {
@@ -2252,6 +2854,98 @@
                         <div class="box-content">
                             Perfect starting point for learning CNNs - simple enough to understand, complex enough to be useful
                         </div>
+                    </div>
+                `,
+                math: `
+                    <h3>LeNet-5 Complete Dimension Walkthrough</h3>
+                    <p>Follow the tensor shapes through each layer of LeNet-5.</p>
+                    
+                    <div class="formula" style="font-size: 1.0rem; margin: 20px 0; background: rgba(0, 212, 255, 0.08); padding: 20px; border-radius: 8px;">
+                        <strong>Output Size Formula:</strong><br>
+                        W_out = (W_in - K + 2P) / S + 1<br>
+                        Where K=kernel, P=padding, S=stride
+                    </div>
+                    
+                    <h4>Layer-by-Layer Calculation:</h4>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div>
+                            <strong>Input:</strong> 32 × 32 × 1 (grayscale MNIST)<br>
+                            <span class="formula-caption">Original: 28×28, padded to 32×32</span>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div>
+                            <strong>C1 - Conv:</strong> 6 filters, 5×5, stride 1, no padding<br>
+                            Output: (32 - 5 + 0)/1 + 1 = <strong>28 × 28 × 6</strong><br>
+                            Params: (5×5×1 + 1) × 6 = <strong>156</strong>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div>
+                            <strong>S2 - AvgPool:</strong> 2×2, stride 2<br>
+                            Output: 28/2 = <strong>14 × 14 × 6</strong><br>
+                            Params: 0 (or 12 with learnable coefficients)
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div>
+                            <strong>C3 - Conv:</strong> 16 filters, 5×5<br>
+                            Output: (14 - 5)/1 + 1 = <strong>10 × 10 × 16</strong><br>
+                            Params: (5×5×6 + 1) × 16 = <strong>2,416</strong>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">05</div>
+                        <div>
+                            <strong>S4 - AvgPool:</strong> 2×2, stride 2<br>
+                            Output: 10/2 = <strong>5 × 5 × 16</strong><br>
+                            Params: 0
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">06</div>
+                        <div>
+                            <strong>C5 - Conv:</strong> 120 filters, 5×5<br>
+                            Output: (5 - 5)/1 + 1 = <strong>1 × 1 × 120</strong><br>
+                            Params: (5×5×16 + 1) × 120 = <strong>48,120</strong>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">07</div>
+                        <div>
+                            <strong>F6 - FC:</strong> 120 → 84<br>
+                            Params: 120 × 84 + 84 = <strong>10,164</strong>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">08</div>
+                        <div>
+                            <strong>Output - FC:</strong> 84 → 10<br>
+                            Params: 84 × 10 + 10 = <strong>850</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Total Parameter Count</div>
+                        <strong>Convolutional Layers:</strong><br>
+                        C1: 156 + C3: 2,416 + C5: 48,120 = 50,692<br><br>
+                        <strong>Fully Connected Layers:</strong><br>
+                        F6: 10,164 + Output: 850 = 11,014<br><br>
+                        <strong>Total:</strong> ≈ <strong>61,706 parameters</strong><br><br>
+                        Compare to AlexNet's 60 million - LeNet is 1000× smaller!
+                    </div>
+                    
+                    <h3>Receptive Field Calculation</h3>
+                    <div class="formula">
+                        After C1 (5×5): Each neuron sees 5×5 pixels<br>
+                        After S2: Sees 6×6 pixels (pooling expands RF)<br>
+                        After C3: Sees 14×14 pixels<br>
+                        After S4: Sees 16×16 pixels<br>
+                        After C5: <strong>Sees entire 32×32 input!</strong>
                     </div>
                 `
             },
@@ -4081,9 +4775,11 @@
             const grid = document.getElementById("modulesGrid");
             const container = document.getElementById("modulesContainer");
 
-            modules.forEach(module => {
+            modules.forEach((module, index) => {
                 const card = document.createElement("div");
-                card.className = "card";
+                // Add staggered animation class
+                const staggerClass = `stagger stagger-${(index % 8) + 1}`;
+                card.className = `card hover-glow ${staggerClass}`;
                 card.style.borderColor = module.color;
                 card.onclick = () => switchTo(module.id + "-module");
                 card.innerHTML = `

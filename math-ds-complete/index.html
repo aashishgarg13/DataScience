@@ -13426,6 +13426,66 @@ model = Sequential([<br>
     </div>
 
     <script src="app.js"></script>
+
+    <!-- Fallback script for Show Answer buttons (works on file:// protocol) -->
+    <script>
+        (function () {
+            // Wait for DOM to be ready
+            function initShowAnswerButtons() {
+                document.addEventListener('click', function (e) {
+                    // Check if clicked element is a show-answers button
+                    if (e.target.classList.contains('show-answers-btn') ||
+                        e.target.classList.contains('show-answer-btn')) {
+
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        var btn = e.target;
+                        var answerDiv = btn.nextElementSibling;
+
+                        if (answerDiv && (answerDiv.classList.contains('practice-answers') ||
+                            answerDiv.classList.contains('answer-content') ||
+                            (answerDiv.id && answerDiv.id.includes('answer')))) {
+
+                            // Toggle display
+                            if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
+                                answerDiv.style.display = 'block';
+                                btn.textContent = 'Hide Answers';
+                                btn.classList.add('active');
+                            } else {
+                                answerDiv.style.display = 'none';
+                                btn.textContent = 'Show Answers';
+                                btn.classList.remove('active');
+                            }
+                        }
+                    }
+                });
+
+                // Ensure all answer divs start hidden
+                var answerDivs = document.querySelectorAll('.practice-answers, .answer-content');
+                for (var i = 0; i < answerDivs.length; i++) {
+                    answerDivs[i].style.display = 'none';
+                }
+
+                // Fix button text
+                var buttons = document.querySelectorAll('.show-answers-btn, .show-answer-btn');
+                for (var j = 0; j < buttons.length; j++) {
+                    var text = buttons[j].textContent.trim();
+                    if (text.indexOf('Show') !== -1 && text.indexOf('Answer') !== -1) {
+                        buttons[j].textContent = 'Show Answers';
+                    }
+                }
+
+                console.log('✓ Show Answer fallback script loaded');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initShowAnswerButtons);
+            } else {
+                initShowAnswerButtons();
+            }
+        })();
+    </script>
 </body>
 
 </html>

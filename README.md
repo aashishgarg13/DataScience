@@ -1,220 +1,265 @@
----
-title: Data Science Masterclass
-emoji: 🚀
-colorFrom: blue
-colorTo: purple
-sdk: static
-pinned: false
----
+# 📊 DataScience Learning Hub v2.0
 
-# 📊 DataScience Learning Hub
+Welcome to a comprehensive collection of educational web projects for learning data science! This repository contains multiple interactive courses covering statistics, machine learning, deep learning, visualization, mathematics, and feature engineering.
 
-Welcome to a comprehensive collection of educational web projects for learning data science! This repository contains multiple interactive courses and resources covering statistics, machine learning, visualization, mathematics, and feature engineering.
+## ✨ What's New in v2.0
+
+- 🔍 **Global Search** - Press `Ctrl/Cmd + K` to search across all modules
+- 📊 **Progress Tracking** - Track your learning journey with persistent progress
+- 🌙 **Light/Dark Mode** - Toggle between themes or follow system preference
+- 📱 **PWA Support** - Install as an app for offline access
+- ♿ **Accessibility** - ARIA labels, keyboard navigation, skip links
+- 🎨 **Unified Design System** - Consistent look and feel across all modules
+- ⚡ **Performance** - Optimized loading with service worker caching
+
+---
 
 ## 🎯 Live Demos
 
 Visit our courses directly in your browser:
 
-- [📈 Interactive Statistics Course](https://aashishgarg13.github.io/DataScience/complete-statistics/)
-- [🤖 Machine Learning Guide](https://aashishgarg13.github.io/DataScience/ml_complete-all-topics/)
-- [🧠 Deep Learning Masterclass](https://aashishgarg13.github.io/DataScience/DeepLearning/Deep%20Learning%20Curriculum.html)
-- [📊 Data Visualization](https://aashishgarg13.github.io/DataScience/Visualization/)
-- [🔢 Mathematics for Data Science](https://aashishgarg13.github.io/DataScience/math-ds-complete/)
-- [⚙️ Feature Engineering Guide](https://aashishgarg13.github.io/DataScience/feature-engineering/)
-- [🤔 Prompt Engineering Guide](https://aashishgarg13.github.io/DataScience/prompt-engineering-guide) - Interactive AI prompting course
+| Course | Link | Topics |
+|--------|------|--------|
+| 🧠 Deep Learning | [Launch](https://aashishgarg13.github.io/DataScience-v2/DeepLearning/) | 12 |
+| 🤖 Machine Learning | [Launch](https://aashishgarg13.github.io/DataScience-v2/ml_complete-all-topics/) | 42 |
+| 📊 Statistics | [Launch](https://aashishgarg13.github.io/DataScience-v2/complete-statistics/) | 41 |
+| 📐 Mathematics | [Launch](https://aashishgarg13.github.io/DataScience-v2/math-ds-complete/) | 15 |
+| ⚙️ Feature Engineering | [Launch](https://aashishgarg13.github.io/DataScience-v2/feature-engineering/) | 12 |
+| 📈 Visualization | [Launch](https://aashishgarg13.github.io/DataScience-v2/Visualization/) | 8 |
+| 💬 Prompt Engineering | [Launch](https://aashishgarg13.github.io/DataScience-v2/prompt-engineering-guide/) | 12 |
 
-## 🔗 Prompt Engineering Resources
+---
 
-Essential resources for mastering AI prompt engineering:
+## 🧠 Course Overview
 
-- [Learn Prompting](https://learnprompting.org/) - Comprehensive interactive guide
-- [Prompt Engineering Guide](https://github.com/dair-ai/Prompt-Engineering-Guide) - Community-maintained resource
-- [Anthropic's Claude Guide](https://www.anthropic.com/index/constitutional-ai-the-basics) - Advanced prompting techniques
-- [OpenAI Best Practices](https://platform.openai.com/docs/guides/prompt-engineering) - Official guidelines
+### Deep Learning Masterclass 🔥
 
-## 📚 Contents
+**The flagship course**. Zero to Hero journey through neural networks.
 
-### 📈 Complete Statistics Course
-- **Location:** `complete-statistics/`
-- **Features:**
-  - 40+ Interactive Topics
-  - Descriptive Statistics
-  - Probability & Distributions
-  - Hypothesis Testing
-  - Interactive Visualizations & Canvas
-  - Hands-on Learning Experience
+**Topics include:**
+- Neural Network Foundations (Architecture, Activation Functions)
+- Backpropagation & Gradient Descent (with full math derivations)
+- Convolutional Neural Networks (CNNs)
+- Recurrent Neural Networks (RNNs, LSTMs, GRUs)
+- Transformers & Attention Mechanisms
+- Generative Adversarial Networks (GANs)
+- Diffusion Models
+- Regularization & Optimization Techniques
 
-### 🤖 Machine Learning Guide
-- **Location:** `ml_complete-all-topics/`
-- **Features:**
-  - Comprehensive ML Topics
-  - Interactive Demonstrations
-  - Visual Learning Aids
-  - Step-by-Step Explanations
+**Methodology:** "Paper & Pain" - rigorous mathematical derivations with step-by-step worked examples.
 
-### 🧠 Deep Learning Masterclass
-- **Location:** `DeepLearning/`
-- **Features:**
-  - **"Paper & Pain" Methodology:** Rigorous mathematical derivations
-  - Neural Network Foundations (MLP, Backprop, Optimizers)
-  - Convolutional Neural Networks (CNNs) & Computer Vision
-  - Generative AI (GANs, Diffusion Models)
-  - Transformers & Large Language Models (LLMs)
-  - Interactive Canvas Visualizations
+---
 
-### 📊 Data Visualization
-- **Location:** `Visualization/`
-- **Features:**
-  - Interactive Data Visualization Examples
-  - Chart Types and Best Practices
-  - Dynamic Visualization Techniques
-  - Data Presentation Guidelines
+### Machine Learning Complete Guide
 
-### 🔢 Mathematics for Data Science
-- **Location:** `math-ds-complete/`
-- **Features:**
-  - Linear Algebra Fundamentals
-  - Calculus for Machine Learning
-  - Statistical Mathematics
-  - Optimization Theory
+The foundational course covering all classical ML algorithms.
 
-### ⚙️ Feature Engineering Guide
-- **Location:** `feature-engineering/`
-- **Features:**
-  - Data Preprocessing Techniques
-  - Feature Selection Methods
-  - Feature Transformation
-  - Dimensionality Reduction
+**Topics include:**
+- Supervised Learning (Linear/Logistic Regression, Trees, SVMs, Ensembles)
+- Unsupervised Learning (K-Means, DBSCAN, Hierarchical Clustering, PCA)
+- Reinforcement Learning Fundamentals
+- NLP & GenAI (Word Embeddings, Transformers, RAG)
+- Model Evaluation & Selection
 
-> 💡 All projects are pure static websites - no server needed! Open directly in your browser or use a simple static server.
+---
 
-## 🔄 Auto-Update & Integration
+### Statistics Course
 
-The repository supports automatic updates for:
-- New AI prompting techniques and best practices
-- Interactive visualization improvements
-- Additional learning resources and examples
-- Community contributions and fixes
+41 interactive topics covering probability and statistical inference.
 
-## 🚀 Quick Start
+**Topics include:**
+- Descriptive Statistics (Mean, Median, Mode, Variance)
+- Probability Distributions (Normal, Binomial, Poisson)
+- Hypothesis Testing (T-test, Chi-squared, ANOVA)
+- Confidence Intervals
+- Bayesian Statistics
 
-### Option A: View Online
-Visit our GitHub Pages hosted versions:
-1. [Statistics Course](https://aashishgarg13.github.io/DataScience/complete-statistics/)
-2. [Machine Learning Guide](https://aashishgarg13.github.io/DataScience/ml_complete-all-topics/)
-3. [Deep Learning Masterclass](https://aashishgarg13.github.io/DataScience/DeepLearning/Deep%20Learning%20Curriculum.html)
+---
 
-### Option B: Run Locally (Recommended for Development)
+### Mathematics for Data Science
 
-#### Simple Browser Opening:
-1. Clone this repository
-2. Navigate to either project folder
-3. Double-click `index.html`
+The engine room of AI and ML.
 
-#### Using Local Server (Recommended to avoid CORS issues):
+**Topics include:**
+- Linear Algebra (Vectors, Matrices, Eigenvalues)
+- Calculus (Derivatives, Gradients, Chain Rule)
+- Probability Theory
+- Optimization
 
-From the repository root, run one of the following in a terminal:
+---
 
-```bash
-# Python 3 (simple static server, available on macOS):
-python3 -m http.server 8000
+### Feature Engineering Guide
 
-# or using Node.js http-server (if installed):
-npx http-server -c-1 . 8000
-```
+The art of data preparation.
 
-Then open http://localhost:8000/complete-statistics/ or http://localhost:8000/ml_complete-all-topics/ in your browser.
+**Topics include:**
+- Data Cleaning & Missing Values
+- Feature Scaling & Normalization
+- Encoding Categorical Variables
+- Feature Selection & Dimensionality Reduction
 
-## Deploy to GitHub Pages
+---
 
-1. Push your changes to the `main` branch on GitHub (already done for this repo).
-2. In your repository settings on GitHub, go to "Pages" and select the `main` branch and root (`/`) as the source, or set the `gh-pages` branch if you prefer.
-3. Save — GitHub Pages will publish the site. For multi-site repos you can add a `docs/` folder or create separate branches, or create a small repo per site.
+### Data Visualization
 
-Because these are static sites you can also host them on Netlify, Vercel, or any static host.
+Communicating insights effectively.
+
+**Topics include:**
+- Matplotlib Fundamentals
+- Seaborn Statistical Visualizations
+- Plotly Interactive Charts
+- Best Practices for Data Storytelling
+
+---
+
+### Prompt Engineering Guide
+
+Mastering LLMs and AI assistants.
+
+**Topics include:**
+- Prompt Fundamentals
+- Zero-shot & Few-shot Learning
+- Chain of Thought Prompting
+- System Prompts & Personas
+- Advanced Techniques (ReAct, ToT)
+
+---
 
 ## 📁 Project Structure
 
-### Statistics Course
 ```
-complete-statistics/
-├── index.html  # Main course interface
-├── style.css   # Course styling
-└── app.js      # Interactive visualizations
-```
-
-### Machine Learning Guide
-```
-ml_complete-all-topics/
-├── index.html  # Main guide interface
-├── style.css   # Guide styling
-└── app.js      # Interactive components
-```
-
-### Deep Learning Masterclass
-```
-DeepLearning/
-└── Deep Learning Curriculum.html  # All-in-one interactive curriculum
-```
-
-### Data Visualization
-```
-Visualization/
-├── index.html  # Visualization examples
-├── style.css   # Visualization styling
-└── app.js      # Interactive charts
+DataScience-v2/
+├── index.html              # Enhanced landing page
+├── manifest.json           # PWA manifest
+├── service-worker.js       # Offline caching
+├── offline.html            # Offline fallback
+├── shared/                 # Shared resources
+│   ├── css/
+│   │   ├── design-system.css   # Core styles & tokens
+│   │   └── components.css      # Reusable components
+│   ├── js/
+│   │   ├── search.js           # Global search (Cmd+K)
+│   │   ├── progress.js         # Progress tracking
+│   │   └── theme.js            # Theme toggle
+│   └── icons/
+│       └── favicon.svg
+├── DeepLearning/           # Deep Learning course
+├── ml_complete-all-topics/ # Machine Learning course
+├── complete-statistics/    # Statistics course
+├── math-ds-complete/       # Mathematics course
+├── feature-engineering/    # Feature Engineering
+├── Visualization/          # Data Visualization
+├── prompt-engineering-guide/ # Prompt Engineering
+├── ML/                     # Experiments & datasets
+└── README.md               # This file
 ```
 
-### Mathematics for Data Science
-```
-math-ds-complete/
-├── index.html  # Mathematics course interface
-├── style.css   # Course styling
-└── app.js      # Interactive math demonstrations
+---
+
+## 🚀 Quick Start
+
+### Local Development
+
+```bash
+# Clone the repository
+git clone https://github.com/aashishgarg13/DataScience.git
+cd DataScience-v2
+
+# Serve locally (any of these options)
+python -m http.server 8000
+# or
+npx serve .
+# or
+php -S localhost:8000
+
+# Open in browser
+open http://localhost:8000
 ```
 
-### Feature Engineering Guide
-```
-feature-engineering/
-├── index.html  # Feature engineering guide
-├── style.css   # Guide styling
-└── app.js      # Interactive examples
-```
+### Deploy to GitHub Pages
 
-## Notes about repository cleanup
+```bash
+# Push to main branch
+git add .
+git commit -m "Deploy"
+git push origin main
 
-While repairing the repository I removed macOS Finder metadata files (names beginning with `._`) that had been added inside the `.git` metadata and working tree. Those `._*` files are resource-fork metadata and are not project code. A `.gitignore` entry was added to ignore these moving forward:
-
-```
-._*
-.DS_Store
->__MACOSX/
+# Enable GitHub Pages in repository settings
+# Settings > Pages > Source: main branch
 ```
 
-If you want to inspect any backup I created of the original `.git`, look for directories named `.git.broken_<timestamp>` in the repository root — they contain the backed-up git metadata.
+### Deploy to Hugging Face Spaces
+
+1. Create a new Space with "Static HTML" SDK
+2. Push this repository:
+```bash
+git remote add hf https://huggingface.co/spaces/YOUR_USERNAME/DataScience
+git push hf main
+```
+
+---
+
+## 🛠️ Features
+
+### Global Search (Ctrl/Cmd + K)
+
+Search across all modules instantly. Uses Fuse.js for fuzzy matching.
+
+### Progress Tracking
+
+- Persistent localStorage-based tracking
+- Per-module progress bars
+- "Continue where you left off" feature
+- Export/Import progress data
+
+### Theme Toggle
+
+- Light and Dark modes
+- Respects system preference
+- Smooth transitions
+- Persisted choice
+
+### PWA Support
+
+- Install as standalone app
+- Offline access to cached pages
+- Background sync
+- App shortcuts
+
+### Accessibility
+
+- Skip to main content links
+- ARIA labels on interactive elements
+- Keyboard navigation
+- Focus indicators
+- Reduced motion support
+
+---
 
 ## 🤝 Contributing
 
-This project welcomes contributions! Here's how you can help:
+Contributions are welcome! Please:
 
-1. **Content Improvements**
-   - Add new interactive examples
-   - Improve existing visualizations
-   - Update documentation and guides
-   - Share prompt engineering techniques
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-2. **Technical Enhancements**
-   - Optimize JavaScript performance
-   - Add responsive design features
-   - Improve accessibility
-   - Create new interactive components
+---
 
-3. **Documentation**
-   - Add topic descriptions
-   - Create usage examples
-   - Write tutorial content
-   - Share prompt templates
+## 📄 License
 
-Please check our [contribution guidelines](CONTRIBUTING.md) for detailed instructions.
+This project is open source and available under the [MIT License](LICENSE).
 
-## License
+---
+
+## 🙏 Acknowledgments
+
+- The Data Science and ML community
+- Contributors and students worldwide
+- Open source projects that made this possible
+
+---
+
+**Made with ❤️ by [Aashish Garg](https://github.com/aashishgarg13)**

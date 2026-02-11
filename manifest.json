@@ -1,0 +1,100 @@
+{
+  "name": "Data Science & AI Masterclass",
+  "short_name": "DS Masterclass",
+  "description": "Comprehensive Data Science, Machine Learning, and Deep Learning curriculum with interactive visualizations",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#00d4ff",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "shared/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "shared/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "shared/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "shared/icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "shared/icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "shared/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "shared/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "shared/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Deep Learning",
+      "short_name": "DL",
+      "description": "Deep Learning Masterclass",
+      "url": "/DeepLearning/index.html",
+      "icons": [{"src": "shared/icons/dl-icon.png", "sizes": "96x96"}]
+    },
+    {
+      "name": "Machine Learning",
+      "short_name": "ML",
+      "description": "Machine Learning Complete Guide",
+      "url": "/ml_complete-all-topics/index.html",
+      "icons": [{"src": "shared/icons/ml-icon.png", "sizes": "96x96"}]
+    },
+    {
+      "name": "Statistics",
+      "short_name": "Stats",
+      "description": "Statistics Complete Course",
+      "url": "/complete-statistics/index.html",
+      "icons": [{"src": "shared/icons/stats-icon.png", "sizes": "96x96"}]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "shared/icons/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "shared/icons/screenshot-narrow.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ]
+}

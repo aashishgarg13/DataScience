@@ -5,304 +5,783 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Science & AI Masterclass | Aashish Garg</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Comprehensive Data Science, Machine Learning, and Deep Learning curriculum. Master statistics, algorithms, neural networks with interactive visualizations and Paper & Pain methodology.">
+    <meta name="keywords"
+        content="data science, machine learning, deep learning, statistics, neural networks, AI, artificial intelligence, tutorials, learning">
+    <meta name="author" content="Aashish Garg">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aashishgarg13.github.io/DataScience/">
+    <meta property="og:title" content="Data Science & AI Masterclass | Aashish Garg">
+    <meta property="og:description"
+        content="Comprehensive curriculum from Fundamentals to Deep Learning with interactive visualizations.">
+    <meta property="og:image" content="shared/icons/og-image.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Data Science & AI Masterclass">
+    <meta name="twitter:description"
+        content="Master Data Science with interactive visualizations and rigorous mathematics.">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="shared/icons/icon-192.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="shared/icons/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="shared/icons/favicon-32.png">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="shared/css/design-system.css">
+    <link rel="stylesheet" href="shared/css/components.css">
+
     <style>
-        :root {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --text-primary: #c9d1d9;
-            --text-secondary: #8b949e;
-            --accent-dl: #ff6b35;
-            /* Deep Learning Orange */
-            --accent-ml: #00d4ff;
-            /* ML Cyan */
-            --accent-math: #a371f7;
-            /* Math Purple */
-            --accent-stats: #2ecc71;
-            /* Stats Green */
-            --border: #30363d;
-            --hover-border: #8b949e;
+        /* Landing Page Specific Styles */
+        .landing-container {
+            min-height: 100vh;
+            padding: var(--space-10) var(--space-6);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+        .landing-header {
+            text-align: center;
+            margin-bottom: var(--space-12);
+            padding-bottom: var(--space-10);
+            border-bottom: 1px solid var(--color-border-default);
         }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 40px;
+        .landing-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-4);
         }
 
-        .container {
-            max-width: 1200px;
+        .landing-subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--color-text-secondary);
+            max-width: 600px;
+            margin: 0 auto var(--space-6);
+        }
+
+        /* Header Actions */
+        .header-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+            flex-wrap: wrap;
+        }
+
+        .search-trigger {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-5);
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border-default);
+            border-radius: var(--border-radius-md);
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            min-width: 280px;
+        }
+
+        .search-trigger:hover {
+            border-color: var(--color-accent-ml);
+            color: var(--color-text-primary);
+        }
+
+        .search-trigger-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .kbd {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            padding: var(--space-1) var(--space-2);
+            background: var(--color-bg-elevated);
+            border: 1px solid var(--color-border-default);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-family: var(--font-family-mono);
+        }
+
+        /* Overall Progress */
+        .overall-progress {
+            max-width: 600px;
+            margin: var(--space-8) auto;
+            padding: var(--space-5);
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border-default);
+            border-radius: var(--border-radius-lg);
+        }
+
+        .overall-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+
+        .overall-progress-title {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
+        }
+
+        .overall-progress-value {
+            font-size: var(--font-size-sm);
+            color: var(--color-accent-ml);
+            font-weight: var(--font-weight-bold);
+        }
+
+        /* Continue Learning */
+        .continue-learning {
+            display: none;
+            align-items: center;
+            gap: var(--space-4);
+            max-width: 600px;
+            margin: 0 auto var(--space-8);
+            padding: var(--space-4) var(--space-5);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(163, 113, 247, 0.1));
+            border: 1px solid var(--color-accent-ml);
+            border-radius: var(--border-radius-lg);
+            text-decoration: none;
+            color: inherit;
+            transition: all var(--transition-base);
+        }
+
+        .continue-learning:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .continue-learning-icon {
+            font-size: 24px;
+        }
+
+        .continue-learning-text {
+            flex: 1;
+        }
+
+        .continue-learning-label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .continue-learning-module {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
+        }
+
+        .continue-learning-arrow {
+            color: var(--color-accent-ml);
+            font-size: 20px;
+        }
+
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--space-6);
+            max-width: var(--container-max-width);
             margin: 0 auto;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 40px;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #00d4ff, #a371f7, #ff6b35);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        p.subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 25px;
+        /* Module Card */
+        .module-card {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border-default);
+            border-radius: var(--border-radius-lg);
+            padding: var(--space-6);
             text-decoration: none;
             color: inherit;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: all var(--transition-base);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--hover-border);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        .module-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--module-color);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+                0 0 30px color-mix(in srgb, var(--module-color) 15%, transparent);
         }
 
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-transform: uppercase;
+        .module-card-header {
+            margin-bottom: var(--space-4);
         }
 
-        .card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
+        .module-card-body {
+            flex: 1;
+        }
+
+        .module-card-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
             color: #fff;
+            margin-bottom: var(--space-2);
         }
 
-        .card p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: 20px;
+        .module-card-description {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            line-height: var(--line-height-relaxed);
+            margin-bottom: var(--space-4);
         }
 
-        .card-footer {
+        .module-card-footer {
             display: flex;
             align-items: center;
-            font-size: 0.9rem;
-            font-weight: bold;
+            justify-content: space-between;
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--color-border-muted);
         }
 
-        .arrow {
-            margin-left: auto;
-            transition: transform 0.2s;
+        .module-card-cta {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            color: var(--module-color);
         }
 
-        .card:hover .arrow {
-            transform: translateX(5px);
+        .module-card-arrow {
+            transition: transform var(--transition-fast);
         }
 
-        /* Module Specific Styles */
-        .dl-card .badge {
-            background: rgba(255, 107, 53, 0.15);
-            color: #ff6b35;
+        .module-card:hover .module-card-arrow {
+            transform: translateX(6px);
         }
 
-        .dl-card:hover {
-            border-color: #ff6b35;
+        /* Module Progress */
+        .module-progress {
+            margin-top: var(--space-3);
         }
 
-        .ml-card .badge {
-            background: rgba(0, 212, 255, 0.15);
-            color: #00d4ff;
+        .module-progress-bar {
+            height: 4px;
+            background: var(--color-bg-tertiary);
+            border-radius: var(--border-radius-full);
+            overflow: hidden;
         }
 
-        .ml-card:hover {
-            border-color: #00d4ff;
+        .module-progress-fill {
+            height: 100%;
+            background: var(--module-color);
+            border-radius: var(--border-radius-full);
+            transition: width var(--transition-slow);
         }
 
-        .math-card .badge {
-            background: rgba(163, 113, 247, 0.15);
-            color: #a371f7;
+        .module-progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-2);
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
         }
 
-        .math-card:hover {
-            border-color: #a371f7;
+        /* Module Color Variants */
+        .module-dl {
+            --module-color: var(--color-accent-dl);
         }
 
-        .stats-card .badge {
-            background: rgba(46, 204, 113, 0.15);
-            color: #2ecc71;
+        .module-ml {
+            --module-color: var(--color-accent-ml);
         }
 
-        .stats-card:hover {
-            border-color: #2ecc71;
+        .module-math {
+            --module-color: var(--color-accent-math);
         }
 
-        .viz-card .badge {
-            background: rgba(255, 206, 86, 0.15);
-            color: #ffce56;
+        .module-stats {
+            --module-color: var(--color-accent-stats);
         }
 
-        .viz-card:hover {
-            border-color: #ffce56;
+        .module-viz {
+            --module-color: var(--color-accent-viz);
         }
 
-        .prompt-card .badge {
-            background: rgba(247, 113, 182, 0.15);
-            color: #f771b6;
+        .module-prompt {
+            --module-color: var(--color-accent-prompt);
         }
 
-        .prompt-card:hover {
-            border-color: #f771b6;
+        /* Footer */
+        .landing-footer {
+            text-align: center;
+            margin-top: var(--space-16);
+            padding-top: var(--space-8);
+            border-top: 1px solid var(--color-border-default);
+            color: var(--color-text-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-6);
+            margin-bottom: var(--space-4);
+        }
+
+        .footer-link {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-link:hover {
+            color: var(--color-accent-ml);
+        }
+
+        /* PWA Install Banner */
+        .pwa-install-banner {
+            position: fixed;
+            bottom: var(--space-6);
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-4) var(--space-6);
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border-default);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: var(--z-fixed);
+        }
+
+        .pwa-install-banner.show {
+            display: flex;
+        }
+
+        /* Theme Toggle Position */
+        #theme-toggle-container {
+            position: fixed;
+            top: var(--space-4);
+            right: var(--space-4);
+            z-index: var(--z-sticky);
+        }
+
+        /* Offline Indicator */
+        .offline-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: var(--space-2);
+            background: var(--color-warning);
+            color: var(--color-bg-primary);
+            text-align: center;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            display: none;
+            z-index: var(--z-fixed);
+        }
+
+        .offline-indicator.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .landing-container {
+                padding: var(--space-6) var(--space-4);
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-trigger {
+                min-width: auto;
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .continue-learning {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>Data Science & AI Masterclass</h1>
-            <p class="subtitle">Comprehensive curriculum from Fundamentals to Deep Learning</p>
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offlineIndicator">
+        You're offline. Some features may be unavailable.
+    </div>
+
+    <!-- Theme Toggle -->
+    <div id="theme-toggle-container"></div>
+
+    <div class="landing-container container">
+        <!-- Header -->
+        <header class="landing-header">
+            <h1 class="landing-title gradient-text">Data Science & AI Masterclass</h1>
+            <p class="landing-subtitle">Comprehensive curriculum from Fundamentals to Deep Learning</p>
+
+            <!-- Search Trigger -->
+            <div class="header-actions">
+                <button class="search-trigger" id="searchTrigger" aria-label="Open search">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="M21 21l-4.35-4.35"></path>
+                    </svg>
+                    <span class="search-trigger-text">Search topics...</span>
+                    <span class="kbd"><span>⌘</span>K</span>
+                </button>
+            </div>
+
+            <!-- Overall Progress -->
+            <div class="overall-progress" data-progress-overall>
+                <div class="overall-progress-header">
+                    <span class="overall-progress-title">📊 Overall Progress</span>
+                    <span class="overall-progress-value progress-label-value">0%</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Continue Learning Button -->
+            <a href="#" class="continue-learning" id="continue-learning-btn">
+                <span class="continue-learning-icon">▶️</span>
+                <div class="continue-learning-text">
+                    <span class="continue-learning-label">Continue Learning</span>
+                    <span class="continue-learning-module continue-module-name">Deep Learning</span>
+                </div>
+                <span class="continue-learning-arrow">→</span>
+            </a>
         </header>
 
-        <div class="grid">
-            <!-- Deep Learning -->
-            <a href="DeepLearning/index.html" class="card dl-card">
-                <div>
-                    <span class="badge">🔥 Flagship Course</span>
-                    <h2>Deep Learning Masterclass</h2>
-                    <p>Complete Zero to Hero journey. CNNs, RNNs, LSTMs, Transformers, GANs, and Diffusion Models.
-                        Featuring rigorous "Paper & Pain" math and interactive visualizations.</p>
-                </div>
-                <div class="card-footer">
-                    <span style="color: var(--accent-dl)">Explore Curriculum</span>
-                    <span class="arrow">→</span>
-                </div>
-            </a>
+        <!-- Main Content -->
+        <main id="main-content">
+            <div class="modules-grid">
+                <!-- Deep Learning -->
+                <a href="DeepLearning/index.html" class="module-card module-dl" data-progress-module="deep-learning">
+                    <div class="module-card-header">
+                        <span class="badge badge-dl">🔥 Flagship Course</span>
+                    </div>
+                    <div class="module-card-body">
+                        <h2 class="module-card-title">Deep Learning Masterclass</h2>
+                        <p class="module-card-description">
+                            Complete Zero to Hero journey. CNNs, RNNs, LSTMs, Transformers, GANs, and Diffusion Models.
+                            Featuring rigorous "Paper & Pain" math and interactive visualizations.
+                        </p>
+                    </div>
+                    <div class="module-progress">
+                        <div class="module-progress-bar">
+                            <div class="module-progress-fill progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="module-progress-label">
+                            <span>Progress</span>
+                            <span class="progress-label-value">0/12</span>
+                        </div>
+                    </div>
+                    <div class="module-card-footer">
+                        <span class="module-card-cta">Explore Curriculum</span>
+                        <span class="module-card-arrow">→</span>
+                    </div>
+                </a>
 
-            <!-- Machine Learning -->
-            <a href="ml_complete-all-topics/index.html" class="card ml-card">
-                <div>
-                    <span class="badge">Core</span>
-                    <h2>Machine Learning Complete</h2>
-                    <p>The foundation. Regression, Classification, Clustering, SVMs, Decision Trees, and Ensembles.
-                        Master Scikit-Learn.</p>
-                </div>
-                <div class="card-footer">
-                    <span style="color: var(--accent-ml)">Start Learning</span>
-                    <span class="arrow">→</span>
-                </div>
-            </a>
+                <!-- Machine Learning -->
+                <a href="ml_complete-all-topics/index.html" class="module-card module-ml"
+                    data-progress-module="machine-learning">
+                    <div class="module-card-header">
+                        <span class="badge badge-core">Core</span>
+                    </div>
+                    <div class="module-card-body">
+                        <h2 class="module-card-title">Machine Learning Complete</h2>
+                        <p class="module-card-description">
+                            The foundation. Regression, Classification, Clustering, SVMs, Decision Trees, and Ensembles.
+                            Master Scikit-Learn with complete mathematical derivations.
+                        </p>
+                    </div>
+                    <div class="module-progress">
+                        <div class="module-progress-bar">
+                            <div class="module-progress-fill progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="module-progress-label">
+                            <span>Progress</span>
+                            <span class="progress-label-value">0/42</span>
+                        </div>
+                    </div>
+                    <div class="module-card-footer">
+                        <span class="module-card-cta">Start Learning</span>
+                        <span class="module-card-arrow">→</span>
+                    </div>
+                </a>
 
-            <!-- ML Lab / Projects  -->
-            <a href="ML/index.html" class="card ml-card">
-                <div>
-                    <span class="badge">Lab</span>
-                    <h2>ML Experiments & Data</h2>
-                    <p>Hands-on laboratory for datasets, experimental scripts, and practical ML applications.</p>
-                </div>
-                <div class="card-footer">
-                    <span style="color: var(--accent-ml)">Enter Lab</span>
-                    <span class="arrow">→</span>
-                </div>
-            </a>
+                <!-- Statistics -->
+                <a href="complete-statistics/index.html" class="module-card module-stats"
+                    data-progress-module="statistics">
+                    <div class="module-card-header">
+                        <span class="badge badge-stats">Foundation</span>
+                    </div>
+                    <div class="module-card-body">
+                        <h2 class="module-card-title">Statistics Complete</h2>
+                        <p class="module-card-description">
+                            Descriptive and Inferential Statistics. Hypothesis testing, Distributions, P-values, and
+                            Bayesian concepts.
+                            41 interactive topics.
+                        </p>
+                    </div>
+                    <div class="module-progress">
+                        <div class="module-progress-bar">
+                            <div class="module-progress-fill progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="module-progress-label">
+                            <span>Progress</span>
+                            <span class="progress-label-value">0/41</span>
+                        </div>
+                    </div>
+                    <div class="module-card-footer">
+                        <span class="module-card-cta">Analyze Data</span>
+                        <span class="module-card-arrow">→</span>
+                    </div>
+                </a>
 
-            <!-- Math -->
-            <a href="math-ds-complete/index.html" class="card math-card">
-                <div>
-                    <span class="badge">Foundation</span>
-                    <h2>Mathematics for AI</h2>
-                    <p>Calculus, Linear Algebra, and Probability. The engine room of AI. Derivatives, Matrix Operations,
-                        and Eigenvalues.</p>
-                </div>
-                <div class="card-footer">
-                    <span style="color: var(--accent-math)">Study Math</span>
-                    <span class="arrow">→</span>
-                </div>
-            </a>
+                <!-- Mathematics -->
+                <a href="math-ds-complete/index.html" class="module-card module-math"
+                    data-progress-module="mathematics">
+                    <div class="module-card-header">
+                        <span class="badge badge-math">Foundation</span>
+                    </div>
+                    <div class="module-card-body">
+                        <h2 class="module-card-title">Mathematics for AI</h2>
+                        <p class="module-card-description">
+                            Calculus, Linear Algebra, and Probability. The engine room of AI. Derivatives, Matrix
+                            Operations, and Eigenvalues.
+                        </p>
+                    </div>
+                    <div class="module-progress">
+                        <div class="module-progress-bar">
+                            <div class="module-progress-fill progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="module-progress-label">
+                            <span>Progress</span>
+                            <span class="progress-label-value">0/15</span>
+                        </div>
+                    </div>
+                    <div class="module-card-footer">
+                        <span class="module-card-cta">Study Math</span>
+                        <span class="module-card-arrow">→</span>
+                    </div>
+                </a>
 
-            <!-- Statistics -->
-            <a href="complete-statistics/index.html" class="card stats-card">
-                <div>
-                    <span class="badge">Foundation</span>
-                    <h2>Statistics Complete</h2>
-                    <p>Descriptive and Inferential Statistics. Hypothesis testing, Distributions, P-values, and Bayesian
-                        concepts.</p>
-                </div>
-                <div class="card-footer">
-                    <span style="color: var(--accent-stats)">Analyze Data</span>
-                    <span class="arrow">→</span>
-                </div>
-            </a>
+                <!-- Feature Engineering -->
+                <a href="feature-engineering/index.html" class="module-card module-viz"
+                    data-progress-module="feature-engineering">
+                    <div class="module-card-header">
+                        <span class="badge badge-viz">Skill</span>
+                    </div>
+                    <div class="module-card-body">
+                        <h2 class="module-card-title">Feature Engineering</h2>
+                        <p class="module-card-description">
+                            Data cleaning, transformation, scaling, encoding, and selection. The art of preparing data
+                            for models.
+                        </p>
+                    </div>
+                    <div class="module-progress">
+                        <div class="module-progress-bar">
+                            <div class="module-progress-fill progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="module-progress-label">
+                            <span>Progress</span>
+                            <span class="progress-label-value">0/12</span>
+                        </div>
+                    </div>
+                    <div class="module-card-footer">
+                        <span class="module-card-cta">Master Data</span>
+                        <span class="module-card-arrow">→</span>
+                    </div>
+                </a>
 
-            <!-- Feature Engineering -->
-            <a href="feature-engineering/index.html" class="card viz-card">
-                <div>
-                    <span class="badge">Skill</span>
-                    <h2>Feature Engineering</h2>
-                    <p>Data cleaning, transformation, scaling, encoding, and selection. The art of preparing data for
-                        models.</p>
-                </div>
-                <div class="card-footer">
-                    <span style="color: #ffce56">Master Data</span>
-                    <span class="arrow">→</span>
-                </div>
-            </a>
+                <!-- Visualization -->
+                <a href="Visualization/index.html" class="module-card module-viz" data-progress-module="visualization">
+                    <div class="module-card-header">
+                        <span class="badge badge-viz">Skill</span>
+                    </div>
+                    <div class="module-card-body">
+                        <h2 class="module-card-title">Data Visualization</h2>
+                        <p class="module-card-description">
+                            Matplotlib, Seaborn, Plotly. Communicating insights effectively through beautiful charts and
+                            dashboards.
+                        </p>
+                    </div>
+                    <div class="module-progress">
+                        <div class="module-progress-bar">
+                            <div class="module-progress-fill progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="module-progress-label">
+                            <span>Progress</span>
+                            <span class="progress-label-value">0/8</span>
+                        </div>
+                    </div>
+                    <div class="module-card-footer">
+                        <span class="module-card-cta">Visualize</span>
+                        <span class="module-card-arrow">→</span>
+                    </div>
+                </a>
 
-            <!-- Visualization -->
-            <a href="Visualization/index.html" class="card viz-card">
-                <div>
-                    <span class="badge">Skill</span>
-                    <h2>Data Visualization</h2>
-                    <p>Matplotlib, Seaborn, Plotly. Communicating insights effectively through beautiful charts and
-                        dashboards.</p>
-                </div>
-                <div class="card-footer">
-                    <span style="color: #ffce56">Visualize</span>
-                    <span class="arrow">→</span>
-                </div>
-            </a>
+                <!-- Prompt Engineering -->
+                <a href="prompt-engineering-guide/index.html" class="module-card module-prompt"
+                    data-progress-module="prompt-engineering">
+                    <div class="module-card-header">
+                        <span class="badge badge-new">New</span>
+                    </div>
+                    <div class="module-card-body">
+                        <h2 class="module-card-title">Prompt Engineering</h2>
+                        <p class="module-card-description">
+                            Mastering LLMs. Zero-shot, Few-shot, Chain-of-Thought, and advanced prompting strategies for
+                            GPT-4/Claude.
+                        </p>
+                    </div>
+                    <div class="module-progress">
+                        <div class="module-progress-bar">
+                            <div class="module-progress-fill progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="module-progress-label">
+                            <span>Progress</span>
+                            <span class="progress-label-value">0/12</span>
+                        </div>
+                    </div>
+                    <div class="module-card-footer">
+                        <span class="module-card-cta">Learn Prompting</span>
+                        <span class="module-card-arrow">→</span>
+                    </div>
+                </a>
 
-            <!-- Prompt Engineering -->
-            <a href="prompt-engineering-guide/index.html" class="card prompt-card">
-                <div>
-                    <span class="badge">New</span>
-                    <h2>Prompt Engineering</h2>
-                    <p>Mastering LLMs. Zero-shot, Few-shot, Chain-of-Thought, and advanced prompting strategies for
-                        GPT-4/Claude.</p>
-                </div>
-                <div class="card-footer">
-                    <span style="color: #f771b6">Learn Prompting</span>
-                    <span class="arrow">→</span>
-                </div>
-            </a>
+                <!-- ML Lab -->
+                <a href="ML/index.html" class="module-card module-ml">
+                    <div class="module-card-header">
+                        <span class="badge badge-ml">Lab</span>
+                    </div>
+                    <div class="module-card-body">
+                        <h2 class="module-card-title">ML Experiments & Data</h2>
+                        <p class="module-card-description">
+                            Hands-on laboratory for datasets, experimental scripts, and practical ML applications.
+                        </p>
+                    </div>
+                    <div class="module-card-footer">
+                        <span class="module-card-cta">Enter Lab</span>
+                        <span class="module-card-arrow">→</span>
+                    </div>
+                </a>
+            </div>
+        </main>
 
-        </div>
+        <!-- Footer -->
+        <footer class="landing-footer">
+            <div class="footer-links">
+                <a href="https://github.com/aashishgarg13/DataScience" class="footer-link" target="_blank"
+                    rel="noopener">GitHub</a>
+                <a href="https://huggingface.co/spaces/aashishgarg13/DataScience" class="footer-link" target="_blank"
+                    rel="noopener">Hugging Face</a>
+                <a href="README.md" class="footer-link">Documentation</a>
+            </div>
+            <p>© 2024 Aashish Garg. Built with ❤️ for the Data Science community.</p>
+        </footer>
     </div>
+
+    <!-- PWA Install Banner -->
+    <div class="pwa-install-banner" id="pwaInstallBanner">
+        <span>📱 Install this app for offline access</span>
+        <button class="btn btn-primary btn-sm" id="pwaInstallBtn">Install</button>
+        <button class="btn btn-ghost btn-sm" id="pwaInstallDismiss">✕</button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="shared/js/theme.js"></script>
+    <script src="shared/js/progress.js"></script>
+    <script src="shared/js/search.js"></script>
+
+    <script>
+        // Search trigger
+        document.getElementById('searchTrigger')?.addEventListener('click', () => {
+            if (window.DSSearch) {
+                window.DSSearch.open();
+            }
+        });
+
+        // PWA Installation
+        let deferredPrompt;
+        const installBanner = document.getElementById('pwaInstallBanner');
+        const installBtn = document.getElementById('pwaInstallBtn');
+        const dismissBtn = document.getElementById('pwaInstallDismiss');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+
+            // Show install banner if not dismissed before
+            if (!localStorage.getItem('pwa-install-dismissed')) {
+                installBanner.classList.add('show');
+            }
+        });
+
+        installBtn?.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+
+            if (outcome === 'accepted') {
+                console.log('PWA installed');
+            }
+
+            deferredPrompt = null;
+            installBanner.classList.remove('show');
+        });
+
+        dismissBtn?.addEventListener('click', () => {
+            installBanner.classList.remove('show');
+            localStorage.setItem('pwa-install-dismissed', 'true');
+        });
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('SW registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('SW registration failed:', error);
+                    });
+            });
+        }
+
+        // Offline indicator
+        const offlineIndicator = document.getElementById('offlineIndicator');
+
+        window.addEventListener('online', () => {
+            offlineIndicator.classList.remove('show');
+        });
+
+        window.addEventListener('offline', () => {
+            offlineIndicator.classList.add('show');
+        });
+
+        if (!navigator.onLine) {
+            offlineIndicator.classList.add('show');
+        }
+    </script>
 </body>
 
 </html>

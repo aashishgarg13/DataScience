@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline | Data Science Masterclass</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --text: #e4e6eb;
+            --text-secondary: #8b949e;
+            --accent: #00d4ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .offline-container {
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .offline-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .retry-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+        }
+
+        .cached-pages {
+            margin-top: 40px;
+            text-align: left;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .cached-pages h3 {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .cached-link {
+            display: block;
+            padding: 10px 12px;
+            color: var(--accent);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .cached-link:hover {
+            background: #30363d;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📡</div>
+        <h1>You're Offline</h1>
+        <p>It looks like you've lost your internet connection. Some pages may still be available from your cache.</p>
+
+        <button class="retry-btn" onclick="location.reload()">
+            <span>🔄</span>
+            Try Again
+        </button>
+
+        <div class="cached-pages">
+            <h3>Possibly Available Offline</h3>
+            <a href="/" class="cached-link">🏠 Home</a>
+            <a href="/DeepLearning/index.html" class="cached-link">🧠 Deep Learning</a>
+            <a href="/ml_complete-all-topics/index.html" class="cached-link">🤖 Machine Learning</a>
+            <a href="/complete-statistics/index.html" class="cached-link">📊 Statistics</a>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('online', () => {
+            location.reload();
+        });
+    </script>
+</body>
+
+</html>
