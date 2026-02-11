@@ -1,3 +1,12 @@
+---
+title: DataScience Learning Hub
+emoji: 📊
+colorFrom: blue
+colorTo: purple
+sdk: static
+pinned: false
+---
+
 # 📊 DataScience Learning Hub v2.0
 
 Welcome to a comprehensive collection of educational web projects for learning data science! This repository contains multiple interactive courses covering statistics, machine learning, deep learning, visualization, mathematics, and feature engineering.
