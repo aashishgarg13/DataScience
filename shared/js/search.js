@@ -421,11 +421,45 @@
     function navigateToResult(path) {
         closeSearch();
 
-        // Determine base path
+        // Dynamically determine base path from current location
+        // Works on GitHub Pages (/DataScience/), Hugging Face (/), and local dev
         const currentPath = window.location.pathname;
-        const basePath = currentPath.includes('DataScience-v2') ? '/DataScience-v2' : '/DataScience';
+        // Find the root by looking for index.html or the last directory segment
+        const pathParts = currentPath.split('/').filter(Boolean);
 
-        window.location.href = basePath + path;
+        // If we're at the root landing page, the base is the directory containing index.html
+        // e.g., /DataScience/ or /DataScience-v2/ or /
+        let basePath = '/';
+        if (pathParts.length > 0) {
+            // Check if last part is a file
+            const lastPart = pathParts[pathParts.length - 1];
+            if (lastPart.includes('.')) {
+                pathParts.pop(); // Remove filename
+            }
+            // The base is everything up to and including the repo directory
+            // For /DataScience/index.html -> /DataScience
+            // For /DataScience-v2/index.html -> /DataScience-v2  
+            // For Hugging Face (just /index.html) -> /
+            if (pathParts.length > 0) {
+                // Find the repo root - it's the first path segment that isn't a module folder
+                const moduleFolders = ['DeepLearning', 'ml_complete-all-topics', 'complete-statistics',
+                    'math-ds-complete', 'feature-engineering', 'Visualization',
+                    'prompt-engineering-guide', 'ML', 'shared'];
+                let rootIndex = 0;
+                for (let i = 0; i < pathParts.length; i++) {
+                    if (moduleFolders.includes(pathParts[i])) {
+                        break;
+                    }
+                    rootIndex = i + 1;
+                }
+                basePath = '/' + pathParts.slice(0, rootIndex).join('/');
+                if (!basePath.endsWith('/')) basePath += '/';
+            }
+        }
+
+        // path starts with /, so remove the leading slash to avoid double slash
+        const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+        window.location.href = basePath + cleanPath;
     }
 
     /**
