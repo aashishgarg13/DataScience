@@ -943,6 +943,18 @@
                             <td>Multi-class output</td>
                             <td>Computationally expensive</td>
                         </tr>
+                        <tr>
+                            <td>GELU</td>
+                            <td>(-0.17, ∞)</td>
+                            <td>Transformers (BERT, GPT)</td>
+                            <td>Computationally expensive</td>
+                        </tr>
+                        <tr>
+                            <td>Swish</td>
+                            <td>(-0.28, ∞)</td>
+                            <td>Deep networks (40+ layers)</td>
+                            <td>Slightly slower than ReLU</td>
+                        </tr>
                     </table>
                 `,
                 concepts: `
@@ -972,6 +984,49 @@
                         • Try <strong>Leaky ReLU</strong> or <strong>ELU</strong> if ReLU neurons are dying<br>
                         • Avoid Sigmoid/Tanh in deep networks (gradient vanishing)
                     </div>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Dead Neurons (Dying ReLU Problem)</div>
+                        When a neuron's input is always negative, ReLU outputs 0 and its gradient is 0.<br>
+                        The neuron <strong>never updates</strong> — it's permanently "dead".<br><br>
+                        <strong>Solutions:</strong><br>
+                        • Use <strong>Leaky ReLU</strong> (small slope for negative values)<br>
+                        • Use <strong>ELU</strong> (exponential for negative values)<br>
+                        • Careful weight initialization (He Initialization)
+                    </div>
+
+                    <h3>GELU (Gaussian Error Linear Unit)</h3>
+                    <p>Used in <strong>Transformers, BERT, and GPT</strong>. GELU multiplies the input by the probability that it's positive under a Gaussian distribution.</p>
+                    <div class="formula">
+                        GELU(x) = x × Φ(x) ≈ 0.5x(1 + tanh(√(2/π)(x + 0.044715x³)))
+                    </div>
+
+                    <h3>Swish (Self-Gated Activation)</h3>
+                    <p>Developed by Google researchers. Consistently matches or outperforms ReLU on deep networks.</p>
+                    <div class="formula">
+                        Swish(x) = x × σ(βx)  where σ = Sigmoid, β = learnable parameter
+                    </div>
+                    <div class="callout tip">
+                        <div class="callout-title">💡 Why Swish is Better</div>
+                        • <strong>Smooth:</strong> Doesn't abruptly change direction like ReLU at x=0<br>
+                        • <strong>Non-monotonous:</strong> Small negative values preserved (not zeroed like ReLU)<br>
+                        • <strong>Unbounded above, bounded below:</strong> Best of both worlds<br>
+                        • Best for networks with depth > 40 layers
+                    </div>
+
+                    <h3>How to Choose Activation Functions</h3>
+                    <table>
+                        <tr><th>Layer / Task</th><th>Recommended</th></tr>
+                        <tr><td>Hidden layers (default)</td><td>ReLU</td></tr>
+                        <tr><td>Regression output</td><td>Linear (no activation)</td></tr>
+                        <tr><td>Binary classification output</td><td>Sigmoid</td></tr>
+                        <tr><td>Multi-class classification</td><td>Softmax</td></tr>
+                        <tr><td>Multi-label classification</td><td>Sigmoid</td></tr>
+                        <tr><td>CNN hidden layers</td><td>ReLU</td></tr>
+                        <tr><td>RNN hidden layers</td><td>Tanh / Sigmoid</td></tr>
+                        <tr><td>Transformers</td><td>GELU</td></tr>
+                        <tr><td>Deep networks (40+ layers)</td><td>Swish</td></tr>
+                    </table>
                 `,
                 applications: `
                     <div class="info-box">
@@ -985,6 +1040,20 @@
                         <div class="box-content">
                             Different tasks need different outputs: Sigmoid for binary, Softmax for multi-class, Linear for regression
                         </div>
+                    </div>
+
+                    <div class="callout tip">
+                        <div class="callout-title">🎤 Probable Interview Questions</div>
+                        1. Why do we need activation functions?<br>
+                        2. What is vanishing gradient?<br>
+                        3. Why is ReLU preferred over sigmoid?<br>
+                        4. What are dead neurons?<br>
+                        5. Difference between ReLU and Leaky ReLU?<br>
+                        6. Why softmax instead of sigmoid for multiclass?<br>
+                        7. Why linear activation for regression output?<br>
+                        8. Why GELU is used in transformers?<br>
+                        9. Can activation function affect convergence speed?<br>
+                        10. What happens if we remove activation functions?
                     </div>
                 `,
                 math: `
@@ -2068,11 +2137,27 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
                     <h3>Common Loss Functions</h3>
                     <div class="list-item">
                         <div class="list-num">01</div>
-                        <div><strong>MSE:</strong> (1/n)Σ(y - ŷ)² - Penalizes large errors</div>
+                        <div><strong>MSE:</strong> (1/n)Σ(y - ŷ)² - Penalizes large errors, sensitive to outliers</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">02</div>
-                        <div><strong>Cross-Entropy:</strong> -Σ(y·log(ŷ)) - For classification</div>
+                        <div><strong>MAE:</strong> (1/n)Σ|y - ŷ| - Robust to outliers, constant gradient, slower convergence</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Huber Loss:</strong> MSE when |error| ≤ δ, MAE otherwise. Best of both — smooth + robust to outliers</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>BCE (Binary Cross-Entropy):</strong> -[y·log(ŷ) + (1-y)·log(1-ŷ)] - Used with Sigmoid</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">05</div>
+                        <div><strong>CCE (Categorical Cross-Entropy):</strong> -Σ y·log(ŷ) - Used with Softmax for multi-class</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">06</div>
+                        <div><strong>Hinge Loss:</strong> max(0, 1 - y·ŷ) where y ∈ {-1, +1} - Margin-based, SVM-style</div>
                     </div>
                 `,
                 applications: `
@@ -2088,6 +2173,31 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
                             Business-specific objectives: Focal Loss (imbalanced data), Dice Loss (segmentation), Contrastive Loss (similarity learning)
                         </div>
                     </div>
+
+                    <h3>Loss Function Comparison</h3>
+                    <table>
+                        <tr><th>Loss</th><th>Type</th><th>Outlier Sensitivity</th><th>Key Property</th></tr>
+                        <tr><td>MSE</td><td>Regression</td><td>High</td><td>Penalizes large errors heavily</td></tr>
+                        <tr><td>MAE</td><td>Regression</td><td>Low</td><td>Robust, constant gradient</td></tr>
+                        <tr><td>Huber</td><td>Regression</td><td>Medium</td><td>Smooth + robust (MSE+MAE combo)</td></tr>
+                        <tr><td>BCE</td><td>Binary Class.</td><td>High</td><td>Strong gradients for wrong predictions</td></tr>
+                        <tr><td>CCE</td><td>Multi-class</td><td>High</td><td>Outputs probabilities via Softmax</td></tr>
+                        <tr><td>Hinge</td><td>Binary Class.</td><td>Medium</td><td>Margin-based, less probabilistic</td></tr>
+                    </table>
+
+                    <div class="callout tip">
+                        <div class="callout-title">🎤 Probable Interview Questions</div>
+                        1. Difference between MSE and MAE?<br>
+                        2. Why Huber loss is preferred sometimes?<br>
+                        3. Why BCE with sigmoid?<br>
+                        4. Why softmax with CCE?<br>
+                        5. Why can't we use MSE for classification?<br>
+                        6. What is Hinge loss and where is it used?<br>
+                        7. Difference between loss function and evaluation metric?<br>
+                        8. How does loss choice affect gradients?<br>
+                        9. What is Focal Loss and when to use it?<br>
+                        10. Can we design custom loss functions?
+                    </div>
                 `,
                 math: `
                     <h3>Binary Cross-Entropy (BCE) Derivation</h3>
@@ -2096,6 +2206,25 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
                     <div class="formula">
                         L(ŷ, y) = -(y log(ŷ) + (1-y) log(1-ŷ))
                     </div>
+
+                    <h3>Huber Loss (Smooth MAE)</h3>
+                    <p>Combines MSE for small errors and MAE for large errors using threshold δ:</p>
+                    <div class="formula">
+                        L = ½(y - ŷ)² &nbsp;&nbsp;&nbsp; when |y - ŷ| ≤ δ<br>
+                        L = δ|y - ŷ| - ½δ² &nbsp;&nbsp; otherwise
+                    </div>
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Huber Intuition</div>
+                        <strong>Small error (|error| ≤ δ):</strong> Behaves like MSE — smooth, differentiable<br>
+                        <strong>Large error (|error| > δ):</strong> Behaves like MAE — doesn't blow up for outliers<br><br>
+                        Best of both worlds! Used when data contains mild outliers.
+                    </div>
+
+                    <h3>Hinge Loss (SVM-style)</h3>
+                    <div class="formula">
+                        L = (1/n) Σ max(0, 1 - y·ŷ) &nbsp;&nbsp; where y ∈ {-1, +1}
+                    </div>
+                    <p>Margin-based loss: only penalizes predictions within the margin boundary. Used in SVMs and some neural network classifiers.</p>
 
                     <h3>Paper & Pain: Why not MSE for Classification?</h3>
                     <p>If we use MSE for sigmoid output, the gradient is:</p>
@@ -2171,6 +2300,30 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
                             CNNs: SGD+Momentum | Transformers: AdamW | RNNs: RMSprop | Default: Adam
                         </div>
                     </div>
+
+                    <h3>Optimizer Comparison</h3>
+                    <table>
+                        <tr><th>Optimizer</th><th>Key Idea</th><th>Problem</th></tr>
+                        <tr><td>SGD</td><td>Simple, fast</td><td>Noisy convergence</td></tr>
+                        <tr><td>Momentum</td><td>Smooths updates</td><td>Needs tuning</td></tr>
+                        <tr><td>AdaGrad</td><td>Adaptive LR</td><td>LR shrinks too much</td></tr>
+                        <tr><td>RMSProp</td><td>Fixes AdaGrad</td><td>No momentum</td></tr>
+                        <tr><td><strong>Adam</strong></td><td><strong>Best of all</strong></td><td>Slightly more computation</td></tr>
+                    </table>
+
+                    <div class="callout tip">
+                        <div class="callout-title">🎤 Probable Interview Questions</div>
+                        1. Difference between optimizer and gradient descent?<br>
+                        2. Why does SGD oscillate?<br>
+                        3. Why does AdaGrad fail in deep networks?<br>
+                        4. How does RMSProp fix AdaGrad?<br>
+                        5. Why is bias correction needed in Adam?<br>
+                        6. What happens if learning rate is too high?<br>
+                        7. When would you prefer SGD over Adam?<br>
+                        8. What is momentum intuitively?<br>
+                        9. Why is Adam the default choice?<br>
+                        10. Can Adam overfit?
+                    </div>
                 `,
                 math: `
                     <h3>Gradient Descent: The Foundation</h3>
@@ -2210,8 +2363,27 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
                         Momentum accumulates past gradients for faster convergence.
                     </div>
                     
-                    <h3>3. RMSprop</h3>
-                    <p>Adapts learning rate per-parameter using running average of squared gradients.</p>
+                    <h3>3. AdaGrad (Adaptive Gradient)</h3>
+                    <p>Adapts learning rate per-parameter based on how frequently each parameter is updated.</p>
+                    
+                    <div class="formula">
+                        <strong>Accumulated Gradient:</strong><br>
+                        G_t = G_{t-1} + (∇L)²<br><br>
+                        <strong>Update Rule:</strong><br>
+                        w_{t+1} = w_t - η / √(G_t + ε) × ∇L<br><br>
+                        Where ε = 1e-8 (numerical stability)
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: AdaGrad Intuition</div>
+                        <strong>Frequent parameters</strong> → G_t grows fast → learning rate shrinks<br>
+                        <strong>Rare parameters</strong> → G_t stays small → learning rate stays large<br><br>
+                        <strong>Problem:</strong> G_t only accumulates (never forgets), so learning rate keeps shrinking and training may stop early!<br>
+                        <strong>This is exactly why RMSprop was invented →</strong>
+                    </div>
+                    
+                    <h3>4. RMSprop (Root Mean Square Propagation)</h3>
+                    <p>Fixes AdaGrad's shrinking problem by using a <strong>decaying average</strong> of recent squared gradients instead of summing all.</p>
                     
                     <div class="formula">
                         v_t = β × v_{t-1} + (1-β) × (∇L)²<br>
@@ -2219,8 +2391,8 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
                         β = 0.9, ε = 1e-8 (numerical stability)
                     </div>
                     
-                    <h3>4. Adam (Adaptive Moment Estimation)</h3>
-                    <p>Combines momentum AND adaptive learning rates. The most popular optimizer.</p>
+                    <h3>5. Adam (Adaptive Moment Estimation)</h3>
+                    <p>Combines momentum (from SGD) AND adaptive learning rates (from RMSprop). The most popular optimizer.</p>
                     
                     <div class="formula" style="background: rgba(255, 107, 53, 0.08); padding: 20px; border-radius: 8px;">
                         <strong>Step 1 - First Moment (Momentum):</strong><br>
@@ -2254,15 +2426,40 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
             },
             "backprop": {
                 overview: `
-                    <h3>Backpropagation Algorithm</h3>
-                    <p>Backprop efficiently computes gradients by applying the chain rule from output to input, enabling training of deep networks.</p>
+                    <h3>Forward & Backpropagation</h3>
+                    <p>The neural network training loop consists of two passes: <strong>forward propagation</strong> (compute predictions) and <strong>backpropagation</strong> (compute gradients for updates).</p>
                     
-                    <h3>Why Backpropagation?</h3>
-                    <ul>
-                        <li><strong>Efficient:</strong> Computes all gradients in single backward pass</li>
-                        <li><strong>Scalable:</strong> Works for networks of any depth</li>
-                        <li><strong>Automatic:</strong> Modern frameworks do it automatically</li>
-                    </ul>
+                    <h3>Forward Propagation</h3>
+                    <p>The process of moving inputs through the network to produce an output:</p>
+                    <div class="formula">
+                        Input → Weighted Sum → Activation → Output
+                    </div>
+                    <p>This happens: for every batch, in every epoch, before computing loss.</p>
+
+                    <h3>Training Pipeline</h3>
+                    <table>
+                        <tr><th>Component</th><th>Role</th></tr>
+                        <tr><td>Forward Propagation</td><td>Computes predictions</td></tr>
+                        <tr><td>Loss Function</td><td>Computes error</td></tr>
+                        <tr><td>Backpropagation</td><td>Computes gradients</td></tr>
+                        <tr><td>Gradient Descent</td><td>Updates weights</td></tr>
+                    </table>
+
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Key Distinction</div>
+                        Backpropagation does <strong>NOT</strong> update weights — it only computes gradients.<br>
+                        <strong>Gradient Descent</strong> (or any optimizer) does the actual weight update!
+                    </div>
+
+                    <h3>Training Terminologies</h3>
+                    <table>
+                        <tr><th>Term</th><th>Meaning</th><th>Example (1000 samples, batch=100)</th></tr>
+                        <tr><td>Batch</td><td>Subset of data</td><td>100 samples</td></tr>
+                        <tr><td>Batch Size</td><td>Samples per batch</td><td>100</td></tr>
+                        <tr><td>Steps per Epoch</td><td>Total / Batch Size</td><td>1000/100 = 10</td></tr>
+                        <tr><td>Iteration</td><td>One batch update</td><td>1 step</td></tr>
+                        <tr><td>Epoch</td><td>One full pass of dataset</td><td>10 iterations</td></tr>
+                    </table>
                 `,
                 concepts: `
                     <div class="formula">
@@ -2286,6 +2483,20 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
                         <div class="box-content">
                             PyTorch, TensorFlow implement automatic backprop - you define forward pass, framework does backward
                         </div>
+                    </div>
+
+                    <div class="callout tip">
+                        <div class="callout-title">🎤 Probable Interview Questions</div>
+                        1. What is the role of bias in a perceptron?<br>
+                        2. Why can't we use MSE for classification?<br>
+                        3. Difference between loss function and evaluation metric?<br>
+                        4. Why is mini-batch GD preferred?<br>
+                        5. Does backpropagation update weights?<br>
+                        6. Can gradient descent work without backpropagation?<br>
+                        7. What happens if learning rate is too high?<br>
+                        8. How many times does forward propagation occur per epoch?<br>
+                        9. What happens if we remove bias?<br>
+                        10. What is the chain rule and why is it essential for backprop?
                     </div>
                 `,
                 math: `
@@ -2364,6 +2575,16 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
                             <td>Computer vision (rotations, flips, crops)</td>
                         </tr>
                     </table>
+
+                    <h3>Weight Initialization</h3>
+                    <p>Proper initialization prevents vanishing/exploding gradients from the very first step.</p>
+                    <table>
+                        <tr><th>Method</th><th>Formula</th><th>Best For</th></tr>
+                        <tr><td>Zero Init</td><td>All w = 0</td><td>❌ Never use! Breaks symmetry</td></tr>
+                        <tr><td>Random</td><td>w ~ N(0, 0.01)</td><td>⚠️ Vanishes in deep nets</td></tr>
+                        <tr><td><strong>Xavier (Glorot)</strong></td><td>w ~ N(0, √(2/(n_in + n_out)))</td><td>✅ Sigmoid, Tanh</td></tr>
+                        <tr><td><strong>He (Kaiming)</strong></td><td>w ~ N(0, √(2/n_in))</td><td>✅ ReLU (default)</td></tr>
+                    </table>
                 `,
                 applications: `
                     <div class="info-box">
@@ -2374,6 +2595,29 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
                             • Always use Early Stopping<br>
                             • Data Augmentation for images
                         </div>
+                    </div>
+
+                    <h3>Dropout vs Batch Normalization</h3>
+                    <table>
+                        <tr><th>Feature</th><th>Dropout</th><th>Batch Normalization</th></tr>
+                        <tr><td>Purpose</td><td>Regularization</td><td>Faster training + mild regularization</td></tr>
+                        <tr><td>Mechanism</td><td>Randomly drops neurons</td><td>Normalizes layer inputs</td></tr>
+                        <tr><td>Training vs Test</td><td>Different behavior</td><td>Different behavior</td></tr>
+                        <tr><td>Combined?</td><td colspan="2">Yes, use BatchNorm <em>before</em> Dropout</td></tr>
+                    </table>
+
+                    <div class="callout tip">
+                        <div class="callout-title">🎤 Probable Interview Questions</div>
+                        1. Why can't we initialize all weights to zero?<br>
+                        2. Difference between Xavier and He initialization?<br>
+                        3. What is the vanishing gradient problem?<br>
+                        4. How does Dropout prevent overfitting?<br>
+                        5. Can we use Dropout at test time?<br>
+                        6. Why is He initialization used with ReLU?<br>
+                        7. What happens if weights are too large initially?<br>
+                        8. Does Batch Normalization eliminate the need for Dropout?<br>
+                        9. L1 vs L2 regularization — when to use each?<br>
+                        10. What is the exploding gradient problem and how to fix it?
                     </div>
                 `,
                 math: `
@@ -2441,6 +2685,30 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
                         Dropout ≈ Training an ensemble of 2ⁿ sub-networks<br>
                         (where n = number of neurons that can be dropped)<br><br>
                         Each forward pass is a different architecture!
+                    </div>
+
+                    <h3>Weight Initialization Mathematics</h3>
+                    
+                    <h4>Xavier Initialization (for Sigmoid/Tanh)</h4>
+                    <div class="formula">
+                        w ~ N(0, σ²)  where  σ² = 2 / (n_in + n_out)<br><br>
+                        Goal: Keep Var(output) ≈ Var(input) across layers
+                    </div>
+
+                    <h4>He Initialization (for ReLU)</h4>
+                    <div class="formula">
+                        w ~ N(0, σ²)  where  σ² = 2 / n_in<br><br>
+                        ReLU zeros out ~50% of activations, so variance is halved → multiply by 2 to compensate!
+                    </div>
+
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: Why Zero Init Fails</div>
+                        If all weights = 0, every neuron computes the <strong>same output</strong>.<br>
+                        All gradients are <strong>identical</strong> → All weights update the same way.<br>
+                        Result: All neurons stay identical forever! The network is as good as <strong>1 neuron</strong>.<br><br>
+                        <strong>Random Init:</strong> w ~ N(0, 0.01) works for shallow networks but gradients shrink exponentially in deep ones.<br>
+                        <strong>Xavier:</strong> Calibrates variance based on layer width → stable gradients for Sigmoid/Tanh.<br>
+                        <strong>He:</strong> Accounts for ReLU zeroing out negative half → default for modern networks.
                     </div>
                 `
             },
@@ -4128,82 +4396,352 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
             },
             "bert": {
                 overview: `
-                    <h3>BERT (Bidirectional Encoder Representations from Transformers)</h3>
-                    <p>Pre-trained encoder-only Transformer for understanding language (not generation).</p>
+                    <h3>BERT: Bidirectional Encoder Representations from Transformers</h3>
+                    <p><strong>Paper:</strong> "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding" (Devlin et al., 2018)</p>
+                    <p><strong>arXiv:</strong> <a href="https://arxiv.org/abs/1810.04805" target="_blank">1810.04805</a></p>
                     
-                    <h3>Key Innovation: Bidirectional Context</h3>
-                    <p>Unlike GPT (left-to-right), BERT sees both left AND right context simultaneously.</p>
+                    <div class="callout insight">
+                        <div class="callout-title">🎯 Key Innovation</div>
+                        BERT revolutionized NLP by introducing <strong>bidirectional pre-training</strong>. Unlike previous models (GPT, ELMo) that processed text left-to-right or combined shallow bidirectional representations, BERT deeply integrates left AND right context in all layers simultaneously.
+                    </div>
                     
-                    <h3>Pre-training Tasks</h3>
+                    <h3>Why BERT Matters</h3>
                     <ul>
-                        <li><strong>Masked Language Modeling:</strong> Mask 15% of tokens, predict them (e.g., "The cat [MASK] on the mat" → predict "sat")</li>
-                        <li><strong>Next Sentence Prediction:</strong> Predict if sentence B follows A</li>
+                        <li><strong>Transfer Learning for NLP:</strong> Pre-train once on massive unlabeled data, fine-tune on many tasks</li>
+                        <li><strong>State-of-the-Art Results:</strong> Set new records on 11 NLP tasks including SQuAD, GLUE, and SWAG</li>
+                        <li><strong>Efficiency:</strong> Fine-tuning requires minimal task-specific architecture changes</li>
+                        <li><strong>Accessibility:</strong> Google released pre-trained models publicly</li>
                     </ul>
                     
+                    <h3>Pre-training Corpus</h3>
+                    <div class="info-box">
+                        <div class="box-title">📚 Training Data</div>
+                        <div class="box-content">
+                            <strong>BooksCorpus:</strong> 800M words from 11,038 unpublished books<br>
+                            <strong>English Wikipedia:</strong> 2,500M words (text passages only, no lists/tables/headers)<br>
+                            <strong>Total:</strong> ~3.3 billion words
+                        </div>
+                    </div>
+                    
+                    <h3>Pre-training Tasks</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Masked Language Modeling (MLM):</strong> Randomly mask 15% of tokens and predict them using bidirectional context. Example: "The cat [MASK] on the mat" → predict "sat"</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Next Sentence Prediction (NSP):</strong> Given sentence pairs (A, B), predict if B actually follows A in the corpus. Helps with tasks like QA and NLI that require understanding sentence relationships.</div>
+                    </div>
+                    
                     <div class="callout tip">
-                        <div class="callout-title">💡 Fine-tuning BERT</div>
-                        1. Start with pre-trained BERT (trained on billions of words)<br>
-                        2. Add task-specific head (classification, QA, NER)<br>
-                        3. Fine-tune on your dataset (10K-100K examples)<br>
-                        4. Achieves SOTA with minimal data!
+                        <div class="callout-title">💡 The BERT Fine-tuning Paradigm</div>
+                        1. <strong>Pre-train</strong> BERT on BooksCorpus + Wikipedia (days/weeks on TPUs)<br>
+                        2. <strong>Download</strong> pre-trained weights from Google<br>
+                        3. <strong>Add</strong> task-specific head (1 layer for classification/QA/NER)<br>
+                        4. <strong>Fine-tune</strong> entire model on your dataset (hours on single GPU)<br>
+                        5. <strong>Achieve SOTA</strong> with as few as 3,600 labeled examples!
                     </div>
                 `,
                 concepts: `
                     <h3>BERT Architecture</h3>
+                    <p>BERT uses a multi-layer bidirectional Transformer encoder based on Vaswani et al. (2017).</p>
+                    
+                    <h3>Model Variants</h3>
+                    <table>
+                        <tr>
+                            <th>Model</th>
+                            <th>Layers (L)</th>
+                            <th>Hidden Size (H)</th>
+                            <th>Attention Heads (A)</th>
+                            <th>Parameters</th>
+                        </tr>
+                        <tr>
+                            <td>BERT<sub>BASE</sub></td>
+                            <td>12</td>
+                            <td>768</td>
+                            <td>12</td>
+                            <td>110M</td>
+                        </tr>
+                        <tr>
+                            <td>BERT<sub>LARGE</sub></td>
+                            <td>24</td>
+                            <td>1024</td>
+                            <td>16</td>
+                            <td>340M</td>
+                        </tr>
+                    </table>
+                    
+                    <p><em>Note: BERT<sub>BASE</sub> was designed to match GPT's size for comparison.</em></p>
+                    
+                    <h3>Input Representation</h3>
+                    <p>BERT's input embedding is the sum of three components:</p>
+                    
                     <div class="list-item">
                         <div class="list-num">01</div>
-                        <div><strong>Encoder Only:</strong> 12/24 Transformer encoder layers (BERT-base/large)</div>
+                        <div><strong>Token Embeddings:</strong> WordPiece tokenization with 30,000 token vocabulary. Handles unknown words by splitting into subwords (e.g., "playing" → "play" + "##ing")</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">02</div>
-                        <div><strong>Token Embedding:</strong> WordPiece tokenization (30K vocab)</div>
+                        <div><strong>Segment Embeddings:</strong> Learned embedding to distinguish sentence A from sentence B (E<sub>A</sub> or E<sub>B</sub>)</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">03</div>
-                        <div><strong>Segment Embedding:</strong> Distinguish sentence A from sentence B</div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-num">04</div>
-                        <div><strong>[CLS] Token:</strong> Aggregated representation for classification tasks</div>
+                        <div><strong>Position Embeddings:</strong> Learned positional encodings (unlike Transformers' sinusoidal), supports sequences up to 512 tokens</div>
                     </div>
                     
-                    <h3>Model Sizes</h3>
+                    <div class="formula">
+                        Input = Token_Embedding + Segment_Embedding + Position_Embedding
+                    </div>
+                    
+                    <h3>Special Tokens</h3>
+                    <div class="info-box">
+                        <div class="box-title">🏷️ Special Token Usage</div>
+                        <div class="box-content">
+                            <strong>[CLS]:</strong> Prepended to every input. Final hidden state used for classification tasks<br>
+                            <strong>[SEP]:</strong> Separates sentence pairs and marks sequence end<br>
+                            <strong>[MASK]:</strong> Replaces masked tokens during pre-training (not used during fine-tuning)
+                        </div>
+                    </div>
+                    
+                    <h4>Example Input Format</h4>
+                    <div class="formula">
+                        [CLS] My dog is cute [SEP] He likes playing [SEP]<br>
+                        <br>
+                        Tokens:    [CLS] My dog is cute [SEP] He likes play ##ing [SEP]<br>
+                        Segments:  E_A   E_A E_A E_A E_A E_A  E_B E_B   E_B  E_B   E_B<br>
+                        Positions: 0     1   2   3   4   5    6   7     8    9     10
+                    </div>
+                    
+                    <h3>Fine-tuning for Different Tasks</h3>
                     <table>
-                        <tr><th>Model</th><th>Layers</th><th>Hidden</th><th>Params</th></tr>
-                        <tr><td>BERT-base</td><td>12</td><td>768</td><td>110M</td></tr>
-                        <tr><td>BERT-large</td><td>24</td><td>1024</td><td>340M</td></tr>
+                        <tr><th>Task Type</th><th>Input Format</th><th>Output</th></tr>
+                        <tr>
+                            <td>Classification</td>
+                            <td>[CLS] text [SEP]</td>
+                            <td>[CLS] representation → classifier</td>
+                        </tr>
+                        <tr>
+                            <td>Sentence Pair</td>
+                            <td>[CLS] sent A [SEP] sent B [SEP]</td>
+                            <td>[CLS] representation → classifier</td>
+                        </tr>
+                        <tr>
+                            <td>Question Answering</td>
+                            <td>[CLS] question [SEP] passage [SEP]</td>
+                            <td>Start/End span vectors over passage tokens</td>
+                        </tr>
+                        <tr>
+                            <td>Token Classification</td>
+                            <td>[CLS] text [SEP]</td>
+                            <td>Each token representation → label</td>
+                        </tr>
                     </table>
                 `,
                 math: `
-                    <h3>Masked Language Modeling (MLM)</h3>
-                    <p>BERT's main pre-training objective:</p>
+                    <h3>Pre-training Objective</h3>
+                    <p>BERT simultaneously optimizes two unsupervised tasks:</p>
                     
                     <div class="formula">
-                        L_MLM = -Σ log P(x_masked | x_visible)<br>
-                        <br>
-                        For each masked token, predict using cross-entropy loss
+                        L = L<sub>MLM</sub> + L<sub>NSP</sub>
                     </div>
                     
+                    <h3>Masked Language Modeling (MLM)</h3>
+                    
                     <div class="callout insight">
-                        <div class="callout-title">📝 Paper & Pain: Masking Strategy</div>
-                        Of the 15% tokens selected for masking:<br>
-                        • 80% → [MASK] token<br>
-                        • 10% → Random token<br>
-                        • 10% → Keep original<br>
-                        This prevents over-reliance on [MASK] during fine-tuning!
+                        <div class="callout-title">📝 Paper & Pain: The Masking Strategy</div>
+                        <strong>Problem:</strong> Standard left-to-right language modeling can't capture bidirectional context.<br>
+                        <strong>Solution:</strong> Randomly mask 15% of tokens and predict them using full context.<br><br>
+                        
+                        <strong>However:</strong> [MASK] token doesn't appear during fine-tuning!<br>
+                        <strong>Clever Fix:</strong> Of the 15% selected tokens:<br>
+                        • 80% → Replace with [MASK]<br>
+                        • 10% → Replace with random token<br>
+                        • 10% → Keep unchanged<br><br>
+                        
+                        This forces the model to maintain context representations for ALL tokens!
+                    </div>
+                    
+                    <h4>MLM Loss Derivation</h4>
+                    <p>Let's work through the MLM objective step by step:</p>
+                    
+                    <div class="formula">
+                        Given input sequence: x = [x₁, x₂, ..., x_n]<br>
+                        Masked sequence: x̃ = [x̃₁, x̃₂, ..., x̃_n]<br>
+                        <br>
+                        Let M = {i₁, i₂, ..., i_m} be indices of masked tokens<br>
+                        <br>
+                        For each masked position i ∈ M:<br>
+                        h_i = BERT(x̃)_i  (hidden state at position i)<br>
+                        logits_i = W · h_i + b  (W ∈ ℝ^(V×H), vocab size V)<br>
+                        P(x_i | x̃) = softmax(logits_i)<br>
+                        <br>
+                        Cross-entropy loss per token:<br>
+                        L_i = -log P(x_i | x̃)<br>
+                        <br>
+                        Total MLM loss:<br>
+                        L_MLM = (1/|M|) Σ_{i∈M} L_i<br>
+                        L_MLM = -(1/|M|) Σ_{i∈M} log P(x_i | x̃)
+                    </div>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">📊 Worked Example: MLM Calculation</div>
+                        <strong>Input:</strong> "The cat sat on the mat"<br>
+                        <strong>After masking (15%):</strong> "The [MASK] sat on the mat"<br>
+                        <strong>Target:</strong> Predict "cat" at position 2<br><br>
+                        
+                        <strong>Step 1:</strong> Forward pass through BERT<br>
+                        h₂ = BERT(x̃)₂ ∈ ℝ^768 (for BERT_BASE)<br><br>
+                        
+                        <strong>Step 2:</strong> Project to vocabulary space<br>
+                        logits₂ = W · h₂ + b ∈ ℝ^30000<br><br>
+                        
+                        <strong>Step 3:</strong> Compute probabilities<br>
+                        P(w | x̃) = exp(logits₂[w]) / Σ_v exp(logits₂[v])<br><br>
+                        
+                        <strong>Step 4:</strong> Compute loss (assume P("cat"|x̃) = 0.73)<br>
+                        L = -log(0.73) = 0.315
+                    </div>
+                    
+                    <h3>Next Sentence Prediction (NSP)</h3>
+                    <p>Binary classification task to understand sentence relationships.</p>
+                    
+                    <div class="formula">
+                        Input: [CLS] sentence_A [SEP] sentence_B [SEP]<br>
+                        <br>
+                        Let C = final hidden state of [CLS] token ∈ ℝ^H<br>
+                        <br>
+                        P(IsNext = True) = σ(W_NSP · C)<br>
+                        where σ = sigmoid function, W_NSP ∈ ℝ^(1×H)<br>
+                        <br>
+                        Binary cross-entropy loss:<br>
+                        L_NSP = -[y·log(ŷ) + (1-y)·log(1-ŷ)]<br>
+                        where y = 1 if B follows A, else 0
+                    </div>
+                    
+                    <h4>NSP Training Data Generation</h4>
+                    <ul>
+                        <li><strong>50% IsNext:</strong> B actually follows A in corpus</li>
+                        <li><strong>50% NotNext:</strong> B sampled randomly from another document</li>
+                    </ul>
+                    
+                    <h3>Fine-tuning Math: Question Answering (SQuAD)</h3>
+                    
+                    <div class="formula">
+                        Input: [CLS] question [SEP] paragraph [SEP]<br>
+                        <br>
+                        Let T_i = final hidden state for token i in paragraph<br>
+                        <br>
+                        Start position logits: S_i = W_start · T_i<br>
+                        End position logits: E_i = W_end · T_i<br>
+                        <br>
+                        P(start = i) = softmax(S)_i<br>
+                        P(end = j) = softmax(E)_j<br>
+                        <br>
+                        Answer span = tokens from position i to j<br>
+                        <br>
+                        Training loss:<br>
+                        L = -log P(start = i*) - log P(end = j*)<br>
+                        where i*, j* are ground truth positions
                     </div>
                 `,
                 applications: `
+                    <h3>SQuAD Benchmark Performance</h3>
+                    
                     <div class="info-box">
-                        <div class="box-title">🔍 Search & QA</div>
+                        <div class="box-title">🏆 Stanford Question Answering Dataset (SQuAD)</div>
                         <div class="box-content">
-                            <strong>Google Search:</strong> Uses BERT for understanding queries<br>
-                            Question answering systems, document retrieval
+                            <strong>SQuAD 1.1:</strong> 100,000+ question-answer pairs on 500+ Wikipedia articles. Every question has an answer span in the passage.<br><br>
+                            <strong>SQuAD 2.0:</strong> Adds 50,000+ unanswerable questions. Models must determine when no answer exists.<br><br>
+                            <strong>Evaluation Metrics:</strong><br>
+                            • <strong>EM (Exact Match):</strong> % of predictions matching ground truth exactly<br>
+                            • <strong>F1:</strong> Token-level overlap between prediction and ground truth
                         </div>
                     </div>
+                    
+                    <h3>SQuAD 1.1 Results</h3>
+                    <table>
+                        <tr><th>Model</th><th>EM</th><th>F1</th></tr>
+                        <tr><td>Human Performance</td><td>82.3</td><td>91.2</td></tr>
+                        <tr><td>BERT<sub>BASE</sub></td><td>80.8</td><td>88.5</td></tr>
+                        <tr><td>BERT<sub>LARGE</sub></td><td><strong>84.1</strong></td><td><strong>90.9</strong></td></tr>
+                    </table>
+                    <p><em>BERT<sub>LARGE</sub> surpassed human performance on EM!</em></p>
+                    
+                    <h3>SQuAD 2.0 Results</h3>
+                    <table>
+                        <tr><th>Model</th><th>EM</th><th>F1</th></tr>
+                        <tr><td>Human Performance</td><td>86.9</td><td>89.5</td></tr>
+                        <tr><td>BERT<sub>BASE</sub></td><td>73.7</td><td>76.3</td></tr>
+                        <tr><td>BERT<sub>LARGE</sub></td><td><strong>78.7</strong></td><td><strong>81.9</strong></td></tr>
+                    </table>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">💡 Example SQuAD Question</div>
+                        <strong>Passage:</strong> "The Normans (Norman: Nourmands; French: Normands; Latin: Normanni) were the people who in the 10th and 11th centuries gave their name to Normandy, a region in France."<br><br>
+                        <strong>Question:</strong> "In what country is Normandy located?"<br><br>
+                        <strong>BERT Answer:</strong> "France" ✓<br>
+                        <strong>Start Token:</strong> position 32<br>
+                        <strong>End Token:</strong> position 32
+                    </div>
+                    
+                    <h3>GLUE Benchmark (General Language Understanding Evaluation)</h3>
+                    <p>BERT set new state-of-the-art on all 9 GLUE tasks:</p>
+                    <table>
+                        <tr><th>Task</th><th>Metric</th><th>Previous SOTA</th><th>BERT<sub>LARGE</sub></th></tr>
+                        <tr><td>MNLI (NLI)</td><td>Acc</td><td>86.6</td><td><strong>86.7</strong></td></tr>
+                        <tr><td>QQP (Paraphrase)</td><td>F1</td><td>66.1</td><td><strong>72.1</strong></td></tr>
+                        <tr><td>QNLI (QA/NLI)</td><td>Acc</td><td>87.4</td><td><strong>92.7</strong></td></tr>
+                        <tr><td>SST-2 (Sentiment)</td><td>Acc</td><td>93.2</td><td><strong>94.9</strong></td></tr>
+                        <tr><td>CoLA (Acceptability)</td><td>Matthew's</td><td>35.0</td><td><strong>60.5</strong></td></tr>
+                    </table>
+                    
+                    <h3>Additional Applications</h3>
+                    
+                    <div class="info-box">
+                        <div class="box-title">🔍 Google Search</div>
+                        <div class="box-content">
+                            In October 2019, Google began using BERT for 1 in 10 English search queries, calling it the biggest leap in 5 years. BERT helps understand search intent and context.
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="box-title">🏷️ Named Entity Recognition (NER)</div>
+                        <div class="box-content">
+                            BERT excels at identifying entities (person, location, organization) in text by treating it as token classification. Each token gets a label (B-PER, I-PER, B-LOC, etc.).
+                        </div>
+                    </div>
+                    
                     <div class="info-box">
                         <div class="box-title">📊 Text Classification</div>
-                        <div class="box-content">Sentiment analysis, topic classification, spam detection</div>
+                        <div class="box-content">
+                            Sentiment analysis, topic classification, spam detection - all benefit from BERT's contextual understanding. Simply use [CLS] representation with a classifier.
+                        </div>
+                    </div>
+                    
+                    <h3>Using BERT: Quick Code Example</h3>
+                    <div class="formula">
+                        # Using Hugging Face Transformers<br>
+                        from transformers import BertTokenizer, BertForQuestionAnswering<br>
+                        import torch<br>
+                        <br>
+                        # Load pre-trained model and tokenizer<br>
+                        tokenizer = BertTokenizer.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')<br>
+                        model = BertForQuestionAnswering.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')<br>
+                        <br>
+                        # Example<br>
+                        question = "What is BERT?"<br>
+                        context = "BERT is a bidirectional Transformer for NLP."<br>
+                        <br>
+                        # Tokenize and get answer<br>
+                        inputs = tokenizer(question, context, return_tensors='pt')<br>
+                        outputs = model(**inputs)<br>
+                        <br>
+                        start_idx = torch.argmax(outputs.start_logits)<br>
+                        end_idx = torch.argmax(outputs.end_logits)<br>
+                        answer = tokenizer.convert_tokens_to_string(<br>
+                            tokenizer.convert_ids_to_tokens(inputs['input_ids'][0][start_idx:end_idx+1])<br>
+                        )<br>
+                        print(answer)  # "a bidirectional Transformer for NLP"
                     </div>
                 `
             },
