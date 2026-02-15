@@ -146,6 +146,25 @@
                 { title: 'Chain of Thought', section: 'topic-4' },
                 { title: 'System Prompts', section: 'topic-5' }
             ]
+        },
+        {
+            id: 'azure-devops',
+            name: 'Azure DevOps & MLOps',
+            path: '/AzureDevops/index.html',
+            icon: '☁️',
+            color: '#0078D4',
+            topics: [
+                { title: 'DevOps Fundamentals', section: 'devops-fundamentals' },
+                { title: 'Azure DevOps Setup', section: 'azure-setup' },
+                { title: 'Infrastructure & Networking', section: 'infrastructure' },
+                { title: 'CI/CD Pipeline (YAML)', section: 'cicd' },
+                { title: 'Build & Test', section: 'build-test' },
+                { title: 'Docker & Containers', section: 'docker' },
+                { title: 'Kubernetes & AKS', section: 'kubernetes' },
+                { title: 'Service Connections & Security', section: 'security' },
+                { title: 'MLOps Pipeline', section: 'mlops' },
+                { title: 'Monitoring & Automation', section: 'monitoring' }
+            ]
         }
     ];
 
@@ -444,7 +463,7 @@
                 // Find the repo root - it's the first path segment that isn't a module folder
                 const moduleFolders = ['DeepLearning', 'ml_complete-all-topics', 'complete-statistics',
                     'math-ds-complete', 'feature-engineering', 'Visualization',
-                    'prompt-engineering-guide', 'ML', 'shared'];
+                    'prompt-engineering-guide', 'AzureDevops', 'ML', 'shared'];
                 let rootIndex = 0;
                 for (let i = 0; i < pathParts.length; i++) {
                     if (moduleFolders.includes(pathParts[i])) {

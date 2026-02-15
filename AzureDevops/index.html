@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure DevOps & MLOps Masterclass</title>
+
+    <!-- Shared Design System -->
+    <link rel="stylesheet" href="../shared/css/design-system.css">
+    <link rel="stylesheet" href="../shared/css/components.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0f1419;
+            --surface: #1a1f2e;
+            --text: #e4e6eb;
+            --text-dim: #b0b7c3;
+            --cyan: #0078D4;
+            --orange: #ff6b35;
+            --green: #00ff88;
+            --yellow: #ffa500;
+            --azure: #0078D4;
+            --teal: #00b7c3;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            border-bottom: 2px solid var(--azure);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, var(--azure), var(--teal));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1.1em;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(0, 120, 212, 0.1), rgba(0, 183, 195, 0.1));
+            border: 2px solid var(--azure);
+            border-radius: 12px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 120, 212, 0.3);
+            border-color: var(--teal);
+        }
+
+        .card-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            color: var(--azure);
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: var(--text-dim);
+            font-size: 0.95em;
+        }
+
+        .category-label {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 12px;
+            background: rgba(0, 120, 212, 0.2);
+            border-radius: 20px;
+            font-size: 0.85em;
+            color: var(--green);
+        }
+
+        .module {
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .btn-back {
+            padding: 10px 20px;
+            background: var(--azure);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--teal);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-bottom: 1px solid rgba(0, 120, 212, 0.2);
+            padding-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: var(--surface);
+            color: var(--text);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            background: rgba(0, 120, 212, 0.1);
+            border-color: var(--azure);
+        }
+
+        .tab-btn.active {
+            background: var(--azure);
+            color: white;
+            border-color: var(--azure);
+        }
+
+        .tab {
+            display: none;
+        }
+
+        .tab.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid rgba(0, 120, 212, 0.2);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            border-color: var(--azure);
+            box-shadow: 0 0 20px rgba(0, 120, 212, 0.1);
+        }
+
+        h2 {
+            color: var(--azure);
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: var(--orange);
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        h4 {
+            color: var(--green);
+            font-size: 1.1em;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background: rgba(0, 120, 212, 0.08);
+            border: 1px solid rgba(0, 120, 212, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .box-title {
+            font-weight: bold;
+            color: var(--azure);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .box-content {
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+
+        .warning-box {
+            background: rgba(255, 165, 0, 0.08);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .warning-box .box-title {
+            color: var(--yellow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 120, 212, 0.15);
+        }
+
+        th {
+            background: rgba(0, 120, 212, 0.15);
+            color: var(--azure);
+            font-weight: 600;
+        }
+
+        td {
+            color: var(--text-dim);
+        }
+
+        tr:hover td {
+            background: rgba(0, 120, 212, 0.05);
+        }
+
+        .code-block {
+            background: #1e1e2e;
+            border: 1px solid rgba(0, 120, 212, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            color: #cdd6f4;
+            line-height: 1.6;
+        }
+
+        .code-block .comment {
+            color: #6c7086;
+        }
+
+        .code-block .keyword {
+            color: #cba6f7;
+        }
+
+        .code-block .string {
+            color: #a6e3a1;
+        }
+
+        .code-block .key {
+            color: #89b4fa;
+        }
+
+        .formula {
+            background: rgba(0, 120, 212, 0.08);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--azure);
+            font-family: 'Georgia', serif;
+        }
+
+        .callout {
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid;
+        }
+
+        .callout.insight {
+            background: rgba(0, 255, 136, 0.05);
+            border-color: var(--green);
+        }
+
+        .callout.insight .callout-title {
+            color: var(--green);
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .callout.warning {
+            background: rgba(255, 165, 0, 0.05);
+            border-color: var(--yellow);
+        }
+
+        .callout.warning .callout-title {
+            color: var(--yellow);
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .pipeline-flow {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0, 120, 212, 0.05);
+            border-radius: 12px;
+        }
+
+        .pipeline-stage {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .pipeline-arrow {
+            font-size: 1.5em;
+            color: var(--azure);
+            padding: 0 4px;
+        }
+
+        .interview-box {
+            background: rgba(163, 113, 247, 0.08);
+            border: 1px solid rgba(163, 113, 247, 0.25);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .interview-box .box-title {
+            color: #a371f7;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pipeline-flow {
+                flex-direction: column;
+            }
+
+            .pipeline-arrow {
+                transform: rotate(90deg);
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Dashboard -->
+        <div class="dashboard active" id="dashboard">
+            <header>
+                <h1>☁️ Azure DevOps & MLOps Masterclass</h1>
+                <p class="subtitle">CI/CD Pipelines · Containers · Kubernetes · MLOps — From Zero to Production</p>
+            </header>
+            <div class="grid" id="modulesGrid"></div>
+        </div>
+
+        <!-- Module Container -->
+        <div id="modulesContainer"></div>
+    </div>
+
+    <script>
+        const modules = [
+            { id: "devops-fundamentals", title: "DevOps Fundamentals", icon: "🔄", category: "Foundations", color: "#0078D4", description: "CI/CD concepts, DevOps culture, and the shift to MLOps" },
+            { id: "azure-setup", title: "Azure DevOps Setup", icon: "⚙️", category: "Foundations", color: "#0078D4", description: "Organizations, Projects, Repos, and Git workflows" },
+            { id: "infrastructure", title: "Infrastructure & Networking", icon: "🌐", category: "Infrastructure", color: "#00b7c3", description: "VPCs, Security Groups, VMs, and Azure networking" },
+            { id: "cicd-yaml", title: "CI/CD Pipeline (YAML)", icon: "📜", category: "Pipeline", color: "#ff6b35", description: "YAML syntax, Triggers, Variables, Stages, Multi-stage pipelines" },
+            { id: "build-test", title: "Build & Test", icon: "🧪", category: "Pipeline", color: "#ff6b35", description: "Maven, Unit Tests, SonarQube quality gates, Trivy scanning" },
+            { id: "docker", title: "Docker & Containers", icon: "🐳", category: "Containers", color: "#2496ED", description: "Dockerfile, Build, Push to ACR, Image scanning" },
+            { id: "kubernetes", title: "Kubernetes & AKS", icon: "☸️", category: "Orchestration", color: "#326CE5", description: "AKS setup, Deployments, Services, Manifests, Helm" },
+            { id: "security", title: "Service Connections & Security", icon: "🔐", category: "Security", color: "#e74c3c", description: "Service Principals, RBAC, Key Vault, PAT tokens" },
+            { id: "mlops", title: "MLOps Pipeline", icon: "🤖", category: "MLOps", color: "#a371f7", description: "ML lifecycle, Model versioning, Data drift, CT/CI/CD for ML" },
+            { id: "monitoring", title: "Monitoring & Automation", icon: "📊", category: "Operations", color: "#2ecc71", description: "Deployment verification, Pipeline automation, Notifications" }
+        ];
+
+        const MODULE_CONTENT = {
+            "devops-fundamentals": {
+                concepts: `
+                    <h3>What is DevOps?</h3>
+                    <p>DevOps is a set of practices that combines <strong>software development (Dev)</strong> and <strong>IT operations (Ops)</strong>. It aims to shorten the software development lifecycle and deliver high-quality software continuously.</p>
+                    <div class="pipeline-flow">
+                        <div class="pipeline-stage" style="background: rgba(0,120,212,0.2); color: #0078D4;">Plan</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(0,183,195,0.2); color: #00b7c3;">Code</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(255,107,53,0.2); color: #ff6b35;">Build</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(0,255,136,0.2); color: #00ff88;">Test</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(163,113,247,0.2); color: #a371f7;">Release</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(46,204,113,0.2); color: #2ecc71;">Deploy</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(255,165,0,0.2); color: #ffa500;">Operate</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(231,76,60,0.2); color: #e74c3c;">Monitor</div>
+                    </div>
+                    <h3>CI/CD Explained</h3>
+                    <table>
+                        <tr><th>Concept</th><th>What It Does</th><th>Tools</th></tr>
+                        <tr><td><strong>Continuous Integration (CI)</strong></td><td>Automatically build & test code on every commit</td><td>Azure Pipelines, Jenkins, GitHub Actions</td></tr>
+                        <tr><td><strong>Continuous Delivery (CD)</strong></td><td>Automatically deploy to staging after tests pass</td><td>Azure Pipelines, ArgoCD, Spinnaker</td></tr>
+                        <tr><td><strong>Continuous Deployment</strong></td><td>Auto-deploy to production (no manual gate)</td><td>Azure DevOps + approvals removed</td></tr>
+                    </table>
+                    <h3>DevOps vs MLOps</h3>
+                    <table>
+                        <tr><th>Aspect</th><th>DevOps</th><th>MLOps</th></tr>
+                        <tr><td>What ships?</td><td>Code → Application</td><td>Code + Data + Model → Prediction Service</td></tr>
+                        <tr><td>Testing</td><td>Unit / Integration / E2E</td><td>+ Data validation, Model validation, Fairness</td></tr>
+                        <tr><td>Versioning</td><td>Code (Git)</td><td>Code + Data + Model + Hyperparams</td></tr>
+                        <tr><td>Monitoring</td><td>Latency, Errors, CPU</td><td>+ Data drift, Model drift, Prediction quality</td></tr>
+                        <tr><td>Retraining</td><td>N/A</td><td>Triggered by drift or schedule</td></tr>
+                    </table>
+                    <div class="callout insight">
+                        <div class="callout-title">💡 Key Insight</div>
+                        MLOps = DevOps + <strong>Data Management</strong> + <strong>Model Management</strong> + <strong>Continuous Training</strong>. The complexity comes from the fact that ML systems have more axes of change than traditional software.
+                    </div>
+                    <h3>DevOps Principles (CALMS)</h3>
+                    <div class="info-box">
+                        <div class="box-title">🎯 CALMS Framework</div>
+                        <div class="box-content">
+                            <strong>C</strong> — Culture: Break silos between Dev and Ops<br>
+                            <strong>A</strong> — Automation: Automate everything (builds, tests, deploys)<br>
+                            <strong>L</strong> — Lean: Eliminate waste, small batch sizes<br>
+                            <strong>M</strong> — Measurement: Measure everything (DORA metrics)<br>
+                            <strong>S</strong> — Sharing: Share knowledge, feedback loops
+                        </div>
+                    </div>
+                `,
+                handson: `
+                    <h3>DORA Metrics — Measuring DevOps Performance</h3>
+                    <table>
+                        <tr><th>Metric</th><th>Elite</th><th>High</th><th>Medium</th><th>Low</th></tr>
+                        <tr><td>Deployment Frequency</td><td>Multiple/day</td><td>Weekly</td><td>Monthly</td><td>Months</td></tr>
+                        <tr><td>Lead Time for Changes</td><td>< 1 hour</td><td>< 1 week</td><td>< 1 month</td><td>> 6 months</td></tr>
+                        <tr><td>Change Failure Rate</td><td>0-15%</td><td>16-30%</td><td>16-30%</td><td>46-60%</td></tr>
+                        <tr><td>Time to Restore</td><td>< 1 hour</td><td>< 1 day</td><td>< 1 week</td><td>> 6 months</td></tr>
+                    </table>
+                    <h3>Shift-Left Testing</h3>
+                    <p>Move testing earlier in the development lifecycle:</p>
+                    <div class="code-block">
+<span class="comment"># Traditional: Test late (expensive to fix)</span>
+Code → Code → Code → <span class="keyword">TEST</span> → Fix → Fix → Deploy
+
+<span class="comment"># Shift-Left: Test early (cheap to fix)</span>
+Code → <span class="keyword">TEST</span> → Code → <span class="keyword">TEST</span> → Code → <span class="keyword">TEST</span> → Deploy
+                    </div>
+                    <h3>Infrastructure as Code (IaC)</h3>
+                    <div class="code-block">
+<span class="comment"># Terraform example — Azure Resource Group</span>
+<span class="keyword">resource</span> <span class="string">"azurerm_resource_group"</span> <span class="string">"example"</span> {
+  <span class="key">name</span>     = <span class="string">"rg-devops-prod"</span>
+  <span class="key">location</span> = <span class="string">"East US"</span>
+  <span class="key">tags</span> = {
+    <span class="key">environment</span> = <span class="string">"production"</span>
+    <span class="key">managed_by</span>  = <span class="string">"terraform"</span>
+  }
+}
+                    </div>
+                    <div class="callout insight">
+                        <div class="callout-title">💡 IaC Benefits</div>
+                        <strong>Repeatability</strong> — Same infra every time<br>
+                        <strong>Version Control</strong> — Track changes in Git<br>
+                        <strong>Audit Trail</strong> — Who changed what and when<br>
+                        <strong>Self-Documentation</strong> — Infra IS the documentation
+                    </div>
+                `,
+                applications: `
+                    <h3>Real-World Applications</h3>
+                    <div class="info-box">
+                        <div class="box-title">🏢 Industry Use Cases</div>
+                        <div class="box-content">
+                            <strong>Netflix:</strong> 1000+ deployments/day using CI/CD and canary releases<br>
+                            <strong>Amazon:</strong> Deploys every 11.7 seconds on average<br>
+                            <strong>Google:</strong> Pioneered SRE (Site Reliability Engineering)<br>
+                            <strong>Spotify:</strong> "Squad" model for autonomous DevOps teams<br>
+                            <strong>Microsoft:</strong> Azure DevOps used internally for all products
+                        </div>
+                    </div>
+                    <div class="interview-box">
+                        <div class="box-title">📋 Probable Interview Questions</div>
+                        <div class="box-content">
+                            1. What is DevOps and why is it important?<br>
+                            2. Explain the difference between CI, CD (Continuous Delivery), and CD (Continuous Deployment).<br>
+                            3. What are the DORA metrics and why do they matter?<br>
+                            4. How does DevOps differ from MLOps?<br>
+                            5. What is "Shift-Left" testing?<br>
+                            6. Explain Infrastructure as Code (IaC) and its benefits.<br>
+                            7. What is the CALMS framework?<br>
+                            8. What are Blue-Green and Canary deployments?<br>
+                            9. How do you measure DevOps maturity in an organization?<br>
+                            10. What is GitOps and how does it relate to DevOps?
+                        </div>
+                    </div>
+                `
+            },
+            "azure-setup": {
+                concepts: `
+                    <h3>Azure DevOps Components</h3>
+                    <table>
+                        <tr><th>Service</th><th>Purpose</th><th>Equivalent</th></tr>
+                        <tr><td><strong>Azure Boards</strong></td><td>Work tracking, Kanban, Sprints</td><td>Jira, Trello</td></tr>
+                        <tr><td><strong>Azure Repos</strong></td><td>Git repositories</td><td>GitHub, GitLab</td></tr>
+                        <tr><td><strong>Azure Pipelines</strong></td><td>CI/CD automation</td><td>Jenkins, GitHub Actions</td></tr>
+                        <tr><td><strong>Azure Test Plans</strong></td><td>Manual & automated testing</td><td>TestRail</td></tr>
+                        <tr><td><strong>Azure Artifacts</strong></td><td>Package management (npm, Maven, NuGet)</td><td>Nexus, JFrog</td></tr>
+                    </table>
+                    <h3>Setting Up Azure DevOps</h3>
+                    <div class="info-box">
+                        <div class="box-title">🚀 Setup Flow (from PDF)</div>
+                        <div class="box-content">
+                            <strong>Step 1:</strong> Go to portal.azure.com → Search "Azure DevOps Organization"<br>
+                            <strong>Step 2:</strong> Click "Create new Organization" → Name it (e.g., "myorgforyaml")<br>
+                            <strong>Step 3:</strong> Create a Project (e.g., "Multi-Tier Application")<br>
+                            <strong>Step 4:</strong> Set visibility (Private recommended for enterprise)<br>
+                            <strong>Step 5:</strong> Azure Repos is automatically created with the project
+                        </div>
+                    </div>
+                    <h3>Azure Repos — Git Workflow</h3>
+                    <p>Azure DevOps uses Git for version control. The common branching strategies are:</p>
+                    <table>
+                        <tr><th>Strategy</th><th>Best For</th><th>Branches</th></tr>
+                        <tr><td><strong>Trunk-Based</strong></td><td>Small teams, fast releases</td><td>main + short-lived feature branches</td></tr>
+                        <tr><td><strong>GitFlow</strong></td><td>Scheduled releases</td><td>main, develop, feature/*, release/*, hotfix/*</td></tr>
+                        <tr><td><strong>GitHub Flow</strong></td><td>Continuous deployment</td><td>main + feature branches + PRs</td></tr>
+                    </table>
+                    <div class="callout insight">
+                        <div class="callout-title">💡 From the PDF</div>
+                        The project uses a "Multi-Tier Application" with all source code pushed to the "main" branch via Git CLI: <code>git init → git add . → git commit → git push</code>
+                    </div>
+                `,
+                handson: `
+                    <h3>Uploading Code to Azure Repos (from PDF)</h3>
+                    <div class="code-block">
+<span class="comment"># Step 1: Initialize local repo</span>
+<span class="keyword">git</span> init
+
+<span class="comment"># Step 2: Stage all files</span>
+<span class="keyword">git</span> add .
+
+<span class="comment"># Step 3: Check status</span>
+<span class="keyword">git</span> status
+
+<span class="comment"># Step 4: Commit</span>
+<span class="keyword">git</span> commit -m <span class="string">"Initial commit"</span>
+
+<span class="comment"># Step 5: Switch to main branch</span>
+<span class="keyword">git</span> branch -M main
+
+<span class="comment"># Step 6: Add Azure remote and push</span>
+<span class="keyword">git</span> remote add origin https://myorg@dev.azure.com/myorg/Project/_git/Project
+<span class="keyword">git</span> push -u origin --all
+                    </div>
+                    <h3>Branch Policies (Best Practice)</h3>
+                    <div class="code-block">
+<span class="comment"># Recommended branch policies for 'main':</span>
+✅ Require pull request reviews (min 1 reviewer)
+✅ Check for linked work items
+✅ Build validation (CI must pass)
+✅ Comment resolution required
+✅ Limit merge types (squash merge preferred)
+                    </div>
+                    <h3>Project Hierarchy</h3>
+                    <div class="info-box">
+                        <div class="box-title">📁 Azure DevOps Hierarchy</div>
+                        <div class="box-content">
+                            <strong>Organization</strong> (top level — company)<br>
+                            &nbsp;&nbsp;└── <strong>Project</strong> (team/product)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <strong>Repos</strong> (multiple repos per project)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <strong>Pipelines</strong> (CI/CD definitions)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <strong>Boards</strong> (work items, sprints)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <strong>Artifacts</strong> (packages)
+                        </div>
+                    </div>
+                `,
+                applications: `
+                    <h3>When to Use Azure DevOps vs GitHub</h3>
+                    <table>
+                        <tr><th>Feature</th><th>Azure DevOps</th><th>GitHub</th></tr>
+                        <tr><td>CI/CD</td><td>Azure Pipelines (YAML + Classic)</td><td>GitHub Actions</td></tr>
+                        <tr><td>Work Tracking</td><td>Azure Boards (enterprise-grade)</td><td>GitHub Issues + Projects</td></tr>
+                        <tr><td>Packages</td><td>Azure Artifacts</td><td>GitHub Packages</td></tr>
+                        <tr><td>Best For</td><td>Enterprise, Azure-heavy orgs</td><td>Open source, GitHub-ecosystem</td></tr>
+                    </table>
+                    <div class="interview-box">
+                        <div class="box-title">📋 Probable Interview Questions</div>
+                        <div class="box-content">
+                            1. What are the 5 main services in Azure DevOps?<br>
+                            2. How do you set up an Azure DevOps Organization and Project?<br>
+                            3. What are the differences between Azure Repos and GitHub?<br>
+                            4. Explain branching strategies — Trunk-Based vs GitFlow.<br>
+                            5. What are Branch Policies and why are they important?<br>
+                            6. How do you push local code to Azure Repos using Git CLI?<br>
+                            7. What is a Personal Access Token (PAT) and when is it needed?<br>
+                            8. How is Azure Boards used for Agile project management?<br>
+                            9. What is Azure Artifacts and when would you use it?<br>
+                            10. How do you manage access control in Azure DevOps?
+                        </div>
+                    </div>
+                `
+            },
+            "infrastructure": {
+                concepts: `
+                    <h3>Azure Networking for DevOps</h3>
+                    <p>Before deploying applications, you need a secure network environment. The PDF project sets up isolated networking so no outside entity can access resources directly.</p>
+                    <table>
+                        <tr><th>Component</th><th>Purpose</th><th>Azure Equivalent</th></tr>
+                        <tr><td><strong>VPC / VNet</strong></td><td>Isolated virtual network</td><td>Azure Virtual Network</td></tr>
+                        <tr><td><strong>Subnet</strong></td><td>Segment within a VNet</td><td>Subnet</td></tr>
+                        <tr><td><strong>Security Group</strong></td><td>Firewall rules for VMs</td><td>Network Security Group (NSG)</td></tr>
+                        <tr><td><strong>NAT Gateway</strong></td><td>Outbound internet for private subnets</td><td>Azure NAT Gateway</td></tr>
+                        <tr><td><strong>Load Balancer</strong></td><td>Distribute traffic across VMs</td><td>Azure Load Balancer</td></tr>
+                    </table>
+                    <h3>Virtual Machines in the Pipeline</h3>
+                    <div class="info-box">
+                        <div class="box-title">🖥️ VM Roles (from PDF)</div>
+                        <div class="box-content">
+                            <strong>Agent VM:</strong> Runs the Azure Pipelines agent. Has Maven, Java, Docker, Trivy installed.<br>
+                            <strong>SonarQube VM:</strong> Hosts Docker + SonarQube container for code quality analysis.<br>
+                            Both VMs are placed in security groups with controlled inbound rules.
+                        </div>
+                    </div>
+                    <h3>Security Group Rules (from PDF)</h3>
+                    <table>
+                        <tr><th>Port Range</th><th>Protocol</th><th>Purpose</th></tr>
+                        <tr><td>22</td><td>SSH</td><td>Remote access to VMs</td></tr>
+                        <tr><td>80 / 443</td><td>HTTP/HTTPS</td><td>Web traffic</td></tr>
+                        <tr><td>9000</td><td>TCP</td><td>SonarQube dashboard</td></tr>
+                        <tr><td>30000-32767</td><td>TCP</td><td>Kubernetes NodePort range</td></tr>
+                        <tr><td>465</td><td>SMTPS</td><td>Email notifications</td></tr>
+                    </table>
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Security Best Practice</div>
+                        Never use "0.0.0.0/0" (open to all) in production. Restrict SSH access to your IP range. Use Azure Bastion for secure VM access instead of public IPs.
+                    </div>
+                `,
+                handson: `
+                    <h3>Creating Azure VNet with CLI</h3>
+                    <div class="code-block">
+<span class="comment"># Create a resource group</span>
+<span class="keyword">az</span> group create --name rg-devops --location eastus
+
+<span class="comment"># Create a VNet with subnet</span>
+<span class="keyword">az</span> network vnet create \\
+  --resource-group rg-devops \\
+  --name vnet-devops \\
+  --address-prefix <span class="string">10.0.0.0/16</span> \\
+  --subnet-name subnet-agents \\
+  --subnet-prefix <span class="string">10.0.1.0/24</span>
+
+<span class="comment"># Create NSG with rules</span>
+<span class="keyword">az</span> network nsg create --resource-group rg-devops --name nsg-agents
+
+<span class="keyword">az</span> network nsg rule create \\
+  --resource-group rg-devops \\
+  --nsg-name nsg-agents \\
+  --name AllowSSH \\
+  --priority 100 \\
+  --destination-port-ranges 22 \\
+  --access Allow \\
+  --protocol Tcp
+                    </div>
+                    <h3>Terraform for Azure Infrastructure</h3>
+                    <div class="code-block">
+<span class="comment"># main.tf — Azure VNet + Subnet + NSG</span>
+<span class="keyword">resource</span> <span class="string">"azurerm_virtual_network"</span> <span class="string">"devops"</span> {
+  <span class="key">name</span>                = <span class="string">"vnet-devops"</span>
+  <span class="key">address_space</span>       = [<span class="string">"10.0.0.0/16"</span>]
+  <span class="key">location</span>            = azurerm_resource_group.devops.location
+  <span class="key">resource_group_name</span> = azurerm_resource_group.devops.name
+}
+
+<span class="keyword">resource</span> <span class="string">"azurerm_subnet"</span> <span class="string">"agents"</span> {
+  <span class="key">name</span>                 = <span class="string">"subnet-agents"</span>
+  <span class="key">virtual_network_name</span> = azurerm_virtual_network.devops.name
+  <span class="key">address_prefixes</span>     = [<span class="string">"10.0.1.0/24"</span>]
+}
+                    </div>
+                `,
+                applications: `
+                    <h3>Network Architecture Patterns</h3>
+                    <div class="info-box">
+                        <div class="box-title">🏗️ Hub-and-Spoke Pattern</div>
+                        <div class="box-content">
+                            <strong>Hub VNet:</strong> Shared services (firewall, DNS, bastion)<br>
+                            <strong>Spoke VNets:</strong> Application workloads (dev, staging, prod)<br>
+                            Connected via VNet Peering. This is the recommended architecture for enterprise Azure deployments.
+                        </div>
+                    </div>
+                    <div class="interview-box">
+                        <div class="box-title">📋 Probable Interview Questions</div>
+                        <div class="box-content">
+                            1. What is an Azure Virtual Network (VNet) and why is it needed?<br>
+                            2. Explain the difference between NSG and Azure Firewall.<br>
+                            3. What port ranges are needed for a Kubernetes cluster?<br>
+                            4. How do you secure SSH access to Azure VMs?<br>
+                            5. What is the Hub-and-Spoke network architecture?<br>
+                            6. How do you use Azure Bastion for secure VM access?<br>
+                            7. What is VNet Peering and when would you use it?<br>
+                            8. How do you create a VM for a self-hosted pipeline agent?<br>
+                            9. What are Managed Identities and why are they better than passwords?<br>
+                            10. How would you design a network for a multi-tier application in Azure?
+                        </div>
+                    </div>
+                `
+            },
+            "cicd-yaml": {
+                concepts: `
+                    <h3>YAML Pipeline Components</h3>
+                    <p>Azure DevOps YAML pipelines are defined in code, giving you version control, code review, and full traceability.</p>
+                    <table>
+                        <tr><th>Component</th><th>Purpose</th><th>Scope</th></tr>
+                        <tr><td><strong>Trigger</strong></td><td>What starts the pipeline</td><td>Branch, PR, Schedule, None (manual)</td></tr>
+                        <tr><td><strong>Pool</strong></td><td>Where it runs</td><td>Microsoft-hosted or Self-hosted agent</td></tr>
+                        <tr><td><strong>Variables</strong></td><td>Reusable values</td><td>Pipeline, Stage, Job level</td></tr>
+                        <tr><td><strong>Stages</strong></td><td>Logical groups</td><td>Build, Test, Deploy</td></tr>
+                        <tr><td><strong>Jobs</strong></td><td>Units of work within a stage</td><td>Run on an agent</td></tr>
+                        <tr><td><strong>Steps</strong></td><td>Individual tasks</td><td>Script, Task, Checkout</td></tr>
+                    </table>
+                    <h3>Pipeline Hierarchy</h3>
+                    <div class="info-box">
+                        <div class="box-title">📐 Structure</div>
+                        <div class="box-content">
+                            <strong>Pipeline</strong><br>
+                            &nbsp;&nbsp;├── trigger<br>
+                            &nbsp;&nbsp;├── variables<br>
+                            &nbsp;&nbsp;└── <strong>stages[]</strong><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <strong>jobs[]</strong><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── pool<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <strong>steps[]</strong><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── script<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── task<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── checkout
+                        </div>
+                    </div>
+                    <h3>Trigger Types</h3>
+                    <table>
+                        <tr><th>Type</th><th>When It Fires</th><th>YAML</th></tr>
+                        <tr><td>CI Trigger</td><td>Push to branch</td><td><code>trigger: [main]</code></td></tr>
+                        <tr><td>PR Trigger</td><td>Pull request created</td><td><code>pr: [main]</code></td></tr>
+                        <tr><td>Scheduled</td><td>Cron schedule</td><td><code>schedules: [{cron: ...}]</code></td></tr>
+                        <tr><td>Manual</td><td>User clicks Run</td><td><code>trigger: none</code></td></tr>
+                    </table>
+                `,
+                handson: `
+                    <h3>Complete Multi-Stage YAML Pipeline (from PDF)</h3>
+                    <div class="code-block">
+<span class="comment"># azure-pipelines.yml — Full CI/CD Pipeline</span>
+<span class="key">trigger</span>:
+  - main    <span class="comment"># Auto-trigger on push to main</span>
+
+<span class="key">stages</span>:
+  - <span class="key">stage</span>: Compile
+    <span class="key">displayName</span>: <span class="string">"Compile Stage"</span>
+    <span class="key">jobs</span>:
+      - <span class="key">job</span>: compile
+        <span class="key">pool</span>:
+          <span class="key">name</span>: <span class="string">"myagentpool"</span>  <span class="comment"># Self-hosted agent</span>
+        <span class="key">steps</span>:
+          - <span class="key">task</span>: Maven@4
+            <span class="key">inputs</span>:
+              <span class="key">mavenPomFile</span>: <span class="string">"pom.xml"</span>
+              <span class="key">goals</span>: <span class="string">"compile"</span>
+
+  - <span class="key">stage</span>: Test
+    <span class="key">displayName</span>: <span class="string">"Test Stage"</span>
+    <span class="key">dependsOn</span>: Compile
+    <span class="key">jobs</span>:
+      - <span class="key">job</span>: test
+        <span class="key">steps</span>:
+          - <span class="key">task</span>: Maven@4
+            <span class="key">inputs</span>:
+              <span class="key">goals</span>: <span class="string">"test"</span>
+
+  - <span class="key">stage</span>: SecurityScan
+    <span class="key">displayName</span>: <span class="string">"Trivy File System Scan"</span>
+    <span class="key">dependsOn</span>: Test
+    <span class="key">jobs</span>:
+      - <span class="key">job</span>: trivy_scan
+        <span class="key">steps</span>:
+          - <span class="key">script</span>: |
+              trivy fs --format table -o report.html .
+            <span class="key">displayName</span>: <span class="string">"Run Trivy FS Scan"</span>
+
+  - <span class="key">stage</span>: CodeQuality
+    <span class="key">displayName</span>: <span class="string">"SonarQube Analysis"</span>
+    <span class="key">dependsOn</span>: SecurityScan
+
+  - <span class="key">stage</span>: BuildImage
+    <span class="key">displayName</span>: <span class="string">"Docker Build & Push"</span>
+    <span class="key">dependsOn</span>: CodeQuality
+
+  - <span class="key">stage</span>: Deploy
+    <span class="key">displayName</span>: <span class="string">"Deploy to AKS"</span>
+    <span class="key">dependsOn</span>: BuildImage
+                    </div>
+                    <h3>Variables & Templates</h3>
+                    <div class="code-block">
+<span class="comment"># Using variables for reusability</span>
+<span class="key">variables</span>:
+  <span class="key">dockerRegistry</span>: <span class="string">"myacr.azurecr.io"</span>
+  <span class="key">imageName</span>: <span class="string">"myapp"</span>
+  <span class="key">imageTag</span>: <span class="string">"$(Build.BuildId)"</span>
+  <span class="key">k8sNamespace</span>: <span class="string">"default"</span>
+
+<span class="comment"># Use in steps:</span>
+<span class="key">steps</span>:
+  - <span class="key">script</span>: |
+      docker build -t $(dockerRegistry)/$(imageName):$(imageTag) .
+      docker push $(dockerRegistry)/$(imageName):$(imageTag)
+                    </div>
+                `,
+                applications: `
+                    <h3>Pipeline Architecture Patterns</h3>
+                    <div class="pipeline-flow">
+                        <div class="pipeline-stage" style="background: rgba(0,120,212,0.2); color: #0078D4;">Compile</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(0,183,195,0.2); color: #00b7c3;">Test</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(231,76,60,0.2); color: #e74c3c;">Trivy Scan</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(163,113,247,0.2); color: #a371f7;">SonarQube</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(36,150,237,0.2); color: #2496ED;">Docker Build</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(255,107,53,0.2); color: #ff6b35;">Image Scan</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(0,255,136,0.2); color: #00ff88;">Push ACR</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(46,204,113,0.2); color: #2ecc71;">Deploy AKS</div>
+                    </div>
+                    <div class="interview-box">
+                        <div class="box-title">📋 Probable Interview Questions</div>
+                        <div class="box-content">
+                            1. What are the main components of a YAML pipeline in Azure DevOps?<br>
+                            2. Explain the difference between Stages, Jobs, and Steps.<br>
+                            3. What are the different types of pipeline triggers?<br>
+                            4. How do you use variables and variable groups in Azure Pipelines?<br>
+                            5. What is the difference between Microsoft-hosted and self-hosted agents?<br>
+                            6. How do you create a multi-stage pipeline with dependencies?<br>
+                            7. What are pipeline templates and why are they useful?<br>
+                            8. How do you implement approval gates between stages?<br>
+                            9. YAML vs Classic editor — when to use which?<br>
+                            10. How do you pass variables between stages in a YAML pipeline?
+                        </div>
+                    </div>
+                `
+            },
+            "build-test": {
+                concepts: `
+                    <h3>Build Stage — Maven Compile</h3>
+                    <p>The first stage in the CI pipeline compiles the source code to check for syntax errors and generate bytecode.</p>
+                    <div class="info-box">
+                        <div class="box-title">🔨 Maven Build Lifecycle</div>
+                        <div class="box-content">
+                            <strong>validate</strong> → Check project is correct<br>
+                            <strong>compile</strong> → Compile source code<br>
+                            <strong>test</strong> → Run unit tests<br>
+                            <strong>package</strong> → Create JAR/WAR file<br>
+                            <strong>verify</strong> → Run integration tests<br>
+                            <strong>install</strong> → Install to local repo<br>
+                            <strong>deploy</strong> → Push to remote repo
+                        </div>
+                    </div>
+                    <h3>Code Quality — SonarQube</h3>
+                    <p>SonarQube performs static code analysis to detect bugs, vulnerabilities, and code smells.</p>
+                    <table>
+                        <tr><th>Metric</th><th>What It Measures</th><th>Quality Gate</th></tr>
+                        <tr><td>Bugs</td><td>Code errors that will cause failures</td><td>0 new bugs</td></tr>
+                        <tr><td>Vulnerabilities</td><td>Security weaknesses</td><td>0 new vulnerabilities</td></tr>
+                        <tr><td>Code Smells</td><td>Maintainability issues</td><td>A rating</td></tr>
+                        <tr><td>Coverage</td><td>% of code tested</td><td>≥ 80%</td></tr>
+                        <tr><td>Duplications</td><td>Copy-pasted code</td><td>< 3%</td></tr>
+                    </table>
+                    <h3>Security Scanning — Trivy</h3>
+                    <p>Trivy scans your file system and Docker images for known vulnerabilities (CVEs).</p>
+                    <table>
+                        <tr><th>Scan Type</th><th>What It Scans</th><th>Command</th></tr>
+                        <tr><td>File System</td><td>Dependencies, configs</td><td><code>trivy fs .</code></td></tr>
+                        <tr><td>Image</td><td>Docker image layers</td><td><code>trivy image myimage:latest</code></td></tr>
+                        <tr><td>Config</td><td>Terraform, K8s manifests</td><td><code>trivy config .</code></td></tr>
+                    </table>
+                    <div class="callout insight">
+                        <div class="callout-title">💡 From the PDF</div>
+                        The pipeline runs TWO Trivy scans: first on the file system (before Docker build), then on the built Docker image (before push to ACR). This catches vulnerabilities at both layers.
+                    </div>
+                `,
+                handson: `
+                    <h3>SonarQube Setup (from PDF)</h3>
+                    <div class="code-block">
+<span class="comment"># Install Docker on SonarQube VM</span>
+<span class="keyword">sudo</span> apt-get update
+<span class="keyword">sudo</span> apt-get install docker.io -y
+<span class="keyword">sudo</span> usermod -aG docker ubuntu
+
+<span class="comment"># Run SonarQube container</span>
+<span class="keyword">docker</span> run -d --name sonarqube \\
+  -p 9000:9000 \\
+  sonarqube:lts-community
+
+<span class="comment"># Access at http://&lt;VM-IP&gt;:9000</span>
+<span class="comment"># Default login: admin / admin</span>
+                    </div>
+                    <h3>SonarQube Pipeline Stage</h3>
+                    <div class="code-block">
+<span class="comment"># SonarQube Analysis Stage</span>
+- <span class="key">stage</span>: SonarQube
+  <span class="key">displayName</span>: <span class="string">"SonarQube Analysis"</span>
+  <span class="key">jobs</span>:
+    - <span class="key">job</span>: sonarqube
+      <span class="key">steps</span>:
+        - <span class="key">task</span>: SonarQubePrepare@6
+          <span class="key">inputs</span>:
+            <span class="key">SonarQube</span>: <span class="string">"sonar-conn"</span>
+            <span class="key">scannerMode</span>: <span class="string">"Other"</span>
+        - <span class="key">task</span>: Maven@4
+          <span class="key">inputs</span>:
+            <span class="key">goals</span>: <span class="string">"verify"</span>
+            <span class="key">sonarQubeRunAnalysis</span>: true
+        - <span class="key">task</span>: SonarQubePublish@6
+          <span class="key">inputs</span>:
+            <span class="key">pollingTimeoutSec</span>: <span class="string">"300"</span>
+                    </div>
+                    <h3>Trivy Scan Stage</h3>
+                    <div class="code-block">
+<span class="comment"># Trivy File System Scan</span>
+- <span class="key">stage</span>: trivy_fs_scan
+  <span class="key">jobs</span>:
+    - <span class="key">job</span>: trivy_scan
+      <span class="key">steps</span>:
+        - <span class="key">script</span>: |
+            trivy fs --format table -o fs-report.html .
+          <span class="key">displayName</span>: <span class="string">"Trivy File System Scan"</span>
+
+<span class="comment"># Trivy Image Scan (after Docker build)</span>
+- <span class="key">stage</span>: trivy_image_scan
+  <span class="key">jobs</span>:
+    - <span class="key">job</span>: trivy_image
+      <span class="key">steps</span>:
+        - <span class="key">script</span>: |
+            trivy image myacr.azurecr.io/dev:latest
+          <span class="key">displayName</span>: <span class="string">"Trivy Image Scan"</span>
+                    </div>
+                `,
+                applications: `
+                    <h3>Quality Gate Strategy</h3>
+                    <div class="info-box">
+                        <div class="box-title">🛡️ Defense in Depth</div>
+                        <div class="box-content">
+                            <strong>Layer 1:</strong> Linting & Static Analysis (SonarQube) → Catch code smells<br>
+                            <strong>Layer 2:</strong> Unit Tests (Maven test) → Catch logic errors<br>
+                            <strong>Layer 3:</strong> File System Security Scan (Trivy fs) → Catch dependency CVEs<br>
+                            <strong>Layer 4:</strong> Image Security Scan (Trivy image) → Catch container CVEs<br>
+                            <strong>Layer 5:</strong> Integration Tests → Catch system-level issues
+                        </div>
+                    </div>
+                    <div class="interview-box">
+                        <div class="box-title">📋 Probable Interview Questions</div>
+                        <div class="box-content">
+                            1. What is the Maven build lifecycle?<br>
+                            2. What is SonarQube and what metrics does it measure?<br>
+                            3. Explain Quality Gates in SonarQube.<br>
+                            4. What is Trivy and how does it differ from OWASP Dependency-Check?<br>
+                            5. Why run both file system and image scans?<br>
+                            6. How do you set up SonarQube as a service connection in Azure DevOps?<br>
+                            7. What is a "code smell" vs a "bug" vs a "vulnerability"?<br>
+                            8. How do you publish test results in Azure Pipelines?<br>
+                            9. What are Azure Pipeline Artifacts and how are they used?<br>
+                            10. How would you fail a pipeline if code coverage drops below 80%?
+                        </div>
+                    </div>
+                `
+            },
+
+            "docker": {
+                concepts: `
+                    <h3>What is Docker?</h3>
+                    <p>Docker is a platform for building, shipping, and running applications in <strong>containers</strong> — lightweight, portable, and self-sufficient units that package code with all its dependencies.</p>
+                    <table>
+                        <tr><th>Concept</th><th>Description</th></tr>
+                        <tr><td><strong>Image</strong></td><td>Read-only template with instructions for creating a container</td></tr>
+                        <tr><td><strong>Container</strong></td><td>Running instance of an image</td></tr>
+                        <tr><td><strong>Dockerfile</strong></td><td>Text file with instructions to build an image</td></tr>
+                        <tr><td><strong>Registry</strong></td><td>Repository for Docker images (Docker Hub, ACR)</td></tr>
+                        <tr><td><strong>Volume</strong></td><td>Persistent storage for containers</td></tr>
+                        <tr><td><strong>Network</strong></td><td>Communication between containers</td></tr>
+                    </table>
+                    <h3>Docker vs Virtual Machines</h3>
+                    <table>
+                        <tr><th>Feature</th><th>Docker Container</th><th>Virtual Machine</th></tr>
+                        <tr><td>Boot Time</td><td>Seconds</td><td>Minutes</td></tr>
+                        <tr><td>Size</td><td>MBs</td><td>GBs</td></tr>
+                        <tr><td>Isolation</td><td>Process-level</td><td>Full OS-level</td></tr>
+                        <tr><td>Performance</td><td>Near-native</td><td>Hypervisor overhead</td></tr>
+                        <tr><td>OS</td><td>Shares host kernel</td><td>Own kernel</td></tr>
+                    </table>
+                    <h3>Azure Container Registry (ACR)</h3>
+                    <div class="info-box">
+                        <div class="box-title">📦 ACR (from PDF)</div>
+                        <div class="box-content">
+                            ACR is a managed Docker registry in Azure. The PDF project creates an ACR to store Docker images built during the CI/CD pipeline.<br><br>
+                            <strong>Key Features:</strong> Geo-replication, image scanning, webhook triggers, integrated with AKS
+                        </div>
+                    </div>
+                `,
+                handson: `
+                    <h3>Dockerfile Best Practices</h3>
+                    <div class="code-block">
+<span class="comment"># Multi-stage build for a Java application</span>
+<span class="keyword">FROM</span> maven:3.9-eclipse-temurin-17 <span class="keyword">AS</span> build
+<span class="key">WORKDIR</span> /app
+<span class="key">COPY</span> pom.xml .
+<span class="keyword">RUN</span> mvn dependency:go-offline
+<span class="key">COPY</span> src/ ./src/
+<span class="keyword">RUN</span> mvn package -DskipTests
+
+<span class="keyword">FROM</span> eclipse-temurin:17-jre-alpine
+<span class="key">WORKDIR</span> /app
+<span class="key">COPY</span> --from=build /app/target/*.jar app.jar
+<span class="key">EXPOSE</span> 8080
+<span class="key">ENTRYPOINT</span> [<span class="string">"java"</span>, <span class="string">"-jar"</span>, <span class="string">"app.jar"</span>]
+                    </div>
+                    <h3>Docker Pipeline Stage (from PDF)</h3>
+                    <div class="code-block">
+<span class="comment"># Build, Scan, and Push Docker Image</span>
+- <span class="key">stage</span>: DockerBuild
+  <span class="key">displayName</span>: <span class="string">"Build Docker Image"</span>
+  <span class="key">jobs</span>:
+    - <span class="key">job</span>: docker_build
+      <span class="key">steps</span>:
+        - <span class="key">task</span>: Docker@2
+          <span class="key">inputs</span>:
+            <span class="key">containerRegistry</span>: <span class="string">"acr-service-conn"</span>
+            <span class="key">repository</span>: <span class="string">"dev"</span>
+            <span class="key">command</span>: <span class="string">"build"</span>
+            <span class="key">tags</span>: <span class="string">"latest"</span>
+
+- <span class="key">stage</span>: DockerPush
+  <span class="key">displayName</span>: <span class="string">"Push to ACR"</span>
+  <span class="key">jobs</span>:
+    - <span class="key">job</span>: docker_push
+      <span class="key">steps</span>:
+        - <span class="key">task</span>: Docker@2
+          <span class="key">inputs</span>:
+            <span class="key">containerRegistry</span>: <span class="string">"acr-service-conn"</span>
+            <span class="key">repository</span>: <span class="string">"dev"</span>
+            <span class="key">command</span>: <span class="string">"push"</span>
+            <span class="key">tags</span>: <span class="string">"latest"</span>
+                    </div>
+                    <h3>Essential Docker Commands</h3>
+                    <div class="code-block">
+<span class="comment"># Build an image</span>
+<span class="keyword">docker</span> build -t myapp:v1 .
+
+<span class="comment"># Run a container</span>
+<span class="keyword">docker</span> run -d -p 8080:8080 --name myapp myapp:v1
+
+<span class="comment"># List running containers</span>
+<span class="keyword">docker</span> ps
+
+<span class="comment"># View logs</span>
+<span class="keyword">docker</span> logs myapp
+
+<span class="comment"># Push to ACR</span>
+<span class="keyword">az</span> acr login --name myacr
+<span class="keyword">docker</span> tag myapp:v1 myacr.azurecr.io/myapp:v1
+<span class="keyword">docker</span> push myacr.azurecr.io/myapp:v1
+                    </div>
+                `,
+                applications: `
+                    <h3>Container Best Practices</h3>
+                    <div class="info-box">
+                        <div class="box-title">✅ Production Checklist</div>
+                        <div class="box-content">
+                            <strong>Security:</strong> Don't run as root, use minimal base images (Alpine)<br>
+                            <strong>Size:</strong> Use multi-stage builds, minimize layers<br>
+                            <strong>Scanning:</strong> Scan images with Trivy before pushing<br>
+                            <strong>Tagging:</strong> Never use :latest in production, use semantic versioning<br>
+                            <strong>Health Checks:</strong> Add HEALTHCHECK in Dockerfile
+                        </div>
+                    </div>
+                    <div class="interview-box">
+                        <div class="box-title">📋 Probable Interview Questions</div>
+                        <div class="box-content">
+                            1. What is the difference between a Docker image and a container?<br>
+                            2. Explain multi-stage builds and their benefits.<br>
+                            3. How does Docker differ from a virtual machine?<br>
+                            4. What is Azure Container Registry and how do you push images to it?<br>
+                            5. How do you scan Docker images for vulnerabilities?<br>
+                            6. What is a Dockerfile and what are best practices for writing one?<br>
+                            7. Explain Docker networking modes (bridge, host, none).<br>
+                            8. What are Docker volumes and when do you use them?<br>
+                            9. How do you optimize Docker image size?<br>
+                            10. What is Docker Compose and when would you use it over Kubernetes?
+                        </div>
+                    </div>
+                `
+            },
+            "kubernetes": {
+                concepts: `
+                    <h3>What is Kubernetes?</h3>
+                    <p>Kubernetes (K8s) is an open-source container orchestration platform that automates deployment, scaling, and management of containerized applications.</p>
+                    <table>
+                        <tr><th>Component</th><th>Purpose</th></tr>
+                        <tr><td><strong>Pod</strong></td><td>Smallest deployable unit — one or more containers</td></tr>
+                        <tr><td><strong>Deployment</strong></td><td>Manages Pod replicas and rolling updates</td></tr>
+                        <tr><td><strong>Service</strong></td><td>Stable networking endpoint for Pods</td></tr>
+                        <tr><td><strong>Namespace</strong></td><td>Virtual cluster for isolation</td></tr>
+                        <tr><td><strong>ConfigMap</strong></td><td>External configuration data</td></tr>
+                        <tr><td><strong>Secret</strong></td><td>Sensitive data (passwords, tokens)</td></tr>
+                        <tr><td><strong>Ingress</strong></td><td>HTTP routing and load balancing</td></tr>
+                    </table>
+                    <h3>Azure Kubernetes Service (AKS)</h3>
+                    <div class="info-box">
+                        <div class="box-title">☸️ AKS (from PDF)</div>
+                        <div class="box-content">
+                            AKS is a managed Kubernetes service in Azure. The PDF project deploys the application to AKS after building and pushing the Docker image to ACR.<br><br>
+                            <strong>Benefits:</strong> Managed control plane, auto-scaling, Azure AD integration, monitoring with Azure Monitor
+                        </div>
+                    </div>
+                    <h3>Kubernetes Architecture</h3>
+                    <div class="info-box">
+                        <div class="box-title">🏗️ Control Plane vs Worker Nodes</div>
+                        <div class="box-content">
+                            <strong>Control Plane (Master):</strong><br>
+                            &nbsp;&nbsp;• API Server — Entry point for all commands<br>
+                            &nbsp;&nbsp;• etcd — Key-value store for cluster state<br>
+                            &nbsp;&nbsp;• Scheduler — Assigns Pods to nodes<br>
+                            &nbsp;&nbsp;• Controller Manager — Maintains desired state<br><br>
+                            <strong>Worker Nodes:</strong><br>
+                            &nbsp;&nbsp;• kubelet — Manages Pods on the node<br>
+                            &nbsp;&nbsp;• kube-proxy — Networking rules<br>
+                            &nbsp;&nbsp;• Container Runtime — Docker/containerd
+                        </div>
+                    </div>
+                `,
+                handson: `
+                    <h3>Kubernetes Manifest (from PDF)</h3>
+                    <div class="code-block">
+<span class="comment"># ds.yml — Deployment + Service</span>
+<span class="key">apiVersion</span>: apps/v1
+<span class="key">kind</span>: Deployment
+<span class="key">metadata</span>:
+  <span class="key">name</span>: bankapp
+<span class="key">spec</span>:
+  <span class="key">replicas</span>: 2
+  <span class="key">selector</span>:
+    <span class="key">matchLabels</span>:
+      <span class="key">app</span>: bankapp
+  <span class="key">template</span>:
+    <span class="key">metadata</span>:
+      <span class="key">labels</span>:
+        <span class="key">app</span>: bankapp
+    <span class="key">spec</span>:
+      <span class="key">containers</span>:
+        - <span class="key">name</span>: bankapp
+          <span class="key">image</span>: <span class="string">sosocicdacr77.azurecr.io/dev:latest</span>
+          <span class="key">ports</span>:
+            - <span class="key">containerPort</span>: 8080
+---
+<span class="key">apiVersion</span>: v1
+<span class="key">kind</span>: Service
+<span class="key">metadata</span>:
+  <span class="key">name</span>: bankapp-service
+<span class="key">spec</span>:
+  <span class="key">type</span>: LoadBalancer
+  <span class="key">selector</span>:
+    <span class="key">app</span>: bankapp
+  <span class="key">ports</span>:
+    - <span class="key">port</span>: 80
+      <span class="key">targetPort</span>: 8080
+                    </div>
+                    <h3>AKS Deploy Pipeline Stage (from PDF)</h3>
+                    <div class="code-block">
+<span class="comment"># Deploy to AKS Stage</span>
+- <span class="key">stage</span>: deploy_to_aks
+  <span class="key">displayName</span>: <span class="string">"Deploy to AKS"</span>
+  <span class="key">jobs</span>:
+    - <span class="key">job</span>: deploy_to_aks
+      <span class="key">steps</span>:
+        - <span class="key">task</span>: KubernetesManifest@1
+          <span class="key">inputs</span>:
+            <span class="key">action</span>: <span class="string">"deploy"</span>
+            <span class="key">kubernetesServiceConnection</span>: <span class="string">"k8s-conn"</span>
+            <span class="key">namespace</span>: <span class="string">"default"</span>
+            <span class="key">manifests</span>: <span class="string">"ds.yml"</span>
+                    </div>
+                    <h3>Essential kubectl Commands</h3>
+                    <div class="code-block">
+<span class="comment"># Get cluster info</span>
+<span class="keyword">kubectl</span> cluster-info
+<span class="keyword">kubectl</span> get nodes
+
+<span class="comment"># Deploy and manage</span>
+<span class="keyword">kubectl</span> apply -f ds.yml
+<span class="keyword">kubectl</span> get pods
+<span class="keyword">kubectl</span> get services
+<span class="keyword">kubectl</span> describe pod bankapp-xyz
+
+<span class="comment"># Scale</span>
+<span class="keyword">kubectl</span> scale deployment bankapp --replicas=3
+
+<span class="comment"># Logs and debugging</span>
+<span class="keyword">kubectl</span> logs bankapp-xyz
+<span class="keyword">kubectl</span> exec -it bankapp-xyz -- /bin/sh
+                    </div>
+                `,
+                applications: `
+                    <h3>Deployment Strategies</h3>
+                    <table>
+                        <tr><th>Strategy</th><th>Description</th><th>Risk</th></tr>
+                        <tr><td><strong>Rolling Update</strong></td><td>Gradually replace old pods with new</td><td>Low</td></tr>
+                        <tr><td><strong>Blue-Green</strong></td><td>Two identical environments, switch traffic</td><td>Very Low</td></tr>
+                        <tr><td><strong>Canary</strong></td><td>Route small % of traffic to new version</td><td>Low</td></tr>
+                        <tr><td><strong>Recreate</strong></td><td>Kill all old pods, create new ones</td><td>High (downtime)</td></tr>
+                    </table>
+                    <div class="interview-box">
+                        <div class="box-title">📋 Probable Interview Questions</div>
+                        <div class="box-content">
+                            1. What is Kubernetes and why is it needed?<br>
+                            2. Explain the difference between a Pod, Deployment, and Service.<br>
+                            3. What is AKS and how does it differ from self-managed Kubernetes?<br>
+                            4. How does a Kubernetes Service expose Pods to the internet?<br>
+                            5. What are the different Kubernetes service types (ClusterIP, NodePort, LoadBalancer)?<br>
+                            6. Explain Rolling Update vs Blue-Green vs Canary deployments.<br>
+                            7. What is a Kubernetes Namespace and when would you use it?<br>
+                            8. How do you troubleshoot a CrashLoopBackOff pod?<br>
+                            9. What is Helm and how does it help with Kubernetes?<br>
+                            10. How do you integrate AKS with Azure DevOps Pipelines?
+                        </div>
+                    </div>
+                `
+            },
+            "security": {
+                concepts: `
+                    <h3>Azure Security Model</h3>
+                    <p>Security in Azure DevOps involves identity management, access control, secrets management, and service-to-service authentication.</p>
+                    <h3>Service Principals</h3>
+                    <div class="info-box">
+                        <div class="box-title">🔑 Service Principal (from PDF)</div>
+                        <div class="box-content">
+                            A Service Principal is an identity for an application/service to access Azure resources. The PDF walks through:<br><br>
+                            <strong>1.</strong> Register a new application in Azure AD<br>
+                            <strong>2.</strong> Generate a Client Secret (password for the app)<br>
+                            <strong>3.</strong> Assign a Role (e.g., Contributor) to the Service Principal
+                        </div>
+                    </div>
+                    <h3>Service Connections (from PDF)</h3>
+                    <table>
+                        <tr><th>Connection Type</th><th>Connects To</th><th>Used For</th></tr>
+                        <tr><td><strong>Azure Resource Manager</strong></td><td>Azure subscription</td><td>Deploy to Azure services</td></tr>
+                        <tr><td><strong>SonarQube</strong></td><td>SonarQube server</td><td>Code quality analysis</td></tr>
+                        <tr><td><strong>Kubernetes</strong></td><td>AKS cluster</td><td>Deploy manifests</td></tr>
+                        <tr><td><strong>Docker Registry</strong></td><td>ACR</td><td>Push/pull images</td></tr>
+                    </table>
+                    <h3>Personal Access Tokens (PAT)</h3>
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ PAT Best Practices</div>
+                        • Set minimum required scopes<br>
+                        • Set short expiration dates<br>
+                        • Never commit PATs to source control<br>
+                        • Use Managed Identities when possible instead
+                    </div>
+                    <h3>Azure Key Vault</h3>
+                    <p>Azure Key Vault securely stores secrets, keys, and certificates. Integrate it with Azure Pipelines using variable groups linked to Key Vault.</p>
+                `,
+                handson: `
+                    <h3>Creating a Service Principal (from PDF)</h3>
+                    <div class="code-block">
+<span class="comment"># Step 1: Register app in Azure AD</span>
+<span class="keyword">az</span> ad app create --display-name <span class="string">"devops-pipeline-sp"</span>
+
+<span class="comment"># Step 2: Create service principal</span>
+<span class="keyword">az</span> ad sp create --id &lt;APP_ID&gt;
+
+<span class="comment"># Step 3: Create client secret</span>
+<span class="keyword">az</span> ad app credential reset \\
+  --id &lt;APP_ID&gt; \\
+  --append
+
+<span class="comment"># Step 4: Assign Contributor role</span>
+<span class="keyword">az</span> role assignment create \\
+  --assignee &lt;SP_OBJECT_ID&gt; \\
+  --role Contributor \\
+  --scope /subscriptions/&lt;SUB_ID&gt;
+                    </div>
+                    <h3>Key Vault Integration with Pipelines</h3>
+                    <div class="code-block">
+<span class="comment"># Link Variable Group to Key Vault</span>
+<span class="key">variables</span>:
+  - <span class="key">group</span>: <span class="string">"kv-secrets"</span>  <span class="comment"># Linked to Azure Key Vault</span>
+
+<span class="key">steps</span>:
+  - <span class="key">task</span>: AzureKeyVault@2
+    <span class="key">inputs</span>:
+      <span class="key">azureSubscription</span>: <span class="string">"azure-conn"</span>
+      <span class="key">keyVaultName</span>: <span class="string">"my-keyvault"</span>
+      <span class="key">secretsFilter</span>: <span class="string">"db-password,api-key"</span>
+  - <span class="key">script</span>: |
+      echo "Using secret: $(db-password)"
+                    </div>
+                    <h3>RBAC in Azure DevOps</h3>
+                    <table>
+                        <tr><th>Role</th><th>Scope</th><th>Permissions</th></tr>
+                        <tr><td>Project Admin</td><td>Project</td><td>Full control</td></tr>
+                        <tr><td>Build Admin</td><td>Pipelines</td><td>Manage build definitions</td></tr>
+                        <tr><td>Contributors</td><td>Project</td><td>Edit code, run pipelines</td></tr>
+                        <tr><td>Readers</td><td>Project</td><td>View only</td></tr>
+                    </table>
+                `,
+                applications: `
+                    <h3>Security Checklist for CI/CD</h3>
+                    <div class="info-box">
+                        <div class="box-title">🛡️ Production Security Checklist</div>
+                        <div class="box-content">
+                            ✅ Use Service Principals (not personal accounts) for pipelines<br>
+                            ✅ Store secrets in Azure Key Vault, never in code<br>
+                            ✅ Enable branch policies and required reviewers<br>
+                            ✅ Scan code with SonarQube and dependencies with Trivy<br>
+                            ✅ Use Managed Identities for Azure-to-Azure auth<br>
+                            ✅ Implement least-privilege RBAC<br>
+                            ✅ Rotate secrets regularly<br>
+                            ✅ Enable audit logging
+                        </div>
+                    </div>
+                    <div class="interview-box">
+                        <div class="box-title">📋 Probable Interview Questions</div>
+                        <div class="box-content">
+                            1. What is a Service Principal and how does it differ from a Managed Identity?<br>
+                            2. How do you create and manage Service Connections in Azure DevOps?<br>
+                            3. What is Azure Key Vault and how do you integrate it with pipelines?<br>
+                            4. What are PATs and what are the security risks?<br>
+                            5. Explain RBAC in Azure DevOps.<br>
+                            6. How do you implement least-privilege access in CI/CD?<br>
+                            7. What is Workload Identity Federation?<br>
+                            8. How do you prevent secrets from leaking in pipeline logs?<br>
+                            9. What security scanning tools should be in a CI/CD pipeline?<br>
+                            10. How do you audit who ran a pipeline and what changes were deployed?
+                        </div>
+                    </div>
+                `
+            },
+            "mlops": {
+                concepts: `
+                    <h3>What is MLOps?</h3>
+                    <p>MLOps (Machine Learning Operations) applies DevOps principles to the ML lifecycle: data preparation, model training, evaluation, deployment, and monitoring.</p>
+                    <div class="pipeline-flow">
+                        <div class="pipeline-stage" style="background: rgba(0,120,212,0.2); color: #0078D4;">Data</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(0,183,195,0.2); color: #00b7c3;">Feature Eng</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(163,113,247,0.2); color: #a371f7;">Train</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(255,107,53,0.2); color: #ff6b35;">Evaluate</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(0,255,136,0.2); color: #00ff88;">Register</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(46,204,113,0.2); color: #2ecc71;">Deploy</div>
+                        <span class="pipeline-arrow">→</span>
+                        <div class="pipeline-stage" style="background: rgba(231,76,60,0.2); color: #e74c3c;">Monitor</div>
+                    </div>
+                    <h3>MLOps Maturity Levels</h3>
+                    <table>
+                        <tr><th>Level</th><th>Name</th><th>Description</th></tr>
+                        <tr><td>0</td><td>No MLOps</td><td>Manual notebooks, no versioning</td></tr>
+                        <tr><td>1</td><td>DevOps but no MLOps</td><td>CI/CD for code but not for models</td></tr>
+                        <tr><td>2</td><td>Automated Training</td><td>Automated training pipeline, model registry</td></tr>
+                        <tr><td>3</td><td>Automated Deployment</td><td>CI/CD for models, A/B testing</td></tr>
+                        <tr><td>4</td><td>Full MLOps</td><td>Auto-retraining on drift, canary rollouts, full observability</td></tr>
+                    </table>
+                    <h3>Key MLOps Concepts</h3>
+                    <div class="info-box">
+                        <div class="box-title">🧠 The Three Pillars of MLOps</div>
+                        <div class="box-content">
+                            <strong>1. Data Management:</strong> Data versioning (DVC), data validation, feature stores<br>
+                            <strong>2. Model Management:</strong> Model registry, experiment tracking (MLflow), reproducibility<br>
+                            <strong>3. Deployment & Monitoring:</strong> Model serving, A/B testing, drift detection, retraining triggers
+                        </div>
+                    </div>
+                    <h3>Data Drift vs Model Drift</h3>
+                    <table>
+                        <tr><th>Type</th><th>What Changes</th><th>Detection</th></tr>
+                        <tr><td><strong>Data Drift</strong></td><td>Input data distribution shifts</td><td>Statistical tests (KS, PSI)</td></tr>
+                        <tr><td><strong>Concept Drift</strong></td><td>Relationship between inputs and outputs changes</td><td>Performance monitoring</td></tr>
+                        <tr><td><strong>Model Decay</strong></td><td>Model accuracy degrades over time</td><td>Accuracy/F1 dashboards</td></tr>
+                    </table>
+                `,
+                handson: `
+                    <h3>Azure ML + Azure DevOps Integration</h3>
+                    <div class="code-block">
+<span class="comment"># azure-pipelines.yml — MLOps Pipeline</span>
+<span class="key">trigger</span>:
+  - main
+
+<span class="key">stages</span>:
+  - <span class="key">stage</span>: DataValidation
+    <span class="key">jobs</span>:
+      - <span class="key">job</span>: validate_data
+        <span class="key">steps</span>:
+          - <span class="key">script</span>: |
+              python validate_data.py \\
+                --input data/train.csv \\
+                --schema schema.json
+
+  - <span class="key">stage</span>: TrainModel
+    <span class="key">dependsOn</span>: DataValidation
+    <span class="key">jobs</span>:
+      - <span class="key">job</span>: train
+        <span class="key">steps</span>:
+          - <span class="key">task</span>: AzureCLI@2
+            <span class="key">inputs</span>:
+              <span class="key">azureSubscription</span>: <span class="string">"azure-ml-conn"</span>
+              <span class="key">scriptType</span>: <span class="string">"bash"</span>
+              <span class="key">scriptLocation</span>: <span class="string">"inlineScript"</span>
+              <span class="key">inlineScript</span>: |
+                az ml job create -f train_job.yml
+
+  - <span class="key">stage</span>: RegisterModel
+    <span class="key">dependsOn</span>: TrainModel
+    <span class="key">jobs</span>:
+      - <span class="key">job</span>: register
+        <span class="key">steps</span>:
+          - <span class="key">script</span>: |
+              az ml model create \\
+                --name my-model \\
+                --version $(Build.BuildId) \\
+                --path outputs/model.pkl
+
+  - <span class="key">stage</span>: DeployModel
+    <span class="key">dependsOn</span>: RegisterModel
+    <span class="key">jobs</span>:
+      - <span class="key">job</span>: deploy
+        <span class="key">steps</span>:
+          - <span class="key">script</span>: |
+              az ml online-endpoint create -f endpoint.yml
+              az ml online-deployment create -f deployment.yml
+                    </div>
+                    <h3>MLflow Experiment Tracking</h3>
+                    <div class="code-block">
+<span class="comment"># Python — Track experiments with MLflow</span>
+<span class="keyword">import</span> mlflow
+
+mlflow.set_experiment(<span class="string">"fraud-detection"</span>)
+
+<span class="keyword">with</span> mlflow.start_run():
+    mlflow.log_param(<span class="string">"learning_rate"</span>, 0.01)
+    mlflow.log_param(<span class="string">"n_estimators"</span>, 100)
+    
+    model = train_model(X_train, y_train)
+    accuracy = evaluate(model, X_test, y_test)
+    
+    mlflow.log_metric(<span class="string">"accuracy"</span>, accuracy)
+    mlflow.log_metric(<span class="string">"f1_score"</span>, f1)
+    mlflow.sklearn.log_model(model, <span class="string">"model"</span>)
+                    </div>
+                `,
+                applications: `
+                    <h3>MLOps Tools Ecosystem</h3>
+                    <table>
+                        <tr><th>Category</th><th>Azure</th><th>Open Source</th></tr>
+                        <tr><td>Experiment Tracking</td><td>Azure ML Studio</td><td>MLflow, W&B</td></tr>
+                        <tr><td>Data Versioning</td><td>Azure ML Datasets</td><td>DVC, LakeFS</td></tr>
+                        <tr><td>Model Registry</td><td>Azure ML Registry</td><td>MLflow Registry</td></tr>
+                        <tr><td>Model Serving</td><td>Azure ML Endpoints</td><td>Seldon, BentoML</td></tr>
+                        <tr><td>Feature Store</td><td>Azure ML Feature Store</td><td>Feast</td></tr>
+                        <tr><td>Monitoring</td><td>Azure Monitor + ML</td><td>Evidently, WhyLabs</td></tr>
+                    </table>
+                    <div class="interview-box">
+                        <div class="box-title">📋 Probable Interview Questions</div>
+                        <div class="box-content">
+                            1. What is MLOps and how does it differ from DevOps?<br>
+                            2. Explain the MLOps maturity levels.<br>
+                            3. What is data drift and how do you detect it?<br>
+                            4. How do you version ML models and datasets?<br>
+                            5. What is a model registry and why is it important?<br>
+                            6. How do you implement CI/CD for ML models in Azure DevOps?<br>
+                            7. What is a feature store and when do you need one?<br>
+                            8. How do you implement A/B testing for ML models?<br>
+                            9. What is MLflow and how does it integrate with Azure ML?<br>
+                            10. How would you design an automated retraining pipeline triggered by drift?
+                        </div>
+                    </div>
+                `
+            },
+            "monitoring": {
+                concepts: `
+                    <h3>Deployment Verification (from PDF)</h3>
+                    <p>After deploying to AKS, verification ensures the application is running correctly:</p>
+                    <div class="info-box">
+                        <div class="box-title">✅ Verification Steps (from PDF)</div>
+                        <div class="box-content">
+                            <strong>1.</strong> Go to AKS cluster → Workloads → Verify "bankapp" is running<br>
+                            <strong>2.</strong> Go to Services and Ingresses → Get External IP<br>
+                            <strong>3.</strong> Access the app via the external IP<br>
+                            <strong>4.</strong> Confirm the application is working fine
+                        </div>
+                    </div>
+                    <h3>Pipeline Automation (from PDF)</h3>
+                    <p>To automate the pipeline so it triggers on every code change:</p>
+                    <div class="callout insight">
+                        <div class="callout-title">💡 From the PDF</div>
+                        Change <code>trigger: none</code> to <code>trigger: [main]</code> in the YAML pipeline. Then test by creating a new file in Azure Repos — the pipeline should start automatically.
+                    </div>
+                    <h3>Monitoring Stack</h3>
+                    <table>
+                        <tr><th>Layer</th><th>What to Monitor</th><th>Azure Tool</th></tr>
+                        <tr><td>Infrastructure</td><td>CPU, Memory, Disk, Network</td><td>Azure Monitor</td></tr>
+                        <tr><td>Application</td><td>Response time, Error rates, Throughput</td><td>Application Insights</td></tr>
+                        <tr><td>Kubernetes</td><td>Pod health, Node status, Resource usage</td><td>Container Insights</td></tr>
+                        <tr><td>Pipeline</td><td>Build time, Failure rate, Deployment frequency</td><td>Azure DevOps Analytics</td></tr>
+                        <tr><td>ML Models</td><td>Accuracy, Data drift, Prediction latency</td><td>Azure ML Monitoring</td></tr>
+                    </table>
+                    <h3>Email Notifications (from PDF)</h3>
+                    <div class="info-box">
+                        <div class="box-title">📧 Email Communication Service</div>
+                        <div class="box-content">
+                            The PDF demonstrates setting up Azure Email Communication Services to send pipeline notifications. This involves:<br>
+                            <strong>1.</strong> Create Email Communication Service resource<br>
+                            <strong>2.</strong> Add Azure subdomain or custom domain<br>
+                            <strong>3.</strong> Configure pipeline to send notifications on completion
+                        </div>
+                    </div>
+                `,
+                handson: `
+                    <h3>Azure Monitor & Application Insights</h3>
+                    <div class="code-block">
+<span class="comment"># Enable Container Insights on AKS</span>
+<span class="keyword">az</span> aks enable-addons \\
+  --resource-group rg-devops \\
+  --name my-aks-cluster \\
+  --addons monitoring
+
+<span class="comment"># Create Application Insights</span>
+<span class="keyword">az</span> monitor app-insights component create \\
+  --app my-app \\
+  --location eastus \\
+  --resource-group rg-devops
+                    </div>
+                    <h3>Pipeline Notifications Setup</h3>
+                    <div class="code-block">
+<span class="comment"># Pipeline notification via Azure DevOps REST API</span>
+<span class="key">stages</span>:
+  - <span class="key">stage</span>: Notify
+    <span class="key">condition</span>: always()
+    <span class="key">jobs</span>:
+      - <span class="key">job</span>: send_notification
+        <span class="key">steps</span>:
+          - <span class="key">script</span>: |
+              <span class="keyword">if</span> [ "$(Agent.JobStatus)" == "Succeeded" ]; then
+                echo "Pipeline PASSED ✅"
+              <span class="keyword">else</span>
+                echo "Pipeline FAILED ❌"
+              <span class="keyword">fi</span>
+          - <span class="key">task</span>: SendEmail@1
+            <span class="key">inputs</span>:
+              <span class="key">to</span>: <span class="string">"team@company.com"</span>
+              <span class="key">subject</span>: <span class="string">"Pipeline $(Build.BuildId) - $(Agent.JobStatus)"</span>
+                    </div>
+                    <h3>Alerting Rules</h3>
+                    <div class="code-block">
+<span class="comment"># Create Azure Monitor Alert for high CPU</span>
+<span class="keyword">az</span> monitor metrics alert create \\
+  --name <span class="string">"high-cpu-alert"</span> \\
+  --resource-group rg-devops \\
+  --scopes /subscriptions/.../aks-cluster \\
+  --condition <span class="string">"avg Percentage CPU > 80"</span> \\
+  --action /subscriptions/.../action-group \\
+  --window-size 5m \\
+  --evaluation-frequency 1m
+                    </div>
+                `,
+                applications: `
+                    <h3>Observability Best Practices</h3>
+                    <div class="info-box">
+                        <div class="box-title">📊 The Three Pillars of Observability</div>
+                        <div class="box-content">
+                            <strong>Logs:</strong> Structured logging with correlation IDs (Azure Log Analytics)<br>
+                            <strong>Metrics:</strong> Time-series data for dashboards and alerting (Azure Monitor)<br>
+                            <strong>Traces:</strong> Distributed tracing across microservices (Application Insights)
+                        </div>
+                    </div>
+                    <div class="interview-box">
+                        <div class="box-title">📋 Probable Interview Questions</div>
+                        <div class="box-content">
+                            1. How do you verify a deployment in AKS is successful?<br>
+                            2. How do you automate a CI/CD pipeline to trigger on code push?<br>
+                            3. What is Azure Monitor and Container Insights?<br>
+                            4. Explain the three pillars of observability (Logs, Metrics, Traces).<br>
+                            5. How do you set up email notifications for pipeline results?<br>
+                            6. What are Azure Monitor Alerts and how do you configure them?<br>
+                            7. How do you monitor Kubernetes cluster health?<br>
+                            8. What is Application Insights and how does it work?<br>
+                            9. How do you track DORA metrics in Azure DevOps?<br>
+                            10. How would you set up monitoring for an ML model in production?
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        function createModuleHTML(module) {
+            const content = MODULE_CONTENT[module.id] || {};
+            return `
+                <div class="module" id="${module.id}-module">
+                    <button class="btn-back" onclick="switchTo('dashboard')">← Back to Dashboard</button>
+                    <header>
+                        <h1>${module.icon} ${module.title}</h1>
+                        <p class="subtitle">${module.description}</p>
+                    </header>
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab(event, '${module.id}-concepts')">📖 Key Concepts</button>
+                        <button class="tab-btn" onclick="switchTab(event, '${module.id}-handson')">🔧 Hands-On / YAML</button>
+                        <button class="tab-btn" onclick="switchTab(event, '${module.id}-applications')">🎯 Applications & Interview</button>
+                    </div>
+                    <div id="${module.id}-concepts" class="tab active">
+                        <div class="section">
+                            <h2>📖 Key Concepts</h2>
+                            ${content.concepts || '<p>Content loading...</p>'}
+                        </div>
+                    </div>
+                    <div id="${module.id}-handson" class="tab">
+                        <div class="section">
+                            <h2>🔧 Hands-On / YAML</h2>
+                            ${content.handson || '<p>Content loading...</p>'}
+                        </div>
+                    </div>
+                    <div id="${module.id}-applications" class="tab">
+                        <div class="section">
+                            <h2>🎯 Applications & Interview Questions</h2>
+                            ${content.applications || '<p>Content loading...</p>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initDashboard() {
+            const grid = document.getElementById("modulesGrid");
+            const container = document.getElementById("modulesContainer");
+            modules.forEach((module) => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.style.borderColor = module.color;
+                card.onclick = () => switchTo(module.id + "-module");
+                card.innerHTML = `
+                    <div class="card-icon">${module.icon}</div>
+                    <h3>${module.title}</h3>
+                    <p>${module.description}</p>
+                    <span class="category-label">${module.category}</span>
+                `;
+                grid.appendChild(card);
+                container.innerHTML += createModuleHTML(module);
+            });
+        }
+
+        function switchTo(target) {
+            document.querySelectorAll('.dashboard, .module').forEach(el => el.classList.remove('active'));
+            const elem = document.getElementById(target);
+            if (elem) { elem.classList.add('active'); window.scrollTo(0, 0); }
+        }
+
+        function switchTab(e, tabId) {
+            const module = e.target.closest('.module');
+            if (!module) return;
+            module.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            module.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            const tab = document.getElementById(tabId);
+            if (tab) tab.classList.add('active');
+            e.target.classList.add('active');
+        }
+
+        initDashboard();
+    </script>
+</body>
+
+</html>
