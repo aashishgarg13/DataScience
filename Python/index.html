@@ -57,7 +57,7 @@
 
         /* Dashboard */
         .dashboard {
-            display: block;
+            display: none;
         }
 
         .modules-grid {
@@ -455,7 +455,8 @@
             }
         ];
 
-        const MODULE_CONTENT = {            "python-fundamentals": {
+        const MODULE_CONTENT = {
+            "python-fundamentals": {
                 concepts: `
                     <div class="section">
                         <h2>Python Data Structures for DS</h2>
@@ -2855,9 +2856,9 @@ data = [np.random.randn(<span class="number">1000000</span>) <span class="keywor
         function showModule(moduleId) {
             const module = modules.find(m => m.id === moduleId);
             const content = MODULE_CONTENT[moduleId];
-            
+
             document.getElementById('dashboard').classList.remove('active');
-            
+
             const moduleHTML = `
                 <div class="module active" id="module-${moduleId}">
                     <button class="btn-back" onclick="backToDashboard()">← Back to Dashboard</button>
@@ -2867,9 +2868,9 @@ data = [np.random.randn(<span class="number">1000000</span>) <span class="keywor
                     </header>
                     
                     <div class="tabs">
-                        <button class="tab-btn active" onclick="switchTab('${moduleId}', 'concepts')">📖 Key Concepts</button>
-                        <button class="tab-btn" onclick="switchTab('${moduleId}', 'code')">💻 Code Examples</button>
-                        <button class="tab-btn" onclick="switchTab('${moduleId}', 'interview')">🎯 Interview Questions</button>
+                        <button class="tab-btn active" onclick="switchTab('${moduleId}', 'concepts', event)">📖 Key Concepts</button>
+                        <button class="tab-btn" onclick="switchTab('${moduleId}', 'code', event)">💻 Code Examples</button>
+                        <button class="tab-btn" onclick="switchTab('${moduleId}', 'interview', event)">🎯 Interview Questions</button>
                     </div>
                     
                     <div id="${moduleId}-concepts" class="tab active">${content.concepts}</div>
@@ -2877,18 +2878,25 @@ data = [np.random.randn(<span class="number">1000000</span>) <span class="keywor
                     <div id="${moduleId}-interview" class="tab">${content.interview}</div>
                 </div>
             `;
-            
+
             document.getElementById('modulesContainer').innerHTML = moduleHTML;
         }
 
         // Switch tabs
-        function switchTab(moduleId, tabName) {
+        function switchTab(moduleId, tabName, e) {
             const moduleEl = document.getElementById(`module-${moduleId}`);
-            
+
             // Update tab buttons
             moduleEl.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
+            if (e && e.target) {
+                e.target.classList.add('active');
+            } else {
+                // Fallback: find the button by tab name
+                const tabNames = ['concepts', 'code', 'interview'];
+                const idx = tabNames.indexOf(tabName);
+                if (idx !== -1) moduleEl.querySelectorAll('.tab-btn')[idx]?.classList.add('active');
+            }
+
             // Update tab content
             moduleEl.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.getElementById(`${moduleId}-${tabName}`).classList.add('active');
@@ -2904,4 +2912,5 @@ data = [np.random.randn(<span class="number">1000000</span>) <span class="keywor
         renderDashboard();
     </script>
 </body>
+
 </html>
