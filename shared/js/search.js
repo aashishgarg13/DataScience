@@ -144,7 +144,11 @@
                 { title: 'Zero-Shot Prompting', section: 'topic-2' },
                 { title: 'Few-Shot Prompting', section: 'topic-3' },
                 { title: 'Chain of Thought', section: 'topic-4' },
-                { title: 'System Prompts', section: 'topic-5' }
+                { title: 'System Prompts', section: 'topic-5' },
+                { title: 'Claude Prompt Mastery', section: 'topic-9' },
+                { title: 'Google Gemini Prompting', section: 'topic-10' },
+                { title: 'OpenAI GPT Best Practices', section: 'topic-11' },
+                { title: 'Provider Comparison', section: 'topic-12' }
             ]
         },
         {
