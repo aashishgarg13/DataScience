@@ -757,6 +757,31 @@
                 category: "Advanced",
                 color: "#9900ff",
                 description: "Curated collection of seminal deep learning papers"
+            },
+            // Module 7: GenAI & LLM Engineering
+            {
+                id: "vector-db",
+                title: "Vector Databases",
+                icon: "🧲",
+                category: "GenAI",
+                color: "#00c9a7",
+                description: "Embeddings, similarity search, FAISS, Pinecone, ChromaDB"
+            },
+            {
+                id: "rag",
+                title: "RAG Pipelines",
+                icon: "🔗",
+                category: "GenAI",
+                color: "#00c9a7",
+                description: "Retrieval-Augmented Generation for grounded AI"
+            },
+            {
+                id: "advanced-llm",
+                title: "Fine-Tuning & Quantization",
+                icon: "⚙️",
+                category: "GenAI",
+                color: "#00c9a7",
+                description: "LoRA, QLoRA, PEFT, GGUF, and deployment strategies"
             }
         ];
 
@@ -5195,8 +5220,567 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
                         <div class="box-content">Pinterest (PinSage), User-Item graphs</div>
                     </div>
                 `
+            },
+            "vector-db": {
+                overview: `
+                    <h3>What are Vector Databases?</h3>
+                    <p>Vector databases store data as <strong>high-dimensional numerical vectors</strong> (embeddings) and enable <strong>similarity search</strong> instead of exact-match queries. They are the backbone of modern AI applications like semantic search, recommendation systems, and RAG pipelines.</p>
+                    
+                    <h3>Why Do We Need Them?</h3>
+                    <ul>
+                        <li><strong>Semantic Understanding:</strong> Traditional databases search by keywords; vector DBs search by meaning</li>
+                        <li><strong>AI-Native:</strong> LLMs and neural networks produce embeddings — vector DBs store and query them</li>
+                        <li><strong>Scale:</strong> Billions of vectors with sub-millisecond query times using approximate nearest neighbor (ANN) algorithms</li>
+                        <li><strong>Multi-Modal:</strong> Store text, image, audio, and video embeddings in the same space</li>
+                    </ul>
+                    
+                    <h3>Vector DB Landscape</h3>
+                    <table>
+                        <tr>
+                            <th>Database</th>
+                            <th>Type</th>
+                            <th>Best For</th>
+                            <th>Index</th>
+                        </tr>
+                        <tr>
+                            <td>FAISS</td>
+                            <td>Library</td>
+                            <td>Research, local use</td>
+                            <td>IVF, HNSW, PQ</td>
+                        </tr>
+                        <tr>
+                            <td>Pinecone</td>
+                            <td>Managed SaaS</td>
+                            <td>Production, low-ops</td>
+                            <td>Proprietary</td>
+                        </tr>
+                        <tr>
+                            <td>ChromaDB</td>
+                            <td>Open-Source</td>
+                            <td>Prototyping, local RAG</td>
+                            <td>HNSW</td>
+                        </tr>
+                        <tr>
+                            <td>Weaviate</td>
+                            <td>Open-Source</td>
+                            <td>Hybrid search</td>
+                            <td>HNSW + BM25</td>
+                        </tr>
+                        <tr>
+                            <td>Milvus</td>
+                            <td>Open-Source</td>
+                            <td>Enterprise scale</td>
+                            <td>IVF, DiskANN</td>
+                        </tr>
+                        <tr>
+                            <td>Qdrant</td>
+                            <td>Open-Source</td>
+                            <td>Filtering + search</td>
+                            <td>HNSW</td>
+                        </tr>
+                    </table>
+
+                    <div class="callout tip">
+                        <div class="callout-title">💡 Key Insight</div>
+                        Traditional DB: "Find all users named John"<br>
+                        Vector DB: "Find all users <strong>similar to</strong> this profile" — completely different paradigm!
+                    </div>
+                `,
+                concepts: `
+                    <h3>Core Concepts</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Embeddings:</strong> Dense numerical representations of data (text, images, etc.) produced by neural networks. Example: OpenAI's text-embedding-3-small produces 1536-dim vectors.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Similarity Metrics:</strong> Cosine similarity (angle), Euclidean distance (L2), Dot product (magnitude-aware). Cosine is most common for text embeddings.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>ANN Algorithms:</strong> Approximate Nearest Neighbor — trade small accuracy loss for massive speed gains (exact search is O(n), ANN is O(log n)).</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>HNSW (Hierarchical Navigable Small World):</strong> Graph-based index. Builds a multi-layer graph where higher layers have fewer, long-range connections. Most popular algorithm.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">05</div>
+                        <div><strong>IVF (Inverted File Index):</strong> Clusters vectors first (like k-means), then only searches relevant clusters. Fast but requires training step.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">06</div>
+                        <div><strong>Product Quantization (PQ):</strong> Compresses vectors by splitting them into sub-vectors and quantizing each. Reduces memory by 10-100x.</div>
+                    </div>
+                    
+                    <h3>Embedding Pipeline</h3>
+                    <div class="formula">
+                        1. Raw Data → Embedding Model → Vector (e.g., [0.12, -0.34, 0.56, ...])<br>
+                        2. Store vector + metadata in Vector DB<br>
+                        3. Query: Convert query → vector → Find nearest neighbors<br>
+                        4. Return top-k most similar results with scores
+                    </div>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Common Pitfalls</div>
+                        • Using wrong distance metric (cosine for normalized, L2 for raw)<br>
+                        • Not chunking documents properly (too large = diluted embedding)<br>
+                        • Mixing embedding models (query and docs must use same model)<br>
+                        • Ignoring metadata filtering (combine vector search + filters)
+                    </div>
+                `,
+                math: `
+                    <h3>📐 Paper & Pain: Vector Similarity Mathematics</h3>
+                    
+                    <h4>Cosine Similarity</h4>
+                    <div class="formula" style="font-size: 1.2rem; text-align: center; margin: 20px 0; background: rgba(0, 212, 255, 0.08); padding: 25px; border-radius: 8px;">
+                        <strong>cos(A, B) = (A · B) / (||A|| × ||B||)</strong>
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Manual Calculation</div>
+                        <strong>A = [1, 2, 3], B = [4, 5, 6]</strong><br><br>
+                        <strong>Step 1 — Dot Product:</strong><br>
+                        A · B = (1×4) + (2×5) + (3×6) = 4 + 10 + 18 = <strong>32</strong><br><br>
+                        <strong>Step 2 — Magnitudes:</strong><br>
+                        ||A|| = √(1² + 2² + 3²) = √14 ≈ 3.742<br>
+                        ||B|| = √(4² + 5² + 6²) = √77 ≈ 8.775<br><br>
+                        <strong>Step 3 — Cosine Similarity:</strong><br>
+                        cos(A, B) = 32 / (3.742 × 8.775) = 32 / 32.833 ≈ <strong>0.9746</strong><br><br>
+                        <strong>Interpretation:</strong> Very high similarity (close to 1.0 = identical direction)
+                    </div>
+                    
+                    <h4>Euclidean Distance (L2)</h4>
+                    <div class="formula">
+                        d(A, B) = √(Σ(aᵢ - bᵢ)²)<br><br>
+                        For A = [1, 2, 3], B = [4, 5, 6]:<br>
+                        d = √((4-1)² + (5-2)² + (6-3)²) = √(9 + 9 + 9) = √27 ≈ <strong>5.196</strong>
+                    </div>
+                    
+                    <h4>HNSW Complexity</h4>
+                    <div class="formula">
+                        Build time: O(N × log(N))<br>
+                        Query time: O(log(N)) — logarithmic!<br>
+                        Memory: O(N × M) where M = max connections per node<br><br>
+                        Compare to brute force: O(N) per query<br>
+                        For N = 1 billion vectors: HNSW is ~30 orders of magnitude faster
+                    </div>
+                `,
+                applications: `
+                    <h3>Real-World Applications</h3>
+                    <div class="info-box">
+                        <div class="box-title">🔍 Semantic Search</div>
+                        <div class="box-content">
+                            <strong>Google, Bing, Notion AI:</strong> Search by meaning, not keywords<br>
+                            <strong>Example:</strong> "How to fix my car" matches "automobile repair guide" even with zero keyword overlap
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🤖 RAG (Retrieval-Augmented Generation)</div>
+                        <div class="box-content">
+                            Store knowledge base as vectors → retrieve relevant context → feed to LLM for grounded answers. Used by ChatGPT with browsing, Perplexity AI, and enterprise AI assistants.
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🛒 Recommendation Systems</div>
+                        <div class="box-content">
+                            <strong>Spotify (music):</strong> Embed songs as vectors, recommend nearest neighbors<br>
+                            <strong>Netflix (movies):</strong> User + content embeddings for personalization
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🖼️ Image & Multi-Modal Search</div>
+                        <div class="box-content">
+                            <strong>CLIP embeddings:</strong> Search images with text queries and vice versa<br>
+                            <strong>Google Lens:</strong> Find products by uploading a photo
+                        </div>
+                    </div>
+                `
+            },
+            "rag": {
+                overview: `
+                    <h3>Retrieval-Augmented Generation (RAG)</h3>
+                    <p>RAG combines the <strong>reasoning power of LLMs</strong> with <strong>external knowledge retrieval</strong> to produce accurate, grounded, and up-to-date responses. It solves the fundamental problem of LLM hallucination by anchoring generation in real data.</p>
+                    
+                    <h3>Why RAG?</h3>
+                    <ul>
+                        <li><strong>Reduces Hallucination:</strong> LLMs generate from training data; RAG retrieves from your actual documents</li>
+                        <li><strong>Always Up-to-Date:</strong> No need to retrain the model when knowledge changes — just update the vector store</li>
+                        <li><strong>Domain-Specific:</strong> Works with proprietary data (internal docs, codebases, policies)</li>
+                        <li><strong>Cost-Effective:</strong> Much cheaper than fine-tuning for knowledge injection</li>
+                        <li><strong>Verifiable:</strong> Retrieved sources can be cited, enabling fact-checking</li>
+                    </ul>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">💡 RAG vs Fine-Tuning</div>
+                        <strong>Fine-tuning:</strong> Changes the model's behavior/style (teach it HOW to respond)<br>
+                        <strong>RAG:</strong> Changes the model's knowledge (give it WHAT to respond with)<br><br>
+                        Rule of thumb: Use RAG for knowledge, fine-tuning for behavior. Combine both for production systems.
+                    </div>
+                    
+                    <h3>The RAG Pipeline</h3>
+                    <div class="formula">
+                        <strong>Indexing Phase (Offline):</strong><br>
+                        Documents → Chunk → Embed → Store in Vector DB<br><br>
+                        <strong>Query Phase (Online):</strong><br>
+                        User Query → Embed → Retrieve top-k chunks → Context + Query → LLM → Answer
+                    </div>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ RAG Failure Modes</div>
+                        • <strong>Poor chunking:</strong> Chunks too large (diluted) or too small (missing context)<br>
+                        • <strong>Retrieval misses:</strong> Relevant docs not in top-k results<br>
+                        • <strong>Lost in the middle:</strong> LLMs ignore context in the middle of long prompts<br>
+                        • <strong>Outdated embeddings:</strong> Vector store not synced with source documents
+                    </div>
+                `,
+                concepts: `
+                    <h3>RAG Architecture Deep Dive</h3>
+                    
+                    <h4>1. Document Processing</h4>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Loading:</strong> Parse PDFs, HTML, Markdown, Databases, APIs using document loaders (LangChain, LlamaIndex)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Chunking Strategies:</strong><br>
+                            • <strong>Fixed-size:</strong> Split every N tokens (simplest, often good enough)<br>
+                            • <strong>Recursive:</strong> Split by paragraphs → sentences → words (preserves structure)<br>
+                            • <strong>Semantic:</strong> Use embeddings to detect topic boundaries<br>
+                            • <strong>Overlap:</strong> Add 10-20% overlap between chunks to preserve context
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Embedding:</strong> Convert chunks to vectors using models like OpenAI text-embedding-3-small (1536-dim), Cohere embed-v3, or open-source models like BGE-large</div>
+                    </div>
+                    
+                    <h4>2. Retrieval Strategies</h4>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Dense Retrieval:</strong> Cosine similarity on embeddings (semantic search)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">05</div>
+                        <div><strong>Sparse Retrieval:</strong> BM25/TF-IDF keyword matching (exact term matching)</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">06</div>
+                        <div><strong>Hybrid Search:</strong> Combine dense + sparse with Reciprocal Rank Fusion (RRF) — usually best results</div>
+                    </div>
+                    
+                    <h4>3. Advanced RAG Patterns</h4>
+                    <div class="list-item">
+                        <div class="list-num">07</div>
+                        <div><strong>Multi-Query RAG:</strong> LLM generates multiple query variations → retrieve for each → merge results</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">08</div>
+                        <div><strong>Re-ranking:</strong> Use a cross-encoder (e.g., Cohere Rerank) to re-score retrieved chunks for higher relevance</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">09</div>
+                        <div><strong>Query Expansion:</strong> HyDE — generate a hypothetical answer, embed that, then retrieve</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">10</div>
+                        <div><strong>Agentic RAG:</strong> LLM decides when and what to retrieve; can self-reflect and re-retrieve if initial results are poor</div>
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">🔑 Production Checklist</div>
+                        ✅ Chunk size 256-512 tokens with 10-20% overlap<br>
+                        ✅ Use hybrid search (dense + BM25)<br>
+                        ✅ Add re-ranker for precision<br>
+                        ✅ Include metadata filtering (date, source, category)<br>
+                        ✅ Monitor retrieval quality with evaluation metrics
+                    </div>
+                `,
+                math: `
+                    <h3>📐 RAG Evaluation Metrics</h3>
+                    
+                    <h4>Retrieval Quality</h4>
+                    <div class="formula" style="font-size: 1.1rem; text-align: center; margin: 20px 0; background: rgba(0, 212, 255, 0.08); padding: 25px; border-radius: 8px;">
+                        <strong>Recall@k = |Relevant ∩ Retrieved@k| / |Relevant|</strong><br><br>
+                        <strong>Precision@k = |Relevant ∩ Retrieved@k| / k</strong><br><br>
+                        <strong>MRR = 1/|Q| × Σ(1 / rank_i)</strong>
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Paper & Pain: MRR Calculation</div>
+                        <strong>3 queries, first relevant result at ranks 1, 3, 2:</strong><br><br>
+                        MRR = (1/3) × (1/1 + 1/3 + 1/2)<br>
+                        MRR = (1/3) × (1.0 + 0.333 + 0.5)<br>
+                        MRR = (1/3) × 1.833 = <strong>0.611</strong><br><br>
+                        <strong>Interpretation:</strong> On average, the first relevant result appears around position 1.6
+                    </div>
+                    
+                    <h4>Reciprocal Rank Fusion (Hybrid Search)</h4>
+                    <div class="formula">
+                        <strong>RRF(d) = Σ 1 / (k + rank_i(d))</strong><br><br>
+                        Where k = 60 (constant), rank_i = rank from retriever i<br><br>
+                        Example: Document D appears at rank 2 in dense, rank 5 in sparse:<br>
+                        RRF(D) = 1/(60+2) + 1/(60+5) = 0.0161 + 0.0154 = <strong>0.0315</strong>
+                    </div>
+                    
+                    <h4>Chunking Size Impact</h4>
+                    <div class="formula">
+                        Optimal chunk size depends on:<br>
+                        • Embedding model context window (usually 512 tokens max)<br>
+                        • Query specificity (specific → smaller chunks)<br>
+                        • Document structure (code → function-level, prose → paragraph-level)<br><br>
+                        Rule of thumb: <strong>chunk_size ≈ 2-3× expected query length</strong>
+                    </div>
+                `,
+                applications: `
+                    <h3>RAG in Production</h3>
+                    <div class="info-box">
+                        <div class="box-title">🔍 Perplexity AI</div>
+                        <div class="box-content">
+                            RAG-powered search engine: retrieves web pages → feeds to LLM → generates cited answers. Processes 100M+ queries/month.
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">💼 Enterprise Knowledge Bases</div>
+                        <div class="box-content">
+                            <strong>Notion AI, Glean, Guru:</strong> Index company docs → answer employee questions with source citations<br>
+                            <strong>Legal AI:</strong> Retrieve relevant case law for legal research (Harvey AI)
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">💻 Code Assistants</div>
+                        <div class="box-content">
+                            <strong>GitHub Copilot, Cursor:</strong> Retrieve relevant code from the codebase to inform suggestions<br>
+                            <strong>Documentation Q&A:</strong> Answer questions about SDKs and libraries
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🏥 Healthcare</div>
+                        <div class="box-content">
+                            Retrieve medical literature → generate evidence-based clinical summaries (Google Med-PaLM 2)
+                        </div>
+                    </div>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">🛠️ Popular Frameworks</div>
+                        • <strong>LangChain:</strong> Most popular, modular pipeline builder<br>
+                        • <strong>LlamaIndex:</strong> Data-focused, great for document processing<br>
+                        • <strong>Haystack:</strong> Production-ready, NLP-first<br>
+                        • <strong>Semantic Kernel:</strong> Microsoft's enterprise RAG framework
+                    </div>
+                `
+            },
+            "advanced-llm": {
+                overview: `
+                    <h3>Fine-Tuning & Quantization for LLMs</h3>
+                    <p>Fine-tuning adapts a pre-trained LLM to a specific task or domain. Quantization reduces model size and inference cost. Together, they enable <strong>deploying powerful AI on limited hardware</strong>.</p>
+                    
+                    <h3>The Fine-Tuning Spectrum</h3>
+                    <table>
+                        <tr>
+                            <th>Method</th>
+                            <th>Parameters Trained</th>
+                            <th>GPU Memory</th>
+                            <th>Best For</th>
+                        </tr>
+                        <tr>
+                            <td>Full Fine-Tuning</td>
+                            <td>100%</td>
+                            <td>Very High</td>
+                            <td>Fundamental behavior change</td>
+                        </tr>
+                        <tr>
+                            <td>LoRA</td>
+                            <td>0.1-1%</td>
+                            <td>Low</td>
+                            <td>Style/domain adaptation</td>
+                        </tr>
+                        <tr>
+                            <td>QLoRA</td>
+                            <td>0.1-1%</td>
+                            <td>Very Low</td>
+                            <td>Consumer GPU fine-tuning</td>
+                        </tr>
+                        <tr>
+                            <td>Prompt Tuning</td>
+                            <td>~0.01%</td>
+                            <td>Minimal</td>
+                            <td>Task-specific adapters</td>
+                        </tr>
+                        <tr>
+                            <td>RLHF / DPO</td>
+                            <td>Varies</td>
+                            <td>High</td>
+                            <td>Alignment & safety</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="callout tip">
+                        <div class="callout-title">💡 When to Fine-Tune vs RAG</div>
+                        <strong>Fine-tune when:</strong> You need to change HOW the model responds (tone, format, reasoning style)<br>
+                        <strong>Use RAG when:</strong> You need to change WHAT the model knows (add new facts/documents)<br>
+                        <strong>Both when:</strong> Production systems needing custom behavior + dynamic knowledge
+                    </div>
+                    
+                    <div class="callout warning">
+                        <div class="callout-title">⚠️ Fine-Tuning Risks</div>
+                        • <strong>Catastrophic forgetting:</strong> Model loses general capabilities<br>
+                        • <strong>Overfitting:</strong> Small datasets → memorization instead of learning<br>
+                        • <strong>Alignment tax:</strong> Safety guardrails can be weakened<br>
+                        • <strong>Data quality:</strong> "Garbage in, garbage out" — bad examples = bad model
+                    </div>
+                `,
+                concepts: `
+                    <h3>LoRA (Low-Rank Adaptation)</h3>
+                    <p>Instead of updating all parameters, LoRA freezes the original weights and injects small trainable matrices into each layer.</p>
+                    
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Core Idea:</strong> Weight update ΔW can be decomposed as a low-rank matrix: ΔW = B × A, where B ∈ ℝ^(d×r) and A ∈ ℝ^(r×d), with r ≪ d</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Memory Savings:</strong> For a 7B model, full fine-tuning needs ~28GB VRAM. LoRA (r=16) needs ~6GB — a 4.7x reduction.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Rank (r):</strong> Typical values: r=8, 16, 32, 64. Higher rank = more expressiveness but more parameters.</div>
+                    </div>
+                    
+                    <h3>QLoRA (Quantized LoRA)</h3>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>4-bit NormalFloat (NF4):</strong> Quantize frozen weights to 4-bit. Train LoRA adapters in fp16/bf16. Enables fine-tuning 65B models on a single 48GB GPU.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">05</div>
+                        <div><strong>Double Quantization:</strong> Quantize the quantization constants themselves — saves additional memory.</div>
+                    </div>
+                    
+                    <h3>Quantization for Deployment</h3>
+                    <div class="list-item">
+                        <div class="list-num">06</div>
+                        <div><strong>GGUF (llama.cpp):</strong> CPU-optimized format. Run Llama-2 70B on a MacBook with Q4_K_M quantization.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">07</div>
+                        <div><strong>GPTQ:</strong> GPU-optimized post-training quantization. 3-4 bit with minimal quality loss.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">08</div>
+                        <div><strong>AWQ (Activation-aware):</strong> Preserves important weight channels. State-of-the-art quality at 4-bit.</div>
+                    </div>
+                    
+                    <h3>RLHF & DPO</h3>
+                    <div class="list-item">
+                        <div class="list-num">09</div>
+                        <div><strong>RLHF:</strong> Train a reward model from human preferences, then use PPO to optimize the LLM's policy. Used by ChatGPT, Claude.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">10</div>
+                        <div><strong>DPO (Direct Preference Optimization):</strong> Skip the reward model entirely — optimize directly from preference pairs. Simpler, lower compute, often comparable results.</div>
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">🔁 PEFT (Parameter-Efficient Fine-Tuning)</div>
+                        PEFT is the umbrella term for all methods that train <1% of parameters:<br>
+                        • <strong>LoRA / QLoRA:</strong> Low-rank weight decomposition<br>
+                        • <strong>Prefix Tuning:</strong> Trainable prefix tokens<br>
+                        • <strong>Adapters:</strong> Small bottleneck layers inserted into frozen model<br>
+                        • <strong>IA3:</strong> Learned rescaling vectors (even fewer params than LoRA)
+                    </div>
+                `,
+                math: `
+                    <h3>📐 Paper & Pain: LoRA Mathematics</h3>
+                    
+                    <h4>Low-Rank Decomposition</h4>
+                    <div class="formula" style="font-size: 1.2rem; text-align: center; margin: 20px 0; background: rgba(0, 212, 255, 0.08); padding: 25px; border-radius: 8px;">
+                        <strong>W' = W + ΔW = W + B × A</strong><br>
+                        <small>where W ∈ ℝ^(d×d), B ∈ ℝ^(d×r), A ∈ ℝ^(r×d), r ≪ d</small>
+                    </div>
+                    
+                    <div class="callout insight">
+                        <div class="callout-title">📝 Parameter Count Comparison</div>
+                        <strong>Full fine-tuning of one attention layer (d=4096):</strong><br>
+                        Parameters = d × d = 4096 × 4096 = <strong>16,777,216</strong><br><br>
+                        <strong>LoRA (r=16):</strong><br>
+                        Parameters = d × r + r × d = 4096 × 16 + 16 × 4096 = <strong>131,072</strong><br><br>
+                        <strong>Reduction: 128x fewer parameters!</strong> (0.78% of original)<br><br>
+                        For a full 7B model (all attention layers):<br>
+                        Full: ~7B params to train (~28GB VRAM)<br>
+                        LoRA (r=16): ~4.2M params to train (~1.5GB for adapters)
+                    </div>
+                    
+                    <h4>Quantization Math</h4>
+                    <div class="formula">
+                        <strong>Linear Quantization (INT8):</strong><br>
+                        q = round(w / scale + zero_point)<br>
+                        w_approx = (q - zero_point) × scale<br><br>
+                        <strong>Example:</strong><br>
+                        Weight w = 0.73, scale = 0.01, zero_point = 128<br>
+                        q = round(0.73 / 0.01 + 128) = round(201) = 201<br>
+                        w_approx = (201 - 128) × 0.01 = 0.73 ✓
+                    </div>
+                    
+                    <h4>Memory Savings</h4>
+                    <div class="formula">
+                        <strong>Model Size = Parameters × Bytes per Parameter</strong><br><br>
+                        7B model at fp32: 7B × 4 bytes = 28 GB<br>
+                        7B model at fp16: 7B × 2 bytes = 14 GB<br>
+                        7B model at INT8: 7B × 1 byte = 7 GB<br>
+                        7B model at INT4: 7B × 0.5 bytes = 3.5 GB<br><br>
+                        <strong>4-bit quantization = 8x memory reduction!</strong>
+                    </div>
+                    
+                    <h4>DPO Loss Function</h4>
+                    <div class="formula">
+                        L_DPO = -E[log σ(β(log π_θ(y_w|x) - log π_ref(y_w|x) - log π_θ(y_l|x) + log π_ref(y_l|x)))]<br><br>
+                        Where:<br>
+                        • y_w = preferred response, y_l = rejected response<br>
+                        • π_θ = policy model, π_ref = reference model<br>
+                        • β = temperature controlling deviation from reference
+                    </div>
+                `,
+                applications: `
+                    <h3>Production Deployment</h3>
+                    <div class="info-box">
+                        <div class="box-title">🏠 Local LLM Deployment</div>
+                        <div class="box-content">
+                            <strong>Ollama:</strong> One-command local LLM deployment (ollama run llama3)<br>
+                            <strong>llama.cpp:</strong> CPU inference with GGUF quantized models<br>
+                            <strong>vLLM:</strong> High-throughput GPU serving with PagedAttention
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🎯 Domain-Specific Fine-Tuning</div>
+                        <div class="box-content">
+                            <strong>Medical:</strong> BioMistral, Med-PaLM (clinical notes, diagnoses)<br>
+                            <strong>Legal:</strong> SaulLM (contract analysis, case law)<br>
+                            <strong>Code:</strong> CodeLlama, StarCoder (code generation, completion)
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">💰 Cost Optimization</div>
+                        <div class="box-content">
+                            <strong>Distillation:</strong> Train a small model to mimic a large one (GPT-4 → Phi-3)<br>
+                            <strong>Speculative Decoding:</strong> Small model drafts, large model verifies (2-3x speedup)<br>
+                            <strong>Mixture of Experts:</strong> Only activate 2 of 8 expert networks per token (Mixtral)
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">🛠️ Key Tools</div>
+                        <div class="box-content">
+                            <strong>Hugging Face PEFT:</strong> Official LoRA/QLoRA library<br>
+                            <strong>Unsloth:</strong> 2x faster fine-tuning with 60% less memory<br>
+                            <strong>Axolotl:</strong> Config-driven fine-tuning (no code needed)<br>
+                            <strong>TRL:</strong> Transformer Reinforcement Learning (RLHF/DPO)
+                        </div>
+                    </div>
+                `
             }
         };
+
 
         function createModuleHTML(module) {
             const content = MODULE_CONTENT[module.id] || {};
@@ -5417,7 +6001,10 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
                 'vit': drawVisionTransformer,
                 'gnn': drawGraphNetwork,
                 'seq2seq': drawSeq2SeqAttention,
-                'research-papers': drawDefaultVisualization
+                'research-papers': drawDefaultVisualization,
+                'vector-db': drawVectorSpace,
+                'rag': drawRAGPipeline,
+                'advanced-llm': drawLoRADiagram
             };
 
             if (vizMap[moduleId]) {
@@ -7087,6 +7674,247 @@ output, attn_weights = mha(x, x, x)  <span style="color: #6c7086;"># Self-attent
 
             ctx.fillStyle = '#ff6b35';
             ctx.fillText('🛒 Pinterest/Amazon Recommendations', canvas.width / 2, 180);
+        }
+
+        // ============ GenAI Visualizations ============
+
+        function drawVectorSpace(ctx, canvas) {
+            const w = canvas.width, h = canvas.height;
+            ctx.fillStyle = '#00c9a7';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Vector Space — Similarity Search', w / 2, 30);
+
+            // Draw axes
+            ctx.strokeStyle = 'rgba(0, 201, 167, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(60, h - 40); ctx.lineTo(w - 20, h - 40); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(60, h - 40); ctx.lineTo(60, 50); ctx.stroke();
+            ctx.fillStyle = '#b0b7c3'; ctx.font = '11px Arial';
+            ctx.fillText('Dimension 1', w / 2, h - 15);
+            ctx.save(); ctx.translate(15, h / 2); ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Dimension 2', 0, 0); ctx.restore();
+
+            // Cluster A (documents)
+            const clusterA = [
+                { x: 200, y: 120, label: 'doc1' }, { x: 230, y: 100, label: 'doc2' },
+                { x: 180, y: 140, label: 'doc3' }, { x: 220, y: 150, label: 'doc4' }
+            ];
+            // Cluster B
+            const clusterB = [
+                { x: 420, y: 200, label: 'doc5' }, { x: 450, y: 220, label: 'doc6' },
+                { x: 400, y: 240, label: 'doc7' }
+            ];
+            // Query
+            const query = { x: 190, y: 130, label: '🔍 Query' };
+
+            // Draw cluster backgrounds
+            ctx.fillStyle = 'rgba(0, 136, 255, 0.08)';
+            ctx.beginPath(); ctx.arc(210, 130, 60, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = 'rgba(255, 107, 53, 0.08)';
+            ctx.beginPath(); ctx.arc(423, 220, 55, 0, Math.PI * 2); ctx.fill();
+
+            // Draw similarity lines from query to nearest
+            ctx.strokeStyle = 'rgba(0, 255, 136, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 3]);
+            clusterA.forEach(d => {
+                ctx.beginPath(); ctx.moveTo(query.x, query.y);
+                ctx.lineTo(d.x, d.y); ctx.stroke();
+            });
+            ctx.setLineDash([]);
+
+            // Draw document points
+            clusterA.forEach(d => {
+                ctx.fillStyle = '#0088ff';
+                ctx.beginPath(); ctx.arc(d.x, d.y, 8, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#e4e6eb'; ctx.font = '10px Arial';
+                ctx.fillText(d.label, d.x + 12, d.y + 4);
+            });
+            clusterB.forEach(d => {
+                ctx.fillStyle = '#ff6b35';
+                ctx.beginPath(); ctx.arc(d.x, d.y, 8, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#e4e6eb'; ctx.font = '10px Arial';
+                ctx.fillText(d.label, d.x + 12, d.y + 4);
+            });
+
+            // Draw query
+            ctx.fillStyle = '#00ff88';
+            ctx.beginPath(); ctx.arc(query.x, query.y, 10, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#00ff88'; ctx.font = 'bold 12px Arial';
+            ctx.fillText(query.label, query.x - 15, query.y - 18);
+
+            // Legend
+            ctx.font = '11px Arial'; let ly = h - 80;
+            [['#0088ff', 'Cluster A (nearest)'], ['#ff6b35', 'Cluster B'], ['#00ff88', 'Query Vector']].forEach(([c, t]) => {
+                ctx.fillStyle = c; ctx.fillRect(w - 160, ly, 10, 10);
+                ctx.fillStyle = '#e4e6eb'; ctx.fillText(t, w - 145, ly + 9); ly += 18;
+            });
+
+            // Cosine score
+            ctx.fillStyle = '#00c9a7'; ctx.font = 'bold 13px Arial';
+            ctx.fillText('cos(query, doc1) = 0.97', w / 2, h - 55);
+        }
+
+        function drawRAGPipeline(ctx, canvas) {
+            const w = canvas.width, h = canvas.height;
+            ctx.fillStyle = '#00c9a7';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('RAG Pipeline — Retrieval-Augmented Generation', w / 2, 30);
+
+            const boxes = [
+                { x: 30, y: 70, w: 90, h: 50, label: '📄 Docs', color: '#0088ff' },
+                { x: 145, y: 70, w: 90, h: 50, label: '✂️ Chunk', color: '#0088ff' },
+                { x: 260, y: 70, w: 90, h: 50, label: '🧮 Embed', color: '#0088ff' },
+                { x: 375, y: 70, w: 100, h: 50, label: '🧲 Vector DB', color: '#0088ff' },
+                { x: 30, y: 180, w: 90, h: 50, label: '❓ Query', color: '#00ff88' },
+                { x: 145, y: 180, w: 90, h: 50, label: '🧮 Embed', color: '#00ff88' },
+                { x: 260, y: 180, w: 90, h: 50, label: '🔍 Retrieve', color: '#ff6b35' },
+                { x: 375, y: 180, w: 100, h: 50, label: '🤖 LLM', color: '#ffaa00' },
+                { x: 500, y: 180, w: 90, h: 50, label: '✅ Answer', color: '#00c9a7' }
+            ];
+
+            // Draw arrows (indexing pipeline)
+            ctx.strokeStyle = 'rgba(0, 136, 255, 0.6)'; ctx.lineWidth = 2;
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.moveTo(boxes[i].x + boxes[i].w, boxes[i].y + 25);
+                ctx.lineTo(boxes[i + 1].x, boxes[i + 1].y + 25);
+                ctx.stroke();
+                // Arrowhead
+                ctx.fillStyle = 'rgba(0, 136, 255, 0.6)';
+                ctx.beginPath();
+                ctx.moveTo(boxes[i + 1].x, boxes[i + 1].y + 25);
+                ctx.lineTo(boxes[i + 1].x - 8, boxes[i + 1].y + 20);
+                ctx.lineTo(boxes[i + 1].x - 8, boxes[i + 1].y + 30);
+                ctx.fill();
+            }
+
+            // Draw arrows (query pipeline)
+            ctx.strokeStyle = 'rgba(0, 255, 136, 0.6)';
+            for (let i = 4; i < 8; i++) {
+                ctx.beginPath();
+                ctx.moveTo(boxes[i].x + boxes[i].w, boxes[i].y + 25);
+                ctx.lineTo(boxes[i + 1].x, boxes[i + 1].y + 25);
+                ctx.stroke();
+                ctx.fillStyle = 'rgba(0, 255, 136, 0.6)';
+                ctx.beginPath();
+                ctx.moveTo(boxes[i + 1].x, boxes[i + 1].y + 25);
+                ctx.lineTo(boxes[i + 1].x - 8, boxes[i + 1].y + 20);
+                ctx.lineTo(boxes[i + 1].x - 8, boxes[i + 1].y + 30);
+                ctx.fill();
+            }
+
+            // Vector DB connection (vertical)
+            ctx.strokeStyle = 'rgba(255, 107, 53, 0.6)'; ctx.setLineDash([4, 3]);
+            ctx.beginPath();
+            ctx.moveTo(boxes[3].x + 50, boxes[3].y + boxes[3].h);
+            ctx.lineTo(boxes[6].x + 45, boxes[6].y);
+            ctx.stroke(); ctx.setLineDash([]);
+
+            // Draw boxes
+            boxes.forEach(b => {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillRect(b.x, b.y, b.w, b.h);
+                ctx.strokeStyle = b.color; ctx.lineWidth = 2;
+                ctx.strokeRect(b.x, b.y, b.w, b.h);
+                ctx.fillStyle = '#e4e6eb'; ctx.font = '11px Arial'; ctx.textAlign = 'center';
+                ctx.fillText(b.label, b.x + b.w / 2, b.y + 30);
+            });
+
+            // Labels
+            ctx.font = 'bold 12px Arial'; ctx.textAlign = 'left';
+            ctx.fillStyle = '#0088ff'; ctx.fillText('Indexing (Offline)', 30, 60);
+            ctx.fillStyle = '#00ff88'; ctx.fillText('Query (Online)', 30, 170);
+        }
+
+        function drawLoRADiagram(ctx, canvas) {
+            const w = canvas.width, h = canvas.height;
+            ctx.fillStyle = '#00c9a7';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('LoRA — Low-Rank Adaptation', w / 2, 30);
+
+            // Original Weight Matrix W (large)
+            const wX = 50, wY = 60, wW = 120, wH = 120;
+            ctx.fillStyle = 'rgba(0, 136, 255, 0.15)';
+            ctx.fillRect(wX, wY, wW, wH);
+            ctx.strokeStyle = '#0088ff'; ctx.lineWidth = 2;
+            ctx.strokeRect(wX, wY, wW, wH);
+            ctx.fillStyle = '#0088ff'; ctx.font = 'bold 14px Arial';
+            ctx.fillText('W', wX + wW / 2, wY + wH / 2 + 5);
+            ctx.font = '10px Arial'; ctx.fillStyle = '#b0b7c3';
+            ctx.fillText('d × d', wX + wW / 2, wY + wH / 2 + 22);
+            ctx.fillText('(Frozen)', wX + wW / 2, wY - 8);
+
+            // Plus sign
+            ctx.fillStyle = '#e4e6eb'; ctx.font = 'bold 24px Arial';
+            ctx.fillText('+', wX + wW + 30, wY + wH / 2 + 8);
+
+            // LoRA matrices B and A
+            const bX = 230, bY = 60, bW = 30, bH = 120;
+            ctx.fillStyle = 'rgba(0, 255, 136, 0.2)';
+            ctx.fillRect(bX, bY, bW, bH);
+            ctx.strokeStyle = '#00ff88'; ctx.lineWidth = 2;
+            ctx.strokeRect(bX, bY, bW, bH);
+            ctx.fillStyle = '#00ff88'; ctx.font = 'bold 14px Arial';
+            ctx.fillText('B', bX + bW / 2, bY + bH / 2 + 5);
+            ctx.font = '10px Arial'; ctx.fillStyle = '#b0b7c3';
+            ctx.fillText('d×r', bX + bW / 2, bY - 8);
+
+            // × symbol
+            ctx.fillStyle = '#e4e6eb'; ctx.font = 'bold 18px Arial';
+            ctx.fillText('×', bX + bW + 18, bY + bH / 2 + 5);
+
+            const aX = 290, aY = 100, aW = 120, aH = 30;
+            ctx.fillStyle = 'rgba(255, 107, 53, 0.2)';
+            ctx.fillRect(aX, aY, aW, aH);
+            ctx.strokeStyle = '#ff6b35'; ctx.lineWidth = 2;
+            ctx.strokeRect(aX, aY, aW, aH);
+            ctx.fillStyle = '#ff6b35'; ctx.font = 'bold 14px Arial';
+            ctx.fillText('A', aX + aW / 2, aY + aH / 2 + 5);
+            ctx.font = '10px Arial'; ctx.fillStyle = '#b0b7c3';
+            ctx.fillText('r×d', aX + aW / 2, aY - 8);
+
+            // = sign
+            ctx.fillStyle = '#e4e6eb'; ctx.font = 'bold 24px Arial';
+            ctx.fillText('=', aX + aW + 25, wY + wH / 2 + 8);
+
+            // Result W'
+            const rX = 460, rY = 60, rW = 120, rH = 120;
+            ctx.fillStyle = 'rgba(0, 201, 167, 0.15)';
+            ctx.fillRect(rX, rY, rW, rH);
+            ctx.strokeStyle = '#00c9a7'; ctx.lineWidth = 2;
+            ctx.strokeRect(rX, rY, rW, rH);
+            ctx.fillStyle = '#00c9a7'; ctx.font = 'bold 14px Arial';
+            ctx.fillText("W'", rX + rW / 2, rY + rH / 2 + 5);
+            ctx.font = '10px Arial'; ctx.fillStyle = '#b0b7c3';
+            ctx.fillText('d × d', rX + rW / 2, rY + rH / 2 + 22);
+            ctx.fillText('(Adapted)', rX + rW / 2, rY - 8);
+
+            // Stats
+            ctx.font = '12px Arial'; ctx.textAlign = 'left';
+            ctx.fillStyle = '#0088ff'; ctx.fillText('Full: 16,777,216 params', 50, 220);
+            ctx.fillStyle = '#00ff88'; ctx.fillText('LoRA (r=16): 131,072 params', 50, 240);
+            ctx.fillStyle = '#00c9a7'; ctx.fillText('Savings: 128x reduction (0.78%)', 50, 260);
+
+            // Quantization bar chart
+            ctx.fillStyle = '#e4e6eb'; ctx.font = 'bold 12px Arial'; ctx.textAlign = 'center';
+            ctx.fillText('Memory: 7B Model', 480, 210);
+            const bars = [
+                { label: 'fp32', val: 28, color: '#ff6b35' },
+                { label: 'fp16', val: 14, color: '#ffaa00' },
+                { label: 'INT8', val: 7, color: '#0088ff' },
+                { label: 'INT4', val: 3.5, color: '#00ff88' }
+            ];
+            bars.forEach((b, i) => {
+                const bw = b.val * 4.5;
+                ctx.fillStyle = b.color;
+                ctx.fillRect(430, 220 + i * 22, bw, 16);
+                ctx.fillStyle = '#e4e6eb'; ctx.font = '10px Arial'; ctx.textAlign = 'left';
+                ctx.fillText(`${b.label}: ${b.val}GB`, 430 + bw + 5, 233 + i * 22);
+            });
         }
 
         initDashboard();

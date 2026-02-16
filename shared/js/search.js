@@ -36,7 +36,10 @@
                 { title: 'GANs - Generative Adversarial Networks', section: 'gans' },
                 { title: 'Diffusion Models', section: 'diffusion' },
                 { title: 'Regularization & Dropout', section: 'regularization' },
-                { title: 'Batch Normalization', section: 'batchnorm' }
+                { title: 'Batch Normalization', section: 'batchnorm' },
+                { title: 'Vector Databases', section: 'vector-db' },
+                { title: 'RAG Pipelines', section: 'rag' },
+                { title: 'Fine-Tuning & Quantization', section: 'advanced-llm' }
             ]
         },
         {
