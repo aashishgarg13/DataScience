@@ -35,6 +35,7 @@ Visit our courses directly in your browser:
 | 📐 Mathematics | [Launch](https://aashishgarg13.github.io/DataScience-v2/math-ds-complete/) | 15 |
 | ⚙️ Feature Engineering | [Launch](https://aashishgarg13.github.io/DataScience-v2/feature-engineering/) | 12 |
 | 📈 Visualization | [Launch](https://aashishgarg13.github.io/DataScience-v2/Visualization/) | 8 |
+| 🐍 Python | [Launch](https://aashishgarg13.github.io/DataScience-v2/Python/) | 10 |
 | 💬 Prompt Engineering | [Launch](https://aashishgarg13.github.io/DataScience-v2/prompt-engineering-guide/) | 12 |
 
 ---

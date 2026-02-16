@@ -1,0 +1,2907 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python for Data Science & AI | Complete Masterclass</title>
+    <link rel="stylesheet" href="../shared/css/design-system.css">
+    <link rel="stylesheet" href="../shared/css/components.css">
+    <style>
+        :root {
+            --python-blue: #3776AB;
+            --python-yellow: #FFD43B;
+            --color-primary: var(--python-blue);
+            --color-secondary: var(--python-yellow);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #1a1f3a 100%);
+            color: #e0e6ed;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--python-blue), var(--python-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #8892a6;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: block;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(55, 118, 171, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--python-blue), var(--python-yellow));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--python-blue);
+            box-shadow: 0 20px 40px rgba(55, 118, 171, 0.3);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            color: var(--python-yellow);
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: #b3b9c5;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-label {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(55, 118, 171, 0.2);
+            border: 1px solid var(--python-blue);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--python-blue);
+            font-weight: 600;
+        }
+
+        /* Module View */
+        .module {
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-back {
+            background: var(--python-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: #2a5d8a;
+            transform: translateX(-4px);
+        }
+
+        .module header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #8892a6;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--python-yellow);
+            border-bottom-color: var(--python-yellow);
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+        }
+
+        /* Tab Content */
+        .tab {
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        .tab.active {
+            display: block;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section h2 {
+            color: var(--python-yellow);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .section h3 {
+            color: var(--python-blue);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            background: rgba(55, 118, 171, 0.3);
+            color: var(--python-yellow);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            line-height: 1.6;
+        }
+
+        .code-block .comment {
+            color: #6e7681;
+        }
+
+        .code-block .keyword {
+            color: #ff7b72;
+            font-weight: bold;
+        }
+
+        .code-block .string {
+            color: #a5d6ff;
+        }
+
+        .code-block .function {
+            color: #d2a8ff;
+        }
+
+        .code-block .number {
+            color: #79c0ff;
+        }
+
+        .code-block .class {
+            color: #ffa657;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: linear-gradient(135deg, rgba(55, 118, 171, 0.1), rgba(255, 212, 59, 0.1));
+            border-left: 4px solid var(--python-blue);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .box-title {
+            font-weight: 700;
+            color: var(--python-yellow);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .box-content {
+            color: #d0d7de;
+            line-height: 1.7;
+        }
+
+        /* Interview Box */
+        .interview-box {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(163, 113, 247, 0.1));
+            border-left: 4px solid #ff6b35;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        /* Callouts */
+        .callout {
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+
+        .callout.tip {
+            background: rgba(46, 204, 113, 0.1);
+            border-color: #2ecc71;
+        }
+
+        .callout.warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-color: #ffc107;
+        }
+
+        .callout-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Utility */
+        .dashboard.active {
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        strong {
+            color: var(--python-yellow);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Dashboard -->
+        <div class="dashboard active" id="dashboard">
+            <header>
+                <h1>🐍 Python for Data Science & AI Masterclass</h1>
+                <p class="subtitle">From Fundamentals to Production — NumPy · Pandas · PyTorch · TensorFlow ·
+                    Scikit-learn</p>
+            </header>
+
+            <div class="modules-grid" id="modulesGrid"></div>
+        </div>
+
+        <!-- Module Container -->
+        <div id="modulesContainer"></div>
+    </div>
+
+    <script>
+        const modules = [
+            {
+                id: "python-fundamentals",
+                title: "Python Fundamentals for DS",
+                icon: "🐍",
+                category: "Foundations",
+                description: "Data structures, comprehensions, file I/O, virtual environments"
+            },
+            {
+                id: "numpy",
+                title: "NumPy & Scientific Computing",
+                icon: "🔢",
+                category: "Scientific",
+                description: "ndarrays, broadcasting, vectorization, linear algebra"
+            },
+            {
+                id: "pandas",
+                title: "Pandas & Data Manipulation",
+                icon: "🐼",
+                category: "Data Wrangling",
+                description: "DataFrames, groupby, pivot, time series, merging"
+            },
+            {
+                id: "visualization",
+                title: "Data Visualization",
+                icon: "📊",
+                category: "Visualization",
+                description: "Matplotlib, Seaborn, Plotly — from basics to publication-ready"
+            },
+            {
+                id: "advanced-python",
+                title: "Advanced Python",
+                icon: "🎯",
+                category: "Advanced",
+                description: "OOP, decorators, async, multiprocessing, type hints"
+            },
+            {
+                id: "sklearn",
+                title: "Python for ML (Scikit-learn)",
+                icon: "🤖",
+                category: "Machine Learning",
+                description: "Pipelines, transformers, cross-validation, hyperparameter tuning"
+            },
+            {
+                id: "pytorch",
+                title: "Deep Learning with PyTorch",
+                icon: "🔥",
+                category: "Deep Learning",
+                description: "Tensors, autograd, nn.Module, training loops, transfer learning"
+            },
+            {
+                id: "tensorflow",
+                title: "TensorFlow & Keras",
+                icon: "🧠",
+                category: "Deep Learning",
+                description: "Sequential/Functional API, callbacks, TensorBoard, deployment"
+            },
+            {
+                id: "production",
+                title: "Production Python",
+                icon: "📦",
+                category: "Engineering",
+                description: "Testing, packaging, logging, FastAPI for model serving"
+            },
+            {
+                id: "optimization",
+                title: "Performance & Optimization",
+                icon: "⚡",
+                category: "Optimization",
+                description: "Profiling, Numba, Cython, memory optimization, Dask"
+            }
+        ];
+
+        const MODULE_CONTENT = {            "python-fundamentals": {
+                concepts: `
+                    <div class="section">
+                        <h2>Python Data Structures for DS</h2>
+                        
+                        <table>
+                            <tr>
+                                <th>Type</th>
+                                <th>Mutable</th>
+                                <th>Ordered</th>
+                                <th>Use Case</th>
+                            </tr>
+                            <tr>
+                                <td><strong>list</strong></td>
+                                <td>✓</td>
+                                <td>✓</td>
+                                <td>Sequential data, time series</td>
+                            </tr>
+                            <tr>
+                                <td><strong>tuple</strong></td>
+                                <td>✗</td>
+                                <td>✓</td>
+                                <td>Fixed records, DataFrame rows</td>
+                            </tr>
+                            <tr>
+                                <td><strong>dict</strong></td>
+                                <td>✓</td>
+                                <td>✓ (Python 3.7+)</td>
+                                <td>Lookup tables, JSON data</td>
+                            </tr>
+                            <tr>
+                                <td><strong>set</strong></td>
+                                <td>✓</td>
+                                <td>✗</td>
+                                <td>Unique values, filtering duplicates</td>
+                            </tr>
+                        </table>
+
+                        <h3>List Comprehensions</h3>
+                        <div class="info-box">
+                            <div class="box-title">⚡ Faster Than Loops</div>
+                            <div class="box-content">
+                                List comprehensions are <strong>30-40% faster</strong> than traditional for loops for building lists.
+                            </div>
+                        </div>
+
+                        <h3>Lambda Functions</h3>
+                        <p>Anonymous functions perfect for <code>map()</code>, <code>filter()</code>, and sorting:</p>
+
+                        <h3>File I/O Best Practices</h3>
+                        <div class="callout tip">
+                            <div class="callout-title">✓ Context Managers</div>
+                            Always use <code>with open()</code> to automatically close files and handle exceptions.
+                        </div>
+
+                        <h3>Virtual Environments</h3>
+                        <table>
+                            <tr>
+                                <th>Tool</th>
+                                <th>Best For</th>
+                                <th>Command</th>
+                            </tr>
+                            <tr>
+                                <td>venv</td>
+                                <td>Simple Python projects</td>
+                                <td>python -m venv env</td>
+                            </tr>
+                            <tr>
+                                <td>conda</td>
+                                <td>DS/ML (complex dependencies)</td>
+                                <td>conda create -n myenv python=3.10</td>
+                            </tr>
+                            <tr>
+                                <td>poetry</td>
+                                <td>Modern dependency management</td>
+                                <td>poetry init</td>
+                            </tr>
+                        </table>
+                    </div>
+                `,
+                code: `
+                    <div class="section">
+                        <h2>💻 Essential Code Examples</h2>
+
+                        <h3>List Comprehensions for Data Cleaning</h3>
+                        <div class="code-block">
+<span class="comment"># Clean and transform survey responses</span>
+responses = [<span class="string">" yes "</span>, <span class="string">"NO"</span>, <span class="string">"  Yes"</span>, <span class="string">"no "</span>]
+clean = [r.strip().lower() <span class="keyword">for</span> r <span class="keyword">in</span> responses]
+<span class="comment"># ['yes', 'no', 'yes', 'no']</span>
+
+<span class="comment"># Filter outliers from dataset</span>
+data = [<span class="number">12</span>, <span class="number">45</span>, <span class="number">67</span>, <span class="number">200</span>, <span class="number">89</span>, <span class="number">34</span>]
+q75 = <span class="number">67</span>  <span class="comment"># 75th percentile</span>
+filtered = [x <span class="keyword">for</span> x <span class="keyword">in</span> data <span class="keyword">if</span> x &lt;= q75]
+                        </div>
+
+                        <h3>Dictionary Techniques</h3>
+                        <div class="code-block">
+<span class="comment"># Count occurrences (alternative to Counter)</span>
+labels = [<span class="string">'cat'</span>, <span class="string">'dog'</span>, <span class="string">'cat'</span>, <span class="string">'bird'</span>, <span class="string">'cat'</span>]
+counts = {}
+<span class="keyword">for</span> label <span class="keyword">in</span> labels:
+    counts[label] = counts.get(label, <span class="number">0</span>) + <span class="number">1</span>
+
+<span class="comment"># Dict comprehension for feature scaling</span>
+features = {<span class="string">'age'</span>: <span class="number">25</span>, <span class="string">'income'</span>: <span class="number">50000</span>, <span class="string">'score'</span>: <span class="number">85</span>}
+normalized = {k: v/<span class="number">100</span> <span class="keyword">for</span> k, v <span class="keyword">in</span> features.items()}
+                        </div>
+
+                        <h3>File I/O with Context Managers</h3>
+                        <div class="code-block">
+<span class="comment"># Reading CSV manually</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">'data.csv'</span>, <span class="string">'r'</span>) <span class="keyword">as</span> f:
+    headers = f.readline().strip().split(<span class="string">','</span>)
+    rows = [line.strip().split(<span class="string">','</span>) <span class="keyword">for</span> line <span class="keyword">in</span> f]
+
+<span class="comment"># Processing large files line-by-line (memory efficient)</span>
+<span class="keyword">def</span> <span class="function">process_large_log</span>(filepath):
+    <span class="keyword">with</span> <span class="function">open</span>(filepath) <span class="keyword">as</span> f:
+        <span class="keyword">for</span> line <span class="keyword">in</span> f:  <span class="comment"># Reads one line at a time</span>
+            <span class="keyword">if</span> <span class="string">'ERROR'</span> <span class="keyword">in</span> line:
+                <span class="function">print</span>(line.strip())
+                        </div>
+
+                        <h3>Lambda + Map/Filter for Data Pipelines</h3>
+                        <div class="code-block">
+<span class="comment"># Apply multiple transformations</span>
+salaries = [<span class="number">45000</span>, <span class="number">67000</span>, <span class="number">89000</span>, <span class="number">123000</span>]
+
+<span class="comment"># Filter and transform in one pipeline</span>
+<span class="keyword">from</span> functools <span class="keyword">import</span> reduce
+
+above_60k = <span class="function">filter</span>(<span class="keyword">lambda</span> x: x &gt; <span class="number">60000</span>, salaries)
+with_bonus = <span class="function">map</span>(<span class="keyword">lambda</span> x: x * <span class="number">1.1</span>, above_60k)
+result = <span class="function">list</span>(with_bonus)
+                        </div>
+                    </div>
+                `,
+                interview: `
+                    <div class="section">
+                        <h2>🎯 Interview Questions</h2>
+
+                        <div class="interview-box">
+                            <strong>Q1: What's the difference between a list and a tuple? When would you use each in DS workflows?</strong>
+                            <p><strong>Answer:</strong> Lists are mutable (can modify), tuples are immutable. Use <strong>tuples</strong> for fixed-size records (e.g., (latitude, longitude) pairs, DataFrame rows), and <strong>lists</strong> for sequences that change (time series, dynamic feature lists).</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q2: How does Python's GIL affect data science workflows?</strong>
+                            <p><strong>Answer:</strong> The Global Interpreter Lock prevents true multi-threading for CPU-bound tasks. For DS: Use <strong>multiprocessing</strong> for parallel data processing, or libraries like NumPy/Pandas that release the GIL for computations.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q3: Explain list comprehensions vs generator expressions. When to use each?</strong>
+                            <p><strong>Answer:</strong> List comp <code>[x**2 for x in range(n)]</code> creates the whole list in memory. Generator <code>(x**2 for x in range(n))</code> yields one value at a time. Use generators for <strong>large datasets</strong> to save memory.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q4: How would you handle a 10GB CSV file that doesn't fit in memory?</strong>
+                            <p><strong>Answer:</strong> Read line-by-line using <code>with open()</code>, or use <code>pd.read_csv(chunksize=10000)</code> to process in batches, or use Dask for distributed computing.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q5: What's the time complexity of dict lookup vs list search?</strong>
+                            <p><strong>Answer:</strong> Dict: O(1) average case using hash tables. List: O(n) requires linear scan. Critical for large-scale feature lookups.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q6: Explain the difference between shallow and deep copy.</strong>
+                            <p><strong>Answer:</strong> Shallow copy (<code>list.copy()</code>) copies references. Deep copy (<code>copy.deepcopy()</code>) recursively copies all nested objects. Important when working with nested data structures in pipelines.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q7: How does <code>*args</code> and <code>**kwargs</code> help in building flexible ML pipelines?</strong>
+                            <p><strong>Answer:</strong> They allow variable arguments. <code>*args</code> for positional (e.g., multiple datasets), <code>**kwargs</code> for named parameters (e.g., hyperparameters). Essential for wrapper functions and decorators.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q8: What's the advantage of using <code>with open()</code> over manual file closing?</strong>
+                            <p><strong>Answer:</strong> Context managers guarantee file closure even if exceptions occur, preventing resource leaks in long-running data pipelines.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q9: How would you remove duplicates from a list while preserving order?</strong>
+                            <p><strong>Code:</strong> <code>list(dict.fromkeys(my_list))</code> or <code>[x for i, x in enumerate(my_list) if x not in my_list[:i]]</code></p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q10: Why use virtual environments in production ML systems?</strong>
+                            <p><strong>Answer:</strong> Isolate dependencies per project, avoid version conflicts (scikit-learn 0.24 vs 1.2), ensure reproducibility across dev/staging/prod, and enable easy rollbacks.</p>
+                        </div>
+                    </div>
+                `
+            },
+
+            "numpy": {
+                concepts: `
+                    <div class="section">
+                        <h2>NumPy ndarray Fundamentals</h2>
+
+                        <h3>Why NumPy?</h3>
+                        <table>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Python List</th>
+                                <th>NumPy Array</th>
+                            </tr>
+                            <tr>
+                                <td>Speed</td>
+                                <td>1x</td>
+                                <td>10-100x faster</td>
+                            </tr>
+                            <tr>
+                                <td>Memory</td>
+                                <td>~28 bytes/element</td>
+                                <td>~8 bytes/element (dtype=int64)</td>
+                            </tr>
+                            <tr>
+                                <td>Vectorization</td>
+                                <td>Manual loops</td>
+                                <td>Built-in (C-optimized)</td>
+                            </tr>
+                        </table>
+
+                        <h3>Broadcasting</h3>
+                        <div class="info-box">
+                            <div class="box-title">🎯 Key Concept</div>
+                            <div class="box-content">
+                                Broadcasting allows operations on arrays of different shapes <strong>without explicit loops or copying</strong>. Rules: trailing dimensions must match or be 1.
+                            </div>
+                        </div>
+
+                        <h3>Vectorization vs Loops</h3>
+                        <div class="callout tip">
+                            <div class="callout-title">⚡ Performance</div>
+                            <code>arr * 2</code> is 50-100x faster than <code>[x * 2 for x in arr]</code> because NumPy uses SIMD instructions.
+                        </div>
+
+                        <h3>Linear Algebra Operations</h3>
+                        <p><strong>Essential for ML:</strong></p>
+                        <ul>
+                            <li><code>np.dot(A, B)</code> - Matrix multiplication (predictions)</li>
+                            <li><code>np.linalg.inv(A)</code> - Inverse (normal equation)</li>
+                            <li><code>np.linalg.eig(A)</code> - Eigenvalues (PCA)</li>
+                            <li><code>np.linalg.svd(A)</code> - SVD (recommender systems)</li>
+                        </ul>
+                    </div>
+                `,
+                code: `
+                    <div class="section">
+                        <h2>💻 NumPy in Action</h2>
+
+                        <h3>Array Creation & Indexing</h3>
+                        <div class="code-block">
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># Create from list</span>
+arr = np.array([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])
+
+<span class="comment"># Special arrays</span>
+zeros = np.zeros((<span class="number">3</span>, <span class="number">4</span>))
+ones = np.ones((<span class="number">2</span>, <span class="number">3</span>))
+identity = np.eye(<span class="number">5</span>)
+random = np.random.randn(<span class="number">100</span>, <span class="number">10</span>)  <span class="comment"># 100 samples, 10 features</span>
+
+<span class="comment"># Boolean indexing (filtering)</span>
+data = np.array([<span class="number">1</span>, <span class="number">5</span>, <span class="number">-3</span>, <span class="number">8</span>, <span class="number">-2</span>])
+positives = data[data &gt; <span class="number">0</span>]  <span class="comment"># [1, 5, 8]</span>
+                        </div>
+
+                        <h3>Broadcasting Example</h3>
+                        <div class="code-block">
+<span class="comment"># Normalize each feature (mean=0, std=1)</span>
+X = np.random.randn(<span class="number">1000</span>, <span class="number">5</span>)  <span class="comment"># 1000 samples, 5 features</span>
+
+mean = X.mean(axis=<span class="number">0</span>)  <span class="comment"># shape (5,)</span>
+std = X.std(axis=<span class="number">0</span>)    <span class="comment"># shape (5,)</span>
+
+X_normalized = (X - mean) / std  <span class="comment"># Broadcasting!</span>
+<span class="comment"># (1000, 5) - (5,) broadcasts to (1000, 5) - (1,5) automatically</span>
+                        </div>
+
+                        <h3>Vectorized Operations</h3>
+                        <div class="code-block">
+<span class="comment"># Inefficient (Python loop)</span>
+result = []
+<span class="keyword">for</span> x <span class="keyword">in</span> data:
+    result.append(x ** <span class="number">2</span>)
+
+<span class="comment"># Efficient (vectorized)</span>
+result = data ** <span class="number">2</span>  <span class="comment"># 100x faster</span>
+
+<span class="comment"># Apply sigmoid activation</span>
+<span class="keyword">def</span> <span class="function">sigmoid</span>(z):
+    <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))
+
+predictions = sigmoid(X @ weights)  <span class="comment"># Matrix mult + vectorized sigmoid</span>
+                        </div>
+
+                        <h3>Linear Algebra for ML</h3>
+                        <div class="code-block">
+<span class="comment"># Solve linear regression (Normal Equation)</span>
+X = np.random.randn(<span class="number">100</span>, <span class="number">3</span>)  <span class="comment"># 100 samples, 3 features</span>
+y = np.random.randn(<span class="number">100</span>)
+
+<span class="comment"># θ = (X^T X)^(-1) X^T y</span>
+theta = np.linalg.inv(X.T @ X) @ X.T @ y
+
+<span class="comment"># Eigendecomposition for PCA</span>
+cov_matrix = np.cov(X.T)
+eigenvalues, eigenvectors = np.linalg.eig(cov_matrix)
+                        </div>
+
+                        <h3>Random Sampling</h3>
+                        <div class="code-block">
+<span class="comment"># Train/test split indices</span>
+n = <span class="number">1000</span>
+indices = np.random.permutation(n)
+train_idx = indices[:<span class="number">800</span>]
+test_idx = indices[<span class="number">800</span>:]
+
+<span class="comment"># Stratified sampling</span>
+classes, counts = np.unique(y, return_counts=<span class="keyword">True</span>)
+                        </div>
+                    </div>
+                `,
+                interview: `
+                    <div class="section">
+                        <h2>🎯 NumPy Interview Questions</h2>
+
+                        <div class="interview-box">
+                            <strong>Q1: Why is NumPy faster than Python lists?</strong>
+                            <p><strong>Answer:</strong> (1) Fixed-type arrays (no type checking), (2) Contiguous memory layout, (3) Vectorized operations in C, (4) SIMD instructions, (5) No Python interpreter overhead for loops.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q2: Explain broadcasting with an example.</strong>
+                            <p><strong>Example:</strong> <code>arr.shape=(3,4)</code> + <code>vec.shape=(4,)</code> → broadcasts vec to (1,4) then (3,4). Adds vec to each row. Critical for efficient feature normalization.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q3: What's the difference between <code>np.dot()</code> and <code>*</code>?</strong>
+                            <p><code>*</code> is element-wise multiplication. <code>np.dot()</code> is matrix multiplication (or <code>@</code> operator). For (m,n) × (n,k) → (m,k) result.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q4: How to handle memory errors with large arrays?</strong>
+                            <p><strong>Solutions:</strong> (1) Use memory-mapped arrays <code>np.memmap</code>, (2) Process in chunks, (3) Use Dask for out-of-core computation, (4) Choose smaller dtypes (float32 vs float64).</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q5: What's the difference between <code>copy()</code> and view?</strong>
+                            <p><strong>View:</strong> <code>arr[1:3]</code> shares memory. <strong>Copy:</strong> <code>arr[1:3].copy()</code> creates new array. Views save memory but can cause bugs if modified.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q6: How to normalize a dataset efficiently?</strong>
+                            <p><code>(X - X.mean(axis=0)) / X.std(axis=0)</code> using broadcasting. For large data, use <code>np.nanmean()</code> to handle missing values.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q7: Explain eigendecomposition's role in PCA.</strong>
+                            <p>PCA finds principal components via <code>np.linalg.eig(cov_matrix)</code>. Eigenvectors = directions of max variance. Eigenvalues = variance magnitude. Sort by eigenvalue desc.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q8: What's the shape of <code>np.dot(A, B)</code> if A is (5,3) and B is (3,7)?</strong>
+                            <p><strong>(5, 7)</strong>. Inner dims (3) must match. Outer dims define result.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q9: How to create a train/test split without sklearn?</strong>
+                            <p><code>indices = np.random.permutation(len(X))</code> then slice: <code>X_train = X[indices[:800]]</code></p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q10: What's the advantage of <code>axis=0</code> vs <code>axis=1</code>?</strong>
+                            <p><code>axis=0</code> = operate down rows (column-wise). <code>axis=1</code> = across columns (row-wise). For (100,5): <code>mean(axis=0)</code> → (5,) means per-feature.</p>
+                        </div>
+                    </div>
+                `
+            },
+
+            "pandas": {
+                concepts: `
+                    <div class="section">
+                        <h2>Pandas Core Concepts</h2>
+
+                        <h3>DataFrames vs Series</h3>
+                        <table>
+                            <tr>
+                                <th>Structure</th>
+                                <th>Dimensions</th>
+                                <th>Use Case</th>
+                            </tr>
+                            <tr>
+                                <td>Series</td>
+                                <td>1D (column)</td>
+                                <td>Single feature, time series</td>
+                            </tr>
+                            <tr>
+                                <td>DataFrame</td>
+                                <td>2D (table)</td>
+                                <td>Tabular data, datasets</td>
+                            </tr>
+                        </table>
+
+                        <h3>Indexing Methods</h3>
+                        <ul>
+                            <li><code>.loc[]</code> - Label-based (by row/col names)</li>
+                            <li><code>.iloc[]</code> - Position-based (by integer index)</li>
+                            <li><code>.at[]</code> - Fast scalar access (label)</li>
+                            <li><code>.iat[]</code> - Fast scalar access (position)</li>
+                        </ul>
+
+                        <h3>GroupBy-Split-Apply-Combine</h3>
+                        <div class="info-box">
+                            <div class="box-title">🔀 Powerful Pattern</div>
+                            <div class="box-content">
+                                <code>df.groupby('category').agg({'price': 'mean', 'quantity': 'sum'})</code><br>
+                                Split data by groups → Apply aggregation → Combine results
+                            </div>
+                        </div>
+
+                        <h3>Merge vs Join vs Concat</h3>
+                        <table>
+                            <tr>
+                                <th>Method</th>
+                                <th>SQL Equivalent</th>
+                                <th>Use Case</th>
+                            </tr>
+                            <tr>
+                                <td>merge()</td>
+                                <td>JOIN</td>
+                                <td>Combine DataFrames on keys</td>
+                            </tr>
+                            <tr>
+                                <td>join()</td>
+                                <td>JOIN on index</td>
+                                <td>Merge by index</td>
+                            </tr>
+                            <tr>
+                                <td>concat()</td>
+                                <td>UNION</td>
+                                <td>Stack DataFrames (rows/cols)</td>
+                            </tr>
+                        </table>
+                    </div>
+                `,
+                code: `
+                    <div class="section">
+                        <h2>💻 Pandas Data Manipulation</h2>
+
+                        <h3>Loading & Basic Exploration</h3>
+                        <div class="code-block">
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># Load data</span>
+df = pd.read_csv(<span class="string">'data.csv'</span>, parse_dates=[<span class="string">'date'</span>])
+
+<span class="comment"># Quick inspection</span>
+df.head()
+df.info()
+df.describe()
+df.isnull().sum()  <span class="comment"># Missing values</span>
+
+<span class="comment"># Select columns</span>
+df[[<span class="string">'age'</span>, <span class="string">'income'</span>]]
+df.filter(like=<span class="string">'price'</span>)  <span class="comment"># All cols with 'price'</span>
+                        </div>
+
+                        <h3>Filtering & Boolean Indexing</h3>
+                        <div class="code-block">
+<span class="comment"># Filter rows</span>
+high_income = df[df[<span class="string">'income'</span>] &gt; <span class="number">100000</span>]
+
+<span class="comment"># Multiple conditions</span>
+young_rich = df[(df[<span class="string">'age'</span>] &lt; <span class="number">30</span>) & (df[<span class="string">'income'</span>] &gt; <span class="number">80000</span>)]
+
+<span class="comment"># isin for categorical</span>
+cities = df[df[<span class="string">'city'</span>].isin([<span class="string">'NYC'</span>, <span class="string">'SF'</span>, <span class="string">'LA'</span>])]
+                        </div>
+
+                        <h3>GroupBy & Aggregation</h3>
+                        <div class="code-block">
+<span class="comment"># Average salary by department</span>
+df.groupby(<span class="string">'department'</span>)[<span class="string">'salary'</span>].mean()
+
+<span class="comment"># Multiple aggregations</span>
+df.groupby(<span class="string">'category'</span>).agg({
+    <span class="string">'price'</span>: [<span class="string">'mean'</span>, <span class="string">'min'</span>, <span class="string">'max'</span>],
+    <span class="string">'quantity'</span>: <span class="string">'sum'</span>
+})
+
+<span class="comment"># Custom aggregation</span>
+df.groupby(<span class="string">'region'</span>).apply(<span class="keyword">lambda</span> x: x[<span class="string">'sales'</span>].max() - x[<span class="string">'sales'</span>].min())
+                        </div>
+
+                        <h3>Pivot Tables</h3>
+                        <div class="code-block">
+<span class="comment"># Create pivot table (sales by product x region)</span>
+pivot = pd.pivot_table(
+    df,
+    values=<span class="string">'sales'</span>,
+    index=<span class="string">'product'</span>,
+    columns=<span class="string">'region'</span>,
+    aggfunc=<span class="string">'sum'</span>,
+    fill_value=<span class="number">0</span>
+)
+                        </div>
+
+                        <h3>Handling Missing Data</h3>
+                        <div class="code-block">
+<span class="comment"># Drop rows with any NaN</span>
+df.dropna()
+
+<span class="comment"># Fill with mean (per column)</span>
+df.fillna(df.mean())
+
+<span class="comment"># Forward fill (time series)</span>
+df.fillna(method=<span class="string">'ffill'</span>)
+
+<span class="comment"># Interpolate</span>
+df.interpolate(method=<span class="string">'linear'</span>)
+                        </div>
+
+                        <h3>Time Series Operations</h3>
+                        <div class="code-block">
+<span class="comment"># Set datetime index</span>
+df[<span class="string">'date'</span>] = pd.to_datetime(df[<span class="string">'date'</span>])
+df.set_index(<span class="string">'date'</span>, inplace=<span class="keyword">True</span>)
+
+<span class="comment"># Resample to monthly</span>
+monthly = df.resample(<span class="string">'M'</span>).sum()
+
+<span class="comment"># Rolling window (moving average)</span>
+df[<span class="string">'ma_7'</span>] = df[<span class="string">'sales'</span>].rolling(window=<span class="number">7</span>).mean()
+                        </div>
+                    </div>
+                `,
+                interview: `
+                    <div class="section">
+                        <h2>🎯 Pandas Interview Questions</h2>
+
+                        <div class="interview-box">
+                            <strong>Q1: What's the difference between <code>.loc</code> and <code>.iloc</code>?</strong>
+                            <p><code>.loc</code> uses labels (row/col names). <code>.iloc</code> uses integer positions (0-indexed). Example: <code>df.loc['row1', 'col_name']</code> vs <code>df.iloc[0, 2]</code></p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q2: How to handle a dataset with 30% missing values?</strong>
+                            <p><strong>Options:</strong> (1) Drop if random missing, (2) Impute with mean/median/mode, (3) Use model-based imputation (KNN, iterative), (4) Forward-fill for time series, (5) Create "missing" indicator feature.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q3: Explain <code>apply()</code> vs <code>transform()</code> vs <code>agg()</code>.</strong>
+                            <p><code>apply()</code>: Any function, can change shape. <code>transform()</code>: Returns same shape (broadcasting). <code>agg()</code>: Multiple aggregations simultaneously.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q4: How to merge two DataFrames with different join types?</strong>
+                            <p><code>pd.merge(df1, df2, on='key', how='inner|left|right|outer')</code>. Inner = intersection, Outer = union, Left/Right = preserve one side.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q5: What's the performance difference between <code>iterrows()</code> and vectorization?</strong>
+                            <p><code>iterrows()</code> is 100-500x slower. Always vectorize: <code>df['new_col'] = df['a'] + df['b']</code> instead of looping.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q6: How to create a pivot table from transaction data?</strong>
+                            <p><code>pd.pivot_table(df, values='amount', index='product', columns='month', aggfunc='sum')</code></p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q7: Explain GroupBy split-apply-combine.</strong>
+                            <p>Split data into groups by key → Apply function to each group → Combine results into new DataFrame. Example: <code>df.groupby('category')['price'].mean()</code></p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q8: How to detect outliers using Pandas?</strong>
+                            <p>IQR method: <code>Q1 = df['col'].quantile(0.25)</code>, <code>Q3 = df['col'].quantile(0.75)</code>, <code>IQR = Q3 - Q1</code>, outliers if <code>< Q1 - 1.5*IQR</code> or <code>> Q3 + 1.5*IQR</code></p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q9: What's the advantage of <code>reset_index()</code>?</strong>
+                            <p>Converts index back to regular column. Useful after groupby or when index becomes multi-level. Use <code>drop=True</code> to discard old index.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q10: How to optimize memory usage for large DataFrames?</strong>
+                            <p>(1) Use categorical dtype for repeated strings, (2) Downcast numerics (int64 → int32), (3) Read in chunks, (4) Use <code>usecols</code> to load only needed columns.</p>
+                        </div>
+                    </div>
+                `
+            },
+
+            "visualization": {
+                concepts: `
+                    <div class="section">
+                        <h2>Data Visualization Principles</h2>
+
+                        <h3>Choosing the Right Chart</h3>
+                        <table>
+                            <tr>
+                                <th>Goal</th>
+                                <th>Chart Type</th>
+                                <th>Library</th>
+                            </tr>
+                            <tr>
+                                <td>Distribution</td>
+                                <td>Histogram, KDE, Box plot</td>
+                                <td>Seaborn</td>
+                            </tr>
+                            <tr>
+                                <td>Relationship</td>
+                                <td>Scatter, Reg plot</td>
+                                <td>Matplotlib/Seaborn</td>
+                            </tr>
+                            <tr>
+                                <td>Time Series</td>
+                                <td>Line plot</td>
+                                <td>Matplotlib</td>
+                            </tr>
+                            <tr>
+                                <td>Categorical</td>
+                                <td>Bar, Count plot</td>
+                                <td>Seaborn</td>
+                            </tr>
+                            <tr>
+                                <td>Interactive</td>
+                                <td>Scatter, Line, 3D</td>
+                                <td>Plotly</td>
+                            </tr>
+                        </table>
+
+                        <h3>Matplotlib Architecture</h3>
+                        <div class="info-box">
+                            <div class="box-title">📊 Fig & Axes</div>
+                            <div class="box-content">
+                                <strong>Figure:</strong> Entire canvas<br>
+                                <strong>Axes:</strong> Individual plot (can have multiple in one figure)<br>
+                                <code>fig, ax = plt.subplots(2, 2)</code> creates 2x2 grid
+                            </div>
+                        </div>
+
+                        <h3>Seaborn Advantages</h3>
+                        <ul>
+                            <li>Built on Matplotlib (high-level API)</li>
+                            <li>Beautiful default styles</li>
+                            <li>Statistical plots (regplot, violinplot)</li>
+                            <li>Works seamlessly with Pandas DataFrames</li>
+                        </ul>
+
+                        <h3>Plotly for Interactivity</h3>
+                        <p>Hover tooltips, zoom, pan, export to HTML. Perfect for dashboards and presentations.</p>
+                    </div>
+                `,
+                code: `
+                    <div class="section">
+                        <h2>💻 Plotting Code Examples</h2>
+
+                        <h3>Matplotlib Basics</h3>
+                        <div class="code-block">
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Simple line plot</span>
+plt.plot(x, y, label=<span class="string">'Actual'</span>, color=<span class="string">'blue'</span>, linewidth=<span class="number">2</span>)
+plt.xlabel(<span class="string">'Time'</span>)
+plt.ylabel(<span class="string">'Value'</span>)
+plt.title(<span class="string">'Time Series'</span>)
+plt.legend()
+plt.grid(<span class="keyword">True</span>, alpha=<span class="number">0.3</span>)
+plt.show()
+
+<span class="comment"># Subplots (2x2 grid)</span>
+fig, axes = plt.subplots(<span class="number">2</span>, <span class="number">2</span>, figsize=(<span class="number">12</span>, <span class="number">10</span>))
+axes[<span class="number">0</span>, <span class="number">0</span>].plot(data1)
+axes[<span class="number">0</span>, <span class="number">1</span>].scatter(x, y)
+axes[<span class="number">1</span>, <span class="number">0</span>].hist(values, bins=<span class="number">30</span>)
+                        </div>
+
+                        <h3>Seaborn Statistical Plots</h3>
+                        <div class="code-block">
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+
+<span class="comment"># Distribution plot</span>
+sns.histplot(df[<span class="string">'price'</span>], kde=<span class="keyword">True</span>, bins=<span class="number">50</span>)
+
+<span class="comment"># Relationship with regression</span>
+sns.regplot(x=<span class="string">'area'</span>, y=<span class="string">'price'</span>, data=df)
+
+<span class="comment"># Categorical count</span>
+sns.countplot(x=<span class="string">'category'</span>, data=df, palette=<span class="string">'viridis'</span>)
+
+<span class="comment"># Correlation heatmap</span>
+corr = df.corr()
+sns.heatmap(corr, annot=<span class="keyword">True</span>, cmap=<span class="string">'coolwarm'</span>, center=<span class="number">0</span>)
+
+<span class="comment"># Pairplot (all features)</span>
+sns.pairplot(df, hue=<span class="string">'species'</span>)
+                        </div>
+
+                        <h3>Plotly Interactive Plots</h3>
+                        <div class="code-block">
+<span class="keyword">import</span> plotly.express <span class="keyword">as</span> px
+
+<span class="comment"># Interactive scatter</span>
+fig = px.scatter(
+    df, x=<span class="string">'gdp'</span>, y=<span class="string">'life_exp'</span>, 
+    size=<span class="string">'pop'</span>, color=<span class="string">'continent'</span>,
+    hover_name=<span class="string">'country'</span>, 
+    title=<span class="string">'GDP vs Life Expectancy'</span>
+)
+fig.show()
+
+<span class="comment"># 3D scatter</span>
+fig = px.scatter_3d(df, x=<span class="string">'x'</span>, y=<span class="string">'y'</span>, z=<span class="string">'z'</span>, color=<span class="string">'cluster'</span>)
+                        </div>
+
+                        <h3>Customization</h3>
+                        <div class="code-block">
+<span class="comment"># Set Seaborn style</span>
+sns.set_style(<span class="string">'whitegrid'</span>)
+sns.set_palette(<span class="string">'husl'</span>)
+
+<span class="comment"># Matplotlib rc params</span>
+plt.rcParams[<span class="string">'figure.figsize'</span>] = (<span class="number">12</span>, <span class="number">6</span>)
+plt.rcParams[<span class="string">'font.size'</span>] = <span class="number">12</span>
+                        </div>
+                    </div>
+                `,
+                interview: `
+                    <div class="section">
+                        <h2>🎯 Visualization Interview Questions</h2>
+
+                        <div class="interview-box">
+                            <strong>Q1: When to use histogram vs KDE plot?</strong>
+                            <p><strong>Histogram:</strong> Raw counts in bins. <strong>KDE:</strong> Smooth probability density estimate. Use KDE for continuous distributions, histogram for discrete/count data.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q2: Explain Figure vs Axes in Matplotlib.</strong>
+                            <p><strong>Figure:</strong> Container (canvas). <strong>Axes:</strong> Individual plot. One figure can have multiple axes (subplots). <code>fig, ax = plt.subplots()</code></p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q3: How to visualize correlation between features?</strong>
+                            <p><strong>Heatmap:</strong> <code>sns.heatmap(df.corr(), annot=True)</code>. <strong>Pairplot:</strong> <code>sns.pairplot(df)</code> shows all pairwise relationships.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q4: What's the advantage of Plotly over Matplotlib?</strong>
+                            <p><strong>Plotly:</strong> Interactive (zoom, pan, hover tooltips), exports to HTML, better for dashboards. <strong>Matplotlib:</strong> More control, publication-ready static plots.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q5: How to create a subplot grid (2 rows, 3 cols)?</strong>
+                            <p><code>fig, axes = plt.subplots(2, 3, figsize=(15, 8))</code>. Access: <code>axes[row, col].plot(data)</code></p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q6: Which plot to show feature importance?</strong>
+                            <p><strong>Horizontal bar chart:</strong> <code>plt.barh(features, importances)</code> sorted by importance. Clear for comparing many features.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q7: How to customize Seaborn style?</strong>
+                            <p><code>sns.set_style('whitegrid')</code>, <code>sns.set_palette('husl')</code>, <code>sns.set_context('talk')</code> for presentations</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q8: What's the best way to visualize model predictions vs actual?</strong>
+                            <p>Scatter plot: <code>plt.scatter(y_true, y_pred)</code> with diagonal line <code>plt.plot([min, max], [min, max], 'r--')</code>. Points close to line = good predictions.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q9: How to save a plot in high resolution?</strong>
+                            <p><code>plt.savefig('plot.png', dpi=300, bbox_inches='tight')</code>. Use dpi=300 for publications.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q10: Which plot for time series with confidence intervals?</strong>
+                            <p><code>plt.plot(dates, mean)</code> + <code>plt.fill_between(dates, lower, upper, alpha=0.3)</code> for shaded confidence bands.</p>
+                        </div>
+                    </div>
+                `
+            },
+
+            "advanced-python": {
+                concepts: `
+                    <div class="section">
+                        <h2>Object-Oriented Programming (OOP)</h2>
+
+                        <h3>Classes for ML Models</h3>
+                        <div class="info-box">
+                            <div class="box-title">🏗️ Encapsulation</div>
+                            <div class="box-content">
+                                Group related data (features, weights) and methods (fit, predict) into reusable class structures. Scikit-learn uses OOP for all estimators.
+                            </div>
+                        </div>
+
+                        <h3>Key OOP Concepts</h3>
+                        <table>
+                            <tr>
+                                <th>Concept</th>
+                                <th>Purpose</th>
+                                <th>Example</th>
+                            </tr>
+                            <tr>
+                                <td>Inheritance</td>
+                                <td>Reuse code</td>
+                                <td>LinearModel → Ridge, Lasso</td>
+                            </tr>
+                            <tr>
+                                <td>Polymorphism</td>
+                                <td>Same interface, different implementation</td>
+                                <td>fit() for all models</td>
+                            </tr>
+                            <tr>
+                                <td>Encapsulation</td>
+                                <td>Hide internal state</td>
+                                <td>Private attributes _weights</td>
+                            </tr>
+                        </table>
+
+                        <h3>Magic Methods</h3>
+                        <ul>
+                            <li><code>__init__</code> - Constructor</li>
+                            <li><code>__repr__</code> - String representation</li>
+                            <li><code>__call__</code> - Make instance callable</li>
+                            <li><code>__len__</code> - len() support</li>
+                            <li><code>__getitem__</code> - Indexing support</li>
+                        </ul>
+
+                        <h2>Async & Concurrency</h2>
+
+                        <h3>Threading vs Multiprocessing vs Async</h3>
+                        <table>
+                            <tr>
+                                <th>Method</th>
+                                <th>Best For</th>
+                                <th>Limitation</th>
+                            </tr>
+                            <tr>
+                                <td>Threading</td>
+                                <td>I/O-bound (API calls, file reads)</td>
+                                <td>GIL blocks CPU parallelism</td>
+                            </tr>
+                            <tr>
+                                <td>Multiprocessing</td>
+                                <td>CPU-bound (model training)</td>
+                                <td>Memory overhead (process copy)</td>
+                            </tr>
+                            <tr>
+                                <td>Asyncio</td>
+                                <td>Many concurrent I/O tasks</td>
+                                <td>Single-threaded</td>
+                            </tr>
+                        </table>
+
+                        <div class="callout warning">
+                            <div class="callout-title">⚠️ GIL Impact</div>
+                            Python's Global Interpreter Lock means threading won't speed up CPU-heavy tasks like model training. Use multiprocessing instead.
+                        </div>
+
+                        <h3>Decorators</h3>
+                        <p>Modify function behavior without changing code. Common uses:</p>
+                        <ul>
+                            <li><strong>@lru_cache</strong> - Memoization for expensive functions</li>
+                            <li><strong>@property</strong> - Getter/setter methods</li>
+                            <li><strong>@staticmethod</strong> - No self parameter</li>
+                            <li><strong>@timing</strong> - Performance monitoring</li>
+                        </ul>
+
+                        <h3>Context Managers</h3>
+                        <p>Manage resources (files, locks, DB connections) with <code>with</code> statement. Guarantees cleanup even if exceptions occur.</p>
+                    </div>
+                `,
+                code: `
+                    <div class="section">
+                        <h2>💻 Advanced Python Examples</h2>
+
+                        <h3>OOP: Custom ML Model Class</h3>
+                        <div class="code-block">
+<span class="keyword">class</span> <span class="class">SimpleLinearRegression</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, learning_rate=<span class="number">0.01</span>):
+        <span class="keyword">self</span>.lr = learning_rate
+        <span class="keyword">self</span>._weights = <span class="keyword">None</span>
+        <span class="keyword">self</span>._bias = <span class="keyword">None</span>
+    
+    <span class="keyword">def</span> <span class="function">fit</span>(<span class="keyword">self</span>, X, y, epochs=<span class="number">100</span>):
+        n_samples, n_features = X.shape
+        <span class="keyword">self</span>._weights = np.zeros(n_features)
+        <span class="keyword">self</span>._bias = <span class="number">0</span>
+        
+        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="function">range</span>(epochs):
+            y_pred = <span class="keyword">self</span>.predict(X)
+            dw = (<span class="number">1</span>/n_samples) * X.T @ (y_pred - y)
+            db = (<span class="number">1</span>/n_samples) * np.<span class="function">sum</span>(y_pred - y)
+            
+            <span class="keyword">self</span>._weights -= <span class="keyword">self</span>.lr * dw
+            <span class="keyword">self</span>._bias -= <span class="keyword">self</span>.lr * db
+    
+    <span class="keyword">def</span> <span class="function">predict</span>(<span class="keyword">self</span>, X):
+        <span class="keyword">return</span> X @ <span class="keyword">self</span>._weights + <span class="keyword">self</span>._bias
+    
+    <span class="keyword">def</span> <span class="function">__repr__</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="string">f"SimpleLinearRegression(lr={self.lr})"</span>
+
+<span class="comment"># Usage</span>
+model = SimpleLinearRegression(learning_rate=<span class="number">0.001</span>)
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+                        </div>
+
+                        <h3>Inheritance Example</h3>
+                        <div class="code-block">
+<span class="keyword">class</span> <span class="class">BaseModel</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>):
+        <span class="keyword">self</span>.is_fitted = <span class="keyword">False</span>
+    
+    <span class="keyword">def</span> <span class="function">check_fitted</span>(<span class="keyword">self</span>):
+        <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">self</span>.is_fitted:
+            <span class="keyword">raise</span> <span class="function">ValueError</span>(<span class="string">"Model not fitted yet!"</span>)
+
+<span class="keyword">class</span> <span class="class">LogisticModel</span>(BaseModel):
+    <span class="keyword">def</span> <span class="function">fit</span>(<span class="keyword">self</span>, X, y):
+        <span class="comment"># Training logic</span>
+        <span class="keyword">self</span>.is_fitted = <span class="keyword">True</span>
+    
+    <span class="keyword">def</span> <span class="function">predict</span>(<span class="keyword">self</span>, X):
+        <span class="keyword">self</span>.check_fitted()  <span class="comment"># Inherited method</span>
+        <span class="keyword">return</span> predictions
+                        </div>
+
+                        <h3>Decorators</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> functools <span class="keyword">import</span> lru_cache
+<span class="keyword">import</span> time
+
+<span class="comment"># Timing decorator</span>
+<span class="keyword">def</span> <span class="function">timing_decorator</span>(func):
+    <span class="keyword">def</span> <span class="function">wrapper</span>(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        <span class="function">print</span>(<span class="string">f"{func.__name__} took {end-start:.4f}s"</span>)
+        <span class="keyword">return</span> result
+    <span class="keyword">return</span> wrapper
+
+<span class="comment"># Memoization for expensive computations</span>
+<span class="function">@lru_cache</span>(maxsize=<span class="number">128</span>)
+<span class="keyword">def</span> <span class="function">fibonacci</span>(n):
+    <span class="keyword">if</span> n &lt; <span class="number">2</span>:
+        <span class="keyword">return</span> n
+    <span class="keyword">return</span> fibonacci(n<span class="number">-1</span>) + fibonacci(n<span class="number">-2</span>)
+
+<span class="function">@timing_decorator</span>
+<span class="keyword">def</span> <span class="function">train_model</span>(X, y):
+    <span class="comment"># Training code</span>
+    <span class="keyword">pass</span>
+                        </div>
+
+                        <h3>Generators for Memory Efficiency</h3>
+                        <div class="code-block">
+<span class="comment"># Generator for batch processing</span>
+<span class="keyword">def</span> <span class="function">batch_generator</span>(X, y, batch_size=<span class="number">32</span>):
+    n_samples = <span class="function">len</span>(X)
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">0</span>, n_samples, batch_size):
+        <span class="keyword">yield</span> X[i:i+batch_size], y[i:i+batch_size]
+
+<span class="comment"># Use in training loop</span>
+<span class="keyword">for</span> X_batch, y_batch <span class="keyword">in</span> batch_generator(X_train, y_train):
+    <span class="comment"># Train on batch</span>
+    <span class="keyword">pass</span>
+                        </div>
+
+                        <h3>Multiprocessing for Parallel Training</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool
+
+<span class="keyword">def</span> <span class="function">train_fold</span>(args):
+    X_train, y_train, X_val, y_val = args
+    model.fit(X_train, y_train)
+    <span class="keyword">return</span> model.score(X_val, y_val)
+
+<span class="comment"># Parallel cross-validation</span>
+<span class="keyword">with</span> Pool(<span class="number">4</span>) <span class="keyword">as</span> pool:
+    scores = pool.<span class="function">map</span>(train_fold, fold_data)
+                        </div>
+
+                        <h3>Asyncio for Concurrent API Calls</h3>
+                        <div class="code-block">
+<span class="keyword">import</span> asyncio
+<span class="keyword">import</span> aiohttp
+
+<span class="keyword">async</span> <span class="keyword">def</span> <span class="function">fetch_data</span>(session, url):
+    <span class="keyword">async</span> <span class="keyword">with</span> session.get(url) <span class="keyword">as</span> response:
+        <span class="keyword">return</span> <span class="keyword">await</span> response.json()
+
+<span class="keyword">async</span> <span class="keyword">def</span> <span class="function">main</span>():
+    urls = [<span class="string">f"https://api.example.com/data/{i}"</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">100</span>)]
+    
+    <span class="keyword">async</span> <span class="keyword">with</span> aiohttp.ClientSession() <span class="keyword">as</span> session:
+        tasks = [fetch_data(session, url) <span class="keyword">for</span> url <span class="keyword">in</span> urls]
+        results = <span class="keyword">await</span> asyncio.gather(*tasks)
+    
+    <span class="keyword">return</span> results
+
+<span class="comment"># Run</span>
+data = asyncio.run(main())
+                        </div>
+
+                        <h3>Context Manager for Model Serving</h3>
+                        <div class="code-block">
+<span class="keyword">class</span> <span class="class">ModelLoader</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, model_path):
+        <span class="keyword">self</span>.model_path = model_path
+        <span class="keyword">self</span>.model = <span class="keyword">None</span>
+    
+    <span class="keyword">def</span> <span class="function">__enter__</span>(<span class="keyword">self</span>):
+        <span class="keyword">self</span>.model = load_model(<span class="keyword">self</span>.model_path)
+        <span class="function">print</span>(<span class="string">"Model loaded"</span>)
+        <span class="keyword">return</span> <span class="keyword">self</span>.model
+    
+    <span class="keyword">def</span> <span class="function">__exit__</span>(<span class="keyword">self</span>, exc_type, exc_val, exc_tb):
+        <span class="keyword">del</span> <span class="keyword">self</span>.model
+        <span class="function">print</span>(<span class="string">"Model unloaded"</span>)
+
+<span class="comment"># Usage</span>
+<span class="keyword">with</span> ModelLoader(<span class="string">'model.pkl'</span>) <span class="keyword">as</span> model:
+    predictions = model.predict(X_test)
+                        </div>
+                    </div>
+                `,
+                interview: `
+                    <div class="section">
+                        <h2>🎯 Advanced Python Interview Questions</h2>
+
+                        <div class="interview-box">
+                            <strong>Q1: Explain the difference between <code>__init__</code> and <code>__new__</code>.</strong>
+                            <p><code>__new__</code> creates the instance (returns object), <code>__init__</code> initializes it (returns None). Use <code>__new__</code> for singletons or immutable types.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q2: When to use multiprocessing vs threading in ML?</strong>
+                            <p><strong>Multiprocessing:</strong> CPU-bound (model training, hyperparameter tuning). <strong>Threading:</strong> I/O-bound (loading data, API calls). GIL blocks threading for CPU tasks.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q3: What's a decorator and why use it?</strong>
+                            <p>Function that wraps another function to modify behavior. Uses: timing, logging, caching (<code>@lru_cache</code>), authentication. Example: <code>@timing_decorator</code> to measure execution time.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q4: How do generators save memory?</strong>
+                            <p>Yield values one at a time instead of storing the entire list. Critical for large datasets: <code>(x**2 for x in range(10**9))</code> vs <code>[x**2 for x in range(10**9)]</code>.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q5: Explain inheritance vs composition.</strong>
+                            <p><strong>Inheritance:</strong> "is-a" (Ridge is-a LinearModel). <strong>Composition:</strong> "has-a" (Pipeline has-a scaler). Prefer composition for flexibility.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q6: What's the purpose of <code>super()</code>?</strong>
+                            <p>Call parent class methods. Example: <code>super().__init__()</code> in child <code>__init__</code>. Ensures proper initialization in inheritance chains.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q7: How does asyncio differ from threading?</strong>
+                            <p><strong>Asyncio:</strong> Cooperative multitasking (async/await), single-threaded. <strong>Threading:</strong> Preemptive, multiple threads. Asyncio better for thousands of concurrent I/O tasks.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q8: What are magic methods? Give 3 examples.</strong>
+                            <p><code>__len__</code> (len()), <code>__getitem__</code> (indexing), <code>__call__</code> (make callable). Example: <code>dataset[0]</code> calls <code>__getitem__</code>.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q9: Why use context managers for file I/O?</strong>
+                            <p>Guarantee resource cleanup (file close) even if exceptions occur. <code>with open()</code> is safer than manual <code>file.close()</code>.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q10: How to make a class iterable?</strong>
+                            <p>Implement <code>__iter__</code> and <code>__next__</code>. Or use <code>yield</code> in <code>__iter__</code>. Example: Custom dataset class for batch iteration.</p>
+                        </div>
+                    </div>
+                `
+            },
+
+            "sklearn": {
+                concepts: `
+                    <div class="section">
+                        <h2>Scikit-learn Architecture</h2>
+
+                        <h3>Estimators, Transformers, Predictors</h3>
+                        <table>
+                            <tr>
+                                <th>Type</th>
+                                <th>Methods</th>
+                                <th>Example</th>
+                            </tr>
+                            <tr>
+                                <td>Estimator</td>
+                                <td>fit()</td>
+                                <td>All models</td>
+                            </tr>
+                            <tr>
+                                <td>Transformer</td>
+                                <td>fit(), transform()</td>
+                                <td>StandardScaler, PCA</td>
+                            </tr>
+                            <tr>
+                                <td>Predictor</td>
+                                <td>fit(), predict()</td>
+                                <td>Classifiers, Regressors</td>
+                            </tr>
+                        </table>
+
+                        <h3>Pipelines</h3>
+                        <div class="info-box">
+                            <div class="box-title">🔗 Chain Transformations</div>
+                            <div class="box-content">
+                                Pipelines chain preprocessing + model into single object. Prevents data leakage by fitting transforms only on training data.
+                            </div>
+                        </div>
+
+                        <h3>Cross-Validation Strategies</h3>
+                        <ul>
+                            <li><strong>KFold</strong> - Standard k-fold (e.g., 5-fold)</li>
+                            <li><strong>StratifiedKFold</strong> - Preserves class distribution</li>
+                            <li><strong>TimeSeriesSplit</strong> - For temporal data</li>
+                            <li><strong>GroupKFold</strong> - Groups stay together</li>
+                        </ul>
+
+                        <h3>Hyperparameter Tuning</h3>
+                        <table>
+                            <tr>
+                                <th>Method</th>
+                                <th>Strategy</th>
+                                <th>When to Use</th>
+                            </tr>
+                            <tr>
+                                <td>GridSearchCV</td>
+                                <td>Exhaustive search</td>
+                                <td>Small param space</td>
+                            </tr>
+                            <tr>
+                                <td>RandomizedSearchCV</td>
+                                <td>Random sampling</td>
+                                <td>Large param space</td>
+                            </tr>
+                            <tr>
+                                <td>HalvingGridSearchCV</td>
+                                <td>Successive halving</td>
+                                <td>Fast elimination of bad params</td>
+                            </tr>
+                        </table>
+                    </div>
+                `,
+                code: `
+                    <div class="section">
+                        <h2>💻 Scikit-learn in Production</h2>
+
+                        <h3>Building a Pipeline</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline
+<span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler
+<span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA
+<span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression
+
+<span class="comment"># Create pipeline</span>
+pipeline = Pipeline([
+    (<span class="string">'scaler'</span>, StandardScaler()),
+    (<span class="string">'pca'</span>, PCA(n_components=<span class="number">10</span>)),
+    (<span class="string">'classifier'</span>, LogisticRegression())
+])
+
+<span class="comment"># Fit entire pipeline</span>
+pipeline.fit(X_train, y_train)
+
+<span class="comment"># Predict (auto-applies all transforms)</span>
+predictions = pipeline.predict(X_test)
+                        </div>
+
+                        <h3>Custom Transformer</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> sklearn.base <span class="keyword">import</span> BaseEstimator, TransformerMixin
+
+<span class="keyword">class</span> <span class="class">OutlierRemover</span>(BaseEstimator, TransformerMixin):
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, factor=<span class="number">1.5</span>):
+        <span class="keyword">self</span>.factor = factor
+    
+    <span class="keyword">def</span> <span class="function">fit</span>(<span class="keyword">self</span>, X, y=<span class="keyword">None</span>):
+        <span class="keyword">self</span>.q1 = np.percentile(X, <span class="number">25</span>, axis=<span class="number">0</span>)
+        <span class="keyword">self</span>.q3 = np.percentile(X, <span class="number">75</span>, axis=<span class="number">0</span>)
+        <span class="keyword">self</span>.iqr = <span class="keyword">self</span>.q3 - <span class="keyword">self</span>.q1
+        <span class="keyword">return</span> <span class="keyword">self</span>
+    
+    <span class="keyword">def</span> <span class="function">transform</span>(<span class="keyword">self</span>, X):
+        lower = <span class="keyword">self</span>.q1 - <span class="keyword">self</span>.factor * <span class="keyword">self</span>.iqr
+        upper = <span class="keyword">self</span>.q3 + <span class="keyword">self</span>.factor * <span class="keyword">self</span>.iqr
+        mask = np.all((X &gt;= lower) & (X &lt;= upper), axis=<span class="number">1</span>)
+        <span class="keyword">return</span> X[mask]
+                        </div>
+
+                        <h3>GridSearchCV</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV
+
+<span class="comment"># Define param grid</span>
+param_grid = {
+    <span class="string">'pca__n_components'</span>: [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>],
+    <span class="string">'classifier__C'</span>: [<span class="number">0.1</span>, <span class="number">1</span>, <span class="number">10</span>],
+    <span class="string">'classifier__penalty'</span>: [<span class="string">'l1'</span>, <span class="string">'l2'</span>]
+}
+
+<span class="comment"># Grid search</span>
+grid = GridSearchCV(
+    pipeline,
+    param_grid,
+    cv=<span class="number">5</span>,
+    scoring=<span class="string">'accuracy'</span>,
+    n_jobs=<span class="number">-1</span>
+)
+
+grid.fit(X_train, y_train)
+<span class="function">print</span>(<span class="string">f"Best params: {grid.best_params_}"</span>)
+<span class="function">print</span>(<span class="string">f"Best score: {grid.best_score_:.3f}"</span>)
+                        </div>
+
+                        <h3>Cross-Validation</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score, StratifiedKFold
+
+<span class="comment"># Stratified k-fold for imbalanced data</span>
+cv = StratifiedKFold(n_splits=<span class="number">5</span>, shuffle=<span class="keyword">True</span>, random_state=<span class="number">42</span>)
+
+<span class="comment"># Cross-validate</span>
+scores = cross_val_score(
+    pipeline,
+    X_train,
+    y_train,
+    cv=cv,
+    scoring=<span class="string">'f1_weighted'</span>
+)
+
+<span class="function">print</span>(<span class="string">f"CV Scores: {scores}"</span>)
+<span class="function">print</span>(<span class="string">f"Mean: {scores.mean():.3f} ± {scores.std():.3f}"</span>)
+                        </div>
+
+                        <h3>Feature Selection</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest, f_classif, RFE
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+
+<span class="comment"># Univariate selection</span>
+selector = SelectKBest(f_classif, k=<span class="number">10</span>)
+X_selected = selector.fit_transform(X_train, y_train)
+
+<span class="comment"># Recursive Feature Elimination</span>
+rfe = RFE(RandomForestClassifier(), n_features_to_select=<span class="number">10</span>)
+rfe.fit(X_train, y_train)
+selected_features = X_train.columns[rfe.support_]
+                        </div>
+                    </div>
+                `,
+                interview: `
+                    <div class="section">
+                        <h2>🎯 Scikit-learn Interview Questions</h2>
+
+                        <div class="interview-box">
+                            <strong>Q1: What's the difference between <code>fit_transform()</code> and <code>fit()</code> then <code>transform()</code>?</strong>
+                            <p>Functionally identical, but <code>fit_transform()</code> is often optimized (e.g., PCA computes components + projects in one pass). Always use <code>fit_transform()</code> on training data.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q2: Why use pipelines in production?</strong>
+                            <p>(1) Prevent data leakage (scaler only fits on train), (2) Single object for deployment, (3) Hyperparameter tuning across entire workflow, (4) Reproducibility.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q3: When to use GridSearchCV vs RandomizedSearchCV?</strong>
+                            <p><strong>Grid:</strong> Small param space (3 params × 3 values = 27 combos). <strong>Randomized:</strong> Large space (10 params = millions of combos), samples N random combinations.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q4: How to handle class imbalance in cross-validation?</strong>
+                            <p>Use <code>StratifiedKFold</code> to preserve class distribution in each fold. For extreme imbalance, use <code>StratifiedShuffleSplit</code> or SMOTE oversampling.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q5: Explain the difference between <code>StandardScaler</code> and <code>MinMaxScaler</code>.</strong>
+                            <p><strong>StandardScaler:</strong> (x - mean) / std → mean=0, std=1. <strong>MinMaxScaler:</strong> (x - min) / (max - min) → range [0, 1]. Use Standard for normal distributions, MinMax for bounded features.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q6: How to create a custom transformer?</strong>
+                            <p>Inherit from <code>BaseEstimator</code> and <code>TransformerMixin</code>. Implement <code>fit()</code> and <code>transform()</code>. <code>TransformerMixin</code> provides <code>fit_transform()</code> for free.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q7: What's the purpose of <code>n_jobs=-1</code>?</strong>
+                            <p>Use all CPU cores for parallel processing. Critical for GridSearchCV, RandomForest, cross-validation to speed up training.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q8: How does <code>TimeSeriesSplit</code> differ from <code>KFold</code>?</strong>
+                            <p><code>TimeSeriesSplit</code> ensures train comes before test chronologically (no future data in training). <code>KFold</code> randomly splits, causing data leakage for time series.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q9: What's the role of <code>random_state</code>?</strong>
+                            <p>Ensures reproducibility by seeding the random number generator. Critical for debugging and comparing models. Set to fixed value (e.g., 42) for experiments.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q10: How to save and load a trained pipeline?</strong>
+                            <p>Use <code>joblib.dump(pipeline, 'model.pkl')</code> to save, <code>joblib.load('model.pkl')</code> to load. Joblib is more efficient than pickle for large NumPy arrays.</p>
+                        </div>
+                    </div>
+                `
+            },
+
+            "pytorch": {
+                concepts: `
+                    <div class="section">
+                        <h2>PyTorch Fundamentals</h2>
+
+                        <h3>Tensors vs NumPy Arrays</h3>
+                        <table>
+                            <tr>
+                                <th>Feature</th>
+                                <th>NumPy</th>
+                                <th>PyTorch Tensor</th>
+                            </tr>
+                            <tr>
+                                <td>GPU Support</td>
+                                <td>✗</td>
+                                <td>✓ (.cuda())</td>
+                            </tr>
+                            <tr>
+                                <td>Autograd</td>
+                                <td>✗</td>
+                                <td>✓ (requires_grad=True)</td>
+                            </tr>
+                            <tr>
+                                <td>Speed (CPU)</td>
+                                <td>Similar</td>
+                                <td>Similar</td>
+                            </tr>
+                        </table>
+
+                        <h3>Autograd: Automatic Differentiation</h3>
+                        <div class="info-box">
+                            <div class="box-title">∂ Computational Graph</div>
+                            <div class="box-content">
+                                PyTorch builds a dynamic computational graph. <code>loss.backward()</code> computes gradients via backpropagation. Critical for training neural networks.
+                            </div>
+                        </div>
+
+                        <h3>nn.Module Architecture</h3>
+                        <p>All models inherit from <code>nn.Module</code>. Must implement:</p>
+                        <ul>
+                            <li><code>__init__</code> - Define layers</li>
+                            <li><code>forward()</code> - Define forward pass</li>
+                        </ul>
+
+                        <h2>Transformers & NLP</h2>
+
+                        <h3>Hugging Face Integration</h3>
+                        <div class="info-box">
+                            <div class="box-title">🤗 Transformers Library</div>
+                            <div class="box-content">
+                                Pre-trained models (BERT, GPT, T5) with 3 lines of code. <code>AutoModel.from_pretrained('bert-base')</code>
+                            </div>
+                        </div>
+
+                        <h3>Attention Mechanism</h3>
+                        <p><strong>Self-Attention:</strong> Query, Key, Value matrices. Attention(Q, K, V) = softmax(QK^T / √d_k) V</p>
+
+                        <h3>Common Architectures</h3>
+                        <table>
+                            <tr>
+                                <th>Model</th>
+                                <th>Type</th>
+                                <th>Use Case</th>
+                            </tr>
+                            <tr>
+                                <td>BERT</td>
+                                <td>Encoder-only</td>
+                                <td>Classification, NER</td>
+                            </tr>
+                            <tr>
+                                <td>GPT</td>
+                                <td>Decoder-only</td>
+                                <td>Text generation</td>
+                            </tr>
+                            <tr>
+                                <td>T5</td>
+                                <td>Encoder-Decoder</td>
+                                <td>Translation, summarization</td>
+                            </tr>
+                        </table>
+                    </div>
+                `,
+                code: `
+                    <div class="section">
+                        <h2>💻 PyTorch Deep Learning</h2>
+
+                        <h3>Basic Training Loop</h3>
+                        <div class="code-block">
+<span class="keyword">import</span> torch
+<span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn
+<span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim
+
+<span class="comment"># Define model</span>
+<span class="keyword">class</span> <span class="class">SimpleNN</span>(nn.Module):
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, input_size, hidden_size, output_size):
+        <span class="function">super</span>().__init__()
+        <span class="keyword">self</span>.fc1 = nn.Linear(input_size, hidden_size)
+        <span class="keyword">self</span>.relu = nn.ReLU()
+        <span class="keyword">self</span>.fc2 = nn.Linear(hidden_size, output_size)
+    
+    <span class="keyword">def</span> <span class="function">forward</span>(<span class="keyword">self</span>, x):
+        x = <span class="keyword">self</span>.fc1(x)
+        x = <span class="keyword">self</span>.relu(x)
+        x = <span class="keyword">self</span>.fc2(x)
+        <span class="keyword">return</span> x
+
+<span class="comment"># Initialize</span>
+model = SimpleNN(<span class="number">10</span>, <span class="number">64</span>, <span class="number">1</span>)
+criterion = nn.MSELoss()
+optimizer = optim.Adam(model.parameters(), lr=<span class="number">0.001</span>)
+
+<span class="comment"># Training loop</span>
+<span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="function">range</span>(<span class="number">100</span>):
+    <span class="comment"># Forward pass</span>
+    outputs = model(X_train)
+    loss = criterion(outputs, y_train)
+    
+    <span class="comment"># Backward pass</span>
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+    
+    <span class="keyword">if</span> epoch % <span class="number">10</span> == <span class="number">0</span>:
+        <span class="function">print</span>(<span class="string">f'Epoch {epoch}, Loss: {loss.item():.4f}'</span>)
+                        </div>
+
+                        <h3>CNN for Image Classification</h3>
+                        <div class="code-block">
+<span class="keyword">class</span> <span class="class">CNN</span>(nn.Module):
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>):
+        <span class="function">super</span>().__init__()
+        <span class="keyword">self</span>.conv1 = nn.Conv2d(<span class="number">3</span>, <span class="number">32</span>, kernel_size=<span class="number">3</span>)
+        <span class="keyword">self</span>.pool = nn.MaxPool2d(<span class="number">2</span>, <span class="number">2</span>)
+        <span class="keyword">self</span>.conv2 = nn.Conv2d(<span class="number">32</span>, <span class="number">64</span>, kernel_size=<span class="number">3</span>)
+        <span class="keyword">self</span>.fc1 = nn.Linear(<span class="number">64</span> * <span class="number">6</span> * <span class="number">6</span>, <span class="number">128</span>)
+        <span class="keyword">self</span>.fc2 = nn.Linear(<span class="number">128</span>, <span class="number">10</span>)
+    
+    <span class="keyword">def</span> <span class="function">forward</span>(<span class="keyword">self</span>, x):
+        x = <span class="keyword">self</span>.pool(F.relu(<span class="keyword">self</span>.conv1(x)))
+        x = <span class="keyword">self</span>.pool(F.relu(<span class="keyword">self</span>.conv2(x)))
+        x = x.view(-<span class="number">1</span>, <span class="number">64</span> * <span class="number">6</span> * <span class="number">6</span>)
+        x = F.relu(<span class="keyword">self</span>.fc1(x))
+        x = <span class="keyword">self</span>.fc2(x)
+        <span class="keyword">return</span> x
+                        </div>
+
+                        <h3>Transfer Learning (ResNet)</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> torchvision <span class="keyword">import</span> models
+
+<span class="comment"># Load pre-trained ResNet</span>
+model = models.resnet50(pretrained=<span class="keyword">True</span>)
+
+<span class="comment"># Freeze all layers</span>
+<span class="keyword">for</span> param <span class="keyword">in</span> model.parameters():
+    param.requires_grad = <span class="keyword">False</span>
+
+<span class="comment"># Replace final layer</span>
+num_features = model.fc.in_features
+model.fc = nn.Linear(num_features, <span class="number">10</span>)  <span class="comment"># 10 classes</span>
+
+<span class="comment"># Only train final layer</span>
+optimizer = optim.Adam(model.fc.parameters(), lr=<span class="number">0.001</span>)
+                        </div>
+
+                        <h3>Transformers with Hugging Face</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer, AutoModelForSequenceClassification
+
+<span class="comment"># Load BERT for classification</span>
+tokenizer = AutoTokenizer.from_pretrained(<span class="string">'bert-base-uncased'</span>)
+model = AutoModelForSequenceClassification.from_pretrained(
+    <span class="string">'bert-base-uncased'</span>,
+    num_labels=<span class="number">2</span>
+)
+
+<span class="comment"># Tokenize text</span>
+text = <span class="string">"This movie is amazing!"</span>
+inputs = tokenizer(text, return_tensors=<span class="string">'pt'</span>, padding=<span class="keyword">True</span>, truncation=<span class="keyword">True</span>)
+
+<span class="comment"># Forward pass</span>
+outputs = model(**inputs)
+logits = outputs.logits
+predictions = torch.argmax(logits, dim=<span class="number">-1</span>)
+                        </div>
+
+                        <h3>Fine-tuning BERT</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> transformers <span class="keyword">import</span> Trainer, TrainingArguments
+
+<span class="comment"># Training arguments</span>
+training_args = TrainingArguments(
+    output_dir=<span class="string">'./results'</span>,
+    num_train_epochs=<span class="number">3</span>,
+    per_device_train_batch_size=<span class="number">16</span>,
+    learning_rate=<span class="number">2e-5</span>,
+    logging_steps=<span class="number">100</span>
+)
+
+<span class="comment"># Trainer</span>
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=train_dataset,
+    eval_dataset=eval_dataset
+)
+
+<span class="comment"># Train</span>
+trainer.train()
+                        </div>
+
+                        <h3>Custom Dataset</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> Dataset, DataLoader
+
+<span class="keyword">class</span> <span class="class">CustomDataset</span>(Dataset):
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, X, y):
+        <span class="keyword">self</span>.X = torch.FloatTensor(X)
+        <span class="keyword">self</span>.y = torch.FloatTensor(y)
+    
+    <span class="keyword">def</span> <span class="function">__len__</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="function">len</span>(<span class="keyword">self</span>.X)
+    
+    <span class="keyword">def</span> <span class="function">__getitem__</span>(<span class="keyword">self</span>, idx):
+        <span class="keyword">return</span> <span class="keyword">self</span>.X[idx], <span class="keyword">self</span>.y[idx]
+
+<span class="comment"># DataLoader</span>
+dataset = CustomDataset(X_train, y_train)
+loader = DataLoader(dataset, batch_size=<span class="number">32</span>, shuffle=<span class="keyword">True</span>)
+                        </div>
+                    </div>
+                `,
+                interview: `
+                    <div class="section">
+                        <h2>🎯 PyTorch & Transformers Interview Questions</h2>
+
+                        <div class="interview-box">
+                            <strong>Q1: What's the purpose of <code>optimizer.zero_grad()</code>?</strong>
+                            <p>Clear gradients from previous iteration. PyTorch accumulates gradients by default. Without <code>zero_grad()</code>, gradients would sum across batches, causing incorrect updates.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q2: Explain <code>requires_grad=True</code>.</strong>
+                            <p>Tells PyTorch to track operations on this tensor for autograd. Essential for trainable parameters. <code>loss.backward()</code> computes gradients only for tensors with <code>requires_grad=True</code>.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q3: What's the difference between <code>model.eval()</code> and <code>model.train()</code>?</strong>
+                            <p><code>model.eval()</code>: Disables dropout, uses batch norm running stats (inference mode). <code>model.train()</code>: Enables dropout, updates batch norm stats (training mode).</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q4: How does transfer learning work in PyTorch?</strong>
+                            <p>Load pre-trained model → Freeze layers (<code>requires_grad=False</code>) → Replace final layer → Train only new layer. Leverages learned features from large datasets (ImageNet).</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q5: What's the purpose of <code>torch.no_grad()</code>?</strong>
+                            <p>Disable gradient tracking during inference. Saves memory and speeds up computation. Use for validation/testing: <code>with torch.no_grad(): outputs = model(X_test)</code></p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q6: Explain BERT's masked language modeling.</strong>
+                            <p>Randomly mask 15% of tokens, train model to predict them using bidirectional context. Example: "The [MASK] is blue" → predict "sky". Enables BERT to learn contextualized representations.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q7: What's the difference between <code>nn.Linear</code> and <code>nn.Conv2d</code>?</strong>
+                            <p><code>nn.Linear</code>: Fully-connected layer (all-to-all). <code>nn.Conv2d</code>: Convolutional layer (local connectivity, weight sharing). Convs for spatial data (images), Linear for flattened features.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q8: How to move a model to GPU?</strong>
+                            <p><code>model = model.cuda()</code> or <code>model.to('cuda')</code>. Tensors must also be on GPU: <code>X = X.cuda()</code>. Check: <code>torch.cuda.is_available()</code></p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q9: What's the role of attention in transformers?</strong>
+                            <p>Allows model to focus on relevant parts of input. Self-attention computes weighted sum of all tokens based on query-key similarity. Replaces RNN's sequential processing with parallel attention.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q10: How to implement early stopping in PyTorch?</strong>
+                            <p>Track validation loss. If no improvement for N epochs, stop training and restore best weights. <code>if val_loss < best_loss: best_loss = val_loss; patience_counter = 0</code></p>
+                        </div>
+                    </div>
+                `
+            },
+
+            "tensorflow": {
+                concepts: `
+                    <div class="section">
+                        <h2>TensorFlow & Keras</h2>
+
+                        <h3>Sequential vs Functional API</h3>
+                        <table>
+                            <tr>
+                                <th>API</th>
+                                <th>Use Case</th>
+                                <th>Complexity</th>
+                            </tr>
+                            <tr>
+                                <td>Sequential</td>
+                                <td>Linear stack of layers</td>
+                                <td>Simple</td>
+                            </tr>
+                            <tr>
+                                <td>Functional</td>
+                                <td>Multi-input, multi-output, skip connections</td>
+                                <td>Complex</td>
+                            </tr>
+                        </table>
+
+                        <h3>Key Components</h3>
+                        <ul>
+                            <li><strong>Layers:</strong> Dense, Conv2D, LSTM, Dropout</li>
+                            <li><strong>Optimizers:</strong> Adam, SGD, RMSprop</li>
+                            <li><strong>Loss Functions:</strong> MSE, CrossEntropy, Hinge</li>
+                            <li><strong>Metrics:</strong> Accuracy, Precision, Recall, AUC</li>
+                        </ul>
+
+                        <h3>Callbacks</h3>
+                        <div class="info-box">
+                            <div class="box-title">🔔 Training Hooks</div>
+                            <div class="box-content">
+                                <strong>EarlyStopping:</strong> Stop when validation plateaus<br>
+                                <strong>ModelCheckpoint:</strong> Save best weights<br>
+                                <strong>TensorBoard:</strong> Visualize training<br>
+                                <strong>ReduceLROnPlateau:</strong> Decrease LR when stuck
+                            </div>
+                        </div>
+
+                        <h3>TensorFlow Lite</h3>
+                        <p>Convert trained models to lightweight format for mobile/edge deployment. Reduced model size + optimized for inference.</p>
+                    </div>
+                `,
+                code: `
+                    <div class="section">
+                        <h2>💻 TensorFlow Code Examples</h2>
+
+                        <h3>Sequential API (Simple)</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras
+<span class="keyword">from</span> keras <span class="keyword">import</span> layers
+
+<span class="comment"># Build model</span>
+model = keras.Sequential([
+    layers.Dense(<span class="number">128</span>, activation=<span class="string">'relu'</span>, input_shape=(<span class="number">10</span>,)),
+    layers.Dropout(<span class="number">0.3</span>),
+    layers.Dense(<span class="number">64</span>, activation=<span class="string">'relu'</span>),
+    layers.Dense(<span class="number">1</span>, activation=<span class="string">'sigmoid'</span>)
+])
+
+<span class="comment"># Compile</span>
+model.compile(
+    optimizer=<span class="string">'adam'</span>,
+    loss=<span class="string">'binary_crossentropy'</span>,
+    metrics=[<span class="string">'accuracy'</span>]
+)
+
+<span class="comment"># Train</span>
+history = model.fit(
+    X_train, y_train,
+    epochs=<span class="number">50</span>,
+    batch_size=<span class="number">32</span>,
+    validation_split=<span class="number">0.2</span>
+)
+                        </div>
+
+                        <h3>Functional API (Complex)</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> keras <span class="keyword">import</span> Input, Model
+
+<span class="comment"># Multi-input model</span>
+input1 = Input(shape=(<span class="number">10</span>,), name=<span class="string">'features'</span>)
+input2 = Input(shape=(<span class="number">5</span>,), name=<span class="string">'metadata'</span>)
+
+<span class="comment"># Branch 1</span>
+x1 = layers.Dense(<span class="number">64</span>, activation=<span class="string">'relu'</span>)(input1)
+x1 = layers.Dropout(<span class="number">0.3</span>)(x1)
+
+<span class="comment"># Branch 2</span>
+x2 = layers.Dense(<span class="number">32</span>, activation=<span class="string">'relu'</span>)(input2)
+
+<span class="comment"># Merge</span>
+merged = layers.concatenate([x1, x2])
+output = layers.Dense(<span class="number">1</span>, activation=<span class="string">'sigmoid'</span>)(merged)
+
+<span class="comment"># Build model</span>
+model = Model(inputs=[input1, input2], outputs=output)
+model.compile(optimizer=<span class="string">'adam'</span>, loss=<span class="string">'binary_crossentropy'</span>)
+                        </div>
+
+                        <h3>Callbacks</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> keras.callbacks <span class="keyword">import</span> EarlyStopping, ModelCheckpoint, TensorBoard
+
+<span class="comment"># Early stopping</span>
+early_stop = EarlyStopping(
+    monitor=<span class="string">'val_loss'</span>,
+    patience=<span class="number">10</span>,
+    restore_best_weights=<span class="keyword">True</span>
+)
+
+<span class="comment"># Save best model</span>
+checkpoint = ModelCheckpoint(
+    <span class="string">'best_model.h5'</span>,
+    monitor=<span class="string">'val_accuracy'</span>,
+    save_best_only=<span class="keyword">True</span>
+)
+
+<span class="comment"># TensorBoard</span>
+tensorboard = TensorBoard(log_dir=<span class="string">'./logs'</span>)
+
+<span class="comment"># Train with callbacks</span>
+model.fit(
+    X_train, y_train,
+    validation_data=(X_val, y_val),
+    epochs=<span class="number">100</span>,
+    callbacks=[early_stop, checkpoint, tensorboard]
+)
+                        </div>
+
+                        <h3>Custom Training Loop</h3>
+                        <div class="code-block">
+<span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf
+
+<span class="comment"># Define loss and optimizer</span>
+loss_fn = keras.losses.BinaryCrossentropy()
+optimizer = keras.optimizers.Adam()
+
+<span class="comment"># Training step</span>
+<span class="function">@tf.function</span>
+<span class="keyword">def</span> <span class="function">train_step</span>(X, y):
+    <span class="keyword">with</span> tf.GradientTape() <span class="keyword">as</span> tape:
+        predictions = model(X, training=<span class="keyword">True</span>)
+        loss = loss_fn(y, predictions)
+    
+    <span class="comment"># Compute gradients</span>
+    gradients = tape.gradient(loss, model.trainable_variables)
+    
+    <span class="comment"># Update weights</span>
+    optimizer.apply_gradients(<span class="function">zip</span>(gradients, model.trainable_variables))
+    
+    <span class="keyword">return</span> loss
+
+<span class="comment"># Training loop</span>
+<span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="function">range</span>(<span class="number">50</span>):
+    <span class="keyword">for</span> X_batch, y_batch <span class="keyword">in</span> train_dataset:
+        loss = train_step(X_batch, y_batch)
+                        </div>
+
+                        <h3>TensorFlow Lite Conversion</h3>
+                        <div class="code-block">
+<span class="comment"># Convert to TFLite</span>
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
+converter.optimizations = [tf.lite.Optimize.DEFAULT]
+tflite_model = converter.convert()
+
+<span class="comment"># Save</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">'model.tflite'</span>, <span class="string">'wb'</span>) <span class="keyword">as</span> f:
+    f.write(tflite_model)
+                        </div>
+                    </div>
+                `,
+                interview: `
+                    <div class="section">
+                        <h2>🎯 TensorFlow Interview Questions</h2>
+
+                        <div class="interview-box">
+                            <strong>Q1: When to use Sequential vs Functional API?</strong>
+                            <p><strong>Sequential:</strong> Simple linear models (input → layers → output). <strong>Functional:</strong> Multiple inputs/outputs, skip connections (ResNet), shared layers, complex architectures.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q2: What's the purpose of <code>model.compile()</code>?</strong>
+                            <p>Configure training process: optimizer (how to update weights), loss function (what to minimize), metrics (what to track). Must call before <code>fit()</code>.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q3: Explain <code>validation_split=0.2</code> vs <code>validation_data</code>.</strong>
+                            <p><code>validation_split</code>: Auto-split last 20% of training data. <code>validation_data=(X_val, y_val)</code>: Use explicit validation set. Latter gives more control.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q4: How does EarlyStopping prevent overfitting?</strong>
+                            <p>Monitors validation metric (e.g., val_loss). If no improvement for <code>patience</code> epochs, stops training and restores best weights. Prevents training too long on training data.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q5: What's the advantage of TensorBoard?</strong>
+                            <p>Visualize training curves (loss, accuracy), model graph, histograms of weights/gradients, embeddings. Launch: <code>tensorboard --logdir=./logs</code></p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q6: How to freeze layers in transfer learning?</strong>
+                            <p><code>for layer in base_model.layers: layer.trainable = False</code>. Then add custom layers on top and train only those.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q7: What's the purpose of <code>@tf.function</code>?</strong>
+                            <p>Converts Python function to TensorFlow graph for faster execution. Auto-optimizes and enables GPU acceleration. Use for training steps and inference.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q8: How to save and load a Keras model?</strong>
+                            <p><code>model.save('model.h5')</code> to save entire model (architecture + weights). <code>keras.models.load_model('model.h5')</code> to load.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q9: What's TensorFlow Lite used for?</strong>
+                            <p>Deploy models on mobile (Android/iOS) and edge devices. Converts model to smaller, optimized format. Supports quantization for further size reduction.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q10: How does <code>Dropout</code> work?</strong>
+                            <p>Randomly sets fraction of inputs to 0 during training. Forces network to learn redundant representations, preventing overfitting. Disabled during inference (<code>model.predict()</code>).</p>
+                        </div>
+                    </div>
+                `
+            },
+
+            "production": {
+                concepts: `
+                    <div class="section">
+                        <h2>Production Python Best Practices</h2>
+
+                        <h3>Testing Frameworks</h3>
+                        <table>
+                            <tr>
+                                <th>Framework</th>
+                                <th>Style</th>
+                                <th>Best For</th>
+                            </tr>
+                            <tr>
+                                <td>unittest</td>
+                                <td>Class-based, built-in</td>
+                                <td>Traditional OOP projects</td>
+                            </tr>
+                            <tr>
+                                <td>pytest</td>
+                                <td>Function-based, fixtures</td>
+                                <td>Modern Python, ML pipelines</td>
+                            </tr>
+                        </table>
+
+                        <h3>Packaging</h3>
+                        <div class="info-box">
+                            <div class="box-title">📦 Distribution</div>
+                            <div class="box-content">
+                                <strong>setup.py (legacy):</strong> Classic packaging<br>
+                                <strong>pyproject.toml (modern):</strong> PEP 517/518 standard<br>
+                                <strong>poetry:</strong> Modern dependency management + packaging
+                            </div>
+                        </div>
+
+                        <h3>Logging Levels</h3>
+                        <ul>
+                            <li><strong>DEBUG:</strong> Detailed diagnostic info</li>
+                            <li><strong>INFO:</strong> General informational messages</li>
+                            <li><strong>WARNING:</strong> Something unexpected</li>
+                            <li><strong>ERROR:</strong> Serious problem occurred</li>
+                            <li><strong>CRITICAL:</strong> Program may crash</li>
+                        </ul>
+
+                        <h3>FastAPI for Model Serving</h3>
+                        <p>Modern async framework for ML APIs. Auto-generates OpenAPI docs, supports type hints, ~3x faster than Flask.</p>
+
+                        <h3>Error Handling</h3>
+                        <div class="callout tip">
+                            <div class="callout-title">✓ Best Practice</div>
+                            Catch specific exceptions, log errors, provide meaningful messages. Never use bare <code>except:</code> — it catches SystemExit and KeyboardInterrupt.
+                        </div>
+                    </div>
+                `,
+                code: `
+                    <div class="section">
+                        <h2>💻 Production Code Examples</h2>
+
+                        <h3>Pytest Testing</h3>
+                        <div class="code-block">
+<span class="comment"># test_model.py</span>
+<span class="keyword">import</span> pytest
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># Fixture (reusable test data)</span>
+<span class="function">@pytest.fixture</span>
+<span class="keyword">def</span> <span class="function">sample_data</span>():
+    X = np.random.randn(<span class="number">100</span>, <span class="number">10</span>)
+    y = np.random.randint(<span class="number">0</span>, <span class="number">2</span>, <span class="number">100</span>)
+    <span class="keyword">return</span> X, y
+
+<span class="comment"># Test function</span>
+<span class="keyword">def</span> <span class="function">test_model_training</span>(sample_data):
+    X, y = sample_data
+    model = MyModel()
+    model.fit(X, y)
+    
+    <span class="keyword">assert</span> model.is_fitted == <span class="keyword">True</span>
+    <span class="keyword">assert</span> model.score(X, y) &gt; <span class="number">0.5</span>
+
+<span class="comment"># Parametrized test</span>
+<span class="function">@pytest.mark.parametrize</span>(<span class="string">"lr,expected"</span>, [
+    (<span class="number">0.001</span>, <span class="number">0.8</span>),
+    (<span class="number">0.01</span>, <span class="number">0.85</span>),
+    (<span class="number">0.1</span>, <span class="number">0.75</span>)
+])
+<span class="keyword">def</span> <span class="function">test_learning_rates</span>(lr, expected, sample_data):
+    X, y = sample_data
+    model = MyModel(learning_rate=lr)
+    model.fit(X, y)
+    <span class="keyword">assert</span> model.score(X, y) &gt; expected
+                        </div>
+
+                        <h3>Logging Configuration</h3>
+                        <div class="code-block">
+<span class="keyword">import</span> logging
+
+<span class="comment"># Configure logger</span>
+logging.basicConfig(
+    level=logging.INFO,
+    format=<span class="string">'%(asctime)s - %(name)s - %(levelname)s - %(message)s'</span>,
+    handlers=[
+        logging.FileHandler(<span class="string">'model_training.log'</span>),
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger(__name__)
+
+<span class="comment"># Use in code</span>
+<span class="keyword">def</span> <span class="function">train_model</span>(X, y):
+    logger.info(<span class="string">f"Training on {len(X)} samples"</span>)
+    <span class="keyword">try</span>:
+        model.fit(X, y)
+        logger.info(<span class="string">"Training completed successfully"</span>)
+    <span class="keyword">except</span> <span class="function">ValueError</span> <span class="keyword">as</span> e:
+        logger.error(<span class="string">f"Training failed: {e}"</span>)
+        <span class="keyword">raise</span>
+                        </div>
+
+                        <h3>FastAPI Model Serving</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI, HTTPException
+<span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel
+<span class="keyword">import</span> joblib
+
+app = FastAPI()
+
+<span class="comment"># Load model at startup</span>
+model = joblib.load(<span class="string">'model.pkl'</span>)
+
+<span class="comment"># Request schema</span>
+<span class="keyword">class</span> <span class="class">PredictionRequest</span>(BaseModel):
+    features: <span class="function">list</span>[<span class="function">float</span>]
+
+<span class="comment"># Response schema</span>
+<span class="keyword">class</span> <span class="class">PredictionResponse</span>(BaseModel):
+    prediction: <span class="function">float</span>
+    probability: <span class="function">float</span>
+
+<span class="function">@app.post</span>(<span class="string">"/predict"</span>, response_model=PredictionResponse)
+<span class="keyword">async</span> <span class="keyword">def</span> <span class="function">predict</span>(request: PredictionRequest):
+    <span class="keyword">try</span>:
+        X = np.array(request.features).reshape(<span class="number">1</span>, -<span class="number">1</span>)
+        prediction = model.predict(X)[<span class="number">0</span>]
+        probability = model.predict_proba(X)[<span class="number">0</span>].max()
+        
+        <span class="keyword">return</span> PredictionResponse(
+            prediction=<span class="function">float</span>(prediction),
+            probability=<span class="function">float</span>(probability)
+        )
+    <span class="keyword">except</span> <span class="function">Exception</span> <span class="keyword">as</span> e:
+        <span class="keyword">raise</span> HTTPException(status_code=<span class="number">500</span>, detail=<span class="function">str</span>(e))
+
+<span class="comment"># Run: uvicorn main:app --reload</span>
+                        </div>
+
+                        <h3>Packaging with pyproject.toml</h3>
+                        <div class="code-block">
+<span class="comment"># pyproject.toml</span>
+[build-system]
+requires = [<span class="string">"setuptools>=45"</span>, <span class="string">"wheel"</span>]
+build-backend = <span class="string">"setuptools.build_meta"</span>
+
+[project]
+name = <span class="string">"my-ml-package"</span>
+version = <span class="string">"0.1.0"</span>
+dependencies = [
+    <span class="string">"numpy>=1.20"</span>,
+    <span class="string">"scikit-learn>=1.0"</span>,
+    <span class="string">"pandas>=1.3"</span>
+]
+
+[project.optional-dependencies]
+dev = [<span class="string">"pytest"</span>, <span class="string">"black"</span>, <span class="string">"flake8"</span>]
+                        </div>
+
+                        <h3>Exception Handling</h3>
+                        <div class="code-block">
+<span class="comment"># Custom exception</span>
+<span class="keyword">class</span> <span class="class">ModelNotFittedError</span>(<span class="function">Exception</span>):
+    <span class="keyword">pass</span>
+
+<span class="keyword">class</span> <span class="class">MyModel</span>:
+    <span class="keyword">def</span> <span class="function">predict</span>(<span class="keyword">self</span>, X):
+        <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">self</span>.is_fitted:
+            <span class="keyword">raise</span> ModelNotFittedError(
+                <span class="string">"Model must be fitted before calling predict()"</span>
+            )
+        
+        <span class="keyword">try</span>:
+            predictions = <span class="keyword">self</span>._predict_internal(X)
+        <span class="keyword">except</span> <span class="function">ValueError</span> <span class="keyword">as</span> e:
+            logger.error(<span class="string">f"Invalid input shape: {e}"</span>)
+            <span class="keyword">raise</span>
+        <span class="keyword">except</span> <span class="function">Exception</span> <span class="keyword">as</span> e:
+            logger.critical(<span class="string">f"Unexpected error: {e}"</span>)
+            <span class="keyword">raise</span>
+        
+        <span class="keyword">return</span> predictions
+                        </div>
+                    </div>
+                `,
+                interview: `
+                    <div class="section">
+                        <h2>🎯 Production Python Interview Questions</h2>
+
+                        <div class="interview-box">
+                            <strong>Q1: What's the advantage of pytest over unittest?</strong>
+                            <p>Pytest: simpler syntax (no classes), powerful fixtures, parametrization, better assertions. Unittest: OOP style, built-in, more verbose. Pytest is preferred for modern Python.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q2: How to test a machine learning model?</strong>
+                            <p>(1) Test data shape/type validation, (2) Test fit/predict logic, (3) Test reproducibility (fixed random seed), (4) Test edge cases (empty data, single sample), (5) Integration tests with real data.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q3: Why use logging instead of print()?</strong>
+                            <p>Logging: levels (DEBUG, INFO, ERROR), can write to files, timestamps, configurable formatting, can be disabled in production. Print: fixed output, no control, pollutes stdout.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q4: How does FastAPI compare to Flask?</strong>
+                            <p><strong>FastAPI:</strong> Async, auto docs (Swagger), type hints, faster. <strong>Flask:</strong> Synchronous, mature ecosystem, simpler. FastAPI better for ML APIs with high throughput.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q5: What's the purpose of fixtures in pytest?</strong>
+                            <p>Reusable test setup code. Example: load dataset once, use in multiple tests. Scope: function (default), class, module, session. Reduces code duplication.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q6: How to package a Python project for distribution?</strong>
+                            <p>Use <code>pyproject.toml</code> (modern) or <code>setup.py</code> (legacy). Build: <code>python -m build</code>. Upload to PyPI: <code>twine upload dist/*</code>. Install: <code>pip install my-package</code></p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q7: What's type hinting and why use it?</strong>
+                            <p>Specify expected types: <code>def predict(X: np.ndarray) -> np.ndarray:</code>. Benefits: IDE autocomplete, early error detection (mypy), self-documentation, FastAPI uses them for validation.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q8: How to handle secrets/credentials in production?</strong>
+                            <p>Never hardcode. Use: environment variables (<code>os.getenv('API_KEY')</code>), config files (gitignored), secret management services (AWS Secrets Manager, HashiCorp Vault).</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q9: What's the purpose of <code>__name__ == '__main__'</code>?</strong>
+                            <p>Distinguish between running as script vs importing as module. Code under <code>if __name__ == '__main__':</code> only runs when executed directly, not when imported.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q10: How to version control ML models?</strong>
+                            <p>Use DVC (Data Version Control) or MLflow. Track model files, datasets, params. Git for code, DVC for large binaries. Enables reproducibility and rollback.</p>
+                        </div>
+                    </div>
+                `
+            },
+
+            "optimization": {
+                concepts: `
+                    <div class="section">
+                        <h2>Performance Optimization</h2>
+
+                        <h3>Profiling Tools</h3>
+                        <table>
+                            <tr>
+                                <th>Tool</th>
+                                <th>Type</th>
+                                <th>Use Case</th>
+                            </tr>
+                            <tr>
+                                <td>cProfile</td>
+                                <td>Function-level</td>
+                                <td>Find slow functions</td>
+                            </tr>
+                            <tr>
+                                <td>line_profiler</td>
+                                <td>Line-by-line</td>
+                                <td>Optimize specific function</td>
+                            </tr>
+                            <tr>
+                                <td>memory_profiler</td>
+                                <td>Memory usage</td>
+                                <td>Find memory leaks</td>
+                            </tr>
+                        </table>
+
+                        <h3>Numba: JIT Compilation</h3>
+                        <div class="info-box">
+                            <div class="box-title">⚡ 100x Speedup</div>
+                            <div class="box-content">
+                                Numba compiles Python to machine code (LLVM). Add <code>@jit</code> decorator to functions with loops/NumPy. No code changes needed!
+                            </div>
+                        </div>
+
+                        <h3>Vectorization Priority</h3>
+                        <ol>
+                            <li><strong>NumPy/Pandas vectorization</strong> — First choice</li>
+                            <li><strong>Numba JIT</strong> — If loops unavoidable</li>
+                            <li><strong>Cython</strong> — If maximum performance needed</li>
+                            <li><strong>Multiprocessing</strong> — For embarrassingly parallel tasks</li>
+                        </ol>
+
+                        <h3>Memory Optimization</h3>
+                        <ul>
+                            <li><strong>Generators:</strong> Yield instead of building lists</li>
+                            <li><strong>__slots__:</strong> Reduce memory for classes</li>
+                            <li><strong>dtype optimization:</strong> float32 vs float64</li>
+                            <li><strong>del:</strong> Explicitly free large objects</li>
+                        </ul>
+
+                        <h3>Dask for Big Data</h3>
+                        <p>Parallel computing for datasets larger than RAM. Pandas-like API but processes in chunks. Scales to clusters.</p>
+
+                        <div class="callout warning">
+                            <div class="callout-title">⚠️ Premature Optimization</div>
+                            Profile first! Don't optimize without measuring. 80% of runtime is often in 20% of code.
+                        </div>
+                    </div>
+                `,
+                code: `
+                    <div class="section">
+                        <h2>💻 Optimization Code Examples</h2>
+
+                        <h3>Profiling with cProfile</h3>
+                        <div class="code-block">
+<span class="keyword">import</span> cProfile
+<span class="keyword">import</span> pstats
+
+<span class="comment"># Profile a function</span>
+<span class="keyword">def</span> <span class="function">slow_function</span>():
+    result = []
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1000000</span>):
+        result.append(i ** <span class="number">2</span>)
+    <span class="keyword">return</span> result
+
+<span class="comment"># Profile</span>
+profiler = cProfile.Profile()
+profiler.enable()
+slow_function()
+profiler.disable()
+
+<span class="comment"># Print stats</span>
+stats = pstats.Stats(profiler)
+stats.sort_stats(<span class="string">'cumtime'</span>)
+stats.print_stats(<span class="number">10</span>)  <span class="comment"># Top 10 slowest</span>
+                        </div>
+
+                        <h3>Numba JIT Compilation</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> numba <span class="keyword">import</span> jit
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># Slow Python loop</span>
+<span class="keyword">def</span> <span class="function">python_sum</span>(arr):
+    total = <span class="number">0</span>
+    <span class="keyword">for</span> x <span class="keyword">in</span> arr:
+        total += x ** <span class="number">2</span>
+    <span class="keyword">return</span> total
+
+<span class="comment"># Fast Numba version (100x faster!)</span>
+<span class="function">@jit</span>(nopython=<span class="keyword">True</span>)
+<span class="keyword">def</span> <span class="function">numba_sum</span>(arr):
+    total = <span class="number">0</span>
+    <span class="keyword">for</span> x <span class="keyword">in</span> arr:
+        total += x ** <span class="number">2</span>
+    <span class="keyword">return</span> total
+
+arr = np.random.randn(<span class="number">1000000</span>)
+<span class="comment"># First call compiles, subsequent calls are fast</span>
+result = numba_sum(arr)
+                        </div>
+
+                        <h3>Vectorization vs Loops</h3>
+                        <div class="code-block">
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> time
+
+<span class="comment"># Slow: Python loop</span>
+<span class="keyword">def</span> <span class="function">loop_version</span>(arr):
+    result = []
+    <span class="keyword">for</span> x <span class="keyword">in</span> arr:
+        result.append(x ** <span class="number">2</span> + <span class="number">2</span> * x)
+    <span class="keyword">return</span> result
+
+<span class="comment"># Fast: Vectorized</span>
+<span class="keyword">def</span> <span class="function">vectorized_version</span>(arr):
+    <span class="keyword">return</span> arr ** <span class="number">2</span> + <span class="number">2</span> * arr
+
+arr = np.random.randn(<span class="number">1000000</span>)
+
+<span class="comment"># Benchmark</span>
+start = time.time()
+loop_version(arr)
+<span class="function">print</span>(<span class="string">f"Loop: {time.time() - start:.4f}s"</span>)
+
+start = time.time()
+vectorized_version(arr)
+<span class="function">print</span>(<span class="string">f"Vectorized: {time.time() - start:.4f}s"</span>)
+                        </div>
+
+                        <h3>Memory Optimization with __slots__</h3>
+                        <div class="code-block">
+<span class="comment"># Regular class (uses dict)</span>
+<span class="keyword">class</span> <span class="class">RegularPoint</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, x, y):
+        <span class="keyword">self</span>.x = x
+        <span class="keyword">self</span>.y = y
+
+<span class="comment"># Optimized class (50% less memory)</span>
+<span class="keyword">class</span> <span class="class">SlottedPoint</span>:
+    __slots__ = [<span class="string">'x'</span>, <span class="string">'y'</span>]
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, x, y):
+        <span class="keyword">self</span>.x = x
+        <span class="keyword">self</span>.y = y
+
+<span class="comment"># For millions of instances, slots save significant memory</span>
+points = [SlottedPoint(i, i*<span class="number">2</span>) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1000000</span>)]
+                        </div>
+
+                        <h3>Dask for Large Datasets</h3>
+                        <div class="code-block">
+<span class="keyword">import</span> dask.dataframe <span class="keyword">as</span> dd
+
+<span class="comment"># Load large CSV (lazy evaluation)</span>
+df = dd.read_csv(<span class="string">'large_file.csv'</span>)
+
+<span class="comment"># Operations are lazy (not executed yet)</span>
+result = df[df[<span class="string">'value'</span>] &gt; <span class="number">100</span>].groupby(<span class="string">'category'</span>)[<span class="string">'price'</span>].mean()
+
+<span class="comment"># Compute triggers execution (parallel)</span>
+final_result = result.compute()
+
+<span class="comment"># Works with datasets bigger than RAM!</span>
+                        </div>
+
+                        <h3>Multiprocessing for Parallel Tasks</h3>
+                        <div class="code-block">
+<span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="keyword">def</span> <span class="function">expensive_computation</span>(data):
+    <span class="keyword">return</span> np.mean(data ** <span class="number">2</span>)
+
+<span class="comment"># Split data into chunks</span>
+data = [np.random.randn(<span class="number">1000000</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="function">range</span>(<span class="number">8</span>)]
+
+<span class="comment"># Parallel processing (uses all CPU cores)</span>
+<span class="keyword">with</span> Pool() <span class="keyword">as</span> pool:
+    results = pool.<span class="function">map</span>(expensive_computation, data)
+
+<span class="function">print</span>(<span class="string">f"Results: {results}"</span>)
+                        </div>
+
+                        <h3>Generator for Memory Efficiency</h3>
+                        <div class="code-block">
+<span class="comment"># Bad: Loads entire file into memory</span>
+<span class="keyword">def</span> <span class="function">read_all_lines</span>(filepath):
+    <span class="keyword">with</span> <span class="function">open</span>(filepath) <span class="keyword">as</span> f:
+        <span class="keyword">return</span> [line.strip() <span class="keyword">for</span> line <span class="keyword">in</span> f]
+
+<span class="comment"># Good: Yields one line at a time</span>
+<span class="keyword">def</span> <span class="function">read_lines_generator</span>(filepath):
+    <span class="keyword">with</span> <span class="function">open</span>(filepath) <span class="keyword">as</span> f:
+        <span class="keyword">for</span> line <span class="keyword">in</span> f:
+            <span class="keyword">yield</span> line.strip()
+
+<span class="comment"># Process 10GB file without loading all</span>
+<span class="keyword">for</span> line <span class="keyword">in</span> read_lines_generator(<span class="string">'huge_file.txt'</span>):
+    process(line)
+                        </div>
+                    </div>
+                `,
+                interview: `
+                    <div class="section">
+                        <h2>🎯 Optimization Interview Questions</h2>
+
+                        <div class="interview-box">
+                            <strong>Q1: What's the first step in optimization?</strong>
+                            <p><strong>Profile first!</strong> Use cProfile to find bottlenecks. Don't optimize without measuring. Often 80% of time is in 20% of code. Focus optimization there.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q2: How does Numba achieve speedup?</strong>
+                            <p>JIT (Just-In-Time) compiles Python to machine code using LLVM. Works best with NumPy arrays and numerical loops. <code>@jit(nopython=True)</code> ensures pure compilation (no Python overhead).</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q3: When to use multiprocessing vs threading?</strong>
+                            <p><strong>Multiprocessing:</strong> CPU-bound (bypasses GIL). <strong>Threading:</strong> I/O-bound (file reads, API calls). For ML: multiprocessing for training, threading for data loading.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q4: How do generators save memory?</strong>
+                            <p>Yield values one at a time instead of building entire list. For iterating over 1 billion records: generator uses constant memory, list uses GB of RAM.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q5: What's __slots__ and when to use it?</strong>
+                            <p>Defines fixed attributes, removes <code>__dict__</code>. Saves ~50% memory per instance. Use for dataclasses with millions of instances (points, records).</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q6: How does Dask handle data larger than RAM?</strong>
+                            <p>Lazy evaluation + task scheduling. Breaks data into chunks, processes in parallel, keeps only necessary chunks in memory. Spills to disk if needed.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q7: Explain the difference between cProfile and line_profiler.</strong>
+                            <p><strong>cProfile:</strong> Function-level, built-in, overhead low. <strong>line_profiler:</strong> Line-by-line, external, overhead higher. Use cProfile first, line_profiler to dig deeper.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q8: What's the advantage of float32 vs float64?</strong>
+                            <p><strong>float32:</strong> 4 bytes, 50% less memory, faster on GPU. <strong>float64:</strong> 8 bytes, more precision. For deep learning, float32 is usually sufficient and 2x faster.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q9: How to optimize Pandas operations?</strong>
+                            <p>(1) Vectorize (no <code>iterrows()</code>), (2) Use categorical dtype for strings, (3) Downcast numeric types, (4) Use <code>eval()</code> for complex expressions, (5) Process in chunks if too large.</p>
+                        </div>
+
+                        <div class="interview-box">
+                            <strong>Q10: What's Cython and when to use it?</strong>
+                            <p>Python with C types. Compile to C extension. 10-100x faster than Python. Use when Numba insufficient and need maximum performance (custom algorithms, hot loops).</p>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // Render dashboard cards
+        function renderDashboard() {
+            const grid = document.getElementById('modulesGrid');
+            grid.innerHTML = modules.map(module => `
+                <div class="card" onclick="showModule('${module.id}')">
+                    <div class="card-icon">${module.icon}</div>
+                    <h3>${module.title}</h3>
+                    <p>${module.description}</p>
+                    <span class="category-label">${module.category}</span>
+                </div>
+            `).join('');
+        }
+
+        // Show specific module
+        function showModule(moduleId) {
+            const module = modules.find(m => m.id === moduleId);
+            const content = MODULE_CONTENT[moduleId];
+            
+            document.getElementById('dashboard').classList.remove('active');
+            
+            const moduleHTML = `
+                <div class="module active" id="module-${moduleId}">
+                    <button class="btn-back" onclick="backToDashboard()">← Back to Dashboard</button>
+                    <header>
+                        <h1>${module.icon} ${module.title}</h1>
+                        <p class="subtitle">${module.description}</p>
+                    </header>
+                    
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab('${moduleId}', 'concepts')">📖 Key Concepts</button>
+                        <button class="tab-btn" onclick="switchTab('${moduleId}', 'code')">💻 Code Examples</button>
+                        <button class="tab-btn" onclick="switchTab('${moduleId}', 'interview')">🎯 Interview Questions</button>
+                    </div>
+                    
+                    <div id="${moduleId}-concepts" class="tab active">${content.concepts}</div>
+                    <div id="${moduleId}-code" class="tab">${content.code}</div>
+                    <div id="${moduleId}-interview" class="tab">${content.interview}</div>
+                </div>
+            `;
+            
+            document.getElementById('modulesContainer').innerHTML = moduleHTML;
+        }
+
+        // Switch tabs
+        function switchTab(moduleId, tabName) {
+            const moduleEl = document.getElementById(`module-${moduleId}`);
+            
+            // Update tab buttons
+            moduleEl.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update tab content
+            moduleEl.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`${moduleId}-${tabName}`).classList.add('active');
+        }
+
+        // Back to dashboard
+        function backToDashboard() {
+            document.querySelectorAll('.module').forEach(m => m.remove());
+            document.getElementById('dashboard').classList.add('active');
+        }
+
+        // Initialize
+        renderDashboard();
+    </script>
+</body>
+</html>

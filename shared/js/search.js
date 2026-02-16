@@ -165,6 +165,25 @@
                 { title: 'MLOps Pipeline', section: 'mlops' },
                 { title: 'Monitoring & Automation', section: 'monitoring' }
             ]
+        },
+        {
+            id: 'python',
+            name: 'Python for Data Science & AI',
+            path: '/Python/index.html',
+            icon: '🐍',
+            color: '#3776AB',
+            topics: [
+                { title: 'Python Fundamentals for DS', section: 'python-fundamentals' },
+                { title: 'NumPy & Scientific Computing', section: 'numpy' },
+                { title: 'Pandas & Data Manipulation', section: 'pandas' },
+                { title: 'Data Visualization (Matplotlib/Seaborn)', section: 'visualization' },
+                { title: 'Advanced Python (OOP/Async)', section: 'advanced' },
+                { title: 'Python for ML (Scikit-learn)', section: 'sklearn' },
+                { title: 'Deep Learning with PyTorch', section: 'pytorch' },
+                { title: 'TensorFlow & Keras', section: 'tensorflow' },
+                { title: 'Production Python (Testing/FastAPI)', section: 'production' },
+                { title: 'Performance & Optimization (Numba/Dask)', section: 'optimization' }
+            ]
         }
     ];
 

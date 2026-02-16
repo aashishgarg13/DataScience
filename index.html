@@ -321,6 +321,10 @@
             --module-color: var(--color-accent-devops);
         }
 
+        .module-python {
+            --module-color: var(--color-accent-python);
+        }
+
         /* Footer */
         .landing-footer {
             text-align: center;
@@ -693,24 +697,62 @@
                     <div class="module-card-header">
                         <span class="badge badge-new">New</span>
                     </div>
-                    <div class="module-card-body">
-                        <h2 class="module-card-title">Azure DevOps & MLOps</h2>
-                        <p class="module-card-description">
-                            CI/CD pipelines, Docker, Kubernetes, AKS, MLOps, Infrastructure as Code, and production ML
-                            deployment on Azure.
-                        </p>
-                    </div>
-                    <div class="module-progress">
-                        <div class="module-progress-bar">
-                            <div class="module-progress-fill progress-bar" style="width: 0%"></div>
+                    <div class="module-card-content">
+                        <div class="module-icon">☁️</div>
+                        <h3>Azure DevOps & MLOps</h3>
+                        <p class="module-description">Master DevOps fundamentals, CI/CD pipelines, Kubernetes, and MLOps
+                            automation for production ML systems.</p>
+                        <div class="module-topics">
+                            <span class="topic-pill">DevOps Fundamentals</span>
+                            <span class="topic-pill">CI/CD Pipeline (YAML)</span>
+                            <span class="topic-pill">Docker & Containers</span>
+                            <span class="topic-pill">Kubernetes & AKS</span>
+                            <span class="topic-pill">MLOps Pipeline</span>
+                            <span class="topic-pill">Monitoring & Automation</span>
                         </div>
-                        <div class="module-progress-label">
-                            <span>Progress</span>
-                            <span class="progress-label-value">0/10</span>
+                        <div class="module-footer">
+                            <div class="module-progress">
+                                <div class="progress-circle">
+                                    <span class="progress-text">0/10</span>
+                                </div>
+                                <span class="progress-label">Topics</span>
+                            </div>
+                            <button class="btn-explore">Explore DevOps</button>
                         </div>
                     </div>
-                    <div class="module-card-footer">
-                        <span class="module-card-cta">Explore DevOps</span>
+                    <div class="module-card-decoration">
+                        <span class="module-card-arrow">→</span>
+                    </div>
+                </a>
+
+                <!-- Python for DS & AI -->
+                <a href="Python/index.html" class="module-card module-python" data-progress-module="python">
+                    <div class="module-card-header">
+                        <span class="badge badge-new">New</span>
+                    </div>
+                    <div class="module-card-content">
+                        <div class="module-icon">🐍</div>
+                        <h3>Python for Data Science & AI</h3>
+                        <p class="module-description">Complete Python masterclass from fundamentals to production—NumPy,
+                            Pandas, PyTorch, TensorFlow, and optimization.</p>
+                        <div class="module-topics">
+                            <span class="topic-pill">Python Fundamentals</span>
+                            <span class="topic-pill">NumPy & Pandas</span>
+                            <span class="topic-pill">Advanced Python (OOP/Async)</span>
+                            <span class="topic-pill">PyTorch & Transformers</span>
+                            <span class="topic-pill">Production & Optimization</span>
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-progress">
+                                <div class="progress-circle">
+                                    <span class="progress-text">0/10</span>
+                                </div>
+                                <span class="progress-label">Topics</span>
+                            </div>
+                            <button class="btn-explore">Explore Python</button>
+                        </div>
+                    </div>
+                    <div class="module-card-decoration">
                         <span class="module-card-arrow">→</span>
                     </div>
                 </a>
