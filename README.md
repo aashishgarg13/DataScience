@@ -15,13 +15,13 @@ Welcome to a comprehensive collection of educational web projects for learning d
 
 Visit our courses directly in your browser:
 
-- [📈 Interactive Statistics Course](https://aashishgarg13.github.io/DataScience/complete-statistics/)
-- [🤖 Machine Learning Guide](https://aashishgarg13.github.io/DataScience/ml_complete-all-topics/)
-- [🧠 Deep Learning Masterclass](https://aashishgarg13.github.io/DataScience/DeepLearning/Deep%20Learning%20Curriculum.html)
-- [📊 Data Visualization](https://aashishgarg13.github.io/DataScience/Visualization/)
-- [🔢 Mathematics for Data Science](https://aashishgarg13.github.io/DataScience/math-ds-complete/)
-- [⚙️ Feature Engineering Guide](https://aashishgarg13.github.io/DataScience/feature-engineering/)
-- [🤔 Prompt Engineering Guide](https://aashishgarg13.github.io/DataScience/prompt-engineering-guide) - Interactive AI prompting course
+- [📈 Interactive Statistics Course](https://aashishgarg13.github.io/DataScience/complete-statistics/index.html)
+- [🤖 Machine Learning Guide](https://aashishgarg13.github.io/DataScience/ml_complete-all-topics/index.html)
+- [🧠 Deep Learning Masterclass](https://aashishgarg13.github.io/DataScience/DeepLearning/index.html)
+- [📊 Data Visualization](https://aashishgarg13.github.io/DataScience/Visualization/index.html)
+- [🔢 Mathematics for Data Science](https://aashishgarg13.github.io/DataScience/math-ds-complete/index.html)
+- [⚙️ Feature Engineering Guide](https://aashishgarg13.github.io/DataScience/feature-engineering/index.html)
+- [🤔 Prompt Engineering Guide](https://aashishgarg13.github.io/DataScience/prompt-engineering-guide/index.html) - Interactive AI prompting course
 
 ## 🔗 Prompt Engineering Resources
 
@@ -100,9 +100,9 @@ The repository supports automatic updates for:
 
 ### Option A: View Online
 Visit our GitHub Pages hosted versions:
-1. [Statistics Course](https://aashishgarg13.github.io/DataScience/complete-statistics/)
-2. [Machine Learning Guide](https://aashishgarg13.github.io/DataScience/ml_complete-all-topics/)
-3. [Deep Learning Masterclass](https://aashishgarg13.github.io/DataScience/DeepLearning/Deep%20Learning%20Curriculum.html)
+1. [Statistics Course](https://aashishgarg13.github.io/DataScience/complete-statistics/index.html)
+2. [Machine Learning Guide](https://aashishgarg13.github.io/DataScience/ml_complete-all-topics/index.html)
+3. [Deep Learning Masterclass](https://aashishgarg13.github.io/DataScience/DeepLearning/index.html)
 
 ### Option B: Run Locally (Recommended for Development)
 
