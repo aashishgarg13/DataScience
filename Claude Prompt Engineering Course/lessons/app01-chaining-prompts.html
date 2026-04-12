@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appendix A: Chaining Prompts — Claude Prompt Engineering</title>
+<meta name="description" content="Learn prompt chaining: sequential pipelines, parallel chains, state management between prompts, error handling, and agentic patterns in Python.">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/main.js" defer></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="../index.html" class="navbar__logo">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="8" r="2" fill="var(--color-primary)"/></svg>
+      <span class="navbar__logo-text">Claude <span>PE</span></span>
+    </a>
+    <div class="navbar__nav">
+      <a href="../index.html" class="navbar__link">Home</a>
+      <a href="../index.html#curriculum" class="navbar__link active">Lessons</a>
+      <a href="../playground.html" class="navbar__link">Playground</a>
+    </div>
+    <div class="navbar__actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <a href="../index.html#curriculum">All Lessons</a>
+    <a href="../playground.html">Playground</a>
+  </div>
+</nav>
+
+<div class="lesson-layout" style="padding-block: var(--space-8);">
+  <!-- SIDEBAR -->
+  <aside class="lesson-sidebar">
+    <div class="sidebar__title">Course Contents</div>
+    <ul class="sidebar__list" role="list">
+      <li class="sidebar__item"><a href="ch01-basic-structure.html"><span class="num">01</span> Basic Prompt Structure</a></li>
+      <li class="sidebar__item"><a href="ch02-clear-direct.html"><span class="num">02</span> Clear and Direct</a></li>
+      <li class="sidebar__item"><a href="ch03-assigning-roles.html"><span class="num">03</span> Assigning Roles</a></li>
+      <li class="sidebar__item"><a href="ch04-separating-data.html"><span class="num">04</span> Separating Data</a></li>
+      <li class="sidebar__item"><a href="ch05-formatting-output.html"><span class="num">05</span> Formatting Output</a></li>
+      <li class="sidebar__item"><a href="ch06-precognition.html"><span class="num">06</span> Precognition / CoT</a></li>
+      <li class="sidebar__item"><a href="ch07-using-examples.html"><span class="num">07</span> Using Examples</a></li>
+      <li class="sidebar__item"><a href="ch08-avoiding-hallucinations.html"><span class="num">08</span> Avoiding Hallucinations</a></li>
+      <li class="sidebar__item"><a href="ch09-complex-prompts.html"><span class="num">09</span> Complex Prompts</a></li>
+      <li class="sidebar__item active"><a href="app01-chaining-prompts.html"><span class="num">A</span> Chaining Prompts</a></li>
+      <li class="sidebar__item"><a href="app02-tool-use.html"><span class="num">B</span> Tool Use</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <article class="lesson-content">
+    <div class="progress-bar"><div class="progress-bar__fill" style="width: 90%"></div></div>
+
+    <header class="lesson-header">
+      <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span>
+        <a href="../index.html#curriculum">Lessons</a> <span>/</span>
+        <span>Appendix A</span>
+      </nav>
+      <div class="lesson-header__badge">
+        <span class="lesson-card__badge badge--appendix">Appendix</span>
+      </div>
+      <h1 class="lesson-title">Chaining Prompts</h1>
+      <p class="lesson-subtitle">Single prompts have limits. Prompt chaining breaks complex tasks into a pipeline of focused steps — each prompt's output feeding the next as input. This is how production AI systems actually work.</p>
+      <div class="lesson-meta">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 20 min read</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 7 code examples</span>
+        <span>Appendix A of B</span>
+      </div>
+    </header>
+
+    <div class="lesson-body">
+
+      <h2>Why Single Prompts Have Limits</h2>
+      <p>A single prompt works well when a task can be completed in one focused step. But complex real-world tasks often involve multiple phases: researching, synthesizing, deciding, formatting, and validating. Cramming all of this into one prompt creates several problems:</p>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">📏</div>
+          <div class="technique-card__title">Context Window Limits</div>
+          <div class="technique-card__desc">A single prompt can't process more text than fits in Claude's context window. A chain can handle documents of any size by breaking them into chunks across sequential steps.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🎯</div>
+          <div class="technique-card__title">Focus Dilution</div>
+          <div class="technique-card__desc">Asking Claude to do five things in one prompt reduces performance on each. A chain of five focused prompts — each doing one thing well — consistently outperforms one sprawling prompt.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🔍</div>
+          <div class="technique-card__title">No Intermediate Validation</div>
+          <div class="technique-card__desc">A single prompt fails silently. In a chain, you can inspect and validate each intermediate output — catching errors before they propagate and corrupt downstream steps.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🔄</div>
+          <div class="technique-card__title">No Conditional Logic</div>
+          <div class="technique-card__desc">Single prompts can't branch. Chains can: inspect the output of Step 1, then decide whether to run Step 2A or Step 2B based on what Claude found.</div>
+        </div>
+      </div>
+
+      <h2>The Pipeline Metaphor</h2>
+      <p>Think of prompt chaining as a data pipeline. Each stage transforms the data and passes it downstream:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Pipeline Visualization</span>
+        </div>
+        <pre><code">Input Document
+      │
+      ▼
+[STEP 1: Extract]  →  "What are the key entities and facts?"
+      │                Output: structured JSON with extracted data
+      ▼
+[STEP 2: Analyze]  →  "Analyze these facts. What are the implications?"
+      │                Output: prose analysis
+      ▼
+[STEP 3: Format]   →  "Format this analysis as an executive brief"
+      │                Output: formatted document
+      ▼
+[STEP 4: Validate] →  "Check: does this brief match the original facts?"
+      │                Output: validation report or approved flag
+      ▼
+Final Output</code></pre>
+      </div>
+
+      <h2>Types of Chains</h2>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">🔗</div>
+          <div class="technique-card__title">Refinement Chains</div>
+          <div class="technique-card__desc">Generate → Critique → Improve. Use when quality matters more than speed. Each step makes the previous output better: draft → editorial feedback → revised draft.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🔬</div>
+          <div class="technique-card__title">Analysis Chains</div>
+          <div class="technique-card__desc">Extract → Analyze → Synthesize. For processing complex information sources. Break analysis into: what does it say? → what does it mean? → what should we do?</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🌿</div>
+          <div class="technique-card__title">Decision Chains</div>
+          <div class="technique-card__desc">Classify → Branch. Step 1 categorizes the input; subsequent steps handle each category differently. Essential for building routing logic in AI applications.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">⚡</div>
+          <div class="technique-card__title">Parallel Chains</div>
+          <div class="technique-card__desc">Run multiple independent prompts simultaneously using async/threading. Collect all results and pass to a synthesis step. Dramatically reduces latency for multi-angle analysis.</div>
+        </div>
+      </div>
+
+      <h2>Sequential Chain: Research → Summarize → Format</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Research Pipeline (Python)</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">import anthropic
+
+client = anthropic.Anthropic()
+
+def call_claude(system: str, user: str, max_tokens: int = 1024) -> str:
+    response = client.messages.create(
+        model="claude-opus-4-5",
+        max_tokens=max_tokens,
+        system=system,
+        messages=[{"role": "user", "content": user}]
+    )
+    return response.content[0].text
+
+def research_pipeline(topic: str, raw_sources: list[str]) -> str:
+    """3-step chain: extract key info → analyze → produce executive brief."""
+
+    # STEP 1: Extract key facts from each source
+    extracted_facts = []
+    for i, source in enumerate(raw_sources):
+        facts = call_claude(
+            system="You are a research analyst. Extract key facts, dates, and statistics from documents.",
+            user=f"Extract all key facts from this source. Return as a JSON array of strings.\n\n&lt;source id='{i+1}'&gt;\n{source}\n&lt;/source&gt;"
+        )
+        extracted_facts.append(facts)
+
+    facts_combined = "\n".join([f"Source {i+1}: {f}" for i, f in enumerate(extracted_facts)])
+
+    # STEP 2: Analyze and synthesize
+    analysis = call_claude(
+        system="You are a strategic analyst. Synthesize information from multiple sources into coherent insights.",
+        user=f"""Analyze these extracted facts about '{topic}'.
+Identify: key themes, conflicting information, important gaps.
+
+&lt;facts&gt;
+{facts_combined}
+&lt;/facts&gt;
+
+Return: 3-5 key insights in prose.""",
+        max_tokens=2048
+    )
+
+    # STEP 3: Format as executive brief
+    brief = call_claude(
+        system="You are a senior business writer specializing in executive communications.",
+        user=f"""Format the following analysis as a one-page executive brief about '{topic}'.
+
+Structure: Background (2 sentences) → Key Findings (3 bullet points) → Implications (2 sentences) → Recommended Actions (3 bullet points)
+
+&lt;analysis&gt;
+{analysis}
+&lt;/analysis&gt;""",
+        max_tokens=1024
+    )
+
+    return brief
+
+# Usage
+brief = research_pipeline("AI adoption in healthcare", [doc1, doc2, doc3])
+print(brief)</code></pre>
+      </div>
+
+      <h2>Document Extract → Validate → Output Chain</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Extraction with Validation</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">import json
+
+def extract_and_validate(contract_text: str) -> dict:
+    """Extract contract data and validate the extraction before returning."""
+
+    # Step 1: Extract structured data
+    extraction_prompt = f"""Extract the following fields from this contract.
+Return valid JSON only — no explanation.
+
+Schema:
+{{
+  "parties": ["list of party names"],
+  "effective_date": "YYYY-MM-DD or null",
+  "termination_date": "YYYY-MM-DD or null",
+  "payment_terms_days": number or null,
+  "liability_cap": number or null,
+  "governing_law": "state/jurisdiction or null"
+}}
+
+&lt;contract&gt;
+{contract_text}
+&lt;/contract&gt;"""
+
+    raw_extraction = call_claude("You extract structured data from legal documents.", extraction_prompt)
+
+    try:
+        extracted = json.loads(raw_extraction)
+    except json.JSONDecodeError:
+        return {"error": "extraction_failed", "raw": raw_extraction}
+
+    # Step 2: Validate the extraction
+    validation_prompt = f"""Review this data extraction from a contract.
+Verify: (1) are the field values consistent with the contract text?
+(2) are any fields incorrectly null that should have values?
+(3) are any field values wrong?
+
+Return JSON: {{"valid": true/false, "issues": ["list of issues found"], "corrections": {{}}}}
+
+&lt;contract&gt;{contract_text[:2000]}&lt;/contract&gt;
+&lt;extraction&gt;{json.dumps(extracted)}&lt;/extraction&gt;"""
+
+    validation = call_claude("You validate data extractions for accuracy.", validation_prompt)
+
+    val_data = json.loads(validation)
+    if not val_data.get("valid") and val_data.get("corrections"):
+        extracted.update(val_data["corrections"])
+
+    return {"data": extracted, "validation": val_data}
+</code></pre>
+      </div>
+
+      <h2>Parallel Chains: Running Multiple Prompts Simultaneously</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Parallel Analysis Chain (asyncio)</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">import asyncio
+import anthropic
+
+async_client = anthropic.AsyncAnthropic()
+
+async def analyze_from_perspective(topic: str, perspective: str) -> dict:
+    response = await async_client.messages.create(
+        model="claude-opus-4-5",
+        max_tokens=512,
+        messages=[{
+            "role": "user",
+            "content": f"Analyze '{topic}' from the perspective of {perspective}. 3 key points."
+        }]
+    )
+    return {"perspective": perspective, "analysis": response.content[0].text}
+
+async def multi_perspective_analysis(topic: str) -> str:
+    # Run all perspectives in parallel
+    perspectives = ["a CFO", "an operations manager", "a frontline employee", "a customer"]
+    tasks = [analyze_from_perspective(topic, p) for p in perspectives]
+    results = await asyncio.gather(*tasks)
+
+    # Synthesize all perspectives into one coherent view
+    combined = "\n".join([f"{r['perspective']}: {r['analysis']}" for r in results])
+    synthesis_response = await async_client.messages.create(
+        model="claude-opus-4-5",
+        max_tokens=1024,
+        messages=[{
+            "role": "user",
+            "content": f"Synthesize these four perspectives on '{topic}' into a balanced summary.\n\n{combined}"
+        }]
+    )
+    return synthesis_response.content[0].text
+
+# Usage
+result = asyncio.run(multi_perspective_analysis("moving to a 4-day work week"))</code></pre>
+      </div>
+
+      <h2>State Management Between Prompts</h2>
+      <p>Each prompt in a chain receives only what you explicitly pass to it — there's no shared memory between API calls. You must actively manage state:</p>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">📦</div>
+          <div class="technique-card__title">Pass Full Context</div>
+          <div class="technique-card__desc">The simplest approach: pass the full accumulated context to each step. Works for short chains with small outputs. Becomes expensive and hit context limits for long chains.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🗜️</div>
+          <div class="technique-card__title">Compress Between Steps</div>
+          <div class="technique-card__desc">Add a compression step between long steps: "Summarize the key findings from this analysis in 200 words." Pass the summary rather than the full output to the next step.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">📊</div>
+          <div class="technique-card__title">Structured State Object</div>
+          <div class="technique-card__desc">Use a JSON state object that accumulates outputs. Each step adds its results to the state object. The final step receives the full structured state and produces the final output.</div>
+        </div>
+      </div>
+
+      <h2>Best Practices for Chain Design</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step__num">1</div>
+          <div class="step__content">
+            <div class="step__title">Atomic prompts: one job per step</div>
+            <div class="step__desc">Each step in the chain should do exactly one thing well. If you find yourself writing "and then also..." in a step's instructions, split it into two steps.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">2</div>
+          <div class="step__content">
+            <div class="step__title">Design for structured handoffs</div>
+            <div class="step__desc">Each step's output should be in a format that makes it easy to inject into the next step. Prefer JSON or XML for intermediate outputs — they're easy to pass as template variables.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">3</div>
+          <div class="step__content">
+            <div class="step__title">Add validation steps for high-stakes chains</div>
+            <div class="step__desc">After any step that makes a critical decision (classification, extraction, analysis), add a validation step that checks the output for correctness before passing it downstream.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">4</div>
+          <div class="step__content">
+            <div class="step__title">Handle errors gracefully</div>
+            <div class="step__desc">Wrap each step in try/except. Never let a parsing error in Step 2 crash the whole pipeline. Log errors, attempt recovery, or fail gracefully with informative error messages.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">Appendix A Takeaway</div>
+          <div class="callout__body">Prompt chaining is the foundational pattern for production AI systems. Break complex tasks into atomic, focused steps. Use structured (JSON/XML) outputs for clean handoffs between steps. Add validation steps for high-stakes decisions. Use parallel chains with asyncio when steps are independent, to minimize total latency. When single prompts fail, the answer is usually "break it into a chain."</div>
+        </div>
+      </div>
+
+    </div><!-- /lesson-body -->
+
+    <!-- LESSON NAV -->
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a href="ch09-complex-prompts.html" class="lesson-nav__btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <div>
+          <div class="lesson-nav__label">Previous lesson</div>
+          <div class="lesson-nav__title">Building Complex Prompts</div>
+        </div>
+      </a>
+      <a href="app02-tool-use.html" class="lesson-nav__btn" style="text-align:right;">
+        <div>
+          <div class="lesson-nav__label">Next lesson</div>
+          <div class="lesson-nav__title">Tool Use &amp; Search/Retrieval</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </nav>
+
+  </article>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Claude Prompt Engineering Course
+      </div>
+      <div class="footer__links">
+        <a href="../index.html">Home</a>
+        <a href="../playground.html">Playground</a>
+        <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Anthropic Docs</a>
+      </div>
+    </div>
+    <div class="footer__credit"><a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a></div>
+  </div>
+</footer>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>

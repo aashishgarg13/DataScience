@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 8: Avoiding Hallucinations — Claude Prompt Engineering</title>
+<meta name="description" content="Understand why AI hallucinations happen and learn proven techniques: grounding, uncertainty expression, citation requirements, confidence scoring, and RAG.">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/main.js" defer></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="../index.html" class="navbar__logo">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="8" r="2" fill="var(--color-primary)"/></svg>
+      <span class="navbar__logo-text">Claude <span>PE</span></span>
+    </a>
+    <div class="navbar__nav">
+      <a href="../index.html" class="navbar__link">Home</a>
+      <a href="../index.html#curriculum" class="navbar__link active">Lessons</a>
+      <a href="../playground.html" class="navbar__link">Playground</a>
+    </div>
+    <div class="navbar__actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <a href="../index.html#curriculum">All Lessons</a>
+    <a href="../playground.html">Playground</a>
+  </div>
+</nav>
+
+<div class="lesson-layout" style="padding-block: var(--space-8);">
+  <!-- SIDEBAR -->
+  <aside class="lesson-sidebar">
+    <div class="sidebar__title">Course Contents</div>
+    <ul class="sidebar__list" role="list">
+      <li class="sidebar__item"><a href="ch01-basic-structure.html"><span class="num">01</span> Basic Prompt Structure</a></li>
+      <li class="sidebar__item"><a href="ch02-clear-direct.html"><span class="num">02</span> Clear and Direct</a></li>
+      <li class="sidebar__item"><a href="ch03-assigning-roles.html"><span class="num">03</span> Assigning Roles</a></li>
+      <li class="sidebar__item"><a href="ch04-separating-data.html"><span class="num">04</span> Separating Data</a></li>
+      <li class="sidebar__item"><a href="ch05-formatting-output.html"><span class="num">05</span> Formatting Output</a></li>
+      <li class="sidebar__item"><a href="ch06-precognition.html"><span class="num">06</span> Precognition / CoT</a></li>
+      <li class="sidebar__item"><a href="ch07-using-examples.html"><span class="num">07</span> Using Examples</a></li>
+      <li class="sidebar__item active"><a href="ch08-avoiding-hallucinations.html"><span class="num">08</span> Avoiding Hallucinations</a></li>
+      <li class="sidebar__item"><a href="ch09-complex-prompts.html"><span class="num">09</span> Complex Prompts</a></li>
+      <li class="sidebar__item"><a href="app01-chaining-prompts.html"><span class="num">A</span> Chaining Prompts</a></li>
+      <li class="sidebar__item"><a href="app02-tool-use.html"><span class="num">B</span> Tool Use</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <article class="lesson-content">
+    <div class="progress-bar"><div class="progress-bar__fill" style="width: 72%"></div></div>
+
+    <header class="lesson-header">
+      <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span>
+        <a href="../index.html#curriculum">Lessons</a> <span>/</span>
+        <span>Chapter 8</span>
+      </nav>
+      <div class="lesson-header__badge">
+        <span class="lesson-card__badge badge--advanced">Advanced</span>
+      </div>
+      <h1 class="lesson-title">Avoiding Hallucinations</h1>
+      <p class="lesson-subtitle">AI hallucinations aren't random bugs — they're predictable failure modes with known causes. Learn the techniques that keep Claude grounded in facts and honest about its limits.</p>
+      <div class="lesson-meta">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 18 min read</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 10 examples</span>
+        <span>Chapter 8 of 11</span>
+      </div>
+    </header>
+
+    <div class="lesson-body">
+
+      <h2>What Hallucinations Are and Why They Happen</h2>
+      <p>A hallucination is when an AI generates text that sounds confident and plausible but is factually incorrect. The term is apt: the model produces something that feels real but isn't grounded in reality. The mechanism is statistical, not intentional — Claude generates the most probable next token given its context, and sometimes the most probable sequence is wrong.</p>
+      <p>Hallucinations are most likely when: the question concerns obscure facts, specific dates or numbers, details from long documents (where the relevant fact was far from the current context window), or anything that requires recalling precise information rather than generating coherent text.</p>
+
+      <div class="callout callout--warn">
+        <div class="callout__icon">⚠️</div>
+        <div>
+          <div class="callout__title">The Fluency Trap</div>
+          <div class="callout__body">Hallucinated content is often written with the same confidence and fluency as correct content. Never judge AI output accuracy by how confident or well-written it sounds. Verify factual claims independently, especially citations, statistics, dates, and names of people or publications.</div>
+        </div>
+      </div>
+
+      <h2>Types of Hallucinations: Know What to Watch For</h2>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">📚</div>
+          <div class="technique-card__title">Citation Fabrication</div>
+          <div class="technique-card__desc">Claude invents academic papers, studies, books, or URLs that don't exist. The author names, journal names, and titles are plausible — but the work doesn't exist. Always verify citations before using them.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🔢</div>
+          <div class="technique-card__title">Number Errors</div>
+          <div class="technique-card__desc">Statistics, percentages, revenue figures, population counts — Claude may generate plausible-sounding numbers that are slightly or completely wrong. High-stakes: always verify numeric claims.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">📅</div>
+          <div class="technique-card__title">Date / Timeline Errors</div>
+          <div class="technique-card__desc">Getting founding dates, product launch years, historical events, or biographical dates wrong. Dates are stored weakly in model weights and should always be independently verified.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">👤</div>
+          <div class="technique-card__title">Attribute Mixing</div>
+          <div class="technique-card__desc">Correctly identifying a person but attributing to them something said or done by someone else. Common with historical figures, executives, and authors with similar names or contexts.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🧩</div>
+          <div class="technique-card__title">Confabulation</div>
+          <div class="technique-card__desc">Inventing plausible-sounding details when the model doesn't know the answer. Instead of saying "I don't know", the model fills the gap with a fabricated but coherent answer.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">📎</div>
+          <div class="technique-card__title">Over-extrapolation</div>
+          <div class="technique-card__desc">Taking a true premise and confidently extending it beyond what's actually known. The starting point is accurate; the extrapolation is invented. Subtle and dangerous in analysis contexts.</div>
+        </div>
+      </div>
+
+      <h2>Technique 1: Grounding — Anchor to Provided Context</h2>
+      <p>The most reliable anti-hallucination technique is to provide the facts yourself and instruct Claude to use only those facts. This works because Claude is excellent at extracting, reasoning about, and synthesizing information from text it can directly reference.</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Grounding Pattern</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">Answer the following question using ONLY the information in the provided document.
+Do not use any knowledge from your training. If the answer is not explicitly
+stated in the document, say: "This information is not in the provided document."
+
+&lt;document&gt;
+{document_text}
+&lt;/document&gt;
+
+&lt;question&gt;
+{user_question}
+&lt;/question&gt;</code></pre>
+      </div>
+
+      <h2>Technique 2: Uncertainty Expression</h2>
+      <p>Instruct Claude to signal when it's uncertain rather than guessing confidently. This simple instruction dramatically reduces the rate of fluent-but-wrong answers:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Uncertainty Expression Instructions</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code"># Pattern 1: Simple "say I don't know"
+Answer the following question accurately. If you don't know the answer
+with high confidence, say "I'm not certain about this" and explain
+what you do and don't know. Never guess.
+
+# Pattern 2: Distinguish knowledge types
+Answer this question. For each factual claim, indicate whether you are:
+- Certain (well-established fact from training)
+- Likely (generally accepted but may have exceptions)
+- Uncertain (you believe this is true but cannot be confident)
+- Unknown (you don't know — do not guess)
+
+# Pattern 3: Knowledge cutoff awareness
+Note: Claude's training has a knowledge cutoff. For time-sensitive questions,
+indicate if the answer may have changed since your training cutoff and
+recommend the user verify with current sources.</code></pre>
+      </div>
+
+      <h2>Technique 3: Citation Requirements</h2>
+      <p>For research and analysis tasks, requiring Claude to cite specific passages from the provided context forces it to ground every claim in actual text rather than generating from general knowledge:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Citation Requirement Pattern</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">Analyze the following research paper and answer the questions below.
+For every claim you make, quote the specific passage that supports it
+using this format: [QUOTE: "exact text from document"].
+If a claim cannot be supported with a direct quote, do not make it.
+
+&lt;paper&gt;
+{paper_text}
+&lt;/paper&gt;
+
+Questions:
+1. What is the study's main finding?
+2. What methodology was used?
+3. What are the stated limitations?</code></pre>
+      </div>
+
+      <h2>Technique 4: Confidence Scoring</h2>
+      <p>Ask Claude to rate its own confidence for each fact in the response. This meta-cognitive prompt activates a different processing mode that tends to produce more calibrated uncertainty:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Confidence Scoring Pattern</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">Answer the following question. For each factual claim in your response,
+add a confidence score in brackets: [HIGH], [MEDIUM], or [LOW].
+- HIGH: well-established fact, verified in training
+- MEDIUM: generally accepted, but details may vary
+- LOW: uncertain — recommend the user verify independently
+
+What were the key factors that led to the 2008 financial crisis?</code></pre>
+      </div>
+
+      <h2>Before / After: Hallucination-Prone vs. Grounded Prompt</h2>
+
+      <div class="prompt-example">
+        <div class="prompt-example__tabs">
+          <button class="prompt-example__tab active" data-panel="ex8-weak">❌ Hallucination-Prone</button>
+          <button class="prompt-example__tab" data-panel="ex8-strong">✅ Grounded</button>
+          <button class="prompt-example__tab" data-panel="ex8-output">📄 Output Difference</button>
+        </div>
+        <div class="prompt-panel active" id="ex8-weak"><span class="tag-content">Tell me about the clinical trials for drug X. Include the trial IDs, sample sizes, and results.</span></div>
+        <div class="prompt-panel" id="ex8-strong"><span class="tag-content">Summarize the clinical trial information for drug X using ONLY the information in the provided documents below. For each trial you mention:
+- Include only trial IDs, sample sizes, and results that are explicitly stated in the documents
+- If a specific piece of information (e.g., sample size) is not in the documents, write "not specified in provided documents"
+- Do not extrapolate or infer beyond what is written
+
+&lt;documents&gt;
+{clinical_trial_documents}
+&lt;/documents&gt;</span></div>
+        <div class="prompt-panel" id="ex8-output"><span class="tag-content">Hallucination-prone: Claude may generate plausible-sounding trial IDs like "NCT04512847", sample sizes, and results that don't correspond to any actual trial. The output looks real and is formatted correctly — but the data is fabricated.
+
+Grounded: Claude extracts exactly what's in the provided documents, uses "not specified in provided documents" for missing data, and makes no claims beyond what's explicitly written. Dramatically safer for medical, legal, or financial contexts.</span></div>
+      </div>
+
+      <h2>RAG: Retrieval-Augmented Generation</h2>
+      <p>RAG is the architectural pattern that makes the grounding technique scale to production. Rather than including all possible documents in every prompt, RAG retrieves the relevant documents at query time and injects them into the context:</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step__num">1</div>
+          <div class="step__content">
+            <div class="step__title">Index your knowledge base</div>
+            <div class="step__desc">Chunk your documents into searchable segments (500-1000 tokens). Generate embeddings using an embedding model. Store in a vector database (Pinecone, Weaviate, pgvector).</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">2</div>
+          <div class="step__content">
+            <div class="step__title">Retrieve at query time</div>
+            <div class="step__desc">Embed the user's query. Find the top-k most semantically similar chunks using cosine similarity. Retrieve those chunks from the database.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">3</div>
+          <div class="step__content">
+            <div class="step__title">Inject into context</div>
+            <div class="step__desc">Insert the retrieved chunks into the prompt as a &lt;context&gt; block. Instruct Claude to answer only from this context. Dramatically reduces hallucination on domain-specific questions.</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>The "No Hallucination" System Prompt Template</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Production Anti-Hallucination System Prompt</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">You are a precise, fact-based assistant. Follow these rules strictly:
+
+1. ONLY use information explicitly provided in this conversation.
+   Do not use knowledge from your training unless the user asks for it.
+
+2. NEVER fabricate citations, studies, statistics, or facts.
+   If you don't have a source, say so.
+
+3. When you are uncertain about something, say so explicitly.
+   Use phrases like "I'm not certain", "you may want to verify this", or
+   "I don't have reliable information on this."
+
+4. Do not extrapolate beyond what is stated.
+   Distinguish clearly between what the documents say and your interpretation.
+
+5. If asked about something not covered in the provided context,
+   say: "I don't have that information in the provided context."</code></pre>
+      </div>
+
+      <h2>Red Flags: When to Be Extra Careful</h2>
+
+      <div class="callout callout--warn">
+        <div class="callout__icon">⚠️</div>
+        <div>
+          <div class="callout__title">High-Risk Hallucination Scenarios</div>
+          <div class="callout__body">Always verify independently when Claude discusses: specific statistics and percentages, publication dates and founding years, names of specific people and their exact roles, URLs and DOIs, legal citations and case names, drug dosages and medical protocols, financial figures, and any claim that begins "studies show" or "research indicates" without a provided source.</div>
+        </div>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">Chapter 8 Takeaway</div>
+          <div class="callout__body">Hallucinations are predictable, not random. They spike for specific fact types (citations, dates, numbers, names) and specific prompting patterns (no context provided, vague questions about obscure topics). The fix is structural: ground Claude in provided context, instruct it to express uncertainty, require citations from source material, and use RAG for production knowledge-intensive applications.</div>
+        </div>
+      </div>
+
+    </div><!-- /lesson-body -->
+
+    <!-- LESSON NAV -->
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a href="ch07-using-examples.html" class="lesson-nav__btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <div>
+          <div class="lesson-nav__label">Previous lesson</div>
+          <div class="lesson-nav__title">Using Examples (Few-Shot)</div>
+        </div>
+      </a>
+      <a href="ch09-complex-prompts.html" class="lesson-nav__btn" style="text-align:right;">
+        <div>
+          <div class="lesson-nav__label">Next lesson</div>
+          <div class="lesson-nav__title">Building Complex Prompts</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </nav>
+
+  </article>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Claude Prompt Engineering Course
+      </div>
+      <div class="footer__links">
+        <a href="../index.html">Home</a>
+        <a href="../playground.html">Playground</a>
+        <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Anthropic Docs</a>
+      </div>
+    </div>
+    <div class="footer__credit"><a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a></div>
+  </div>
+</footer>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>

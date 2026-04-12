@@ -22,6 +22,7 @@ Visit our courses directly in your browser:
 - [🔢 Mathematics for Data Science](https://aashishgarg13.github.io/DataScience/math-ds-complete/index.html)
 - [⚙️ Feature Engineering Guide](https://aashishgarg13.github.io/DataScience/feature-engineering/index.html)
 - [🤔 Prompt Engineering Guide](https://aashishgarg13.github.io/DataScience/prompt-engineering-guide/index.html) - Interactive AI prompting course
+- [🧠 Claude Prompt Engineering Guide](https://aashishgarg13.github.io/DataScience/Claude%20Prompt%20Engineering%20Course/index.html) - In-depth guide for Anthropic's Claude models
 
 ## 🔗 Prompt Engineering Resources
 
@@ -85,6 +86,15 @@ Essential resources for mastering AI prompt engineering:
   - Feature Selection Methods
   - Feature Transformation
   - Dimensionality Reduction
+
+### 🧠 Claude Prompt Engineering Course
+- **Location:** `Claude Prompt Engineering Course/`
+- **Features:**
+  - Specialized Anthropic Claude Techniques
+  - System Prompt Optimization
+  - Multi-step Reasoning & Thought Chains
+  - Complex Tool Use & API Integration
+  - Prompt Versioning & Safety Guardrails
 
 > 💡 All projects are pure static websites - no server needed! Open directly in your browser or use a simple static server.
 
@@ -179,6 +189,15 @@ feature-engineering/
 ├── index.html  # Feature engineering guide
 ├── style.css   # Guide styling
 └── app.js      # Interactive examples
+```
+
+### Claude Prompt Engineering Course
+```
+Claude Prompt Engineering Course/
+├── index.html     # Main course dashboard
+├── playground.html # Interactive prompting lab
+├── js/            # Core logic & state management
+└── lessons/       # Individual course modules
 ```
 
 ## Notes about repository cleanup

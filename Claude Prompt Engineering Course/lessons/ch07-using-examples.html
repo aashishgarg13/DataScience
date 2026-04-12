@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 7: Using Examples (Few-Shot Prompting) — Claude Prompt Engineering</title>
+<meta name="description" content="Learn few-shot prompting: when examples outperform descriptions, the H/A turn format, example quality criteria, and dynamic example selection.">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/main.js" defer></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="../index.html" class="navbar__logo">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="8" r="2" fill="var(--color-primary)"/></svg>
+      <span class="navbar__logo-text">Claude <span>PE</span></span>
+    </a>
+    <div class="navbar__nav">
+      <a href="../index.html" class="navbar__link">Home</a>
+      <a href="../index.html#curriculum" class="navbar__link active">Lessons</a>
+      <a href="../playground.html" class="navbar__link">Playground</a>
+    </div>
+    <div class="navbar__actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <a href="../index.html#curriculum">All Lessons</a>
+    <a href="../playground.html">Playground</a>
+  </div>
+</nav>
+
+<div class="lesson-layout" style="padding-block: var(--space-8);">
+  <!-- SIDEBAR -->
+  <aside class="lesson-sidebar">
+    <div class="sidebar__title">Course Contents</div>
+    <ul class="sidebar__list" role="list">
+      <li class="sidebar__item"><a href="ch01-basic-structure.html"><span class="num">01</span> Basic Prompt Structure</a></li>
+      <li class="sidebar__item"><a href="ch02-clear-direct.html"><span class="num">02</span> Clear and Direct</a></li>
+      <li class="sidebar__item"><a href="ch03-assigning-roles.html"><span class="num">03</span> Assigning Roles</a></li>
+      <li class="sidebar__item"><a href="ch04-separating-data.html"><span class="num">04</span> Separating Data</a></li>
+      <li class="sidebar__item"><a href="ch05-formatting-output.html"><span class="num">05</span> Formatting Output</a></li>
+      <li class="sidebar__item"><a href="ch06-precognition.html"><span class="num">06</span> Precognition / CoT</a></li>
+      <li class="sidebar__item active"><a href="ch07-using-examples.html"><span class="num">07</span> Using Examples</a></li>
+      <li class="sidebar__item"><a href="ch08-avoiding-hallucinations.html"><span class="num">08</span> Avoiding Hallucinations</a></li>
+      <li class="sidebar__item"><a href="ch09-complex-prompts.html"><span class="num">09</span> Complex Prompts</a></li>
+      <li class="sidebar__item"><a href="app01-chaining-prompts.html"><span class="num">A</span> Chaining Prompts</a></li>
+      <li class="sidebar__item"><a href="app02-tool-use.html"><span class="num">B</span> Tool Use</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <article class="lesson-content">
+    <div class="progress-bar"><div class="progress-bar__fill" style="width: 63%"></div></div>
+
+    <header class="lesson-header">
+      <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span>
+        <a href="../index.html#curriculum">Lessons</a> <span>/</span>
+        <span>Chapter 7</span>
+      </nav>
+      <div class="lesson-header__badge">
+        <span class="lesson-card__badge badge--intermediate">Intermediate</span>
+      </div>
+      <h1 class="lesson-title">Using Examples (Few-Shot Prompting)</h1>
+      <p class="lesson-subtitle">A single well-chosen example often teaches Claude more than three paragraphs of description. Master the H/A turn format, example quality criteria, and dynamic example selection.</p>
+      <div class="lesson-meta">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 15 min read</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 12 examples</span>
+        <span>Chapter 7 of 11</span>
+      </div>
+    </header>
+
+    <div class="lesson-body">
+
+      <h2>Zero-Shot, One-Shot, Few-Shot: When to Use Each</h2>
+      <p>Few-shot prompting means giving Claude examples of the task before asking it to complete a new instance. The examples act as demonstrations: they show Claude not just what to do, but how to do it at a concrete, pattern-matchable level.</p>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">0️⃣</div>
+          <div class="technique-card__title">Zero-Shot</div>
+          <div class="technique-card__desc">No examples — just instructions. Best for: well-defined tasks Claude handles reliably (summarization, translation, basic classification). Lowest token cost. Start here and only add examples if output is inconsistent.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">1️⃣</div>
+          <div class="technique-card__title">One-Shot</div>
+          <div class="technique-card__desc">One example. Best for: establishing a specific format or tone that's hard to describe. One good example often does more than a paragraph of format instructions. High ROI for low token cost.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🔢</div>
+          <div class="technique-card__title">Few-Shot (2–8)</div>
+          <div class="technique-card__desc">Multiple examples. Best for: nuanced classification, idiosyncratic writing styles, domain-specific formats, edge case coverage. Diminishing returns after 5-8 examples for most tasks.</div>
+        </div>
+      </div>
+
+      <div class="callout callout--note">
+        <div class="callout__icon">💡</div>
+        <div>
+          <div class="callout__title">Examples Outperform Descriptions</div>
+          <div class="callout__body">For format and style tasks, a concrete example is almost always more effective than a verbal description. You can spend three sentences describing the tone you want, or show one sentence that has it. Show, don't tell.</div>
+        </div>
+      </div>
+
+      <h2>The H/A Turn Format for Embedding Examples</h2>
+      <p>The cleanest way to embed examples in a prompt is using the Human/Assistant (H/A) conversation turn format. This mirrors how Claude actually works — each input/output pair becomes a simulated prior conversation turn:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">H/A Turn Format (API)</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">import anthropic
+
+client = anthropic.Anthropic()
+
+# Few-shot via message history — the cleanest API pattern
+response = client.messages.create(
+    model="claude-opus-4-5",
+    max_tokens=256,
+    system="You are a customer service agent for a software company. Classify support tickets into one of three categories: Bug / Feature Request / Account Issue. Respond with just the category name.",
+    messages=[
+        # Example 1
+        {"role": "user", "content": "I can't log in — it says my password is wrong but I just reset it."},
+        {"role": "assistant", "content": "Account Issue"},
+        # Example 2
+        {"role": "user", "content": "The export to CSV function crashes when I have more than 1000 rows."},
+        {"role": "assistant", "content": "Bug"},
+        # Example 3
+        {"role": "user", "content": "It would be really helpful if I could schedule reports to send automatically."},
+        {"role": "assistant", "content": "Feature Request"},
+        # Actual input
+        {"role": "user", "content": "The dark mode toggle doesn't save between sessions — every time I reload I have to switch it back."}
+    ]
+)
+
+print(response.content[0].text)  # → "Bug"</code></pre>
+      </div>
+
+      <h2>Inline Examples with XML Tags</h2>
+      <p>For simpler cases or when working in a prompt template, you can embed examples inline using XML tags:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Inline Examples with XML</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">Rewrite the following customer review response in our brand voice.
+Brand voice: warm, direct, uses the customer's name, specific not generic,
+ends with a forward-looking statement.
+
+Here are two examples of our ideal responses:
+
+&lt;example&gt;
+&lt;original&gt;Thank you for your feedback. We're sorry for the inconvenience.&lt;/original&gt;
+&lt;rewritten&gt;Hi Sarah — we hear you, and that's genuinely frustrating. Our team is already looking at the sync issue you hit. You'll get an email the moment it's fixed. Thank you for taking the time to let us know.&lt;/rewritten&gt;
+&lt;/example&gt;
+
+&lt;example&gt;
+&lt;original&gt;We appreciate your business and will look into this.&lt;/original&gt;
+&lt;rewritten&gt;James, thanks for flagging this — a 3-day delay is not okay and you deserve better. I've escalated this to our logistics team directly. Expect an update by tomorrow afternoon.&lt;/rewritten&gt;
+&lt;/example&gt;
+
+Now rewrite this response in the same voice:
+&lt;original&gt;{original_response}&lt;/original&gt;</code></pre>
+      </div>
+
+      <h2>Example Quality: What Makes a Good Example</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step__num">1</div>
+          <div class="step__content">
+            <div class="step__title">Representative of the typical case</div>
+            <div class="step__desc">Your examples should reflect what Claude will see most often in real usage. An example of an unusual edge case as the only example will bias Claude toward handling edge cases incorrectly.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">2</div>
+          <div class="step__content">
+            <div class="step__title">Diverse, not identical</div>
+            <div class="step__desc">If all your examples look the same, Claude learns from a narrow sample. Include examples with different inputs, different lengths, different cases — especially for classification tasks with multiple classes.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">3</div>
+          <div class="step__content">
+            <div class="step__title">Include edge cases deliberately</div>
+            <div class="step__desc">If you know there are tricky edge cases (ambiguous inputs, borderline classifications), include at least one example of each. Examples are the most efficient way to calibrate Claude on hard cases.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">4</div>
+          <div class="step__content">
+            <div class="step__title">Correct and verified</div>
+            <div class="step__desc">Wrong examples teach wrong patterns. Every example in your prompt should be hand-verified as the gold-standard correct response. One bad example can corrupt a whole set.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">5</div>
+          <div class="step__content">
+            <div class="step__title">Consistent with instructions</div>
+            <div class="step__desc">Examples that contradict your instructions create conflicting signals. If you say "always use formal language" but your examples use contractions, the examples often win — Claude learns by pattern, not by rule priority.</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>How Many Examples: Diminishing Returns</h2>
+      <p>More examples aren't always better. The relationship between example count and accuracy improvement looks like a diminishing returns curve:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Example Count Guidelines by Task Type</span>
+        </div>
+        <pre><code">TASK TYPE                    RECOMMENDED EXAMPLES  NOTES
+─────────────────────────────────────────────────────────────────
+Binary classification        2 (one per class)     One yes, one no
+Multi-class (3-5 classes)    3-5 (one per class)   Cover all classes
+Complex format matching      1-3                    One great example often sufficient
+Style/tone matching          1-2                    Show don't tell
+Extraction tasks             2-3                    Cover edge cases
+Translation/transformation   2-3                    Include a tricky case
+Creative writing style       3-5                    Show range of the style</code></pre>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">The Example Audit</div>
+          <div class="callout__body">After writing your examples, re-read them as if you've never seen your instructions. Does the pattern they demonstrate match exactly what you want? Remove any example that teaches the wrong thing — even if it's a good example of something else.</div>
+        </div>
+      </div>
+
+      <h2>Before / After: Description vs. Example for Tone Matching</h2>
+
+      <div class="prompt-example">
+        <div class="prompt-example__tabs">
+          <button class="prompt-example__tab active" data-panel="ex7a-desc">Description Only</button>
+          <button class="prompt-example__tab" data-panel="ex7a-example">With Example</button>
+          <button class="prompt-example__tab" data-panel="ex7a-output">📄 Output</button>
+        </div>
+        <div class="prompt-panel active" id="ex7a-desc"><span class="tag-content">Write a push notification for our fitness app. The tone should be motivational but not cheesy, direct, uses second person, short (under 15 words), creates urgency, and feels personal not corporate.
+
+Today's workout: Upper body strength, 30 minutes.</span></div>
+        <div class="prompt-panel" id="ex7a-example"><span class="tag-content">Write a push notification for our fitness app.
+
+Here's an example of our notification style:
+"You haven't moved today. 20 minutes is all it takes. Go."
+
+Now write one for:
+Today's workout: Upper body strength, 30 minutes.</span></div>
+        <div class="prompt-panel" id="ex7a-output"><span class="tag-content">Description only:
+"Time to crush your upper body! Your 30-minute strength session is ready and waiting. Let's get stronger together! 💪"
+(cheesy, corporate-feeling, too long, uses exclamation points)
+
+With example:
+"Arms haven't ached yet today. Let's fix that. 30 minutes."
+(matches the example's terse, direct voice exactly)</span></div>
+      </div>
+
+      <h2>Negative Examples: Teaching What NOT to Do</h2>
+      <p>Negative examples explicitly show Claude what a bad output looks like and why. They're especially useful when Claude keeps drifting toward a particular failure mode:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Negative Example Pattern</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">Classify the sentiment of customer reviews as positive, negative, or neutral.
+
+GOOD EXAMPLES:
+Input: "Works exactly as described. Arrived on time."
+Output: positive
+
+Input: "Broke after one week. Terrible quality."
+Output: negative
+
+BAD EXAMPLES (do not do this):
+Input: "It's fine I guess."
+Output: positive  ← WRONG: "fine I guess" signals lukewarm disappointment, not satisfaction. This should be: neutral
+
+Input: "Expensive but worth it."
+Output: negative  ← WRONG: explicit statement of worth overrides the price complaint. This should be: positive
+
+Classify this review: "Not what I expected, but I've gotten used to it."</code></pre>
+      </div>
+
+      <h2>Dynamic Few-Shot: Selecting Relevant Examples</h2>
+      <p>For large-scale production systems, you may have a library of dozens of examples. Rather than using all of them (expensive) or fixed ones (potentially irrelevant), you can dynamically select the most relevant examples for each input using embedding similarity:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Dynamic Few-Shot Selection (Python)</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">from anthropic import Anthropic
+import numpy as np
+
+# Simplified example — in production use a vector DB (Pinecone, Weaviate, etc.)
+def cosine_similarity(a, b):
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+def select_relevant_examples(query: str, example_library: list, k: int = 3) -> list:
+    """Select k most similar examples to query using embedding similarity."""
+    client = Anthropic()
+    # In practice: embed query and examples, find top-k by cosine similarity
+    # This pseudocode illustrates the concept
+    query_embedding = embed(query)
+    scored = [(cosine_similarity(query_embedding, ex["embedding"]), ex)
+              for ex in example_library]
+    scored.sort(reverse=True)
+    return [ex for _, ex in scored[:k]]
+
+def classify_with_dynamic_examples(input_text: str) -> str:
+    examples = select_relevant_examples(input_text, EXAMPLE_LIBRARY, k=3)
+    messages = []
+    for ex in examples:
+        messages.append({"role": "user", "content": ex["input"]})
+        messages.append({"role": "assistant", "content": ex["output"]})
+    messages.append({"role": "user", "content": input_text})
+    # ... make API call with dynamic messages</code></pre>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">Chapter 7 Takeaway</div>
+          <div class="callout__body">Examples teach patterns more efficiently than instructions for format and style tasks. Use the H/A turn format for clean API-level few-shot prompting. Keep examples diverse, verified, and consistent with your instructions. For complex tasks, 2-5 well-chosen examples beat 10 mediocre ones. When Claude keeps producing the wrong output format, add one more example before adding more instructions.</div>
+        </div>
+      </div>
+
+    </div><!-- /lesson-body -->
+
+    <!-- LESSON NAV -->
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a href="ch06-precognition.html" class="lesson-nav__btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <div>
+          <div class="lesson-nav__label">Previous lesson</div>
+          <div class="lesson-nav__title">Precognition: Thinking Step by Step</div>
+        </div>
+      </a>
+      <a href="ch08-avoiding-hallucinations.html" class="lesson-nav__btn" style="text-align:right;">
+        <div>
+          <div class="lesson-nav__label">Next lesson</div>
+          <div class="lesson-nav__title">Avoiding Hallucinations</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </nav>
+
+  </article>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Claude Prompt Engineering Course
+      </div>
+      <div class="footer__links">
+        <a href="../index.html">Home</a>
+        <a href="../playground.html">Playground</a>
+        <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Anthropic Docs</a>
+      </div>
+    </div>
+    <div class="footer__credit"><a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a></div>
+  </div>
+</footer>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>

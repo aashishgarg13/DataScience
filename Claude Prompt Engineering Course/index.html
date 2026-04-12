@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Prompt Engineering — Complete Course</title>
+<meta name="description" content="Master prompt engineering for Claude AI. 11 in-depth lessons covering basics to advanced techniques — from role prompting and XML structuring to chain-of-thought and hallucination avoidance.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/main.js" defer></script>
+<style>
+  /* Inline hero SVG art */
+  .hero-graphic { margin: var(--space-12) auto 0; max-width: 700px; }
+  .chapter-index { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-5); }
+  .cta-section {
+    background: linear-gradient(135deg, var(--color-accent-highlight), var(--color-primary-highlight));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-2xl);
+    padding: clamp(var(--space-10), 6vw, var(--space-20));
+    text-align: center;
+    margin-block: var(--space-16);
+  }
+  .cta-section h2 { font-size: var(--text-xl); font-weight: 800; letter-spacing: -0.02em; margin-bottom: var(--space-4); }
+  .cta-section p { color: var(--color-text-muted); margin-bottom: var(--space-8); }
+  .model-pill {
+    display: inline-flex; align-items: center; gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600;
+    color: var(--color-text-muted); margin: var(--space-1);
+  }
+  .model-pill .dot { width: 7px; height: 7px; border-radius: var(--radius-full); background: var(--color-success); }
+  .models-row { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin-bottom: var(--space-8); }
+  .prereq-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    display: flex; gap: var(--space-4); align-items: flex-start;
+  }
+  .prereq-icon { font-size: 1.6em; flex-shrink: 0; }
+  .prereq-title { font-weight: 700; font-size: var(--text-sm); margin-bottom: var(--space-1); color: var(--color-text); }
+  .prereq-desc { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.6; }
+  .prereqs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-4); }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar__inner">
+    <a href="index.html" class="navbar__logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-label="Claude PE Logo">
+        <rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/>
+        <path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="8" r="2" fill="var(--color-primary)"/>
+      </svg>
+      <span class="navbar__logo-text">Claude <span>PE</span></span>
+    </a>
+    <div class="navbar__nav">
+      <a href="index.html" class="navbar__link active">Home</a>
+      <a href="lessons/ch01-basic-structure.html" class="navbar__link">Lessons</a>
+      <a href="playground.html" class="navbar__link">Playground</a>
+    </div>
+    <div class="navbar__actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a href="lessons/ch01-basic-structure.html" class="btn btn--primary">Start Learning</a>
+      <button class="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu">
+    <a href="index.html">Home</a>
+    <a href="lessons/ch01-basic-structure.html">Lessons</a>
+    <a href="playground.html">Playground</a>
+    <a href="lessons/ch01-basic-structure.html" style="color:var(--color-primary);font-weight:700;">Start Learning →</a>
+  </div>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container">
+      <div class="hero__badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+        Anthropic Official Curriculum · 2025 Edition
+      </div>
+      <h1 class="hero__title animate-in" id="hero-title">
+        Master <em>Prompt Engineering</em><br>for Claude AI
+      </h1>
+      <p class="hero__subtitle animate-in animate-in-delay-1">
+        11 in-depth lessons — from basic structure to advanced multi-prompt architectures.
+        Unlock Claude's full potential with techniques used by top AI engineers.
+      </p>
+      <div class="hero__actions animate-in animate-in-delay-2">
+        <a href="lessons/ch01-basic-structure.html" class="btn btn--primary btn--lg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Start Free Course
+        </a>
+        <a href="playground.html" class="btn btn--ghost btn--lg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Open Playground
+        </a>
+      </div>
+      <div class="hero__stats animate-in animate-in-delay-3">
+        <div class="hero__stat">
+          <div class="hero__stat-value">11</div>
+          <div class="hero__stat-label">Lessons</div>
+        </div>
+        <div class="hero__stat">
+          <div class="hero__stat-value">3</div>
+          <div class="hero__stat-label">Skill Levels</div>
+        </div>
+        <div class="hero__stat">
+          <div class="hero__stat-value">50+</div>
+          <div class="hero__stat-label">Prompt Examples</div>
+        </div>
+        <div class="hero__stat">
+          <div class="hero__stat-value">Free</div>
+          <div class="hero__stat-label">Always</div>
+        </div>
+      </div>
+
+      <!-- Hero visual -->
+      <div class="hero-graphic" aria-hidden="true">
+        <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:var(--radius-xl);overflow:hidden;">
+          <rect width="700" height="220" fill="var(--color-surface)" rx="12"/>
+          <rect width="700" height="36" fill="var(--color-surface-offset)" rx="0"/>
+          <circle cx="20" cy="18" r="6" fill="#ef4444"/>
+          <circle cx="38" cy="18" r="6" fill="#f59e0b"/>
+          <circle cx="56" cy="18" r="6" fill="#22c55e"/>
+          <text x="80" y="23" fill="var(--color-text-muted)" font-size="11" font-family="monospace">claude-prompt-engineering.html</text>
+          <!-- User bubble -->
+          <rect x="20" y="52" width="400" height="56" rx="10" fill="var(--color-accent-highlight)" stroke="var(--color-accent)" stroke-width="1"/>
+          <text x="34" y="71" fill="var(--color-accent)" font-size="9" font-weight="700" font-family="monospace">USER</text>
+          <text x="34" y="87" fill="var(--color-text)" font-size="10" font-family="monospace">You are an expert ML engineer. Explain backpropagation</text>
+          <text x="34" y="100" fill="var(--color-text)" font-size="10" font-family="monospace">using the chain rule. Be concise. Use &lt;math&gt; tags.</text>
+          <!-- Claude bubble -->
+          <rect x="20" y="122" width="440" height="82" rx="10" fill="var(--color-primary-highlight)" stroke="var(--color-primary)" stroke-width="1"/>
+          <text x="34" y="141" fill="var(--color-primary)" font-size="9" font-weight="700" font-family="monospace">CLAUDE</text>
+          <text x="34" y="158" fill="var(--color-text)" font-size="10" font-family="monospace">&lt;math&gt;∂L/∂w = ∂L/∂a · ∂a/∂z · ∂z/∂w&lt;/math&gt;</text>
+          <text x="34" y="174" fill="var(--color-text-muted)" font-size="10" font-family="monospace">The chain rule propagates gradients backward through</text>
+          <text x="34" y="188" fill="var(--color-text-muted)" font-size="10" font-family="monospace">each layer, updating weights to minimize loss L...</text>
+          <!-- Annotations -->
+          <rect x="470" y="52" width="210" height="28" rx="6" fill="color-mix(in oklch, var(--color-success) 12%, transparent)"/>
+          <text x="480" y="70" fill="var(--color-success)" font-size="10" font-family="sans-serif" font-weight="600">✓ Role assigned</text>
+          <rect x="470" y="88" width="210" height="28" rx="6" fill="color-mix(in oklch, var(--color-warning) 12%, transparent)"/>
+          <text x="480" y="106" fill="var(--color-warning)" font-size="10" font-family="sans-serif" font-weight="600">✓ Output format specified</text>
+          <rect x="470" y="124" width="210" height="28" rx="6" fill="color-mix(in oklch, var(--color-accent) 12%, transparent)"/>
+          <text x="480" y="142" fill="var(--color-accent)" font-size="10" font-family="sans-serif" font-weight="600">✓ XML structured output</text>
+          <rect x="470" y="160" width="210" height="28" rx="6" fill="color-mix(in oklch, var(--color-primary) 12%, transparent)"/>
+          <text x="480" y="178" fill="var(--color-primary)" font-size="10" font-family="sans-serif" font-weight="600">✓ Clear, precise response</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODELS SUPPORTED -->
+  <section class="section" style="padding-block: var(--space-6) var(--space-12);">
+    <div class="container">
+      <p style="text-align:center;font-size:var(--text-xs);color:var(--color-text-faint);margin-bottom:var(--space-4);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Works with all Claude models</p>
+      <div class="models-row">
+        <span class="model-pill"><span class="dot"></span>Claude Opus 4</span>
+        <span class="model-pill"><span class="dot"></span>Claude Sonnet 4.5</span>
+        <span class="model-pill"><span class="dot"></span>Claude Haiku 4.5</span>
+        <span class="model-pill"><span class="dot"></span>Claude 3 Opus</span>
+        <span class="model-pill"><span class="dot"></span>Claude 3.5 Sonnet</span>
+        <span class="model-pill"><span class="dot"></span>Claude 3 Haiku</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT YOU'LL LEARN -->
+  <section class="section" style="background:var(--color-surface-offset);">
+    <div class="container">
+      <div class="section__header">
+        <span class="section__label">What you'll learn</span>
+        <h2 class="section__title">Everything from zero to advanced</h2>
+        <p class="section__desc">Build real-world prompting skills with hands-on examples, before/after comparisons, and industry use cases.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <div class="feature-icon">🏗️</div>
+          <div class="feature-text">
+            <div class="feature-text__title">Prompt Structure Fundamentals</div>
+            <div class="feature-text__desc">Understand how Claude processes instructions and build prompts that always get the response you need.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🎭</div>
+          <div class="feature-text">
+            <div class="feature-text__title">Role & Persona Prompting</div>
+            <div class="feature-text__desc">Assign expert identities to Claude to unlock domain-specific knowledge and communication styles.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🧠</div>
+          <div class="feature-text">
+            <div class="feature-text__title">Chain-of-Thought Reasoning</div>
+            <div class="feature-text__desc">Make Claude think step-by-step to solve complex problems, math, and multi-step logic accurately.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📐</div>
+          <div class="feature-text">
+            <div class="feature-text__title">XML Structuring & Formatting</div>
+            <div class="feature-text__desc">Use XML tags to separate data from instructions and control output format with precision.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🛡️</div>
+          <div class="feature-text">
+            <div class="feature-text__title">Hallucination Prevention</div>
+            <div class="feature-text__desc">Techniques to ensure Claude stays grounded in facts and admits uncertainty appropriately.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">⛓️</div>
+          <div class="feature-text">
+            <div class="feature-text__title">Prompt Chaining & Tool Use</div>
+            <div class="feature-text__desc">Build multi-step AI workflows by chaining prompts and integrating external tools and APIs.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COURSE TRACKS -->
+  <section class="section" id="curriculum">
+    <div class="container">
+      <div class="section__header">
+        <span class="section__label">Curriculum</span>
+        <h2 class="section__title">11 lessons across 3 levels</h2>
+        <p class="section__desc">Structured by difficulty. Each lesson builds on the last with real examples and exercises.</p>
+      </div>
+      <div class="tracks-grid">
+        <!-- BEGINNER -->
+        <div class="track-card">
+          <div class="track-card__level track-card__level--beginner">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            Beginner
+          </div>
+          <div class="track-card__title">Core Foundations</div>
+          <div class="track-card__desc">Learn how Claude reads prompts, why clarity matters, and how to assign expert roles that shape every response.</div>
+          <ul class="track-card__lessons" role="list">
+            <li class="track-card__lesson"><span class="lesson-dot"></span><a href="lessons/ch01-basic-structure.html">Ch 1 · Basic Prompt Structure</a></li>
+            <li class="track-card__lesson"><span class="lesson-dot"></span><a href="lessons/ch02-clear-direct.html">Ch 2 · Being Clear and Direct</a></li>
+            <li class="track-card__lesson"><span class="lesson-dot"></span><a href="lessons/ch03-assigning-roles.html">Ch 3 · Assigning Roles</a></li>
+          </ul>
+        </div>
+        <!-- INTERMEDIATE -->
+        <div class="track-card">
+          <div class="track-card__level track-card__level--intermediate">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            Intermediate
+          </div>
+          <div class="track-card__title">Structuring & Reasoning</div>
+          <div class="track-card__desc">Separate data from instructions with XML, format outputs precisely, make Claude think step-by-step, and use few-shot examples.</div>
+          <ul class="track-card__lessons" role="list">
+            <li class="track-card__lesson"><span class="lesson-dot"></span><a href="lessons/ch04-separating-data.html">Ch 4 · Separating Data from Instructions</a></li>
+            <li class="track-card__lesson"><span class="lesson-dot"></span><a href="lessons/ch05-formatting-output.html">Ch 5 · Formatting Output & Speaking for Claude</a></li>
+            <li class="track-card__lesson"><span class="lesson-dot"></span><a href="lessons/ch06-precognition.html">Ch 6 · Precognition (Thinking Step by Step)</a></li>
+            <li class="track-card__lesson"><span class="lesson-dot"></span><a href="lessons/ch07-using-examples.html">Ch 7 · Using Examples (Few-Shot)</a></li>
+          </ul>
+        </div>
+        <!-- ADVANCED -->
+        <div class="track-card">
+          <div class="track-card__level track-card__level--advanced">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            Advanced
+          </div>
+          <div class="track-card__title">Production Prompting</div>
+          <div class="track-card__desc">Eliminate hallucinations, build complex industry-grade prompts, and go beyond single-turn interactions.</div>
+          <ul class="track-card__lessons" role="list">
+            <li class="track-card__lesson"><span class="lesson-dot"></span><a href="lessons/ch08-avoiding-hallucinations.html">Ch 8 · Avoiding Hallucinations</a></li>
+            <li class="track-card__lesson"><span class="lesson-dot"></span><a href="lessons/ch09-complex-prompts.html">Ch 9 · Building Complex Prompts</a></li>
+          </ul>
+        </div>
+        <!-- APPENDIX -->
+        <div class="track-card" style="border-style:dashed;">
+          <div class="track-card__level track-card__level--appendix">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l9 18H3z"/></svg>
+            Appendix
+          </div>
+          <div class="track-card__title">Beyond Standard Prompting</div>
+          <div class="track-card__desc">Advanced architectures for real-world AI systems: chaining prompts and integrating external tools.</div>
+          <ul class="track-card__lessons" role="list">
+            <li class="track-card__lesson"><span class="lesson-dot"></span><a href="lessons/app01-chaining-prompts.html">App A · Chaining Prompts</a></li>
+            <li class="track-card__lesson"><span class="lesson-dot"></span><a href="lessons/app02-tool-use.html">App B · Tool Use & Search/Retrieval</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ALL LESSONS INDEX -->
+  <section class="section" style="background:var(--color-surface-offset);">
+    <div class="container">
+      <div class="section__header">
+        <span class="section__label">All Lessons</span>
+        <h2 class="section__title">Jump in anywhere</h2>
+      </div>
+      <div class="chapter-index lessons-grid">
+        <!-- Beginner -->
+        <a href="lessons/ch01-basic-structure.html" class="lesson-card">
+          <div class="lesson-card__meta">
+            <span class="lesson-card__num">CH·01</span>
+            <span class="lesson-card__badge badge--beginner">Beginner</span>
+          </div>
+          <div class="lesson-card__title">Basic Prompt Structure</div>
+          <div class="lesson-card__desc">Understand how Claude parses your messages. Learn the anatomy of a great prompt: role, context, task, and format.</div>
+          <div class="lesson-card__footer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 12 min
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 8 examples
+            <span class="lesson-card__arrow">→</span>
+          </div>
+        </a>
+        <a href="lessons/ch02-clear-direct.html" class="lesson-card">
+          <div class="lesson-card__meta">
+            <span class="lesson-card__num">CH·02</span>
+            <span class="lesson-card__badge badge--beginner">Beginner</span>
+          </div>
+          <div class="lesson-card__title">Being Clear and Direct</div>
+          <div class="lesson-card__desc">Why vague prompts fail. Techniques for writing precise, unambiguous instructions that eliminate guesswork.</div>
+          <div class="lesson-card__footer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 10 min
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 6 examples
+            <span class="lesson-card__arrow">→</span>
+          </div>
+        </a>
+        <a href="lessons/ch03-assigning-roles.html" class="lesson-card">
+          <div class="lesson-card__meta">
+            <span class="lesson-card__num">CH·03</span>
+            <span class="lesson-card__badge badge--beginner">Beginner</span>
+          </div>
+          <div class="lesson-card__title">Assigning Roles</div>
+          <div class="lesson-card__desc">Give Claude a persona — domain expert, writing coach, Socratic tutor — to unlock specialized knowledge modes.</div>
+          <div class="lesson-card__footer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 11 min
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 7 examples
+            <span class="lesson-card__arrow">→</span>
+          </div>
+        </a>
+        <!-- Intermediate -->
+        <a href="lessons/ch04-separating-data.html" class="lesson-card">
+          <div class="lesson-card__meta">
+            <span class="lesson-card__num">CH·04</span>
+            <span class="lesson-card__badge badge--intermediate">Intermediate</span>
+          </div>
+          <div class="lesson-card__title">Separating Data from Instructions</div>
+          <div class="lesson-card__desc">Use XML tags and delimiters to cleanly separate your instructions from the data Claude should process.</div>
+          <div class="lesson-card__footer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 14 min
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 9 examples
+            <span class="lesson-card__arrow">→</span>
+          </div>
+        </a>
+        <a href="lessons/ch05-formatting-output.html" class="lesson-card">
+          <div class="lesson-card__meta">
+            <span class="lesson-card__num">CH·05</span>
+            <span class="lesson-card__badge badge--intermediate">Intermediate</span>
+          </div>
+          <div class="lesson-card__title">Formatting Output & Speaking for Claude</div>
+          <div class="lesson-card__desc">Control response structure with JSON, Markdown, lists, and prefill techniques. Make Claude start responses your way.</div>
+          <div class="lesson-card__footer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 15 min
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 10 examples
+            <span class="lesson-card__arrow">→</span>
+          </div>
+        </a>
+        <a href="lessons/ch06-precognition.html" class="lesson-card">
+          <div class="lesson-card__meta">
+            <span class="lesson-card__num">CH·06</span>
+            <span class="lesson-card__badge badge--intermediate">Intermediate</span>
+          </div>
+          <div class="lesson-card__title">Precognition: Thinking Step by Step</div>
+          <div class="lesson-card__desc">Unlock Chain-of-Thought reasoning. Make Claude reason before answering to dramatically improve accuracy.</div>
+          <div class="lesson-card__footer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 16 min
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 8 examples
+            <span class="lesson-card__arrow">→</span>
+          </div>
+        </a>
+        <a href="lessons/ch07-using-examples.html" class="lesson-card">
+          <div class="lesson-card__meta">
+            <span class="lesson-card__num">CH·07</span>
+            <span class="lesson-card__badge badge--intermediate">Intermediate</span>
+          </div>
+          <div class="lesson-card__title">Using Examples (Few-Shot Prompting)</div>
+          <div class="lesson-card__desc">Show, don't just tell. Learn zero-shot, one-shot, and few-shot techniques to guide format and style.</div>
+          <div class="lesson-card__footer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 13 min
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 7 examples
+            <span class="lesson-card__arrow">→</span>
+          </div>
+        </a>
+        <!-- Advanced -->
+        <a href="lessons/ch08-avoiding-hallucinations.html" class="lesson-card">
+          <div class="lesson-card__meta">
+            <span class="lesson-card__num">CH·08</span>
+            <span class="lesson-card__badge badge--advanced">Advanced</span>
+          </div>
+          <div class="lesson-card__title">Avoiding Hallucinations</div>
+          <div class="lesson-card__desc">Critical production technique. Teach Claude to say "I don't know" and stay grounded in provided context only.</div>
+          <div class="lesson-card__footer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 17 min
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 11 examples
+            <span class="lesson-card__arrow">→</span>
+          </div>
+        </a>
+        <a href="lessons/ch09-complex-prompts.html" class="lesson-card">
+          <div class="lesson-card__meta">
+            <span class="lesson-card__num">CH·09</span>
+            <span class="lesson-card__badge badge--advanced">Advanced</span>
+          </div>
+          <div class="lesson-card__title">Building Complex Prompts</div>
+          <div class="lesson-card__desc">Combine all techniques for production systems. Industry use cases: chatbots, legal, financial services, and code.</div>
+          <div class="lesson-card__footer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 22 min
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 14 examples
+            <span class="lesson-card__arrow">→</span>
+          </div>
+        </a>
+        <!-- Appendix -->
+        <a href="lessons/app01-chaining-prompts.html" class="lesson-card" style="border-style:dashed;">
+          <div class="lesson-card__meta">
+            <span class="lesson-card__num">APP·A</span>
+            <span class="lesson-card__badge badge--appendix">Appendix</span>
+          </div>
+          <div class="lesson-card__title">Chaining Prompts</div>
+          <div class="lesson-card__desc">Build multi-step AI pipelines. Pass outputs as inputs, create reasoning chains, and design agentic workflows.</div>
+          <div class="lesson-card__footer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 18 min
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 9 examples
+            <span class="lesson-card__arrow">→</span>
+          </div>
+        </a>
+        <a href="lessons/app02-tool-use.html" class="lesson-card" style="border-style:dashed;">
+          <div class="lesson-card__meta">
+            <span class="lesson-card__num">APP·B</span>
+            <span class="lesson-card__badge badge--appendix">Appendix</span>
+          </div>
+          <div class="lesson-card__title">Tool Use & Search/Retrieval</div>
+          <div class="lesson-card__desc">Extend Claude beyond its training data. Connect to APIs, databases, and real-time search with function calling.</div>
+          <div class="lesson-card__footer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 20 min
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 10 examples
+            <span class="lesson-card__arrow">→</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PREREQUISITES -->
+  <section class="section">
+    <div class="container">
+      <div class="section__header">
+        <span class="section__label">Prerequisites</span>
+        <h2 class="section__title">What you need to start</h2>
+      </div>
+      <div class="prereqs-grid">
+        <div class="prereq-card">
+          <div class="prereq-icon">✅</div>
+          <div>
+            <div class="prereq-title">Claude Access</div>
+            <div class="prereq-desc">A free or Pro account at claude.ai, or API access via Anthropic Console. The course works with any Claude model.</div>
+          </div>
+        </div>
+        <div class="prereq-card">
+          <div class="prereq-icon">📖</div>
+          <div>
+            <div class="prereq-title">Reading English</div>
+            <div class="prereq-desc">No programming experience required for Beginner and Intermediate levels. Advanced concepts benefit from basic Python.</div>
+          </div>
+        </div>
+        <div class="prereq-card">
+          <div class="prereq-icon">🧪</div>
+          <div>
+            <div class="prereq-title">Curiosity to Experiment</div>
+            <div class="prereq-desc">Prompt engineering is learned by doing. Each lesson has hands-on exercises. Run the examples as you read them.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-section">
+        <h2>Ready to write prompts that actually work?</h2>
+        <p>Start with Chapter 1 — it takes 12 minutes and you'll immediately see the difference.</p>
+        <a href="lessons/ch01-basic-structure.html" class="btn btn--primary btn--lg">
+          Begin Chapter 1 →
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/>
+          <path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Claude Prompt Engineering Course · Based on <a href="https://github.com/anthropics/prompt-eng-interactive-tutorial" target="_blank" rel="noopener" style="color:var(--color-primary);">Anthropic's Official Tutorial</a>
+      </div>
+      <div class="footer__links">
+        <a href="index.html">Home</a>
+        <a href="lessons/ch01-basic-structure.html">Lessons</a>
+        <a href="playground.html">Playground</a>
+        <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Anthropic Docs</a>
+      </div>
+    </div>
+    <div class="footer__credit">
+      <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a>
+    </div>
+  </div>
+</footer>
+
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 5: Formatting Output &amp; Speaking for Claude — Claude Prompt Engineering</title>
+<meta name="description" content="Control Claude's output format: JSON schema, Markdown, tables, and the powerful prefill technique for anchoring tone, format, and eliminating preamble.">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/main.js" defer></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="../index.html" class="navbar__logo">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="8" r="2" fill="var(--color-primary)"/></svg>
+      <span class="navbar__logo-text">Claude <span>PE</span></span>
+    </a>
+    <div class="navbar__nav">
+      <a href="../index.html" class="navbar__link">Home</a>
+      <a href="../index.html#curriculum" class="navbar__link active">Lessons</a>
+      <a href="../playground.html" class="navbar__link">Playground</a>
+    </div>
+    <div class="navbar__actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <a href="../index.html#curriculum">All Lessons</a>
+    <a href="../playground.html">Playground</a>
+  </div>
+</nav>
+
+<div class="lesson-layout" style="padding-block: var(--space-8);">
+  <!-- SIDEBAR -->
+  <aside class="lesson-sidebar">
+    <div class="sidebar__title">Course Contents</div>
+    <ul class="sidebar__list" role="list">
+      <li class="sidebar__item"><a href="ch01-basic-structure.html"><span class="num">01</span> Basic Prompt Structure</a></li>
+      <li class="sidebar__item"><a href="ch02-clear-direct.html"><span class="num">02</span> Clear and Direct</a></li>
+      <li class="sidebar__item"><a href="ch03-assigning-roles.html"><span class="num">03</span> Assigning Roles</a></li>
+      <li class="sidebar__item"><a href="ch04-separating-data.html"><span class="num">04</span> Separating Data</a></li>
+      <li class="sidebar__item active"><a href="ch05-formatting-output.html"><span class="num">05</span> Formatting Output</a></li>
+      <li class="sidebar__item"><a href="ch06-precognition.html"><span class="num">06</span> Precognition / CoT</a></li>
+      <li class="sidebar__item"><a href="ch07-using-examples.html"><span class="num">07</span> Using Examples</a></li>
+      <li class="sidebar__item"><a href="ch08-avoiding-hallucinations.html"><span class="num">08</span> Avoiding Hallucinations</a></li>
+      <li class="sidebar__item"><a href="ch09-complex-prompts.html"><span class="num">09</span> Complex Prompts</a></li>
+      <li class="sidebar__item"><a href="app01-chaining-prompts.html"><span class="num">A</span> Chaining Prompts</a></li>
+      <li class="sidebar__item"><a href="app02-tool-use.html"><span class="num">B</span> Tool Use</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <article class="lesson-content">
+    <div class="progress-bar"><div class="progress-bar__fill" style="width: 45%"></div></div>
+
+    <header class="lesson-header">
+      <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span>
+        <a href="../index.html#curriculum">Lessons</a> <span>/</span>
+        <span>Chapter 5</span>
+      </nav>
+      <div class="lesson-header__badge">
+        <span class="lesson-card__badge badge--intermediate">Intermediate</span>
+      </div>
+      <h1 class="lesson-title">Formatting Output &amp; Speaking for Claude</h1>
+      <p class="lesson-subtitle">Claude will choose its own format if you don't specify one. Learn to take control: JSON schemas, Markdown structure, table generation, and the powerful prefill technique.</p>
+      <div class="lesson-meta">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 14 min read</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 10 examples</span>
+        <span>Chapter 5 of 11</span>
+      </div>
+    </header>
+
+    <div class="lesson-body">
+
+      <h2>Why Output Format Matters for Downstream Use</h2>
+      <p>Claude's response doesn't end when it reaches you — it feeds into something downstream. Maybe it's parsed by code, inserted into a database, displayed in a UI, reviewed by a human, or piped into another prompt. If the format doesn't match what's expected downstream, the whole pipeline breaks.</p>
+      <p>Format specification is <strong>not about aesthetics</strong> — it's about making Claude's output machine-readable, predictable, and processable. A JSON extractor that returns prose once will break your entire data pipeline.</p>
+
+      <div class="callout callout--note">
+        <div class="callout__icon">💡</div>
+        <div>
+          <div class="callout__title">Format is a Contract</div>
+          <div class="callout__body">When you specify an output format, you're defining a contract between Claude and the code or humans that consume its output. A well-specified format is as important as a well-specified API schema.</div>
+        </div>
+      </div>
+
+      <h2>Format Options: When to Use Each</h2>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">📋</div>
+          <div class="technique-card__title">JSON</div>
+          <div class="technique-card__desc">Best for structured data extraction, classification results, API responses, database ingestion. Always specify the exact schema. Use when a machine consumes the output.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">📝</div>
+          <div class="technique-card__title">Markdown</div>
+          <div class="technique-card__desc">Best for documentation, reports, content that will be rendered (READMEs, wikis, chat UIs). Counterproductive if output will be processed as plain text or displayed in a non-Markdown context.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">📊</div>
+          <div class="technique-card__title">Tables</div>
+          <div class="technique-card__desc">Best for comparative information, reference material, multi-attribute data. Use Markdown tables for rendered contexts, CSV format for spreadsheet ingestion.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">📃</div>
+          <div class="technique-card__title">Plain Text</div>
+          <div class="technique-card__desc">Best for voice interfaces, contexts where Markdown renders as raw symbols, or downstream systems that strip formatting. Explicitly request plain text to prevent unwanted asterisks and hashes.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">&lt;/&gt;</div>
+          <div class="technique-card__title">XML</div>
+          <div class="technique-card__desc">Best for structured output in pipelines that parse XML, or when you need Claude to wrap different sections of a response in labeled tags for downstream extraction.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">💻</div>
+          <div class="technique-card__title">Code Blocks</div>
+          <div class="technique-card__desc">Always specify the language for syntax highlighting. For programming tasks, request code-only output when you don't need explanation — saves tokens and makes parsing trivial.</div>
+        </div>
+      </div>
+
+      <h2>JSON Output: Specifying Schema Explicitly</h2>
+      <p>For any task that requires JSON output, always provide the exact schema. Don't just say "return JSON" — show Claude the exact structure, field names, and types you expect.</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">JSON Schema Specification</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code>Extract structured information from the following job posting.
+Return a valid JSON object — no markdown, no explanation, just JSON.
+
+Schema:
+{
+  "job_title": string,
+  "company": string,
+  "location": string | null,
+  "remote": "yes" | "no" | "hybrid",
+  "salary_range": {
+    "min": number | null,
+    "max": number | null,
+    "currency": string
+  },
+  "required_skills": string[],
+  "experience_years_min": number | null,
+  "seniority": "junior" | "mid" | "senior" | "lead" | "unknown"
+}
+
+&lt;job_posting&gt;
+{job_posting_text}
+&lt;/job_posting&gt;</code></pre>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">Pro Tip: Use Type Annotations</div>
+          <div class="callout__body">Adding <code>string | null</code>, <code>number | null</code>, and enum values like <code>"yes" | "no" | "hybrid"</code> to your schema dramatically improves Claude's JSON output consistency. It signals the valid type domain for each field, reducing type mismatches.</div>
+        </div>
+      </div>
+
+      <h2>Markdown Formatting: Helpful vs. Cluttering</h2>
+      <p>Markdown formatting is additive when it renders — and visual noise when it doesn't. Know your rendering context:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Markdown Format Control</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code># Requesting rich Markdown (rendered UI, documentation)
+Write a technical README for this Python library.
+Use: H2 headers for sections, code blocks for examples,
+bold for key terms, bullet lists for features.
+Format: standard GitHub README style.
+
+# Requesting no Markdown (plain text contexts, voice, SMS)
+Write a short welcome message for our SMS onboarding flow.
+Plain text only — no asterisks, no hashes, no bullet characters.
+Just clean sentences.
+
+# Controlling Markdown granularly
+Write a product comparison.
+Use a Markdown table for the feature comparison.
+Use plain prose for the recommendation paragraph.
+No headers — this will be embedded in a larger document.</code></pre>
+      </div>
+
+      <h2>The Prefill Technique: Speaking for Claude</h2>
+      <p>The Claude API lets you pre-populate the start of Claude's response. This is called <strong>prefilling the assistant turn</strong>. It's one of the most powerful format control techniques in the API.</p>
+      <p>By adding a partial message in the <code>assistant</code> role, you force Claude to continue from that point — anchoring the format, tone, and structure from the very first character.</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Prefill Pattern (Python)</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">import anthropic
+
+client = anthropic.Anthropic()
+
+message = client.messages.create(
+    model="claude-opus-4-5",
+    max_tokens=1024,
+    messages=[
+        {
+            "role": "user",
+            "content": "Extract the key financial metrics from this earnings call transcript.\n\n&lt;transcript&gt;{transcript}&lt;/transcript&gt;"
+        },
+        {
+            "role": "assistant",
+            "content": "{"  # &lt;-- Prefill forces JSON output from character 1
+        }
+    ]
+)
+
+# Claude continues from the "{" — response is guaranteed to start as JSON
+raw = "{" + message.content[0].text
+import json
+data = json.loads(raw)</code></pre>
+      </div>
+
+      <h2>Anti-Preamble: Eliminating "Certainly!"</h2>
+      <p>Without guidance, Claude often starts responses with filler phrases like "Certainly! I'd be happy to help...", "Great question!", or "Of course! Here's what I found...". These phrases add zero value and waste tokens. Prefill is the most reliable way to eliminate them:</p>
+
+      <div class="prompt-example">
+        <div class="prompt-example__tabs">
+          <button class="prompt-example__tab active" data-panel="ex5a-before">❌ Without Prefill</button>
+          <button class="prompt-example__tab" data-panel="ex5a-after">✅ With Prefill</button>
+          <button class="prompt-example__tab" data-panel="ex5a-alt">💡 Alternative</button>
+        </div>
+        <div class="prompt-panel active" id="ex5a-before"><span class="tag-content">Summarize the following article in 3 bullet points.
+
+[article text]
+
+---
+Claude responds:
+"Certainly! I'd be happy to summarize this article for you. Here are three key points from the text:
+
+• ..."</span></div>
+        <div class="prompt-panel" id="ex5a-after"><span class="tag-content">// Using prefill in the API:
+messages=[
+  {"role": "user", "content": "Summarize the following article in 3 bullet points.\n\n[article text]"},
+  {"role": "assistant", "content": "•"}  // starts directly at the bullets
+]
+
+---
+Claude responds (continuing from "•"):
+"• [First key point]
+• [Second key point]
+• [Third key point]"</span></div>
+        <div class="prompt-panel" id="ex5a-alt"><span class="tag-content">// If you can't use prefill (e.g., in a chat UI), add explicit instructions:
+
+"Summarize the following article in 3 bullet points.
+Start your response directly with the first bullet point.
+Do not include any preamble, acknowledgment, or introduction.
+
+[article text]"
+
+---
+This instruction approach works ~90% of the time. Prefill is 100% reliable.</span></div>
+      </div>
+
+      <h2>Format Specification Formula</h2>
+      <p>A complete format specification answers five questions about the output:</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step__num">1</div>
+          <div class="step__content">
+            <div class="step__title">Structure: What format?</div>
+            <div class="step__desc">JSON, Markdown, plain text, XML, table, numbered list, bullet list. Be specific about the top-level structure.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">2</div>
+          <div class="step__content">
+            <div class="step__title">Schema: What fields/sections?</div>
+            <div class="step__desc">For JSON, specify the exact schema. For documents, specify the sections and headers. For lists, specify if numbered or bulleted and how many items.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">3</div>
+          <div class="step__content">
+            <div class="step__title">Length: How much content?</div>
+            <div class="step__desc">Word count, character count, number of items, number of sentences. Don't leave this to Claude's discretion if it matters.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">4</div>
+          <div class="step__content">
+            <div class="step__title">Tone: What register?</div>
+            <div class="step__desc">Formal, casual, technical, accessible. Specifying tone ensures the content inside the format matches the format's purpose.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">5</div>
+          <div class="step__content">
+            <div class="step__title">Exclusions: What to omit?</div>
+            <div class="step__desc">Explicitly exclude elements you don't want: no preamble, no caveats, no examples, no explanation — only the output.</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Before / After: With and Without Format Spec</h2>
+
+      <div class="prompt-example">
+        <div class="prompt-example__tabs">
+          <button class="prompt-example__tab active" data-panel="ex5b-weak">❌ No Format Spec</button>
+          <button class="prompt-example__tab" data-panel="ex5b-strong">✅ With Format Spec</button>
+          <button class="prompt-example__tab" data-panel="ex5b-output">📄 Output Comparison</button>
+        </div>
+        <div class="prompt-panel active" id="ex5b-weak"><span class="tag-content">Analyze the pros and cons of remote work.</span></div>
+        <div class="prompt-panel" id="ex5b-strong"><span class="tag-content">Analyze the pros and cons of remote work for a mid-size B2B software company.
+Format: a Markdown table with two columns (Pros | Cons).
+Include exactly 5 rows — most impactful items only.
+After the table: one paragraph (3 sentences max) with a net recommendation.
+No preamble. No headers other than the table. Start with the table directly.</span></div>
+        <div class="prompt-panel" id="ex5b-output"><span class="tag-content">No Format Spec: 4+ paragraphs of prose, some with headers, some without. Lists or no lists — unpredictable. Might include "Great question!" opener. Might be 200 words or 800 words. Hard to parse, hard to compare with other analyses.
+
+With Format Spec: Exactly as requested — a clean 5-row table, followed by one concise recommendation paragraph. Parseable, comparable, and consistent across runs. Every regeneration produces the same structure.</span></div>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">Chapter 5 Takeaway</div>
+          <div class="callout__body">Format specification transforms Claude from a general-purpose text generator into a precision output machine. Use the five-question formula (structure, schema, length, tone, exclusions) for any output that feeds a downstream system or follows a template. Use prefill in the API to guarantee format compliance from character one.</div>
+        </div>
+      </div>
+
+    </div><!-- /lesson-body -->
+
+    <!-- LESSON NAV -->
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a href="ch04-separating-data.html" class="lesson-nav__btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <div>
+          <div class="lesson-nav__label">Previous lesson</div>
+          <div class="lesson-nav__title">Separating Data from Instructions</div>
+        </div>
+      </a>
+      <a href="ch06-precognition.html" class="lesson-nav__btn" style="text-align:right;">
+        <div>
+          <div class="lesson-nav__label">Next lesson</div>
+          <div class="lesson-nav__title">Precognition: Thinking Step by Step</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </nav>
+
+  </article>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Claude Prompt Engineering Course
+      </div>
+      <div class="footer__links">
+        <a href="../index.html">Home</a>
+        <a href="../playground.html">Playground</a>
+        <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Anthropic Docs</a>
+      </div>
+    </div>
+    <div class="footer__credit"><a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a></div>
+  </div>
+</footer>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>

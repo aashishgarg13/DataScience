@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 2: Being Clear and Direct — Claude Prompt Engineering</title>
+<meta name="description" content="Learn why vague prompts fail and how to write precise, direct instructions. Covers the specificity spectrum, action verbs, and length control.">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/main.js" defer></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="../index.html" class="navbar__logo">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="8" r="2" fill="var(--color-primary)"/></svg>
+      <span class="navbar__logo-text">Claude <span>PE</span></span>
+    </a>
+    <div class="navbar__nav">
+      <a href="../index.html" class="navbar__link">Home</a>
+      <a href="../index.html#curriculum" class="navbar__link active">Lessons</a>
+      <a href="../playground.html" class="navbar__link">Playground</a>
+    </div>
+    <div class="navbar__actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <a href="../index.html#curriculum">All Lessons</a>
+    <a href="../playground.html">Playground</a>
+  </div>
+</nav>
+
+<div class="lesson-layout" style="padding-block: var(--space-8);">
+  <!-- SIDEBAR -->
+  <aside class="lesson-sidebar">
+    <div class="sidebar__title">Course Contents</div>
+    <ul class="sidebar__list" role="list">
+      <li class="sidebar__item"><a href="ch01-basic-structure.html"><span class="num">01</span> Basic Prompt Structure</a></li>
+      <li class="sidebar__item active"><a href="ch02-clear-direct.html"><span class="num">02</span> Clear and Direct</a></li>
+      <li class="sidebar__item"><a href="ch03-assigning-roles.html"><span class="num">03</span> Assigning Roles</a></li>
+      <li class="sidebar__item"><a href="ch04-separating-data.html"><span class="num">04</span> Separating Data</a></li>
+      <li class="sidebar__item"><a href="ch05-formatting-output.html"><span class="num">05</span> Formatting Output</a></li>
+      <li class="sidebar__item"><a href="ch06-precognition.html"><span class="num">06</span> Precognition / CoT</a></li>
+      <li class="sidebar__item"><a href="ch07-using-examples.html"><span class="num">07</span> Using Examples</a></li>
+      <li class="sidebar__item"><a href="ch08-avoiding-hallucinations.html"><span class="num">08</span> Avoiding Hallucinations</a></li>
+      <li class="sidebar__item"><a href="ch09-complex-prompts.html"><span class="num">09</span> Complex Prompts</a></li>
+      <li class="sidebar__item"><a href="app01-chaining-prompts.html"><span class="num">A</span> Chaining Prompts</a></li>
+      <li class="sidebar__item"><a href="app02-tool-use.html"><span class="num">B</span> Tool Use</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <article class="lesson-content">
+    <div class="progress-bar"><div class="progress-bar__fill" style="width: 18%"></div></div>
+
+    <header class="lesson-header">
+      <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span>
+        <a href="../index.html#curriculum">Lessons</a> <span>/</span>
+        <span>Chapter 2</span>
+      </nav>
+      <div class="lesson-header__badge">
+        <span class="lesson-card__badge badge--beginner">Beginner</span>
+      </div>
+      <h1 class="lesson-title">Being Clear and Direct</h1>
+      <p class="lesson-subtitle">Vague prompts produce vague answers. Learn the specificity spectrum, golden rules for precision, and how to eliminate ambiguity from every prompt you write.</p>
+      <div class="lesson-meta">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 14 min read</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 10 examples</span>
+        <span>Chapter 2 of 11</span>
+      </div>
+    </header>
+
+    <div class="lesson-body">
+
+      <h2>Why Vague Prompts Fail</h2>
+      <p>When you send Claude an ambiguous prompt, you aren't just giving incomplete instructions — you're asking Claude to resolve multiple competing interpretations simultaneously. Every ambiguous word is a branch point. The word "good" can mean accurate, well-written, concise, creative, or safe depending on context. Claude must choose one interpretation, and it may not choose yours.</p>
+      <p>This is the <strong>ambiguity tax</strong>: every vague term in your prompt forces Claude to make a guess. Enough guesses, and the output drifts far from what you wanted. Clarity isn't about being rigid — it's about eliminating the interpretation gaps that lead to misaligned results.</p>
+
+      <div class="callout callout--note">
+        <div class="callout__icon">💡</div>
+        <div>
+          <div class="callout__title">The Ambiguity Tax</div>
+          <div class="callout__body">Every vague word in your prompt is a branch point where Claude must guess your intent. Three ambiguous words means Claude could be on one of eight different paths — and only one of them is the one you wanted.</div>
+        </div>
+      </div>
+
+      <h2>The Specificity Spectrum</h2>
+      <p>Prompts exist on a spectrum from dangerously vague to over-constrained. Both extremes produce poor results — for different reasons.</p>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">🌫️</div>
+          <div class="technique-card__title">Too Vague</div>
+          <div class="technique-card__desc">"Write something about our product." Claude has no idea what product, who the audience is, what format, what tone, or what length. Output: generic filler that satisfies no real need.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🎯</div>
+          <div class="technique-card__title">Just Right</div>
+          <div class="technique-card__desc">"Write a 3-sentence product description for our B2B analytics dashboard, targeting CFOs, emphasizing time savings." Clear enough to get focused output, open enough to let Claude be good.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🔒</div>
+          <div class="technique-card__title">Over-Specified</div>
+          <div class="technique-card__desc">"Use exactly 47 words. Start with 'Imagine'. Include the word 'seamless' in sentence 2." Micro-managing format produces stilted, unnatural output. You're fighting Claude's strengths.</div>
+        </div>
+      </div>
+
+      <h2>Golden Rules for Clear Prompts</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step__num">1</div>
+          <div class="step__content">
+            <div class="step__title">Use strong action verbs</div>
+            <div class="step__desc">Don't say "tell me about" — say "explain", "list", "compare", "summarize", "classify", "rewrite", "debug", "translate", "evaluate". Action verbs set Claude's processing mode immediately.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">2</div>
+          <div class="step__content">
+            <div class="step__title">Be literal, not metaphorical</div>
+            <div class="step__desc">"Give me a deep dive" is a metaphor. "Write a 600-word technical analysis covering X, Y, and Z" is literal. Claude takes instructions literally — write them that way.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">3</div>
+          <div class="step__content">
+            <div class="step__title">State constraints explicitly</div>
+            <div class="step__desc">If something must NOT appear in the output, say so. "Do not include pricing information." "Avoid technical jargon." "Do not recommend competitors." Implicit constraints are invisible constraints.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">4</div>
+          <div class="step__content">
+            <div class="step__title">Name the audience</div>
+            <div class="step__desc">Who is reading this? "Write for a non-technical executive audience" produces completely different output than "write for a senior software engineer". Audience specification changes vocabulary, depth, and framing.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">5</div>
+          <div class="step__content">
+            <div class="step__title">Specify the purpose</div>
+            <div class="step__desc">What will this output be used for? An internal Slack message, a formal report, a landing page, or a training document each demands a different register. Purpose shapes tone, length, and structure.</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Common Vague Words and Their Replacements</h2>
+      <p>These are the most common offenders — words that seem specific but leave enormous interpretive space. Replace them with precise alternatives:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Vague → Precise Word Substitutions</span>
+        </div>
+        <pre><code>VAGUE WORD        →  PRECISE REPLACEMENT(S)
+──────────────────────────────────────────────────────
+"good"            →  "accurate and factual" / "persuasive" / "grammatically correct"
+"better"          →  "more concise (under 100 words)" / "more formal in register"
+"improve"         →  "fix grammar errors" / "make the argument clearer" / "shorten by 30%"
+"write about"     →  "summarize" / "argue for" / "explain the mechanism of" / "list"
+"deep dive"       →  "write a 500-word analysis covering [specific points]"
+"briefly"         →  "in 2-3 sentences" / "under 50 words"
+"comprehensive"   →  "covering X, Y, and Z with examples for each"
+"professional"    →  "formal business register, no contractions, third person"
+"simple"          →  "use vocabulary appropriate for a 10th-grade reading level"
+"modern"          →  "published or relevant after 2022" / "uses current best practices"
+"soon"            →  "within the next paragraph" / "in the first sentence"
+"relevant"        →  "directly related to [specific topic]"
+"explain"         →  "define the term, describe the mechanism, give one example"</code></pre>
+      </div>
+
+      <h2>Length Control: How to Specify Depth</h2>
+      <p>Without a length constraint, Claude calibrates response length based on its best guess at what's useful. That guess is often wrong for your specific context. There are four reliable ways to specify length:</p>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">📏</div>
+          <div class="technique-card__title">Word / Sentence Count</div>
+          <div class="technique-card__desc">"In exactly 2 sentences." / "In under 100 words." / "Write 300–400 words." Highly precise. Use for constrained formats like social media, summaries, or form fields.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">📋</div>
+          <div class="technique-card__title">Structural Count</div>
+          <div class="technique-card__desc">"List exactly 5 bullet points." / "Write 3 paragraphs." / "Give 4 examples." Controls the number of ideas rather than the exact word count.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🎚️</div>
+          <div class="technique-card__title">Depth Level</div>
+          <div class="technique-card__desc">"A high-level overview only — no implementation details." / "A thorough technical explanation including edge cases." Lets Claude choose length but constrains depth.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">📖</div>
+          <div class="technique-card__title">Format Anchor</div>
+          <div class="technique-card__desc">"The length of a typical tweet." / "A one-page executive summary." / "A README-style introduction." Anchors to a familiar format that implies appropriate length.</div>
+        </div>
+      </div>
+
+      <h2>The Goldilocks Principle</h2>
+      <p>Great prompts are neither too sparse nor too prescriptive. The sweet spot gives Claude a clear task, a defined audience, and key constraints — while leaving the actual craft of the response to Claude's judgment.</p>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">The Goldilocks Test</div>
+          <div class="callout__body">A prompt is well-calibrated when you could explain it to a smart colleague in one sentence and they'd know exactly what to produce — but you haven't dictated every word choice. If your prompt reads like a fill-in-the-blank template, you've gone too far.</div>
+        </div>
+      </div>
+
+      <h2>Before / After: Three Real Examples</h2>
+      <p>See how adding specificity transforms the same request into a precise, actionable instruction:</p>
+
+      <div class="prompt-example">
+        <div class="prompt-example__tabs">
+          <button class="prompt-example__tab active" data-panel="ex2a-weak">❌ Vague</button>
+          <button class="prompt-example__tab" data-panel="ex2a-strong">✅ Clear</button>
+          <button class="prompt-example__tab" data-panel="ex2a-output">📄 Result</button>
+        </div>
+        <div class="prompt-panel active" id="ex2a-weak"><span class="tag-content">Write a good email about our new feature.</span></div>
+        <div class="prompt-panel" id="ex2a-strong"><span class="tag-content">Write a 150-word product announcement email for our new "Smart Search" feature.
+Audience: existing customers who use our SaaS project management tool.
+Goal: drive them to try the feature in their account within 7 days.
+Tone: friendly and excited, but professional.
+Include: one concrete benefit, one specific example use case, and a clear CTA button labeled "Try Smart Search Now".
+Do not include pricing or comparison to competitors.</span></div>
+        <div class="prompt-panel" id="ex2a-output"><span class="tag-content">Subject: Find anything in seconds — Smart Search is here ✨
+
+Hi [Name],
+
+We just shipped something you're going to love.
+
+Smart Search lets you find any task, comment, or file across your entire workspace instantly — no more digging through project folders. Type a client's name and see every related task, file, and discussion in one view.
+
+Try it on your next project kickoff: search your client's name and pull up everything at once instead of switching between boards.
+
+[Try Smart Search Now →]
+
+It's live in your account today. Let us know what you think.
+
+The [Product] Team</span></div>
+      </div>
+
+      <div class="prompt-example">
+        <div class="prompt-example__tabs">
+          <button class="prompt-example__tab active" data-panel="ex2b-weak">❌ Vague</button>
+          <button class="prompt-example__tab" data-panel="ex2b-strong">✅ Clear</button>
+          <button class="prompt-example__tab" data-panel="ex2b-output">📄 Result</button>
+        </div>
+        <div class="prompt-panel active" id="ex2b-weak"><span class="tag-content">Explain machine learning briefly.</span></div>
+        <div class="prompt-panel" id="ex2b-strong"><span class="tag-content">Explain what machine learning is to a business executive (non-technical) who needs to understand it well enough to discuss it intelligently in a board meeting. Use exactly 3 sentences. No technical jargon — define any terms you use. Do not use analogies involving cooking or children's toys.</span></div>
+        <div class="prompt-panel" id="ex2b-output"><span class="tag-content">Machine learning is a method of building software systems that improve their own performance automatically by analyzing large amounts of data, rather than following rules that a programmer manually writes. A spam filter that learns which emails you flag is a machine learning system; a calculator that adds numbers is not. Businesses use machine learning to make faster, more accurate decisions — from predicting which customers will cancel their subscriptions to detecting fraudulent transactions before they process.</span></div>
+      </div>
+
+      <div class="prompt-example">
+        <div class="prompt-example__tabs">
+          <button class="prompt-example__tab active" data-panel="ex2c-weak">❌ Vague</button>
+          <button class="prompt-example__tab" data-panel="ex2c-strong">✅ Clear</button>
+          <button class="prompt-example__tab" data-panel="ex2c-output">📄 Result</button>
+        </div>
+        <div class="prompt-panel active" id="ex2c-weak"><span class="tag-content">Improve this code.</span></div>
+        <div class="prompt-panel" id="ex2c-strong"><span class="tag-content">Review the Python function below. Do the following, in order:
+1. Fix any bugs that would cause incorrect output.
+2. Improve readability with descriptive variable names.
+3. Add a docstring following Google style conventions.
+Do NOT refactor the logic or change the function signature.
+Output the improved code only — no explanation needed.
+
+def calc(x, y, z):
+    r = x * y
+    if z &gt; 0:
+        r = r / z
+    return r</span></div>
+        <div class="prompt-panel" id="ex2c-output"><span class="tag-content">def calculate_weighted_value(base_value: float, multiplier: float, divisor: float) -> float:
+    """Calculate a weighted value with optional division.
+
+    Args:
+        base_value: The starting numeric value.
+        multiplier: Factor to multiply the base value by.
+        divisor: If positive, divides the product; otherwise returns the product unchanged.
+
+    Returns:
+        The calculated result as a float.
+    """
+    product = base_value * multiplier
+    if divisor > 0:
+        return product / divisor
+    return product</span></div>
+      </div>
+
+      <h2>Explicit Negation: "Do X. Don't Do Y."</h2>
+      <p>One of the most underused clarity techniques is <strong>explicit negation</strong> — directly stating what you do NOT want. Claude respects "don't" instructions reliably, but it can't respect implicit don'ts it doesn't know about.</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Explicit Negation Patterns</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code># Pattern 1: Do / Don't pairs
+Write a product summary. Focus on benefits, not features.
+Include concrete numbers. Do not use superlatives like "best" or "leading".
+
+# Pattern 2: Avoidance list
+Summarize this research paper.
+Avoid: technical jargon, citations, methodology details.
+Include: the core finding, practical implications, limitations.
+
+# Pattern 3: Format negations
+Write the cover letter.
+Do not start with "I am writing to apply for..."
+Do not include salary requirements.
+Do not exceed one page.</code></pre>
+      </div>
+
+      <div class="callout callout--warn">
+        <div class="callout__icon">⚠️</div>
+        <div>
+          <div class="callout__title">The "Don't Think of a Pink Elephant" Problem</div>
+          <div class="callout__body">Excessive negation can backfire. If you give Claude a list of 15 things not to do, it may focus on the negations rather than the task. Keep negations to the 2-3 most critical constraints. For complex constraints, rephrase as positive instructions when possible: instead of "don't be too formal", say "use casual, conversational language".</div>
+        </div>
+      </div>
+
+      <h2>Practice Exercise</h2>
+      <p>Here are three vague prompts. Rewrite each one applying the Golden Rules: action verb, literal instructions, explicit constraints, named audience, and stated purpose.</p>
+      <div class="code-block">
+        <div class="code-block__header"><span class="code-block__label">Rewrite These Prompts</span></div>
+        <pre><code>1. "Write something about our company culture for the website."
+
+2. "Make this paragraph better."
+
+3. "Help me with this SQL query — it's slow."</code></pre>
+      </div>
+      <p>Test your rewrites in the <a href="../playground.html" style="color:var(--color-primary);">Playground →</a> and compare the output quality.</p>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">Chapter 2 Takeaway</div>
+          <div class="callout__body">Clarity is a skill, not a personality trait. Before sending any prompt, scan it for vague words (good, better, brief, improve) and replace them with precise alternatives. State what you want. State what you don't want. Name the audience and purpose. These changes take 30 seconds and consistently double output quality.</div>
+        </div>
+      </div>
+
+    </div><!-- /lesson-body -->
+
+    <!-- LESSON NAV -->
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a href="ch01-basic-structure.html" class="lesson-nav__btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <div>
+          <div class="lesson-nav__label">Previous lesson</div>
+          <div class="lesson-nav__title">Basic Prompt Structure</div>
+        </div>
+      </a>
+      <a href="ch03-assigning-roles.html" class="lesson-nav__btn" style="text-align:right;">
+        <div>
+          <div class="lesson-nav__label">Next lesson</div>
+          <div class="lesson-nav__title">Assigning Roles</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </nav>
+
+  </article>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Claude Prompt Engineering Course
+      </div>
+      <div class="footer__links">
+        <a href="../index.html">Home</a>
+        <a href="../playground.html">Playground</a>
+        <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Anthropic Docs</a>
+      </div>
+    </div>
+    <div class="footer__credit"><a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a></div>
+  </div>
+</footer>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>

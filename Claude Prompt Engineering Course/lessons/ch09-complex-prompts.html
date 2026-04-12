@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 9: Building Complex Prompts — Claude Prompt Engineering</title>
+<meta name="description" content="Combine all techniques into production-grade prompts. Real industry use cases: customer service, legal analysis, financial modeling, and code review.">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/main.js" defer></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="../index.html" class="navbar__logo">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="8" r="2" fill="var(--color-primary)"/></svg>
+      <span class="navbar__logo-text">Claude <span>PE</span></span>
+    </a>
+    <div class="navbar__nav">
+      <a href="../index.html" class="navbar__link">Home</a>
+      <a href="../index.html#curriculum" class="navbar__link active">Lessons</a>
+      <a href="../playground.html" class="navbar__link">Playground</a>
+    </div>
+    <div class="navbar__actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <a href="../index.html#curriculum">All Lessons</a>
+    <a href="../playground.html">Playground</a>
+  </div>
+</nav>
+
+<div class="lesson-layout" style="padding-block: var(--space-8);">
+  <!-- SIDEBAR -->
+  <aside class="lesson-sidebar">
+    <div class="sidebar__title">Course Contents</div>
+    <ul class="sidebar__list" role="list">
+      <li class="sidebar__item"><a href="ch01-basic-structure.html"><span class="num">01</span> Basic Prompt Structure</a></li>
+      <li class="sidebar__item"><a href="ch02-clear-direct.html"><span class="num">02</span> Clear and Direct</a></li>
+      <li class="sidebar__item"><a href="ch03-assigning-roles.html"><span class="num">03</span> Assigning Roles</a></li>
+      <li class="sidebar__item"><a href="ch04-separating-data.html"><span class="num">04</span> Separating Data</a></li>
+      <li class="sidebar__item"><a href="ch05-formatting-output.html"><span class="num">05</span> Formatting Output</a></li>
+      <li class="sidebar__item"><a href="ch06-precognition.html"><span class="num">06</span> Precognition / CoT</a></li>
+      <li class="sidebar__item"><a href="ch07-using-examples.html"><span class="num">07</span> Using Examples</a></li>
+      <li class="sidebar__item"><a href="ch08-avoiding-hallucinations.html"><span class="num">08</span> Avoiding Hallucinations</a></li>
+      <li class="sidebar__item active"><a href="ch09-complex-prompts.html"><span class="num">09</span> Complex Prompts</a></li>
+      <li class="sidebar__item"><a href="app01-chaining-prompts.html"><span class="num">A</span> Chaining Prompts</a></li>
+      <li class="sidebar__item"><a href="app02-tool-use.html"><span class="num">B</span> Tool Use</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <article class="lesson-content">
+    <div class="progress-bar"><div class="progress-bar__fill" style="width: 81%"></div></div>
+
+    <header class="lesson-header">
+      <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span>
+        <a href="../index.html#curriculum">Lessons</a> <span>/</span>
+        <span>Chapter 9</span>
+      </nav>
+      <div class="lesson-header__badge">
+        <span class="lesson-card__badge badge--advanced">Advanced</span>
+      </div>
+      <h1 class="lesson-title">Building Complex Prompts</h1>
+      <p class="lesson-subtitle">Everything you've learned, combined. This chapter shows how all the techniques layer into production-grade prompts — with complete real-world examples across four industries.</p>
+      <div class="lesson-meta">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 20 min read</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 8 full examples</span>
+        <span>Chapter 9 of 11</span>
+      </div>
+    </header>
+
+    <div class="lesson-body">
+
+      <h2>The Complex Prompt Architecture</h2>
+      <p>A production-grade prompt is not a single paragraph — it's a layered architecture where each layer serves a specific function. The five layers, in order:</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step__num">1</div>
+          <div class="step__content">
+            <div class="step__title">Role (Ch 3) — Who Claude is</div>
+            <div class="step__desc">Sets the expertise domain, communication style, and perspective. Goes in the system prompt. Example: "You are a senior software engineer specializing in Python backend systems."</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">2</div>
+          <div class="step__content">
+            <div class="step__title">Instructions (Ch 2) — What to do</div>
+            <div class="step__desc">Clear, direct task description using action verbs. Explicit constraints. Named audience. Explicit negations. Example: "Review the code below. Identify bugs, then suggest refactors. Do not rewrite the entire function."</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">3</div>
+          <div class="step__content">
+            <div class="step__title">Context/Data (Ch 4) — What to work with</div>
+            <div class="step__desc">XML-delimited input data, clearly separated from instructions. Variable placeholders for runtime injection. Multiple sources labeled with attributes.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">4</div>
+          <div class="step__content">
+            <div class="step__title">CoT / Reasoning (Ch 6) — How to think</div>
+            <div class="step__desc">Explicit reasoning instructions for complex tasks: "Before answering, consider...", &lt;thinking&gt; tag pattern, or self-verification instructions.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">5</div>
+          <div class="step__content">
+            <div class="step__title">Output Format (Ch 5) — What to return</div>
+            <div class="step__desc">Complete format specification: structure (JSON/Markdown/etc.), schema, length, tone, exclusions. Prefill if needed. Always last in the prompt.</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Industry Use Case 1: Customer Service Chatbot</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Customer Service System Prompt</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code"># ROLE
+You are a customer success specialist for Acme Cloud Storage.
+You are knowledgeable, empathetic, and solution-focused.
+You de-escalate frustrated customers calmly and without being defensive.
+
+# BEHAVIOR RULES
+- Always address the customer by their first name if provided
+- Acknowledge their issue before solving it (one sentence)
+- Provide solutions in numbered steps when the answer involves multiple actions
+- If you cannot resolve an issue, escalate gracefully: offer to connect them with billing support or technical support by name
+- Never say "I can't help with that" — say "Let me connect you with [specific team]"
+- Never promise specific resolution timelines unless stated in the knowledge base
+
+# KNOWLEDGE BASE
+&lt;policies&gt;
+- Refunds: available within 30 days of charge, processed in 5-7 business days
+- Password reset: use the "Forgot Password" link; SMS code expires in 10 minutes
+- Storage upgrade: Plans page → Upgrade; takes effect immediately
+- Data recovery: available for 30 days after deletion; contact support for files
+  deleted more than 7 days ago
+- Business accounts: can add up to 50 users; admin panel → Team Members
+&lt;/policies&gt;
+
+# ESCALATION PATHS
+- Billing disputes: billing@acme.com or 1-800-ACME-BIL (Mon-Fri 9-6 ET)
+- Technical issues not in knowledge base: Tier 2 Technical Support chat
+- Account security concerns: Security team (priority queue, response within 2 hours)
+
+# RESPONSE FORMAT
+- Conversational, warm, professional
+- Use simple language (no technical jargon unless the customer uses it first)
+- Maximum 150 words per response unless a step-by-step process requires more
+- Never start with "Certainly!" or "Great question!"</code></pre>
+      </div>
+
+      <h2>Industry Use Case 2: Legal Document Analysis</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Legal Document Analysis Prompt</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code"># ROLE
+You are a contract attorney specializing in SaaS vendor agreements.
+You identify legal risks and explain them in plain language for non-lawyer business stakeholders.
+
+# TASK
+Review the following contract and produce a risk assessment memo.
+This is NOT legal advice — it is a preliminary risk identification to guide
+conversation with counsel.
+
+# REASONING INSTRUCTION
+Before writing your assessment, work through each section:
+1. Identify any clauses that are non-standard or potentially disadvantageous
+2. Flag any missing standard protections
+3. Note any ambiguous language that could be interpreted multiple ways
+
+# INPUT
+&lt;contract type="SaaS_vendor_agreement" party="customer"&gt;
+{contract_text}
+&lt;/contract&gt;
+
+# OUTPUT FORMAT
+Return a structured memo with these sections:
+1. Executive Summary (3 sentences — overall risk level: Low/Medium/High)
+2. High-Risk Clauses (table: Clause | Risk | Recommendation)
+3. Missing Protections (bullet list)
+4. Ambiguous Language (bullet list with specific quotes)
+5. Recommended Next Steps
+
+Cite specific section numbers for every finding.
+Use plain language — avoid legal jargon in explanations.
+Do not fabricate citations or invent legal standards.</code></pre>
+      </div>
+
+      <h2>Industry Use Case 3: Financial Analysis</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Financial Analysis Prompt</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code"># ROLE
+You are a senior equity research analyst specializing in B2B SaaS companies.
+You use rigorous financial analysis and industry benchmarks to evaluate company performance.
+
+# TASK
+Analyze the financial metrics below and produce a structured investment assessment.
+
+# REASONING INSTRUCTION
+Think through this systematically:
+1. Calculate the key SaaS metrics (NRR, CAC, LTV, Magic Number)
+2. Compare each to industry benchmarks for this growth stage
+3. Identify the 2-3 most important signals (positive or negative)
+4. Form an overall view on unit economics health
+
+# DATA
+&lt;financials period="Q3 2024"&gt;
+ARR: $18.5M
+New ARR this quarter: $2.1M
+Churned ARR this quarter: $380K
+Expansion ARR this quarter: $720K
+S&amp;M Spend (quarterly): $2.8M
+New Customers: 47
+Average Contract Value: $44,700
+Gross Margin: 74%
+&lt;/financials&gt;
+
+&lt;benchmarks source="SaaS Capital 2024"&gt;
+Median NRR for $10-25M ARR companies: 108%
+Healthy Magic Number: &gt;0.75
+Strong CAC Payback: &lt;18 months
+&lt;/benchmarks&gt;
+
+# OUTPUT FORMAT
+Section 1: Calculated Metrics (table with your calculations shown)
+Section 2: Benchmark Comparison (table: Metric | Your Value | Benchmark | Assessment)
+Section 3: Key Findings (3 bullet points, most important signals)
+Section 4: One-Paragraph Overall Assessment
+Flag any calculations where the provided data is insufficient.</code></pre>
+      </div>
+
+      <h2>Industry Use Case 4: Code Review Assistant</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Code Review System Prompt</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code"># ROLE
+You are a senior software engineer conducting code reviews for a production Python web service.
+You prioritize correctness, security, and maintainability — in that order.
+
+# REVIEW PROCESS
+For each review, examine:
+1. Correctness: bugs, logic errors, edge cases not handled
+2. Security: injection vulnerabilities, auth issues, sensitive data exposure
+3. Performance: obvious inefficiencies (N+1 queries, unnecessary computation)
+4. Maintainability: naming, structure, missing docs
+
+# SEVERITY LEVELS
+🔴 BLOCKER — Must fix before merge (security, data loss, incorrect behavior)
+🟡 IMPORTANT — Should fix (performance, error handling, significant code smell)
+🟢 SUGGESTION — Nice to have (style, minor improvements, optimization ideas)
+
+# OUTPUT FORMAT
+For each issue found:
+```
+[SEVERITY] Short title
+File: filename.py, Line: XX
+Issue: What the problem is (1-2 sentences)
+Fix: Specific recommended change with code example if helpful
+```
+
+After all issues: one-paragraph summary of overall code health.
+If no issues: say so directly — do not invent problems.
+
+# CODE TO REVIEW
+&lt;code language="{language}" author="{author}" pr="{pr_number}"&gt;
+{code}
+&lt;/code&gt;</code></pre>
+      </div>
+
+      <h2>Iterative Refinement Process</h2>
+      <p>Great prompts are never written perfectly on the first try. They're refined through a structured iterative process:</p>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">✍️</div>
+          <div class="technique-card__title">Draft v1</div>
+          <div class="technique-card__desc">Start with the minimum viable prompt. Role + task + basic format spec. Run it on 3-5 representative inputs and note every place the output falls short of your expectation.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🔍</div>
+          <div class="technique-card__title">Diagnose Failures</div>
+          <div class="technique-card__desc">Categorize each failure: wrong content (add instructions), wrong format (improve format spec), wrong tone (improve role or add examples), hallucination (add grounding), missing edge case (add example).</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🔧</div>
+          <div class="technique-card__title">Targeted Fix</div>
+          <div class="technique-card__desc">Change one thing per iteration. Changing multiple things at once makes it impossible to know which change fixed (or broke) what. Test the same inputs after each change.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">📊</div>
+          <div class="technique-card__title">Eval-Driven</div>
+          <div class="technique-card__desc">For production prompts, build a test set of 20-50 input/output pairs and score each iteration. Prompt engineering without evals is navigation without a map.</div>
+        </div>
+      </div>
+
+      <h2>Common Failure Modes and Fixes</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Failure Mode Diagnosis Table</span>
+        </div>
+        <pre><code">SYMPTOM                          DIAGNOSIS                FIX
+───────────────────────────────────────────────────────────────────────────
+Response starts with "Certainly" Role too generic          Add prefill or explicit no-preamble
+                                                           instruction
+Output format varies across runs No format spec            Add complete format specification
+                                                           (Ch 5)
+Wrong expertise level            Role too vague            Add specialization + experience
+                                                           context (Ch 3)
+Hallucinated facts               No grounding              Add context, cite requirement
+                                                           (Ch 8)
+Misses edge cases                No examples               Add 2-3 examples including edge
+                                                           cases (Ch 7)
+Reasoning errors on math/logic   No CoT instruction        Add "think step by step" (Ch 6)
+Ignores part of prompt           Prompt too long/dense     Break into sections with headers;
+                                                           use XML structure (Ch 4)
+Mixes data with instructions     No delimiters             Wrap data in XML tags (Ch 4)
+Overly verbose response          No length constraint      Add explicit word/sentence count</code></pre>
+      </div>
+
+      <h2>Production-Ready Prompt Template</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Universal Production Prompt Template</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code"># SYSTEM PROMPT
+# ─────────────────────────────────────
+# ROLE (Ch 3): Expertise + specialization + experience context
+You are a [expertise] specializing in [domain] with [experience].
+
+# BEHAVIOR (Ch 2): Standing instructions, constraints, explicit negations
+[Standing rules that apply to every response]
+Do not [constraint 1]. Always [requirement 1].
+
+# GROUNDING (Ch 8): Anti-hallucination rules if applicable
+Use only information from the provided context.
+If information is not in the context, say so explicitly.
+
+# ─────────────────────────────────────
+# USER MESSAGE (constructed at runtime)
+
+# TASK (Ch 2): Action verb + object + audience + purpose
+[Verb] the [object] for [audience] in order to [purpose].
+
+# REASONING (Ch 6): For complex tasks
+Before answering, think through: [reasoning steps]
+
+# DATA (Ch 4): XML-delimited inputs
+&lt;[data_type] [attributes]&gt;
+{variable}
+&lt;/[data_type]&gt;
+
+# OUTPUT FORMAT (Ch 5): Structure + schema + length + tone + exclusions
+Return [format] with the following structure:
+- [field_1]: [type/description]
+- [field_2]: [type/description]
+Length: [constraint]. Tone: [register]. Exclude: [exclusions].</code></pre>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">Chapter 9 Takeaway</div>
+          <div class="callout__body">Complex prompts are architectures, not essays. Layer the five components in order: role, instructions, context/data, reasoning, format. Use the failure mode table to diagnose problems and apply targeted fixes. Build an eval test set for any production prompt and run it after every change. The best prompt engineers treat prompts like code — version-controlled, tested, and refined systematically.</div>
+        </div>
+      </div>
+
+    </div><!-- /lesson-body -->
+
+    <!-- LESSON NAV -->
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a href="ch08-avoiding-hallucinations.html" class="lesson-nav__btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <div>
+          <div class="lesson-nav__label">Previous lesson</div>
+          <div class="lesson-nav__title">Avoiding Hallucinations</div>
+        </div>
+      </a>
+      <a href="app01-chaining-prompts.html" class="lesson-nav__btn" style="text-align:right;">
+        <div>
+          <div class="lesson-nav__label">Next lesson</div>
+          <div class="lesson-nav__title">Chaining Prompts</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </nav>
+
+  </article>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Claude Prompt Engineering Course
+      </div>
+      <div class="footer__links">
+        <a href="../index.html">Home</a>
+        <a href="../playground.html">Playground</a>
+        <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Anthropic Docs</a>
+      </div>
+    </div>
+    <div class="footer__credit"><a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a></div>
+  </div>
+</footer>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appendix B: Tool Use &amp; Search/Retrieval — Claude Prompt Engineering</title>
+<meta name="description" content="Extend Claude beyond its training data with tool use: function calling, tool schemas, the think-call-observe cycle, RAG with tools, and building AI agents.">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/main.js" defer></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="../index.html" class="navbar__logo">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="8" r="2" fill="var(--color-primary)"/></svg>
+      <span class="navbar__logo-text">Claude <span>PE</span></span>
+    </a>
+    <div class="navbar__nav">
+      <a href="../index.html" class="navbar__link">Home</a>
+      <a href="../index.html#curriculum" class="navbar__link active">Lessons</a>
+      <a href="../playground.html" class="navbar__link">Playground</a>
+    </div>
+    <div class="navbar__actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <a href="../index.html#curriculum">All Lessons</a>
+    <a href="../playground.html">Playground</a>
+  </div>
+</nav>
+
+<div class="lesson-layout" style="padding-block: var(--space-8);">
+  <!-- SIDEBAR -->
+  <aside class="lesson-sidebar">
+    <div class="sidebar__title">Course Contents</div>
+    <ul class="sidebar__list" role="list">
+      <li class="sidebar__item"><a href="ch01-basic-structure.html"><span class="num">01</span> Basic Prompt Structure</a></li>
+      <li class="sidebar__item"><a href="ch02-clear-direct.html"><span class="num">02</span> Clear and Direct</a></li>
+      <li class="sidebar__item"><a href="ch03-assigning-roles.html"><span class="num">03</span> Assigning Roles</a></li>
+      <li class="sidebar__item"><a href="ch04-separating-data.html"><span class="num">04</span> Separating Data</a></li>
+      <li class="sidebar__item"><a href="ch05-formatting-output.html"><span class="num">05</span> Formatting Output</a></li>
+      <li class="sidebar__item"><a href="ch06-precognition.html"><span class="num">06</span> Precognition / CoT</a></li>
+      <li class="sidebar__item"><a href="ch07-using-examples.html"><span class="num">07</span> Using Examples</a></li>
+      <li class="sidebar__item"><a href="ch08-avoiding-hallucinations.html"><span class="num">08</span> Avoiding Hallucinations</a></li>
+      <li class="sidebar__item"><a href="ch09-complex-prompts.html"><span class="num">09</span> Complex Prompts</a></li>
+      <li class="sidebar__item"><a href="app01-chaining-prompts.html"><span class="num">A</span> Chaining Prompts</a></li>
+      <li class="sidebar__item active"><a href="app02-tool-use.html"><span class="num">B</span> Tool Use</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <article class="lesson-content">
+    <div class="progress-bar"><div class="progress-bar__fill" style="width: 100%"></div></div>
+
+    <header class="lesson-header">
+      <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span>
+        <a href="../index.html#curriculum">Lessons</a> <span>/</span>
+        <span>Appendix B</span>
+      </nav>
+      <div class="lesson-header__badge">
+        <span class="lesson-card__badge badge--appendix">Appendix</span>
+      </div>
+      <h1 class="lesson-title">Tool Use &amp; Search/Retrieval</h1>
+      <p class="lesson-subtitle">Tool use breaks Claude out of its training data constraints. Define functions Claude can call, and watch it reason about when to use them, execute them, and incorporate the results — becoming a true autonomous agent.</p>
+      <div class="lesson-meta">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 22 min read</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 9 code examples</span>
+        <span>Appendix B of B</span>
+      </div>
+    </header>
+
+    <div class="lesson-body">
+
+      <h2>What Tool Use Is: Extending Claude Beyond Training Data</h2>
+      <p>Claude's training data has a knowledge cutoff and covers only information that was text-form and publicly available. It cannot look up a current stock price, check your database, send an email, or run a Python function. <strong>Tool use</strong> — also called function calling — solves this by letting you define a menu of capabilities Claude can invoke at will.</p>
+      <p>When Claude has tools available, it reasons about which tool to call, generates a structured function call, your code executes the function with real-world access, and returns the result to Claude — which then incorporates it into its reasoning and response. Claude becomes an agent with real capabilities, not just a text generator.</p>
+
+      <div class="callout callout--note">
+        <div class="callout__icon">💡</div>
+        <div>
+          <div class="callout__title">Tools Are Mini-Prompts</div>
+          <div class="callout__body">The description field of a tool definition is read by Claude to decide when and how to use the tool. Write tool descriptions like prompts — specific, clear about when to use the tool and what it returns. A poorly described tool is a tool Claude won't use correctly.</div>
+        </div>
+      </div>
+
+      <h2>The Tool Definition Schema</h2>
+      <p>Each tool is defined as a JSON object with three required fields:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Tool Definition Structure</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">{
+  "name": "get_weather",           // Snake_case function name — clear and specific
+  "description": "Get the current weather conditions and forecast for a city. Use this when the user asks about weather, temperature, or forecast for any location. Returns current conditions and a 3-day forecast.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "city": {
+        "type": "string",
+        "description": "The city name, e.g. 'London', 'Tokyo'. Include country code for ambiguous cities: 'Springfield, IL, US'"
+      },
+      "units": {
+        "type": "string",
+        "enum": ["celsius", "fahrenheit"],
+        "description": "Temperature units. Default to celsius unless user specifies."
+      }
+    },
+    "required": ["city"]
+  }
+}</code></pre>
+      </div>
+
+      <h2>Three Foundational Tool Examples</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Weather + Search + Calculator Tools</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">TOOLS = [
+    {
+        "name": "web_search",
+        "description": "Search the web for current information, news, facts, and data. Use when the user asks about recent events, specific facts, or anything that may have changed after your training cutoff. Returns a list of relevant excerpts with source URLs.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "Search query — 2-6 words, specific"},
+                "num_results": {"type": "integer", "description": "Number of results, 1-10. Default 5."}
+            },
+            "required": ["query"]
+        }
+    },
+    {
+        "name": "calculator",
+        "description": "Perform precise mathematical calculations including arithmetic, statistics, and financial formulas. Use this for any calculation that requires precision — do not calculate in your head. Returns the numeric result.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "expression": {
+                    "type": "string",
+                    "description": "A valid mathematical expression as a Python expression string. E.g.: '(1500000 * 0.08) / 12' or 'sum([12, 15, 8, 22]) / 4'"
+                }
+            },
+            "required": ["expression"]
+        }
+    },
+    {
+        "name": "query_database",
+        "description": "Query the company's internal database for customer data, orders, product inventory, and metrics. Use when the user asks about specific accounts, orders, or internal data. Returns rows matching the query.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "table": {"type": "string", "enum": ["customers", "orders", "products", "metrics"]},
+                "filters": {"type": "object", "description": "Key-value pairs to filter records, e.g. {\"customer_id\": \"C1234\"}"},
+                "limit": {"type": "integer", "description": "Max records to return. Default 10, max 100."}
+            },
+            "required": ["table"]
+        }
+    }
+]</code></pre>
+      </div>
+
+      <h2>The Tool Use Cycle: Think → Call → Observe → Respond</h2>
+      <p>Tool use follows a deterministic cycle. Understanding it is essential for implementing the execution loop correctly:</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step__num">1</div>
+          <div class="step__content">
+            <div class="step__title">Think: Claude decides to use a tool</div>
+            <div class="step__desc">Claude processes the user message and determines that answering requires tool use. It returns a response with stop_reason="tool_use" and a tool_use content block containing the tool name and arguments.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">2</div>
+          <div class="step__content">
+            <div class="step__title">Call: Your code executes the tool</div>
+            <div class="step__desc">You parse the tool_use block, find the matching function in your codebase, call it with the provided arguments, and capture the return value. This is where real-world execution happens.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">3</div>
+          <div class="step__content">
+            <div class="step__title">Observe: Return results to Claude</div>
+            <div class="step__desc">Add the tool result to the conversation as a "tool_result" content block in an assistant message. Claude now has access to the real-world data it needed.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">4</div>
+          <div class="step__content">
+            <div class="step__title">Respond: Claude synthesizes the final answer</div>
+            <div class="step__desc">Claude reads the tool result and generates its final response, incorporating the real-world data. If more tools are needed, it repeats the cycle — potentially calling multiple tools in sequence.</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Complete Tool Use Implementation</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Tool Use Execution Loop (Python)</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">import anthropic
+import json
+
+client = anthropic.Anthropic()
+
+# Your actual tool implementations
+def web_search(query: str, num_results: int = 5) -> list:
+    """Call your search API here."""
+    # ... implementation
+    return [{"title": "...", "snippet": "...", "url": "..."}]
+
+def calculator(expression: str) -> float:
+    """Safe expression evaluator."""
+    import ast, math
+    return eval(expression, {"__builtins__": {}, "math": math})
+
+TOOL_IMPLEMENTATIONS = {
+    "web_search": web_search,
+    "calculator": calculator,
+}
+
+def run_agent(user_message: str) -> str:
+    """Run the tool use loop until Claude is done."""
+    messages = [{"role": "user", "content": user_message}]
+
+    while True:
+        response = client.messages.create(
+            model="claude-opus-4-5",
+            max_tokens=4096,
+            tools=TOOLS,
+            messages=messages
+        )
+
+        # Add Claude's response to the conversation
+        messages.append({"role": "assistant", "content": response.content})
+
+        # If Claude is done (no more tool calls), return the final text
+        if response.stop_reason == "end_turn":
+            for block in response.content:
+                if hasattr(block, 'text'):
+                    return block.text
+
+        # Process all tool calls in this response
+        tool_results = []
+        for block in response.content:
+            if block.type == "tool_use":
+                tool_fn = TOOL_IMPLEMENTATIONS.get(block.name)
+                if tool_fn:
+                    try:
+                        result = tool_fn(**block.input)
+                        tool_results.append({
+                            "type": "tool_result",
+                            "tool_use_id": block.id,
+                            "content": json.dumps(result)
+                        })
+                    except Exception as e:
+                        tool_results.append({
+                            "type": "tool_result",
+                            "tool_use_id": block.id,
+                            "is_error": True,
+                            "content": str(e)
+                        })
+
+        # Return tool results to Claude for the next iteration
+        if tool_results:
+            messages.append({"role": "user", "content": tool_results})
+
+# Usage
+answer = run_agent("What's the current EUR/USD exchange rate and how has it changed this week?")
+print(answer)</code></pre>
+      </div>
+
+      <h2>Best Practices for Tool Descriptions</h2>
+      <p>Tool descriptions are mini-prompts. Claude reads them to decide which tool to use and how to call it. Treat them with the same care as your main prompts:</p>
+
+      <div class="prompt-example">
+        <div class="prompt-example__tabs">
+          <button class="prompt-example__tab active" data-panel="exB-weak">❌ Poor Description</button>
+          <button class="prompt-example__tab" data-panel="exB-strong">✅ Good Description</button>
+          <button class="prompt-example__tab" data-panel="exB-output">📄 Why It Matters</button>
+        </div>
+        <div class="prompt-panel active" id="exB-weak"><span class="tag-content">{
+  "name": "search",
+  "description": "Search for information.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "query": {"type": "string"}
+    },
+    "required": ["query"]
+  }
+}</span></div>
+        <div class="prompt-panel" id="exB-strong"><span class="tag-content">{
+  "name": "web_search",
+  "description": "Search the internet for current information, news articles, and facts. Use this tool when: (1) the user asks about recent events or news after your training cutoff, (2) you need to verify a specific fact you're uncertain about, (3) the user asks for current prices, statistics, or data. Do NOT use for general knowledge questions you can answer confidently. Returns: list of results with title, snippet, and URL.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "Search query. Be specific — 3-6 words. E.g. 'AAPL stock price today' not 'tell me about Apple'"
+      }
+    },
+    "required": ["query"]
+  }
+}</span></div>
+        <div class="prompt-panel" id="exB-output"><span class="tag-content">Poor description: Claude overuses the tool (calls it for things it could answer directly) or underuses it (misses cases where it should search). The vague description provides no guidance on when or how to call the tool.
+
+Good description: Claude calls the tool at exactly the right times, forms optimal search queries, and knows what to expect back. The "Do NOT use for..." instruction is especially powerful — it prevents tool overuse for simple questions.</span></div>
+      </div>
+
+      <h2>RAG with Tool Use: Retrieval as a Tool</h2>
+      <p>Retrieval-Augmented Generation (RAG) and tool use are naturally combined: your vector search becomes a tool Claude can call when it needs to look up specific information:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">RAG Tool Definition</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">{
+  "name": "search_knowledge_base",
+  "description": "Search our internal knowledge base for product documentation, support articles, policy documents, and internal guides. Use this tool BEFORE answering any question about our products, policies, or procedures. Always search before responding — do not rely on memory. Returns relevant document excerpts with source document names.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "The search query. Rephrase the user's question as a direct search query. E.g. if user asks 'can I get a refund?' search for 'refund policy'"
+      },
+      "max_results": {
+        "type": "integer",
+        "description": "Maximum number of document chunks to retrieve. Default 3, max 8."
+      }
+    },
+    "required": ["query"]
+  }
+}</code></pre>
+      </div>
+
+      <h2>Security Considerations</h2>
+      <p>When Claude can execute real-world actions via tools, security is critical:</p>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">🔐</div>
+          <div class="technique-card__title">Validate Tool Inputs</div>
+          <div class="technique-card__desc">Never trust Claude's tool arguments blindly. Validate types, ranges, and values before executing. A prompt injection in user input could trick Claude into calling tools with unexpected arguments.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🛡️</div>
+          <div class="technique-card__title">Principle of Least Privilege</div>
+          <div class="technique-card__desc">Give Claude only the tools it needs for the specific task. A customer support agent shouldn't have access to a "delete_user" tool. Scope tool access to the minimum required.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">👁️</div>
+          <div class="technique-card__title">Log and Audit All Tool Calls</div>
+          <div class="technique-card__desc">Every tool invocation should be logged with the full arguments and result. Anomalies in tool call patterns can indicate prompt injection or misuse. Audit logs are also invaluable for debugging.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">⏸️</div>
+          <div class="technique-card__title">Human-in-the-Loop for Irreversible Actions</div>
+          <div class="technique-card__desc">For destructive or irreversible operations (sending emails, deleting records, making purchases), require explicit human confirmation before tool execution. Don't let Claude act unilaterally.</div>
+        </div>
+      </div>
+
+      <h2>Building a Research Assistant with Web Search</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Research Assistant System Prompt</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code">You are a research assistant with web search capabilities.
+
+PROCESS FOR RESEARCH QUESTIONS:
+1. Identify what you need to find: break the question into searchable sub-questions
+2. Search for each sub-question using the web_search tool
+3. Evaluate the search results: note the source quality and recency
+4. Synthesize the information into a coherent, cited answer
+
+CITATION FORMAT:
+For every factual claim, include the source in brackets: [Source: Publication Name, URL]
+If you searched but couldn't find reliable information, say so explicitly.
+
+QUALITY STANDARDS:
+- Prefer primary sources (official sites, academic papers, original reporting)
+- Flag outdated information (more than 2 years old for rapidly-changing topics)
+- Distinguish confirmed facts from interpretations or estimates
+- If sources conflict, present both views and note the discrepancy
+
+NEVER answer factual questions from memory alone when web_search is available.
+Always search first, then synthesize from real results.</code></pre>
+      </div>
+
+      <h2>The Future: Autonomous Agents with Tool Use</h2>
+      <p>Tool use is the foundation of autonomous AI agents — systems that can take a goal and execute multi-step plans using a combination of reasoning, tool calls, and iterative refinement without human intervention at each step.</p>
+
+      <div class="callout callout--note">
+        <div class="callout__icon">💡</div>
+        <div>
+          <div class="callout__title">The Agent Stack</div>
+          <div class="callout__body">A fully autonomous agent combines everything in this course: a role (who the agent is), clear goals (what it achieves), XML-structured state (what it knows), CoT reasoning (how it plans), format specs (structured intermediate outputs), tool use (real-world capabilities), and chaining (multi-step execution). The techniques in this course are the building blocks — tool use is what puts them to work in the world.</div>
+        </div>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">Course Complete — What's Next</div>
+          <div class="callout__body">You've now covered the full stack of Claude prompt engineering: from basic structure to complex multi-tool agents. The techniques compound: every prompt you write should consider role, clarity, data separation, format, reasoning strategy, grounding, examples, and — for production systems — chaining and tool use. The best way to deepen this knowledge is practice. Build something real, run into failures, and apply the diagnostic frameworks from Ch 9. Head to the Playground and start building.</div>
+        </div>
+      </div>
+
+    </div><!-- /lesson-body -->
+
+    <!-- LESSON NAV -->
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a href="app01-chaining-prompts.html" class="lesson-nav__btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <div>
+          <div class="lesson-nav__label">Previous lesson</div>
+          <div class="lesson-nav__title">Chaining Prompts</div>
+        </div>
+      </a>
+      <a href="../index.html" class="lesson-nav__btn" style="text-align:right;">
+        <div>
+          <div class="lesson-nav__label">Back to start</div>
+          <div class="lesson-nav__title">Course Home</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </nav>
+
+  </article>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Claude Prompt Engineering Course
+      </div>
+      <div class="footer__links">
+        <a href="../index.html">Home</a>
+        <a href="../playground.html">Playground</a>
+        <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Anthropic Docs</a>
+      </div>
+    </div>
+    <div class="footer__credit"><a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a></div>
+  </div>
+</footer>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>

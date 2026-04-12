@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Playground — Claude Prompt Engineering Course</title>
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/main.js" defer></script>
+<style>
+.pg-hero{padding-block:var(--space-12) var(--space-8);text-align:center;}
+.pg-hero h1{font-size:var(--text-2xl);font-weight:800;letter-spacing:-0.02em;margin-bottom:var(--space-3);}
+.pg-hero p{color:var(--color-text-muted);max-width:520px;margin-inline:auto;}
+.pg-layout{display:grid;grid-template-columns:260px 1fr;gap:var(--space-6);max-width:var(--content-wide);margin-inline:auto;padding-inline:var(--space-6);padding-bottom:var(--space-16);align-items:start;}
+@media(max-width:860px){.pg-layout{grid-template-columns:1fr;}.pg-panel-left{order:2;}}
+.pg-panel-left{display:flex;flex-direction:column;gap:var(--space-4);}
+.pg-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;}
+.pg-card__header{padding:var(--space-3) var(--space-5);background:var(--color-surface-offset);border-bottom:1px solid var(--color-border);font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-muted);}
+.pg-card__body{padding:var(--space-4) var(--space-5);}
+.technique-btn{width:100%;text-align:left;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);font-size:var(--text-sm);font-weight:500;color:var(--color-text-muted);border:1px solid transparent;background:none;cursor:pointer;display:flex;align-items:center;gap:var(--space-3);transition:all var(--transition-interactive);}
+.technique-btn:hover{background:var(--color-surface-dynamic);color:var(--color-text);}
+.technique-btn.active{background:var(--color-primary-highlight);color:var(--color-primary);border-color:color-mix(in oklch,var(--color-primary) 30%,transparent);font-weight:600;}
+.technique-btn .icon{width:26px;height:26px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--color-surface-offset);}
+.pg-main{display:flex;flex-direction:column;gap:var(--space-4);}
+.pg-editor{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;}
+.pg-editor__header{display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--space-5);background:var(--color-surface-offset);border-bottom:1px solid var(--color-border);}
+.pg-editor__title{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-muted);display:flex;align-items:center;gap:var(--space-2);}
+.pg-editor__title .dot{width:8px;height:8px;border-radius:var(--radius-full);background:var(--color-primary);}
+.pg-system{padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--color-divider);background:color-mix(in oklch,var(--color-accent) 4%,var(--color-surface));}
+.pg-system__label{font-size:var(--text-xs);font-weight:700;color:var(--color-accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:var(--space-2);}
+.pg-textarea{width:100%;background:transparent;border:none;outline:none;resize:vertical;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--color-text);line-height:1.65;}
+.pg-user{padding:var(--space-4) var(--space-5);}
+.pg-user__label{font-size:var(--text-xs);font-weight:700;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:var(--space-2);}
+.pg-actions{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-4) var(--space-5);background:var(--color-surface-offset);border-top:1px solid var(--color-border);flex-wrap:wrap;}
+.pg-run-btn{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-6);background:var(--color-primary);color:#fff;border-radius:var(--radius-full);font-size:var(--text-sm);font-weight:700;border:none;cursor:pointer;}
+.pg-run-btn:hover{background:var(--color-primary-hover);}
+.pg-clear-btn{padding:var(--space-2) var(--space-4);font-size:var(--text-sm);color:var(--color-text-faint);border:1px solid var(--color-border);border-radius:var(--radius-full);background:var(--color-surface-2);}
+.pg-clear-btn:hover{color:var(--color-text);background:var(--color-surface-dynamic);}
+.pg-hint{font-size:var(--text-xs);color:var(--color-text-faint);margin-left:auto;}
+.pg-output{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;}
+.pg-output__header{display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--space-5);background:var(--color-surface-offset);border-bottom:1px solid var(--color-border);}
+.pg-output__label{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-muted);display:flex;align-items:center;gap:var(--space-2);}
+.claude-dot{width:8px;height:8px;border-radius:var(--radius-full);background:var(--color-success);}
+.pg-output__body{padding:var(--space-5) var(--space-6);font-size:var(--text-sm);line-height:1.8;color:var(--color-text);min-height:200px;white-space:pre-wrap;}
+.pg-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;color:var(--color-text-faint);text-align:center;gap:var(--space-3);}
+.pg-placeholder svg{opacity:.3;}
+.pg-template-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2);}
+.template-btn{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-3) var(--space-3);font-size:var(--text-xs);color:var(--color-text-muted);cursor:pointer;text-align:left;}
+.template-btn:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-highlight);}
+.template-btn__name{font-weight:700;font-size:var(--text-sm);color:var(--color-text);margin-bottom:2px;}
+.tips-list{display:flex;flex-direction:column;gap:var(--space-2);}
+.tip-item{display:flex;gap:var(--space-3);font-size:var(--text-xs);color:var(--color-text-muted);line-height:1.6;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:14px;height:14px;border:2px solid var(--color-border);border-top-color:var(--color-primary);border-radius:50%;animation:spin .8s linear infinite;}
+.pg-loading{display:none;align-items:center;gap:var(--space-2);font-size:var(--text-sm);color:var(--color-text-muted);}
+.pg-loading.show{display:flex;}
+.info-banner{background:var(--color-accent-highlight);border:1px solid color-mix(in oklch,var(--color-accent) 25%,transparent);border-radius:var(--radius-lg);padding:var(--space-4) var(--space-5);font-size:var(--text-sm);color:var(--color-text);}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="index.html" class="navbar__logo">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="8" r="2" fill="var(--color-primary)"/></svg>
+      <span class="navbar__logo-text">Claude <span>PE</span></span>
+    </a>
+    <div class="navbar__nav">
+      <a href="index.html" class="navbar__link">Home</a>
+      <a href="index.html#curriculum" class="navbar__link">Lessons</a>
+      <a href="playground.html" class="navbar__link active">Playground</a>
+    </div>
+    <div class="navbar__actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu">
+    <a href="index.html">Home</a>
+    <a href="index.html#curriculum">All Lessons</a>
+    <a href="playground.html">Playground</a>
+  </div>
+</nav>
+
+<div class="container--default">
+  <div class="pg-hero">
+    <div class="hero__badge" style="margin-bottom:var(--space-4);">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Interactive Prompt Playground
+    </div>
+    <h1>Practice What You Learn</h1>
+    <p>Select a technique, edit the prompt, and see how different approaches change the simulated response. Experiment freely.</p>
+  </div>
+</div>
+
+<div class="pg-layout">
+  <div class="pg-panel-left">
+    <div class="pg-card">
+      <div class="pg-card__header">Techniques</div>
+      <div class="pg-card__body" style="display:flex;flex-direction:column;gap:4px;">
+        <button class="technique-btn active" onclick="selectTech(this,'basic')"><span class="icon">🏗️</span>Basic Structure</button>
+        <button class="technique-btn" onclick="selectTech(this,'role')"><span class="icon">🎭</span>Role Prompting</button>
+        <button class="technique-btn" onclick="selectTech(this,'xml')"><span class="icon">📐</span>XML Structuring</button>
+        <button class="technique-btn" onclick="selectTech(this,'cot')"><span class="icon">🧠</span>Chain-of-Thought</button>
+        <button class="technique-btn" onclick="selectTech(this,'fewshot')"><span class="icon">📋</span>Few-Shot</button>
+        <button class="technique-btn" onclick="selectTech(this,'antihallu')"><span class="icon">🛡️</span>Anti-Hallucination</button>
+      </div>
+    </div>
+    <div class="pg-card">
+      <div class="pg-card__header">Quick Templates</div>
+      <div class="pg-card__body">
+        <div class="pg-template-grid">
+          <button class="template-btn" onclick="loadTpl('classify')"><div class="template-btn__name">Classifier</div>Sentiment analysis</button>
+          <button class="template-btn" onclick="loadTpl('summarize')"><div class="template-btn__name">Summarizer</div>Document summary</button>
+          <button class="template-btn" onclick="loadTpl('code')"><div class="template-btn__name">Code Review</div>Python audit</button>
+          <button class="template-btn" onclick="loadTpl('qa')"><div class="template-btn__name">Q&amp;A Bot</div>Context-based Q&amp;A</button>
+        </div>
+      </div>
+    </div>
+    <div class="pg-card">
+      <div class="pg-card__header">Prompting Tips</div>
+      <div class="pg-card__body">
+        <div class="tips-list">
+          <div class="tip-item"><span>🎯</span>Start with an action verb: Summarize, Classify, Write, Debug</div>
+          <div class="tip-item"><span>📐</span>Always specify output format explicitly</div>
+          <div class="tip-item"><span>🎭</span>Use roles for domain expertise activation</div>
+          <div class="tip-item"><span>🧠</span>Add "Think step by step" for complex reasoning</div>
+          <div class="tip-item"><span>🛡️</span>Ground with "Only use the provided context"</div>
+          <div class="tip-item"><span>📋</span>Add 2-3 examples for format/style consistency</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pg-main">
+    <div class="info-banner" id="info-banner">
+      <strong>Basic Structure:</strong> The four components of every effective prompt — task, context, data, and format. Edit the prompts below and run the simulation.
+    </div>
+    <div class="pg-editor">
+      <div class="pg-editor__header">
+        <div class="pg-editor__title"><span class="dot"></span>Prompt Editor</div>
+      </div>
+      <div class="pg-system">
+        <div class="pg-system__label">System Prompt</div>
+        <textarea class="pg-textarea" id="sys-input" rows="3">You are a helpful assistant. Answer clearly and concisely.</textarea>
+      </div>
+      <div class="pg-user">
+        <div class="pg-user__label">User Message</div>
+        <textarea class="pg-textarea" id="usr-input" rows="7">Explain what machine learning is.
+
+Please format your response as:
+1. One-sentence definition
+2. How it works (2 sentences)
+3. One real-world example</textarea>
+      </div>
+      <div class="pg-actions">
+        <button class="pg-run-btn" onclick="runSim()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Run Simulation
+        </button>
+        <button class="pg-clear-btn" onclick="clearSim()">Clear</button>
+        <div class="pg-loading" id="pg-loading"><div class="spinner"></div> Generating...</div>
+        <span class="pg-hint">Simulated responses — no API key needed</span>
+      </div>
+    </div>
+    <div class="pg-output">
+      <div class="pg-output__header">
+        <div class="pg-output__label"><span class="claude-dot"></span>Claude Response</div>
+      </div>
+      <div class="pg-output__body" id="pg-out">
+        <div class="pg-placeholder">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <p>Press <strong>Run Simulation</strong> to see a response based on your prompt.</p>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;padding-block:var(--space-4);">
+      <p style="font-size:var(--text-sm);color:var(--color-text-muted);">
+        Ready to use real Claude? 
+        <a href="https://claude.ai" target="_blank" rel="noopener" style="color:var(--color-primary);font-weight:600;">Open Claude.ai →</a>
+        &nbsp;|&nbsp;
+        <a href="https://console.anthropic.com" target="_blank" rel="noopener" style="color:var(--color-primary);font-weight:600;">Anthropic Console →</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Claude Prompt Engineering Course
+      </div>
+      <div class="footer__links">
+        <a href="index.html">Home</a>
+        <a href="index.html#curriculum">Lessons</a>
+        <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Anthropic Docs</a>
+      </div>
+    </div>
+    <div class="footer__credit"><a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a></div>
+  </div>
+</footer>
+
+<script>
+const RESPONSES = {
+  basic: `1. One-sentence definition
+Machine learning is a branch of AI where systems automatically learn and improve from data without being explicitly programmed for each task.
+
+2. How it works
+You feed the system thousands of labeled examples so it discovers patterns on its own. During training, it adjusts internal parameters to minimize prediction errors, becoming progressively more accurate.
+
+3. Real-world example
+Email spam filters: rather than manually coding rules, a spam filter learns from millions of labeled emails and identifies novel spam patterns automatically.`,
+  role: `Great question — attention is one of the most elegant ideas in modern ML.
+
+The Core Idea: Selective Focus
+Think of reading "The trophy didn't fit in the suitcase because it was too big." When you process "it", your brain focuses back on "trophy." That selective focus is attention.
+
+The Three Matrices: Q, K, V
+Every token becomes three vectors:
+• Query (Q): "What am I looking for?"
+• Key (K):   "What do I contain?"  
+• Value (V): "What do I provide if selected?"
+
+Score = softmax(QK^T / √d_k) × V
+
+The √d_k scaling prevents vanishing gradients. Unlike RNNs which pass information sequentially (like a game of telephone), attention creates direct O(1) connections between any two positions — which is why transformers handle long-range dependencies so much better.`,
+  xml: `\`\`\`json
+{
+  "sentiment": "mixed",
+  "rating": 7,
+  "positives": [
+    "Dashboard loading time improved significantly (8s to under 1s)"
+  ],
+  "negatives": [
+    "Mobile layout broken on iPhone 12"
+  ],
+  "feature_requests": [
+    "PDF export feature"
+  ],
+  "customer_tenure": "3 years"
+}
+\`\`\``,
+  cot: `<thinking>
+Let me define variables:
+- Founder B = x
+- Founder A = 2x (twice B)
+- Founder C = 2x - 10pp (10 percentage points less than A)
+
+Equation: x + 2x + (2x - 10) = 100
+5x - 10 = 100
+5x = 110
+x = 22
+</thinking>
+
+Equity Split:
+
+| Founder | Calculation      | Equity |
+|---------|-----------------|--------|
+| B       | base (x)        | 22%    |
+| A       | 2 × B           | 44%    |
+| C       | A − 10pp        | 34%    |
+| Total   |                 | 100% ✓ |
+
+Note: If "10% less" means 10% of A's share (multiplicative), the split would be B: 20.83%, A: 41.67%, C: 37.5%. Clarify before filing paperwork.`,
+  fewshot: `Following the established naming pattern:
+
+• CalmCore — meditation app for executives
+  (calm + core, compound, benefit-first)
+
+• SparkPath — career development for students
+  (spark + path, energetic, direction-focused)
+
+• MindFlow — focus timer for deep work
+  (mind + flow, psychological, state-focused)
+
+• DataNest — analytics dashboard for teams
+  (data + nest, technical, home metaphor)`,
+  antihallu: `Based on the provided context only:
+
+**Confirmed facts:**
+- Python was created by Guido van Rossum ✓
+- First released in 1991 ✓
+- Named after Monty Python (stated in context) ✓
+
+**Not in provided context:**
+- Current Python version → I cannot confirm this
+- Exact adoption statistics → I cannot confirm this
+
+**Summary:** Python is a general-purpose programming language created by Guido van Rossum and first released in 1991, named after the British comedy group Monty Python. I have not included any information that wasn't present in your provided document.`
+};
+
+const INFO = {
+  basic: '<strong>Basic Structure:</strong> Four components — task, context, data, format. Specifying output format dramatically changes response structure.',
+  role: '<strong>Role Prompting:</strong> Assigning an expert persona unlocks domain-specific knowledge and communication depth.',
+  xml: '<strong>XML Structuring:</strong> Separating instructions from data prevents ambiguity and produces reliable structured outputs.',
+  cot: '<strong>Chain-of-Thought:</strong> Asking Claude to reason before answering (using &lt;thinking&gt; tags) dramatically improves accuracy.',
+  fewshot: '<strong>Few-Shot Prompting:</strong> Showing examples teaches format and style more reliably than describing it.',
+  antihallu: '<strong>Anti-Hallucination:</strong> Explicitly grounding Claude to provided context only prevents fabrication.'
+};
+
+const TEMPLATES = {
+  basic: {
+    sys: 'You are a helpful assistant. Answer clearly and concisely.',
+    usr: 'Explain what machine learning is.\n\nPlease format your response as:\n1. One-sentence definition\n2. How it works (2 sentences)\n3. One real-world example'
+  },
+  role: {
+    sys: 'You are a senior ML research scientist at Google DeepMind with 12 years of experience. You explain complex concepts with precise technical depth while remaining accessible.',
+    usr: 'Explain how attention mechanisms work in transformer models.'
+  },
+  xml: {
+    sys: 'You are a document analysis assistant. Process only content within XML tags. Return structured JSON.',
+    usr: 'Analyze the following feedback and extract key information.\n\n<feedback>\nThe new dashboard is much faster — loading time dropped from 8 seconds to under 1 second. However, the mobile layout breaks on iPhone 12. The export to PDF feature is missing. Overall I\'d rate it 7/10. Been a customer for 3 years.\n</feedback>\n\nReturn JSON with: sentiment, rating, positives[], negatives[], feature_requests[], customer_tenure'
+  },
+  cot: {
+    sys: 'You are a careful analytical assistant. Before answering, reason through the problem inside <thinking> tags. Then give your final answer.',
+    usr: 'A startup has 3 co-founders:\n- Founder A gets twice as much as Founder B\n- Founder C gets 10 percentage points less than Founder A\n- Total must equal 100%\n\nWhat percentage does each founder receive?'
+  },
+  fewshot: {
+    sys: 'You are a product naming assistant. Match the pattern from examples precisely.',
+    usr: 'Generate 4 product names following this pattern:\n\nExample 1:\nProduct: Task management app for remote teams\nName: TeamFlow\nRationale: compound word, action + metaphor\n\nExample 2:\nProduct: Sleep tracking app for athletes\nName: RestEdge\nRationale: compound word, benefit + competitive edge\n\nNow generate names for:\n1. Meditation app for busy executives\n2. Career development platform for students\n3. Focus timer for deep work\n4. Analytics dashboard for small teams'
+  },
+  antihallu: {
+    sys: 'You are a research assistant. Only use information from the provided context. If a fact is not in the context, say "not in provided context." Never fabricate information.',
+    usr: 'Based only on the context below, summarize the key facts about Python.\n\n<context>\nPython is a high-level, general-purpose programming language. Created by Guido van Rossum and first released in 1991, Python emphasizes code readability. The language was named after the BBC comedy series Monty Python\'s Flying Circus.\n</context>'
+  },
+  classify: {
+    sys: 'You are a sentiment analysis model. Classify each review. Return JSON only.',
+    usr: 'Classify the sentiment of these reviews. Return JSON array with id, sentiment ("positive"|"neutral"|"negative"), and confidence (0-1).\n\nReviews:\n1. "The product exceeded all expectations. Worth every penny."\n2. "Arrived on time. Does what it says."\n3. "Stopped working after 2 weeks. Very disappointed."'
+  },
+  summarize: {
+    sys: 'You are a professional summarizer. Be concise and accurate.',
+    usr: 'Summarize the following article in exactly 3 bullet points. Each bullet should be one sentence. Start each with a bold key term.\n\n<article>\nArtificial intelligence is transforming healthcare by enabling earlier disease detection, personalized treatment plans, and more efficient drug discovery. Machine learning models can now detect cancers in medical images with accuracy matching or exceeding human radiologists. AI-powered drug discovery platforms have reduced the time to identify promising drug candidates from years to months.\n</article>'
+  },
+  code: {
+    sys: 'You are a senior Python engineer. Review code for bugs, security issues, and style problems.',
+    usr: 'Review this Python code and return a JSON report.\n\n```python\ndef get_user(user_id):\n    query = "SELECT * FROM users WHERE id = " + user_id\n    result = db.execute(query)\n    return result[0]\n```\n\nReturn JSON with: issues[] (each with severity, description, fix), overall_score (1-10), summary'
+  },
+  qa: {
+    sys: 'You are a Q&A assistant. Only answer based on the provided context. If the answer is not in the context, say so.',
+    usr: 'Answer the question based only on the context below.\n\n<context>\nThe Anthropic Claude API uses a messages format with alternating "user" and "assistant" roles. The system prompt is passed as a separate "system" parameter. Max tokens controls response length. The model parameter selects which Claude version to use.\n</context>\n\nQuestion: How do I set the system prompt when using the Claude API?'
+  }
+};
+
+let currentTech = 'basic';
+
+function selectTech(btn, tech) {
+  document.querySelectorAll('.technique-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTech = tech;
+  const t = TEMPLATES[tech];
+  if (t) {
+    document.getElementById('sys-input').value = t.sys;
+    document.getElementById('usr-input').value = t.usr;
+  }
+  document.getElementById('info-banner').innerHTML = INFO[tech] || '';
+  document.getElementById('pg-out').innerHTML = '<div class="pg-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><p>Press <strong>Run Simulation</strong> to see a response.</p></div>';
+}
+
+function loadTpl(key) {
+  const t = TEMPLATES[key];
+  if (!t) return;
+  document.getElementById('sys-input').value = t.sys;
+  document.getElementById('usr-input').value = t.usr;
+  const response = RESPONSES[key] || RESPONSES.basic;
+  document.getElementById('pg-out').innerHTML = '<div class="pg-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><p>Press <strong>Run Simulation</strong> to see the response.</p></div>';
+}
+
+function runSim() {
+  const loading = document.getElementById('pg-loading');
+  const out = document.getElementById('pg-out');
+  loading.classList.add('show');
+  out.innerHTML = '';
+  setTimeout(() => {
+    loading.classList.remove('show');
+    const r = RESPONSES[currentTech] || RESPONSES.basic;
+    out.textContent = r;
+  }, 900);
+}
+
+function clearSim() {
+  document.getElementById('sys-input').value = '';
+  document.getElementById('usr-input').value = '';
+  document.getElementById('pg-out').innerHTML = '<div class="pg-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><p>Press <strong>Run Simulation</strong> to see a response.</p></div>';
+}
+</script>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>

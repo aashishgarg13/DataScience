@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 1: Basic Prompt Structure — Claude Prompt Engineering</title>
+<meta name="description" content="Learn the anatomy of a prompt Claude understands perfectly. Covers Human/Assistant turns, system prompts, and the four core components.">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/main.js" defer></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="../index.html" class="navbar__logo">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="8" r="2" fill="var(--color-primary)"/></svg>
+      <span class="navbar__logo-text">Claude <span>PE</span></span>
+    </a>
+    <div class="navbar__nav">
+      <a href="../index.html" class="navbar__link">Home</a>
+      <a href="../index.html#curriculum" class="navbar__link active">Lessons</a>
+      <a href="../playground.html" class="navbar__link">Playground</a>
+    </div>
+    <div class="navbar__actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <a href="../index.html#curriculum">All Lessons</a>
+    <a href="../playground.html">Playground</a>
+  </div>
+</nav>
+
+<div class="lesson-layout" style="padding-block: var(--space-8);">
+  <!-- SIDEBAR -->
+  <aside class="lesson-sidebar">
+    <div class="sidebar__title">Course Contents</div>
+    <ul class="sidebar__list" role="list">
+      <li class="sidebar__item active"><a href="ch01-basic-structure.html"><span class="num">01</span> Basic Prompt Structure</a></li>
+      <li class="sidebar__item"><a href="ch02-clear-direct.html"><span class="num">02</span> Clear and Direct</a></li>
+      <li class="sidebar__item"><a href="ch03-assigning-roles.html"><span class="num">03</span> Assigning Roles</a></li>
+      <li class="sidebar__item"><a href="ch04-separating-data.html"><span class="num">04</span> Separating Data</a></li>
+      <li class="sidebar__item"><a href="ch05-formatting-output.html"><span class="num">05</span> Formatting Output</a></li>
+      <li class="sidebar__item"><a href="ch06-precognition.html"><span class="num">06</span> Precognition / CoT</a></li>
+      <li class="sidebar__item"><a href="ch07-using-examples.html"><span class="num">07</span> Using Examples</a></li>
+      <li class="sidebar__item"><a href="ch08-avoiding-hallucinations.html"><span class="num">08</span> Avoiding Hallucinations</a></li>
+      <li class="sidebar__item"><a href="ch09-complex-prompts.html"><span class="num">09</span> Complex Prompts</a></li>
+      <li class="sidebar__item"><a href="app01-chaining-prompts.html"><span class="num">A</span> Chaining Prompts</a></li>
+      <li class="sidebar__item"><a href="app02-tool-use.html"><span class="num">B</span> Tool Use</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <article class="lesson-content">
+    <div class="progress-bar"><div class="progress-bar__fill" style="width: 9%"></div></div>
+
+    <header class="lesson-header">
+      <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span>
+        <a href="../index.html#curriculum">Lessons</a> <span>/</span>
+        <span>Chapter 1</span>
+      </nav>
+      <div class="lesson-header__badge">
+        <span class="lesson-card__badge badge--beginner">Beginner</span>
+      </div>
+      <h1 class="lesson-title">Basic Prompt Structure</h1>
+      <p class="lesson-subtitle">Understand exactly how Claude processes your messages. Master the four-component framework that underpins every effective prompt.</p>
+      <div class="lesson-meta">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 12 min read</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 8 examples</span>
+        <span>Chapter 1 of 11</span>
+      </div>
+    </header>
+
+    <div class="lesson-body">
+
+      <h2>How Claude Reads Your Message</h2>
+      <p>Every interaction with Claude follows a structured conversation format. Unlike a search engine that parses keywords, Claude processes entire conversational contexts — understanding role, intent, constraints, and desired output all at once.</p>
+      <p>The Claude API uses a <strong>turn-based message format</strong>: alternating Human and Assistant turns. Understanding this structure is the foundation of every other technique in this course.</p>
+
+      <div class="callout callout--note">
+        <div class="callout__icon">💡</div>
+        <div>
+          <div class="callout__title">Key Mental Model</div>
+          <div class="callout__body">Think of Claude as an extremely capable colleague who needs complete context to do their best work. The more context you provide in the right structure, the better the output.</div>
+        </div>
+      </div>
+
+      <h2>The Turn-Based Conversation Format</h2>
+      <p>The Claude API separates messages into Human and Assistant turns. This maps directly to how you write prompts:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">API Format (Python)</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code>import anthropic
+
+client = anthropic.Anthropic()
+
+message = client.messages.create(
+    model="claude-opus-4-5",
+    max_tokens=1024,
+    messages=[
+        {
+            "role": "user",
+            "content": "Explain the difference between supervised and unsupervised learning."
+        }
+    ]
+)
+
+print(message.content[0].text)</code></pre>
+      </div>
+
+      <h2>The Four Components of a Great Prompt</h2>
+      <p>Every high-quality prompt contains some combination of these four elements. Not all are required for every prompt, but knowing them lets you diagnose why a prompt isn't working.</p>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">🎯</div>
+          <div class="technique-card__title">1. Task</div>
+          <div class="technique-card__desc">What you want Claude to do. Be explicit: "summarize", "classify", "write", "debug", "explain". The task should be the first thing Claude reads.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">📋</div>
+          <div class="technique-card__title">2. Context</div>
+          <div class="technique-card__desc">Background information Claude needs to do the task well. Who is the audience? What is the purpose? What constraints apply?</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">📄</div>
+          <div class="technique-card__title">3. Input Data</div>
+          <div class="technique-card__desc">The actual content Claude should work with — a document, code snippet, list, or question. Keep this clearly separated from your instructions.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">📐</div>
+          <div class="technique-card__title">4. Output Format</div>
+          <div class="technique-card__desc">How you want the response structured — bullet points, JSON, a table, paragraph prose, or a specific template. Without this, Claude chooses for you.</div>
+        </div>
+      </div>
+
+      <h2>System Prompts: Setting the Stage</h2>
+      <p>The <strong>system prompt</strong> is a special instruction block that runs before the conversation starts. It's where you establish Claude's persona, define constraints, and provide standing instructions that apply to every turn.</p>
+      <p>System prompts are invisible to end users (in most implementations) but have the highest priority for shaping Claude's behavior.</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">System Prompt Example</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code>client.messages.create(
+    model="claude-opus-4-5",
+    max_tokens=1024,
+    system="""You are a senior Python developer with 15 years of experience.
+You specialize in clean, production-ready code.
+Always explain your reasoning.
+Format code examples with syntax highlighting.
+If a request is ambiguous, ask one clarifying question.""",
+    messages=[
+        {"role": "user", "content": "How do I handle database connection pooling?"}
+    ]
+)</code></pre>
+      </div>
+
+      <h2>Before vs. After: Structured Prompts in Action</h2>
+      <p>See the difference a structured prompt makes. Both prompts ask for the same thing — but the outputs are dramatically different.</p>
+
+      <div class="prompt-example">
+        <div class="prompt-example__tabs">
+          <button class="prompt-example__tab active" data-panel="ex1-weak">❌ Weak Prompt</button>
+          <button class="prompt-example__tab" data-panel="ex1-strong">✅ Strong Prompt</button>
+          <button class="prompt-example__tab" data-panel="ex1-output">📄 Output</button>
+        </div>
+        <div class="prompt-panel active" id="ex1-weak"><span class="tag-content">Tell me about machine learning.</span></div>
+        <div class="prompt-panel" id="ex1-strong"><span class="tag-system">SYSTEM: You are a technical writer creating course material for software developers with no ML background.
+
+</span><span class="tag-content">USER: Write a 150-word introduction to machine learning for software developers.
+Cover: what it is, why it matters, and one concrete example.
+Format: 3 short paragraphs. No jargon without explanation.</span></div>
+        <div class="prompt-panel" id="ex1-output"><span class="tag-content">Machine learning (ML) is a branch of artificial intelligence where systems learn from data rather than following explicit rules. Instead of writing code that says "if email contains 'win a prize', mark as spam," you show the system thousands of labeled spam/ham emails and it learns the pattern itself.
+
+This matters to developers because ML is now embedded everywhere: search ranking, autocomplete, fraud detection, recommendation engines. As a software engineer, you'll increasingly integrate ML models into your applications via APIs even if you don't build them yourself.
+
+A concrete example: Netflix's recommendation system. Rather than hand-coding "show action movies to users who watched Die Hard," ML analyzes billions of watch patterns and discovers complex correlations you'd never think to program manually. The model improves as it sees more data.</span></div>
+      </div>
+
+      <h2>Anatomy of a Complete Prompt</h2>
+      <p>Here is a fully annotated prompt demonstrating all four components working together:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Complete Prompt Anatomy</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code># ROLE (sets expertise and tone)
+You are a senior data scientist specializing in NLP.
+
+# TASK (what to do — verb + object)
+Classify the sentiment of the following customer reviews.
+
+# CONTEXT (background that shapes the response)
+These reviews are for a B2B SaaS product. "Neutral" means
+the customer neither recommends nor discourages others.
+Use the classifications for a stakeholder dashboard.
+
+# INPUT DATA (the actual content to process)
+Reviews:
+1. "Onboarding took too long but the core features work."
+2. "Transformed our entire reporting workflow. 10/10."
+3. "Support team responded in 2 days. Expected faster."
+
+# OUTPUT FORMAT (structure and schema)
+Return a JSON array with objects containing:
+- "id": review number
+- "sentiment": "positive" | "neutral" | "negative"
+- "confidence": 0.0 to 1.0
+- "key_phrase": the most sentiment-bearing phrase</code></pre>
+      </div>
+
+      <h2>The Order of Components Matters</h2>
+      <p>Claude reads prompts sequentially. Research and practice show that <strong>task-first ordering</strong> produces the most focused responses:</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step__num">1</div>
+          <div class="step__content">
+            <div class="step__title">Start with the task</div>
+            <div class="step__desc">Lead with the verb and object: "Summarize...", "Classify...", "Write...", "Debug...". This primes Claude's attention on the right goal.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">2</div>
+          <div class="step__content">
+            <div class="step__title">Add context and constraints</div>
+            <div class="step__desc">Who is the audience? What's the use case? Any hard constraints? This shapes tone, depth, and approach.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">3</div>
+          <div class="step__content">
+            <div class="step__title">Provide your input data</div>
+            <div class="step__desc">Put the document, text, or data to be processed clearly after your instructions. Use delimiters to separate it.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__num">4</div>
+          <div class="step__content">
+            <div class="step__title">Specify output format last</div>
+            <div class="step__desc">Describe the exact format you need. JSON? Markdown? A specific template? Format instructions work best as the final instruction.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">Chapter 1 Takeaway</div>
+          <div class="callout__body">Every prompt has an implicit structure. Making it explicit — task, context, data, format — is the single highest-leverage change you can make to improve output quality. Before writing your next prompt, ask: which of the four components am I missing?</div>
+        </div>
+      </div>
+
+      <h2>Practice Exercise</h2>
+      <p>Take this weak prompt and rewrite it using all four components:</p>
+      <div class="code-block">
+        <div class="code-block__header"><span class="code-block__label">Original (Weak)</span></div>
+        <pre><code>Explain neural networks.</code></pre>
+      </div>
+      <p>Consider: Who is the audience? What depth? What format? What specific aspect? Try your rewrite in the <a href="../playground.html" style="color:var(--color-primary);">Playground →</a></p>
+
+    </div><!-- /lesson-body -->
+
+    <!-- LESSON NAV -->
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <span></span>
+      <a href="ch02-clear-direct.html" class="lesson-nav__btn" style="text-align:right;">
+        <div>
+          <div class="lesson-nav__label">Next lesson</div>
+          <div class="lesson-nav__title">Ch 2: Being Clear and Direct</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </nav>
+
+  </article>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Claude Prompt Engineering Course
+      </div>
+      <div class="footer__links">
+        <a href="../index.html">Home</a>
+        <a href="../playground.html">Playground</a>
+        <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Anthropic Docs</a>
+      </div>
+    </div>
+    <div class="footer__credit"><a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a></div>
+  </div>
+</footer>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>

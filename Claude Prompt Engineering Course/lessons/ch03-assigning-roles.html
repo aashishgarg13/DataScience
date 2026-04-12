@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 3: Assigning Roles — Claude Prompt Engineering</title>
+<meta name="description" content="Master role prompting: how to assign expert personas, system-level roles, and deep character framing to dramatically improve Claude's output quality.">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/main.js" defer></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="../index.html" class="navbar__logo">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="8" r="2" fill="var(--color-primary)"/></svg>
+      <span class="navbar__logo-text">Claude <span>PE</span></span>
+    </a>
+    <div class="navbar__nav">
+      <a href="../index.html" class="navbar__link">Home</a>
+      <a href="../index.html#curriculum" class="navbar__link active">Lessons</a>
+      <a href="../playground.html" class="navbar__link">Playground</a>
+    </div>
+    <div class="navbar__actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <a href="../index.html#curriculum">All Lessons</a>
+    <a href="../playground.html">Playground</a>
+  </div>
+</nav>
+
+<div class="lesson-layout" style="padding-block: var(--space-8);">
+  <!-- SIDEBAR -->
+  <aside class="lesson-sidebar">
+    <div class="sidebar__title">Course Contents</div>
+    <ul class="sidebar__list" role="list">
+      <li class="sidebar__item"><a href="ch01-basic-structure.html"><span class="num">01</span> Basic Prompt Structure</a></li>
+      <li class="sidebar__item"><a href="ch02-clear-direct.html"><span class="num">02</span> Clear and Direct</a></li>
+      <li class="sidebar__item active"><a href="ch03-assigning-roles.html"><span class="num">03</span> Assigning Roles</a></li>
+      <li class="sidebar__item"><a href="ch04-separating-data.html"><span class="num">04</span> Separating Data</a></li>
+      <li class="sidebar__item"><a href="ch05-formatting-output.html"><span class="num">05</span> Formatting Output</a></li>
+      <li class="sidebar__item"><a href="ch06-precognition.html"><span class="num">06</span> Precognition / CoT</a></li>
+      <li class="sidebar__item"><a href="ch07-using-examples.html"><span class="num">07</span> Using Examples</a></li>
+      <li class="sidebar__item"><a href="ch08-avoiding-hallucinations.html"><span class="num">08</span> Avoiding Hallucinations</a></li>
+      <li class="sidebar__item"><a href="ch09-complex-prompts.html"><span class="num">09</span> Complex Prompts</a></li>
+      <li class="sidebar__item"><a href="app01-chaining-prompts.html"><span class="num">A</span> Chaining Prompts</a></li>
+      <li class="sidebar__item"><a href="app02-tool-use.html"><span class="num">B</span> Tool Use</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <article class="lesson-content">
+    <div class="progress-bar"><div class="progress-bar__fill" style="width: 27%"></div></div>
+
+    <header class="lesson-header">
+      <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span>
+        <a href="../index.html#curriculum">Lessons</a> <span>/</span>
+        <span>Chapter 3</span>
+      </nav>
+      <div class="lesson-header__badge">
+        <span class="lesson-card__badge badge--beginner">Beginner</span>
+      </div>
+      <h1 class="lesson-title">Assigning Roles</h1>
+      <p class="lesson-subtitle">Give Claude an identity and watch the output transform. Role prompting is one of the highest-leverage techniques for shaping expertise, tone, and perspective.</p>
+      <div class="lesson-meta">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 13 min read</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> 9 examples</span>
+        <span>Chapter 3 of 11</span>
+      </div>
+    </header>
+
+    <div class="lesson-body">
+
+      <h2>Why Role Prompting Works</h2>
+      <p>When you assign Claude a role, you're not just adding a label — you're activating a specific slice of its training. Claude has been trained on an enormous range of expert writing, from medical journals to legal briefs to software documentation. A role assignment tells Claude which corpus to draw from.</p>
+      <p>Without a role, Claude defaults to a helpful generalist tone — broad, careful, and slightly hedged. With a well-crafted role, Claude shifts register: using domain vocabulary correctly, structuring responses the way a practitioner in that field would, and calibrating confidence to match expert norms.</p>
+
+      <div class="callout callout--note">
+        <div class="callout__icon">💡</div>
+        <div>
+          <div class="callout__title">The Activation Model</div>
+          <div class="callout__body">Think of Claude's training as a vast library of expertise. A role prompt is a library card that grants access to a specific section. "You are a senior security engineer" unlocks the security-focused section; "You are a children's author" unlocks the early education section. The same underlying knowledge, different activation key.</div>
+        </div>
+      </div>
+
+      <h2>System Prompt Roles vs. Inline Roles</h2>
+      <p>Roles can be assigned in two places, and each has a distinct purpose:</p>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">⚙️</div>
+          <div class="technique-card__title">System Prompt Role</div>
+          <div class="technique-card__desc">Assigned before the conversation starts. Persists across every turn. Ideal for products and applications where Claude always plays the same character — a customer support agent, a coding assistant, a legal research tool.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">💬</div>
+          <div class="technique-card__title">Inline Role</div>
+          <div class="technique-card__desc">Added at the start of a user message. Scoped to that request. Ideal for one-off tasks in a general-purpose conversation: "Acting as a UX researcher, review this wireframe..." Overrides generalist defaults for that response only.</div>
+        </div>
+      </div>
+
+      <h2>The Role Formula</h2>
+      <p>The most effective roles follow a three-part structure that establishes expertise, domain specificity, and relevant experience:</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Role Formula</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code>You are a [EXPERTISE TITLE] specializing in [SPECIFIC DOMAIN]
+with [X years / demonstrated] experience [CONTEXT/SETTING].
+
+# Examples:
+You are a senior backend engineer specializing in distributed systems
+with 10 years of experience building high-scale APIs at fintech companies.
+
+You are a board-certified cardiologist specializing in preventive cardiology,
+writing patient education materials for a general adult audience.
+
+You are a former McKinsey engagement manager specializing in operational
+restructuring, advising a mid-size manufacturing company.</code></pre>
+      </div>
+
+      <p>The three components compound: <strong>expertise title</strong> sets the knowledge domain, <strong>specialization</strong> narrows to the relevant sub-field, and <strong>experience context</strong> shapes the perspective and communication style.</p>
+
+      <h2>Role Depth: Surface vs. Deep Roles</h2>
+      <p>Not all roles are created equal. There's a significant difference between a surface role (just a job title) and a deep role (title + specialization + constraints + communication style).</p>
+
+      <div class="prompt-example">
+        <div class="prompt-example__tabs">
+          <button class="prompt-example__tab active" data-panel="ex3a-surface">Surface Role</button>
+          <button class="prompt-example__tab" data-panel="ex3a-deep">Deep Role</button>
+          <button class="prompt-example__tab" data-panel="ex3a-output">📄 Difference</button>
+        </div>
+        <div class="prompt-panel active" id="ex3a-surface"><span class="tag-system">You are a financial advisor.
+
+</span><span class="tag-content">Should I pay off my mortgage early or invest the extra cash?</span></div>
+        <div class="prompt-panel" id="ex3a-deep"><span class="tag-system">You are a fee-only certified financial planner (CFP) specializing in retirement planning for high-income professionals in their 40s. You use evidence-based financial planning frameworks. You always explain trade-offs clearly, ask about relevant unknowns before giving advice, and avoid product recommendations since you have no conflicts of interest.
+
+</span><span class="tag-content">Should I pay off my mortgage early or invest the extra cash?</span></div>
+        <div class="prompt-panel" id="ex3a-output"><span class="tag-content">Surface role → Generic answer covering both options with no strong framework. May not ask about tax bracket, mortgage rate, emergency fund, or retirement account status. Output resembles a Wikipedia article.
+
+Deep role → Response opens with clarifying questions (mortgage rate, tax bracket, retirement account status, time horizon), then applies a concrete framework (compare after-tax mortgage rate to expected market returns), acknowledges behavioral factors, and gives a conditional recommendation with clear reasoning. Output resembles actual client advice.</span></div>
+      </div>
+
+      <h2>Three Categories of Powerful Roles</h2>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">🎓</div>
+          <div class="technique-card__title">Expert Roles</div>
+          <div class="technique-card__desc">Activate domain knowledge and professional vocabulary. "Senior security researcher", "Board-certified oncologist", "Principal engineer". Best for technical accuracy, domain-specific analysis, and professional-grade output.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">🎭</div>
+          <div class="technique-card__title">Persona Roles</div>
+          <div class="technique-card__desc">Establish communication style and voice. "A patient high school teacher who uses analogies", "A skeptical journalist who challenges every claim", "A direct, no-nonsense startup founder". Best for tone, writing style, and relational dynamics.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">⚙️</div>
+          <div class="technique-card__title">Process Roles</div>
+          <div class="technique-card__desc">Define a workflow pattern. "An editor who gives feedback as tracked changes", "A Socratic tutor who asks questions rather than giving answers", "A devil's advocate who argues against every proposal". Best for structured interactions.</div>
+        </div>
+      </div>
+
+      <h2>Domain → Optimal Role → Example System Prompt</h2>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Role Reference Table</span>
+        </div>
+        <pre><code>DOMAIN              OPTIMAL ROLE                    EXAMPLE SYSTEM PROMPT
+────────────────────────────────────────────────────────────────────────────────
+Software Dev        Senior engineer + specialization "You are a senior Go engineer
+                                                      specializing in performance
+                                                      optimization. Review code for
+                                                      correctness first, then efficiency."
+
+Legal Research      Associate attorney + area        "You are a contract attorney
+                                                      specializing in SaaS agreements.
+                                                      Flag risks, don't give legal advice."
+
+Marketing Copy      Copywriter + audience            "You are a direct-response
+                                                      copywriter who specializes in
+                                                      B2B SaaS landing pages. Write
+                                                      for skeptical technical buyers."
+
+Data Analysis       Data scientist + domain          "You are a data scientist
+                                                      specializing in e-commerce
+                                                      metrics. Explain findings in
+                                                      plain language for non-technical
+                                                      stakeholders."
+
+Education           Subject tutor + pedagogy         "You are a patient AP Chemistry
+                                                      tutor. Use the Socratic method.
+                                                      Never give direct answers to
+                                                      homework problems."
+
+Customer Support    Support specialist + product     "You are a customer success
+                                                      specialist for [Product]. Be
+                                                      empathetic, solution-focused,
+                                                      and escalate only when needed."</code></pre>
+      </div>
+
+      <h2>Role Consistency Across Turns</h2>
+      <p>In multi-turn conversations, roles assigned in the system prompt persist naturally. But inline roles in user messages are scoped to that message only — they don't carry forward automatically.</p>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">Role Consistency Pattern</div>
+          <div class="callout__body">For applications where role consistency is critical (a customer-facing chatbot, a tutoring product), always define the role in the system prompt, not in user messages. If you need to shift roles mid-conversation, explicitly reassign: "For this message only, respond as a product manager rather than an engineer."</div>
+        </div>
+      </div>
+
+      <h2>When NOT to Use Roles</h2>
+      <p>Role prompting adds value when the expertise or style of the responder matters. It adds unnecessary overhead when it doesn't:</p>
+
+      <div class="technique-grid">
+        <div class="technique-card">
+          <div class="technique-card__icon">❌</div>
+          <div class="technique-card__title">Skip roles for:</div>
+          <div class="technique-card__desc">Simple factual lookups ("What year was the Eiffel Tower built?"), basic math, format conversions, direct translations. The role adds nothing when the task is purely retrieval or computation.</div>
+        </div>
+        <div class="technique-card">
+          <div class="technique-card__icon">✅</div>
+          <div class="technique-card__title">Use roles for:</div>
+          <div class="technique-card__desc">Analysis, writing, review, advice, explanation, code review, and any task where the perspective, expertise level, or communication style of the responder affects the quality of the output.</div>
+        </div>
+      </div>
+
+      <h2>Before / After: Generic vs. Role-Assigned</h2>
+
+      <div class="prompt-example">
+        <div class="prompt-example__tabs">
+          <button class="prompt-example__tab active" data-panel="ex3b-weak">❌ No Role</button>
+          <button class="prompt-example__tab" data-panel="ex3b-strong">✅ With Role</button>
+          <button class="prompt-example__tab" data-panel="ex3b-output">📄 Output</button>
+        </div>
+        <div class="prompt-panel active" id="ex3b-weak"><span class="tag-content">Review this code for problems.
+
+def process_payment(card_number, amount):
+    query = f"INSERT INTO payments VALUES ('{card_number}', {amount})"
+    db.execute(query)
+    return True</span></div>
+        <div class="prompt-panel" id="ex3b-strong"><span class="tag-system">You are a senior application security engineer specializing in payment systems and OWASP Top 10 vulnerabilities. Your job is to identify security risks before code ships to production. Be direct and prioritize by severity. Cite the specific vulnerability class for each issue.</span>
+
+<span class="tag-content">Review this code for security problems. Use severity levels: CRITICAL / HIGH / MEDIUM / LOW.
+
+def process_payment(card_number, amount):
+    query = f"INSERT INTO payments VALUES ('{card_number}', {amount})"
+    db.execute(query)
+    return True</span></div>
+        <div class="prompt-panel" id="ex3b-output"><span class="tag-content">CRITICAL — SQL Injection (OWASP A03:2021)
+The f-string directly interpolates user input into the SQL query. An attacker can terminate the query and inject arbitrary SQL. This allows full database compromise, not just payment table access. Fix: use parameterized queries: db.execute("INSERT INTO payments VALUES (?, ?)", (card_number, amount))
+
+CRITICAL — PCI-DSS Violation
+Storing raw card numbers violates PCI-DSS requirements. You must never persist full PANs unless you are a Level 1 PCI merchant with full compliance controls. Use a tokenization service (Stripe, Braintree) and store only the token.
+
+HIGH — No Input Validation
+Amount has no validation. Negative amounts, zero, or extremely large values are accepted. Add range validation before the insert.
+
+HIGH — No Transaction Handling
+The function has no try/except. A failed db.execute() returns True, falsely indicating success. Wrap in a try/except and return False on failure.
+
+MEDIUM — No Return Value Semantics
+Returning True without confirming the insert succeeded is misleading. Return the actual result of the operation.</span></div>
+      </div>
+
+      <h2>Combining Roles with Other Techniques</h2>
+      <p>Role prompting is most powerful when combined with the other techniques in this course. A good role provides the <em>who</em> — pair it with clear instructions (Ch 2), XML-structured data (Ch 4), format specifications (Ch 5), and chain-of-thought reasoning (Ch 6) for production-quality prompts.</p>
+
+      <div class="code-block">
+        <div class="code-block__header">
+          <span class="code-block__label">Role + Other Techniques Combined</span>
+          <button class="code-block__copy">Copy</button>
+        </div>
+        <pre><code># Role (Ch 3) + Clear Instructions (Ch 2) + Format Spec (Ch 5)
+You are a technical writer specializing in API documentation,
+with experience writing for developer audiences at Stripe and Twilio.
+
+Rewrite the following API endpoint description.
+Requirements:
+- Audience: developers integrating our API for the first time
+- Format: follow the pattern: Overview → Parameters table → Example request → Example response
+- Tone: direct, no marketing language
+- Do not include internal implementation details
+- Max length: 300 words
+
+[endpoint description here]</code></pre>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout__icon">✅</div>
+        <div>
+          <div class="callout__title">Chapter 3 Takeaway</div>
+          <div class="callout__body">A role is a context switch. It tells Claude which expertise to draw on, what register to use, and how a practitioner in that field thinks about problems. Use the three-part formula (expertise + specialization + experience context), place roles in the system prompt for persistent applications, and combine roles with clear instructions for maximum precision.</div>
+        </div>
+      </div>
+
+    </div><!-- /lesson-body -->
+
+    <!-- LESSON NAV -->
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a href="ch02-clear-direct.html" class="lesson-nav__btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <div>
+          <div class="lesson-nav__label">Previous lesson</div>
+          <div class="lesson-nav__title">Being Clear and Direct</div>
+        </div>
+      </a>
+      <a href="ch04-separating-data.html" class="lesson-nav__btn" style="text-align:right;">
+        <div>
+          <div class="lesson-nav__label">Next lesson</div>
+          <div class="lesson-nav__title">Separating Data from Instructions</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </nav>
+
+  </article>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/><path d="M8 24 L16 8 L24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.5 19 L21.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Claude Prompt Engineering Course
+      </div>
+      <div class="footer__links">
+        <a href="../index.html">Home</a>
+        <a href="../playground.html">Playground</a>
+        <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Anthropic Docs</a>
+      </div>
+    </div>
+    <div class="footer__credit"><a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a></div>
+  </div>
+</footer>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>
