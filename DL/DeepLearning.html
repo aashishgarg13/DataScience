@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deep Learning — In-Depth Tutorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300..700&display=swap" rel="stylesheet"/>
+  <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet"/>
+  <style>
+    /* ─── TOKENS ─────────────────────────────────── */
+    :root {
+      --text-xs: clamp(0.75rem,0.7rem + 0.25vw,0.875rem);
+      --text-sm: clamp(0.875rem,0.8rem + 0.35vw,1rem);
+      --text-base: clamp(1rem,0.95rem + 0.25vw,1.125rem);
+      --text-lg: clamp(1.125rem,1rem + 0.75vw,1.5rem);
+      --text-xl: clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+      --text-2xl: clamp(2rem,1.2rem + 2.5vw,3.5rem);
+      --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;
+      --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
+      --space-12:3rem;--space-16:4rem;
+      --radius-sm:0.375rem;--radius-md:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem;--radius-full:9999px;
+      --transition-interactive:180ms cubic-bezier(0.16,1,0.3,1);
+      --font-display:'Cabinet Grotesk','Inter',sans-serif;
+      --font-body:'Inter',system-ui,sans-serif;
+      --font-mono:'JetBrains Mono',monospace;
+    }
+    /* Light */
+    :root,[data-theme="light"]{
+      --color-bg:#0d0d14;
+      --color-surface:#12121e;
+      --color-surface-2:#16162a;
+      --color-surface-offset:#1a1a30;
+      --color-border:#2a2a48;
+      --color-divider:#1f1f38;
+      --color-text:#e8e8f0;
+      --color-text-muted:#8888aa;
+      --color-text-faint:#4a4a6a;
+      --color-text-inverse:#0d0d14;
+      --color-primary:#6c63ff;
+      --color-primary-hover:#8a83ff;
+      --color-primary-glow:rgba(108,99,255,0.25);
+      --color-cyan:#00d4ff;
+      --color-cyan-glow:rgba(0,212,255,0.2);
+      --color-green:#00e676;
+      --color-green-glow:rgba(0,230,118,0.15);
+      --color-orange:#ff9800;
+      --color-orange-glow:rgba(255,152,0,0.15);
+      --color-pink:#ff4081;
+      --color-pink-glow:rgba(255,64,129,0.15);
+      --color-yellow:#ffeb3b;
+      --shadow-sm:0 1px 3px rgba(0,0,0,0.4);
+      --shadow-md:0 4px 16px rgba(0,0,0,0.5);
+      --shadow-lg:0 12px 40px rgba(0,0,0,0.6);
+    }
+    [data-theme="light"]{
+      --color-bg:#f4f4ff;
+      --color-surface:#ffffff;
+      --color-surface-2:#f8f8ff;
+      --color-surface-offset:#eeeeff;
+      --color-border:#c8c8e8;
+      --color-divider:#dcdcf0;
+      --color-text:#12121e;
+      --color-text-muted:#5555888;
+      --color-text-muted:#555588;
+      --color-text-faint:#aaaacc;
+      --color-text-inverse:#f4f4ff;
+      --color-primary:#5249e0;
+      --color-primary-hover:#3d35c2;
+      --color-primary-glow:rgba(82,73,224,0.15);
+      --color-cyan:#0077aa;
+      --color-cyan-glow:rgba(0,119,170,0.1);
+      --color-green:#007a3d;
+      --color-green-glow:rgba(0,122,61,0.1);
+      --shadow-sm:0 1px 3px rgba(0,0,50,0.08);
+      --shadow-md:0 4px 16px rgba(0,0,50,0.1);
+      --shadow-lg:0 12px 40px rgba(0,0,50,0.15);
+    }
+    /* ─── BASE ────────────────────────────────────── */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
+    body{min-height:100dvh;font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text);background:var(--color-bg);line-height:1.65;}
+    a{color:var(--color-primary);text-decoration:none;}
+    a:hover{color:var(--color-primary-hover);}
+    button{cursor:pointer;background:none;border:none;font:inherit;color:inherit;}
+    img,canvas,svg{display:block;max-width:100%;}
+    :focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm);}
+    @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+
+    /* ─── LAYOUT ─────────────────────────────────── */
+    .app-shell{display:flex;flex-direction:column;min-height:100dvh;}
+
+    /* ─── HEADER ─────────────────────────────────── */
+    .site-header{
+      position:sticky;top:0;z-index:100;
+      background:color-mix(in srgb,var(--color-bg) 85%,transparent);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--color-border);
+      padding:var(--space-3) var(--space-6);
+      display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);
+    }
+    .logo{display:flex;align-items:center;gap:var(--space-3);font-family:var(--font-display);font-weight:800;font-size:var(--text-lg);letter-spacing:-0.02em;}
+    .logo-icon{width:36px;height:36px;flex-shrink:0;}
+    .logo-text span{color:var(--color-primary);}
+    .header-right{display:flex;align-items:center;gap:var(--space-3);}
+    .badge{
+      font-size:var(--text-xs);font-weight:600;padding:var(--space-1) var(--space-3);
+      border-radius:var(--radius-full);
+      background:var(--color-primary-glow);color:var(--color-primary);
+      border:1px solid color-mix(in srgb,var(--color-primary) 30%,transparent);
+      letter-spacing:0.03em;text-transform:uppercase;
+    }
+    .theme-btn{
+      width:36px;height:36px;border-radius:var(--radius-md);
+      display:flex;align-items:center;justify-content:center;
+      border:1px solid var(--color-border);
+      color:var(--color-text-muted);
+      transition:all var(--transition-interactive);
+    }
+    .theme-btn:hover{border-color:var(--color-primary);color:var(--color-primary);}
+
+    /* ─── NAV TABS ───────────────────────────────── */
+    .tab-nav{
+      background:var(--color-surface);
+      border-bottom:1px solid var(--color-border);
+      padding:0 var(--space-6);
+      overflow-x:auto;scrollbar-width:none;
+      display:flex;gap:0;
+    }
+    .tab-nav::-webkit-scrollbar{display:none;}
+    .tab-btn{
+      padding:var(--space-4) var(--space-5);
+      font-size:var(--text-sm);font-weight:500;
+      color:var(--color-text-muted);
+      border-bottom:2px solid transparent;
+      white-space:nowrap;
+      transition:all var(--transition-interactive);
+      display:flex;align-items:center;gap:var(--space-2);
+    }
+    .tab-btn:hover{color:var(--color-text);}
+    .tab-btn.active{color:var(--color-primary);border-bottom-color:var(--color-primary);font-weight:600;}
+    .tab-icon{font-size:1rem;}
+
+    /* ─── MAIN CONTENT ───────────────────────────── */
+    .main{flex:1;padding:var(--space-8) var(--space-6);max-width:1200px;margin:0 auto;width:100%;}
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;animation:fadeIn .25s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+    /* ─── SECTION HEADERS ────────────────────────── */
+    .page-title{
+      font-family:var(--font-display);font-size:var(--text-xl);font-weight:800;
+      letter-spacing:-0.02em;margin-bottom:var(--space-2);
+      background:linear-gradient(135deg,var(--color-text) 0%,var(--color-primary) 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .page-subtitle{font-size:var(--text-base);color:var(--color-text-muted);margin-bottom:var(--space-8);max-width:60ch;}
+    .section-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-4);margin-top:var(--space-8);}
+    .section-title:first-child{margin-top:0;}
+    .subsection-title{font-size:var(--text-base);font-weight:600;margin-bottom:var(--space-3);margin-top:var(--space-6);color:var(--color-primary);}
+
+    /* ─── CARDS ──────────────────────────────────── */
+    .card{
+      background:var(--color-surface);
+      border:1px solid var(--color-border);
+      border-radius:var(--radius-xl);
+      padding:var(--space-6);
+      margin-bottom:var(--space-6);
+      box-shadow:var(--shadow-sm);
+    }
+    .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-5);}
+    .info-card{
+      background:var(--color-surface);border:1px solid var(--color-border);
+      border-radius:var(--radius-lg);padding:var(--space-5);
+      transition:border-color var(--transition-interactive),box-shadow var(--transition-interactive);
+    }
+    .info-card:hover{border-color:var(--color-primary);box-shadow:0 0 0 3px var(--color-primary-glow);}
+    .info-card-icon{font-size:1.75rem;margin-bottom:var(--space-3);}
+    .info-card-title{font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-2);}
+    .info-card-desc{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6;}
+
+    /* ─── CODE BLOCKS ────────────────────────────── */
+    .code-block{
+      background:#0a0a15;
+      border:1px solid var(--color-border);
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      margin:var(--space-4) 0;
+      font-family:var(--font-mono);
+    }
+    [data-theme="light"] .code-block{background:#12122a;}
+    .code-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:var(--space-3) var(--space-4);
+      background:color-mix(in srgb,var(--color-border) 50%,transparent);
+      border-bottom:1px solid var(--color-border);
+    }
+    .code-lang{font-size:var(--text-xs);font-weight:600;color:var(--color-cyan);letter-spacing:0.06em;text-transform:uppercase;}
+    .copy-btn{
+      font-size:var(--text-xs);font-weight:500;
+      color:var(--color-text-muted);
+      padding:var(--space-1) var(--space-3);
+      border-radius:var(--radius-sm);
+      border:1px solid var(--color-border);
+      transition:all var(--transition-interactive);
+    }
+    .copy-btn:hover{color:var(--color-primary);border-color:var(--color-primary);}
+    pre{overflow-x:auto;padding:var(--space-5);font-size:var(--text-sm);line-height:1.7;}
+    code{font-family:var(--font-mono);}
+
+    /* Syntax highlighting */
+    .kw{color:#c792ea;}
+    .fn{color:#82aaff;}
+    .str{color:#c3e88d;}
+    .num{color:#f78c6c;}
+    .cm{color:#546e7a;font-style:italic;}
+    .cl{color:#ffcb6b;}
+    .op{color:#89ddff;}
+    .param{color:#f07178;}
+
+    /* ─── MATH BLOCKS ────────────────────────────── */
+    .math-block{
+      background:var(--color-surface-offset);
+      border-left:3px solid var(--color-primary);
+      border-radius:0 var(--radius-md) var(--radius-md) 0;
+      padding:var(--space-4) var(--space-5);
+      margin:var(--space-4) 0;
+      font-family:var(--font-mono);
+      font-size:var(--text-sm);
+      color:var(--color-cyan);
+      overflow-x:auto;
+    }
+    .math-label{font-size:var(--text-xs);color:var(--color-text-faint);margin-bottom:var(--space-2);text-transform:uppercase;letter-spacing:0.05em;}
+
+    /* ─── CALLOUTS ───────────────────────────────── */
+    .callout{
+      border-radius:var(--radius-lg);
+      padding:var(--space-4) var(--space-5);
+      margin:var(--space-4) 0;
+      display:flex;gap:var(--space-3);align-items:flex-start;
+      font-size:var(--text-sm);
+    }
+    .callout-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+    .callout.info{background:var(--color-cyan-glow);border:1px solid color-mix(in srgb,var(--color-cyan) 25%,transparent);}
+    .callout.tip{background:var(--color-green-glow);border:1px solid color-mix(in srgb,var(--color-green) 25%,transparent);}
+    .callout.warn{background:var(--color-orange-glow);border:1px solid color-mix(in srgb,var(--color-orange) 25%,transparent);}
+    .callout.key{background:var(--color-primary-glow);border:1px solid color-mix(in srgb,var(--color-primary) 25%,transparent);}
+    .callout strong{display:block;margin-bottom:var(--space-1);}
+
+    /* ─── TABLES ─────────────────────────────────── */
+    .table-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--color-border);margin:var(--space-4) 0;}
+    table{width:100%;border-collapse:collapse;font-size:var(--text-sm);}
+    th{background:var(--color-surface-offset);padding:var(--space-3) var(--space-4);text-align:left;font-weight:600;font-size:var(--text-xs);letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border);}
+    td{padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-divider);vertical-align:top;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:var(--color-surface-2);}
+
+    /* ─── STEP LIST ──────────────────────────────── */
+    .step-list{list-style:none;display:flex;flex-direction:column;gap:var(--space-4);}
+    .step-item{display:flex;gap:var(--space-4);}
+    .step-num{
+      width:28px;height:28px;border-radius:50%;flex-shrink:0;
+      background:var(--color-primary-glow);
+      border:1px solid color-mix(in srgb,var(--color-primary) 40%,transparent);
+      color:var(--color-primary);
+      font-size:var(--text-xs);font-weight:700;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .step-content{flex:1;}
+    .step-title{font-weight:600;margin-bottom:var(--space-1);}
+    .step-desc{font-size:var(--text-sm);color:var(--color-text-muted);}
+
+    /* ─── ARCHITECTURE DIAGRAM ───────────────────── */
+    .arch-canvas-wrap{
+      background:var(--color-surface);
+      border:1px solid var(--color-border);
+      border-radius:var(--radius-xl);
+      overflow:hidden;
+      margin:var(--space-6) 0;
+    }
+    .arch-canvas-header{
+      padding:var(--space-3) var(--space-5);
+      border-bottom:1px solid var(--color-border);
+      font-size:var(--text-sm);font-weight:600;color:var(--color-text-muted);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    canvas{background:transparent;}
+
+    /* ─── PROGRESS BAR ───────────────────────────── */
+    .progress-row{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-3);}
+    .progress-label{font-size:var(--text-sm);width:160px;flex-shrink:0;}
+    .progress-bar-wrap{flex:1;height:8px;background:var(--color-surface-offset);border-radius:var(--radius-full);}
+    .progress-bar{height:100%;border-radius:var(--radius-full);transition:width 1s ease;}
+    .progress-val{font-size:var(--text-xs);font-weight:600;color:var(--color-text-muted);width:40px;text-align:right;}
+
+    /* ─── ACCORDION ──────────────────────────────── */
+    .accordion{border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;margin:var(--space-4) 0;}
+    .accordion-item{border-bottom:1px solid var(--color-border);}
+    .accordion-item:last-child{border-bottom:none;}
+    .accordion-trigger{
+      width:100%;display:flex;align-items:center;justify-content:space-between;
+      padding:var(--space-4) var(--space-5);
+      font-weight:600;font-size:var(--text-sm);
+      background:var(--color-surface);
+      transition:background var(--transition-interactive);
+    }
+    .accordion-trigger:hover{background:var(--color-surface-2);}
+    .accordion-trigger.open{color:var(--color-primary);}
+    .accordion-icon{transition:transform .3s ease;font-size:0.9rem;color:var(--color-text-faint);}
+    .accordion-trigger.open .accordion-icon{transform:rotate(180deg);}
+    .accordion-content{display:none;padding:var(--space-4) var(--space-5);background:var(--color-surface-2);font-size:var(--text-sm);line-height:1.7;color:var(--color-text-muted);}
+    .accordion-content.open{display:block;}
+
+    /* ─── TABS WITHIN SECTION ────────────────────── */
+    .inner-tabs{display:flex;gap:var(--space-2);margin-bottom:var(--space-5);flex-wrap:wrap;}
+    .inner-tab{
+      padding:var(--space-2) var(--space-4);font-size:var(--text-sm);font-weight:500;
+      border-radius:var(--radius-full);
+      border:1px solid var(--color-border);
+      color:var(--color-text-muted);
+      transition:all var(--transition-interactive);
+    }
+    .inner-tab:hover{border-color:var(--color-primary);color:var(--color-primary);}
+    .inner-tab.active{background:var(--color-primary);border-color:var(--color-primary);color:#fff;}
+    .inner-panel{display:none;}
+    .inner-panel.active{display:block;}
+
+    /* ─── TAG / CHIP ─────────────────────────────── */
+    .tag{
+      display:inline-block;font-size:var(--text-xs);font-weight:600;
+      padding:2px var(--space-2);border-radius:var(--radius-full);
+      background:var(--color-surface-offset);color:var(--color-text-muted);
+    }
+    .tag.blue{background:rgba(82,73,224,.15);color:var(--color-primary);}
+    .tag.cyan{background:var(--color-cyan-glow);color:var(--color-cyan);}
+    .tag.green{background:var(--color-green-glow);color:var(--color-green);}
+    .tag.orange{background:var(--color-orange-glow);color:var(--color-orange);}
+    .tag.pink{background:var(--color-pink-glow);color:var(--color-pink);}
+
+    /* ─── GRID HELPERS ───────────────────────────── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);}
+    .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-5);}
+    @media(max-width:768px){.two-col,.three-col{grid-template-columns:1fr;}.card-grid{grid-template-columns:1fr;}}
+
+    /* ─── FOOTER ─────────────────────────────────── */
+    .site-footer{
+      border-top:1px solid var(--color-border);
+      padding:var(--space-6);
+      text-align:center;
+      font-size:var(--text-xs);
+      color:var(--color-text-faint);
+    }
+    .site-footer a{color:var(--color-primary);}
+
+    /* ─── NEURON VIZ ─────────────────────────────── */
+    #nn-canvas{cursor:pointer;}
+
+    /* ─── OVERVIEW HERO ──────────────────────────── */
+    .hero-strip{
+      background:linear-gradient(135deg,var(--color-surface) 0%,var(--color-surface-2) 100%);
+      border:1px solid var(--color-border);
+      border-radius:var(--radius-xl);
+      padding:var(--space-10) var(--space-8);
+      margin-bottom:var(--space-8);
+      position:relative;overflow:hidden;
+    }
+    .hero-strip::before{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse at 80% 50%,var(--color-primary-glow) 0%,transparent 60%);
+      pointer-events:none;
+    }
+    .hero-eyebrow{font-size:var(--text-xs);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-primary);margin-bottom:var(--space-3);}
+    .hero-title{font-family:var(--font-display);font-size:var(--text-2xl);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:var(--space-4);}
+    .hero-desc{font-size:var(--text-base);color:var(--color-text-muted);max-width:55ch;line-height:1.75;}
+    .stat-row{display:flex;gap:var(--space-8);margin-top:var(--space-8);flex-wrap:wrap;}
+    .stat{text-align:center;}
+    .stat-value{font-family:var(--font-display);font-size:var(--text-xl);font-weight:800;color:var(--color-primary);}
+    .stat-label{font-size:var(--text-xs);color:var(--color-text-muted);margin-top:var(--space-1);}
+
+    /* learning path timeline */
+    .timeline{position:relative;padding-left:var(--space-8);}
+    .timeline::before{content:'';position:absolute;left:11px;top:6px;bottom:6px;width:2px;background:linear-gradient(to bottom,var(--color-primary),var(--color-cyan));}
+    .tl-item{position:relative;margin-bottom:var(--space-6);}
+    .tl-dot{
+      position:absolute;left:calc(-1*var(--space-8) + 4px);
+      width:14px;height:14px;border-radius:50%;
+      background:var(--color-primary);border:2px solid var(--color-bg);
+      box-shadow:0 0 0 3px var(--color-primary-glow);
+      top:4px;
+    }
+    .tl-title{font-weight:600;font-size:var(--text-sm);margin-bottom:var(--space-1);}
+    .tl-desc{font-size:var(--text-sm);color:var(--color-text-muted);}
+
+    /* ─── ACTIVATION VIZ ─────────────────────────── */
+    #activation-canvas{border-radius:var(--radius-lg);width:100%;height:220px;}
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 36 36" fill="none" aria-label="Deep Learning logo">
+        <circle cx="18" cy="18" r="17" stroke="#6c63ff" stroke-width="1.5"/>
+        <circle cx="9" cy="14" r="3.5" fill="#6c63ff" opacity=".9"/>
+        <circle cx="9" cy="22" r="3.5" fill="#6c63ff" opacity=".9"/>
+        <circle cx="18" cy="10" r="3.5" fill="#00d4ff" opacity=".9"/>
+        <circle cx="18" cy="18" r="3.5" fill="#00d4ff"/>
+        <circle cx="18" cy="26" r="3.5" fill="#00d4ff" opacity=".9"/>
+        <circle cx="27" cy="18" r="3.5" fill="#00e676" opacity=".9"/>
+        <line x1="12.5" y1="14" x2="14.5" y2="11.5" stroke="#6c63ff" stroke-width="1"/>
+        <line x1="12.5" y1="14" x2="14.5" y2="18" stroke="#6c63ff" stroke-width="1"/>
+        <line x1="12.5" y1="14" x2="14.5" y2="24.5" stroke="#6c63ff" stroke-width="1"/>
+        <line x1="12.5" y1="22" x2="14.5" y2="11.5" stroke="#6c63ff" stroke-width="1"/>
+        <line x1="12.5" y1="22" x2="14.5" y2="18" stroke="#6c63ff" stroke-width="1"/>
+        <line x1="12.5" y1="22" x2="14.5" y2="24.5" stroke="#6c63ff" stroke-width="1"/>
+        <line x1="21.5" y1="10" x2="23.5" y2="18" stroke="#00d4ff" stroke-width="1"/>
+        <line x1="21.5" y1="18" x2="23.5" y2="18" stroke="#00d4ff" stroke-width="1"/>
+        <line x1="21.5" y1="26" x2="23.5" y2="18" stroke="#00d4ff" stroke-width="1"/>
+      </svg>
+      <span class="logo-text">Deep<span>Learn</span></span>
+    </div>
+    <div class="header-right">
+      <span class="badge">In-Depth Tutorial</span>
+      <button class="theme-btn" data-theme-toggle aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- TAB NAV -->
+  <nav class="tab-nav" role="tablist" aria-label="Deep Learning sections">
+    <button class="tab-btn active" role="tab" data-tab="overview"><span class="tab-icon">🏠</span> Overview</button>
+    <button class="tab-btn" role="tab" data-tab="foundations"><span class="tab-icon">🧮</span> Foundations</button>
+    <button class="tab-btn" role="tab" data-tab="neural-nets"><span class="tab-icon">🧠</span> Neural Networks</button>
+    <button class="tab-btn" role="tab" data-tab="cnn"><span class="tab-icon">👁️</span> CNNs</button>
+    <button class="tab-btn" role="tab" data-tab="rnn"><span class="tab-icon">🔄</span> RNNs & LSTMs</button>
+    <button class="tab-btn" role="tab" data-tab="transformers"><span class="tab-icon">⚡</span> Transformers</button>
+    <button class="tab-btn" role="tab" data-tab="gans"><span class="tab-icon">🎨</span> GANs</button>
+    <button class="tab-btn" role="tab" data-tab="training"><span class="tab-icon">🏋️</span> Training</button>
+    <button class="tab-btn" role="tab" data-tab="deployment"><span class="tab-icon">🚀</span> Deployment</button>
+    <button class="tab-btn" role="tab" data-tab="code"><span class="tab-icon">💻</span> Code Lab</button>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ═══ OVERVIEW ═══ -->
+    <div class="tab-panel active" id="panel-overview">
+      <div class="hero-strip">
+        <div class="hero-eyebrow">Complete Deep Learning Curriculum</div>
+        <h1 class="hero-title">Master Deep Learning<br/>from Neurons to Production</h1>
+        <p class="hero-desc">A comprehensive, hands-on reference covering neural network theory, architectures, training techniques, and real-world deployment — from first principles to state-of-the-art models.</p>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-value">10</div><div class="stat-label">Modules</div></div>
+          <div class="stat"><div class="stat-value">50+</div><div class="stat-label">Code Examples</div></div>
+          <div class="stat"><div class="stat-value">8</div><div class="stat-label">Architectures</div></div>
+          <div class="stat"><div class="stat-value">∞</div><div class="stat-label">Learning</div></div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <h2 class="section-title">Learning Path</h2>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">1. Foundations</div><div class="tl-desc">Linear algebra, calculus, probability — the math powering every model</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">2. Neural Networks</div><div class="tl-desc">Perceptrons → MLPs, activation functions, forward/backprop</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">3. CNNs</div><div class="tl-desc">Convolutions, pooling, ResNet, EfficientNet for vision tasks</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">4. RNNs & LSTMs</div><div class="tl-desc">Sequence modeling, vanishing gradients, gated architectures</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">5. Transformers</div><div class="tl-desc">Attention mechanism, BERT, GPT, ViT — modern AI backbone</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">6. GANs & Diffusion</div><div class="tl-desc">Generative models, adversarial training, image synthesis</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">7. Training Mastery</div><div class="tl-desc">Optimizers, regularisation, hyperparameter tuning, mixed precision</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">8. Production</div><div class="tl-desc">ONNX, TensorRT, FastAPI, Docker, MLflow, monitoring</div></div>
+          </div>
+        </div>
+        <div>
+          <h2 class="section-title">What You'll Learn</h2>
+          <div class="card-grid" style="grid-template-columns:1fr;">
+            <div class="info-card"><div class="info-card-icon">🧮</div><div class="info-card-title">Mathematical Foundations</div><div class="info-card-desc">Tensors, matrix ops, chain rule, probability distributions — the core maths behind every DL algorithm.</div></div>
+            <div class="info-card"><div class="info-card-icon">⚙️</div><div class="info-card-title">Architecture Design</div><div class="info-card-desc">When to choose CNN vs. RNN vs. Transformer. Design intuitions with real trade-off tables.</div></div>
+            <div class="info-card"><div class="info-card-icon">🔬</div><div class="info-card-title">Training Techniques</div><div class="info-card-desc">Adam, batch norm, dropout, learning-rate scheduling, gradient clipping and more.</div></div>
+            <div class="info-card"><div class="info-card-icon">🚀</div><div class="info-card-title">Production Deployment</div><div class="info-card-desc">Export models to ONNX, serve with TorchServe/FastAPI, containerise with Docker, monitor with MLflow.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title" style="margin-top:var(--space-10);">Architecture Comparison</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Architecture</th><th>Best For</th><th>Key Innovation</th><th>Parameters</th><th>Year</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag blue">MLP</span></td><td>Tabular data, classification</td><td>Universal approximator</td><td>Thousands</td><td>1986</td></tr>
+            <tr><td><span class="tag cyan">CNN</span></td><td>Image, video, audio spectrograms</td><td>Weight sharing, local connectivity</td><td>Millions</td><td>1998</td></tr>
+            <tr><td><span class="tag green">LSTM</span></td><td>Time series, NLP sequences</td><td>Gated memory cells</td><td>Millions</td><td>1997</td></tr>
+            <tr><td><span class="tag orange">Transformer</span></td><td>NLP, vision, multimodal</td><td>Self-attention, parallelisation</td><td>Billions</td><td>2017</td></tr>
+            <tr><td><span class="tag pink">GAN</span></td><td>Image synthesis, data augmentation</td><td>Adversarial training</td><td>Millions–billions</td><td>2014</td></tr>
+            <tr><td><span class="tag blue">Diffusion</span></td><td>Image/video/audio generation</td><td>Denoising score matching</td><td>Billions</td><td>2020</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ FOUNDATIONS ═══ -->
+    <div class="tab-panel" id="panel-foundations">
+      <h1 class="page-title">Mathematical Foundations</h1>
+      <p class="page-subtitle">The core maths every deep learning practitioner must understand — from tensors to gradients.</p>
+
+      <div class="inner-tabs">
+        <button class="inner-tab active" data-inner-tab="tensors">Tensors & Linear Algebra</button>
+        <button class="inner-tab" data-inner-tab="calculus">Calculus & Backprop</button>
+        <button class="inner-tab" data-inner-tab="probability">Probability & Statistics</button>
+        <button class="inner-tab" data-inner-tab="info-theory">Information Theory</button>
+      </div>
+
+      <div class="inner-panel active" id="inner-tensors">
+        <div class="two-col">
+          <div>
+            <h3 class="subsection-title">Tensors</h3>
+            <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-4);">Tensors are the fundamental data structure in deep learning — generalisations of scalars, vectors, and matrices to arbitrary dimensions (ranks).</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Rank</th><th>Name</th><th>Example Shape</th><th>DL Use</th></tr></thead>
+                <tbody>
+                  <tr><td>0</td><td>Scalar</td><td>()</td><td>Loss value, learning rate</td></tr>
+                  <tr><td>1</td><td>Vector</td><td>(512,)</td><td>Embedding, bias</td></tr>
+                  <tr><td>2</td><td>Matrix</td><td>(64, 512)</td><td>Weight matrix, batch</td></tr>
+                  <tr><td>3</td><td>3D Tensor</td><td>(32, 128, 512)</td><td>Batch of sequences</td></tr>
+                  <tr><td>4</td><td>4D Tensor</td><td>(32, 3, 224, 224)</td><td>Batch of images (NCHW)</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h3 class="subsection-title">Essential Operations</h3>
+            <div class="math-block">
+              <div class="math-label">Matrix Multiplication</div>
+              C[i,j] = Σ_k  A[i,k] · B[k,j]<br/>
+              C = A @ B  →  shape: (m,n) @ (n,p) = (m,p)
+            </div>
+            <div class="math-block">
+              <div class="math-label">Dot Product / Inner Product</div>
+              a · b = Σᵢ aᵢbᵢ = |a||b|cos(θ)
+            </div>
+            <div class="math-block">
+              <div class="math-label">Hadamard (Element-wise)</div>
+              (A ⊙ B)[i,j] = A[i,j] · B[i,j]
+            </div>
+            <div class="math-block">
+              <div class="math-label">Broadcast Rule</div>
+              Dims aligned right; size-1 dims expand to match
+            </div>
+          </div>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">Python · PyTorch</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre><code><span class="kw">import</span> torch
+
+<span class="cm"># Creating tensors</span>
+x = torch.<span class="fn">tensor</span>([[<span class="num">1.0</span>, <span class="num">2.0</span>], [<span class="num">3.0</span>, <span class="num">4.0</span>]])  <span class="cm"># from list</span>
+zeros = torch.<span class="fn">zeros</span>(<span class="num">3</span>, <span class="num">4</span>)                    <span class="cm"># shape (3,4)</span>
+rand  = torch.<span class="fn">randn</span>(<span class="num">32</span>, <span class="num">512</span>)                <span class="cm"># normal dist</span>
+
+<span class="cm"># Fundamental ops</span>
+W = torch.<span class="fn">randn</span>(<span class="num">512</span>, <span class="num">256</span>)
+b = torch.<span class="fn">zeros</span>(<span class="num">256</span>)
+out = rand <span class="op">@</span> W <span class="op">+</span> b   <span class="cm"># (32,512)@(512,256)+256 → (32,256)</span>
+
+<span class="cm"># Reshape, transpose, squeeze</span>
+t = torch.<span class="fn">arange</span>(<span class="num">24</span>).<span class="fn">reshape</span>(<span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>)
+t_T = t.<span class="fn">transpose</span>(<span class="num">1</span>, <span class="num">2</span>)           <span class="cm"># (2,4,3)</span>
+flat = t.<span class="fn">flatten</span>(<span class="num">1</span>)               <span class="cm"># (2,12)</span>
+
+<span class="cm"># GPU transfer</span>
+device = <span class="str">"cuda"</span> <span class="kw">if</span> torch.cuda.<span class="fn">is_available</span>() <span class="kw">else</span> <span class="str">"cpu"</span>
+x = x.<span class="fn">to</span>(device)</code></pre>
+        </div>
+      </div>
+
+      <div class="inner-panel" id="inner-calculus">
+        <div class="two-col">
+          <div>
+            <h3 class="subsection-title">The Chain Rule — Heart of Backprop</h3>
+            <div class="math-block">
+              <div class="math-label">Chain Rule</div>
+              dL/dw = (dL/dy) · (dy/dw)<br/><br/>
+              For composition f(g(x)):<br/>
+              df/dx = (df/dg) · (dg/dx)
+            </div>
+            <div class="math-block">
+              <div class="math-label">Gradient Descent Update</div>
+              θ ← θ − η · ∇_θ L(θ)<br/><br/>
+              where η = learning rate<br/>
+              ∇_θ L = gradient of loss w.r.t. θ
+            </div>
+            <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Key Insight</strong>The gradient tells us the direction of steepest ascent in loss space. We subtract it to descend toward lower loss.</div></div>
+          </div>
+          <div>
+            <h3 class="subsection-title">Partial Derivatives in Layers</h3>
+            <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-4);">For a linear layer <code>y = Wx + b</code> and loss <code>L</code>:</p>
+            <div class="math-block">
+              <div class="math-label">Gradients of Linear Layer</div>
+              ∂L/∂W = (∂L/∂y) · xᵀ<br/>
+              ∂L/∂b = ∂L/∂y<br/>
+              ∂L/∂x = Wᵀ · (∂L/∂y)
+            </div>
+            <div class="math-block">
+              <div class="math-label">Jacobian Matrix</div>
+              J[i,j] = ∂yᵢ/∂xⱼ<br/><br/>
+              For vector → vector functions<br/>
+              Shape: (dim_y × dim_x)
+            </div>
+          </div>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">Python · Autograd</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre><code><span class="kw">import</span> torch
+
+<span class="cm"># Automatic differentiation with requires_grad</span>
+x = torch.<span class="fn">tensor</span>([<span class="num">2.0</span>, <span class="num">3.0</span>], requires_grad=<span class="kw">True</span>)
+W = torch.<span class="fn">randn</span>(<span class="num">2</span>, <span class="num">2</span>, requires_grad=<span class="kw">True</span>)
+
+<span class="cm"># Forward pass — builds computation graph</span>
+y = x <span class="op">@</span> W            <span class="cm"># (2,) @ (2,2) → (2,)</span>
+loss = y.<span class="fn">sum</span>()       <span class="cm"># scalar loss</span>
+
+<span class="cm"># Backward pass — computes gradients via chain rule</span>
+loss.<span class="fn">backward</span>()
+<span class="fn">print</span>(x.grad)        <span class="cm"># ∂loss/∂x</span>
+<span class="fn">print</span>(W.grad)        <span class="cm"># ∂loss/∂W</span>
+
+<span class="cm"># Manual gradient check</span>
+<span class="kw">with</span> torch.<span class="fn">no_grad</span>():
+    W -= <span class="num">0.01</span> <span class="op">*</span> W.grad  <span class="cm"># gradient descent step</span>
+    W.grad.<span class="fn">zero_</span>()       <span class="cm"># must zero before next backward()</span></code></pre>
+        </div>
+      </div>
+
+      <div class="inner-panel" id="inner-probability">
+        <div class="two-col">
+          <div>
+            <h3 class="subsection-title">Key Distributions in DL</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Distribution</th><th>Use in DL</th></tr></thead>
+                <tbody>
+                  <tr><td>Normal N(μ,σ²)</td><td>Weight init, noise injection, VAE latent</td></tr>
+                  <tr><td>Bernoulli</td><td>Binary classification output, dropout</td></tr>
+                  <tr><td>Categorical</td><td>Multi-class softmax output, token prediction</td></tr>
+                  <tr><td>Uniform</td><td>Xavier init, random sampling</td></tr>
+                  <tr><td>Dirichlet</td><td>Topic models, mixture models</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h3 class="subsection-title">Loss Functions as Likelihoods</h3>
+            <div class="math-block">
+              <div class="math-label">Cross-Entropy Loss (Classification)</div>
+              L = −Σᵢ yᵢ · log(ŷᵢ)<br/><br/>
+              = −log P(true class | input)
+            </div>
+            <div class="math-block">
+              <div class="math-label">MSE Loss (Regression)</div>
+              L = (1/n) Σᵢ (yᵢ − ŷᵢ)²<br/><br/>
+              = MLE under Gaussian noise assumption
+            </div>
+            <div class="math-block">
+              <div class="math-label">KL Divergence (VAE)</div>
+              KL(P‖Q) = Σᵢ P(x) log[P(x)/Q(x)]
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="inner-panel" id="inner-info-theory">
+        <div class="two-col">
+          <div>
+            <h3 class="subsection-title">Information Theory</h3>
+            <div class="math-block">
+              <div class="math-label">Shannon Entropy</div>
+              H(X) = −Σᵢ P(xᵢ) · log₂P(xᵢ)<br/>
+              Measures uncertainty / information content
+            </div>
+            <div class="math-block">
+              <div class="math-label">Mutual Information</div>
+              I(X;Y) = H(X) − H(X|Y)<br/>
+              How much Y tells us about X
+            </div>
+          </div>
+          <div>
+            <div class="callout info"><div class="callout-icon">ℹ️</div><div><strong>Why It Matters</strong>Cross-entropy loss is just the negative log-likelihood, which minimises KL divergence between predicted and true distributions — directly rooted in information theory.</div></div>
+            <div class="callout key"><div class="callout-icon">🔑</div><div><strong>Softmax Temperature</strong>Dividing logits by temperature T before softmax controls sharpness: T→0 = argmax, T→∞ = uniform. Used in knowledge distillation and sampling from LLMs.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ NEURAL NETWORKS ═══ -->
+    <div class="tab-panel" id="panel-neural-nets">
+      <h1 class="page-title">Neural Networks</h1>
+      <p class="page-subtitle">From the biological neuron to deep multi-layer perceptrons — theory, math, and interactive visualisation.</p>
+
+      <div class="two-col">
+        <div>
+          <h2 class="section-title">Architecture</h2>
+          <ul class="step-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-content"><div class="step-title">Input Layer</div><div class="step-desc">Receives raw features. No computation — passes values forward. Each node = one feature.</div></div></li>
+            <li class="step-item"><div class="step-num">2</div><div class="step-content"><div class="step-title">Hidden Layers</div><div class="step-desc">Each neuron computes z = Wx + b, then applies activation σ(z). Multiple hidden layers = "deep" network.</div></div></li>
+            <li class="step-item"><div class="step-num">3</div><div class="step-content"><div class="step-title">Output Layer</div><div class="step-desc">Produces predictions. Activation depends on task: sigmoid (binary), softmax (multiclass), linear (regression).</div></div></li>
+            <li class="step-item"><div class="step-num">4</div><div class="step-content"><div class="step-title">Forward Pass</div><div class="step-desc">Data flows input→output. Loss is computed comparing prediction to ground truth.</div></div></li>
+            <li class="step-item"><div class="step-num">5</div><div class="step-content"><div class="step-title">Backpropagation</div><div class="step-desc">Gradients flow output→input via chain rule. Each weight updated: w ← w − η·∂L/∂w.</div></div></li>
+          </ul>
+        </div>
+        <div>
+          <div class="arch-canvas-wrap">
+            <div class="arch-canvas-header">
+              <span>Interactive Neural Network — click neurons</span>
+              <span class="tag cyan">4-4-3-2 layers</span>
+            </div>
+            <canvas id="nn-canvas" width="480" height="360"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Activation Functions</h2>
+      <div class="arch-canvas-wrap">
+        <div class="arch-canvas-header"><span>Activation Functions Comparison</span><span class="tag blue">Visualisation</span></div>
+        <canvas id="activation-canvas" width="900" height="220"></canvas>
+      </div>
+      <div class="table-wrap" style="margin-top:var(--space-4);">
+        <table>
+          <thead><tr><th>Function</th><th>Formula</th><th>Range</th><th>Use Case</th><th>Drawback</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag orange">Sigmoid</span></td><td>1/(1+e⁻ˣ)</td><td>(0,1)</td><td>Binary output</td><td>Vanishing gradient</td></tr>
+            <tr><td><span class="tag blue">Tanh</span></td><td>(eˣ−e⁻ˣ)/(eˣ+e⁻ˣ)</td><td>(-1,1)</td><td>Hidden layers (old)</td><td>Vanishing gradient</td></tr>
+            <tr><td><span class="tag green">ReLU</span></td><td>max(0, x)</td><td>[0,∞)</td><td>Most hidden layers</td><td>Dying ReLU</td></tr>
+            <tr><td><span class="tag cyan">Leaky ReLU</span></td><td>max(αx, x)</td><td>(-∞,∞)</td><td>Fixes dying ReLU</td><td>Extra hyperparameter</td></tr>
+            <tr><td><span class="tag pink">GELU</span></td><td>x·Φ(x)</td><td>≈(-0.17,∞)</td><td>Transformers (BERT, GPT)</td><td>More compute</td></tr>
+            <tr><td><span class="tag blue">Swish</span></td><td>x·sigmoid(x)</td><td>(-∞,∞)</td><td>EfficientNet</td><td>More compute</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="section-title">Complete MLP Implementation</h2>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python · PyTorch</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="kw">import</span> torch
+<span class="kw">import</span> torch.nn <span class="kw">as</span> nn
+<span class="kw">import</span> torch.optim <span class="kw">as</span> optim
+<span class="kw">from</span> torch.utils.data <span class="kw">import</span> DataLoader, TensorDataset
+
+<span class="cm"># ─── Define MLP ───────────────────────────────────────────</span>
+<span class="kw">class</span> <span class="cl">MLP</span>(nn.<span class="cl">Module</span>):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, input_dim, hidden_dims, output_dim, dropout=<span class="num">0.3</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>()
+        layers = []
+        dims = [input_dim] + hidden_dims
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(dims) - <span class="num">1</span>):
+            layers += [
+                nn.<span class="cl">Linear</span>(dims[i], dims[i+<span class="num">1</span>]),
+                nn.<span class="cl">BatchNorm1d</span>(dims[i+<span class="num">1</span>]),  <span class="cm"># normalise activations</span>
+                nn.<span class="cl">GELU</span>(),                  <span class="cm"># smooth non-linearity</span>
+                nn.<span class="cl">Dropout</span>(dropout),        <span class="cm"># regularisation</span>
+            ]
+        layers.<span class="fn">append</span>(nn.<span class="cl">Linear</span>(dims[-<span class="num">1</span>], output_dim))
+        self.net = nn.<span class="cl">Sequential</span>(*layers)
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x):
+        <span class="kw">return</span> self.net(x)
+
+<span class="cm"># ─── Training Loop ─────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">train</span>(model, loader, criterion, optimizer, device):
+    model.<span class="fn">train</span>()
+    total_loss = <span class="num">0</span>
+    <span class="kw">for</span> X, y <span class="kw">in</span> loader:
+        X, y = X.<span class="fn">to</span>(device), y.<span class="fn">to</span>(device)
+        optimizer.<span class="fn">zero_grad</span>()        <span class="cm"># clear previous gradients</span>
+        logits = model(X)            <span class="cm"># forward pass</span>
+        loss = criterion(logits, y)  <span class="cm"># compute loss</span>
+        loss.<span class="fn">backward</span>()             <span class="cm"># backpropagation</span>
+        nn.utils.<span class="fn">clip_grad_norm_</span>(model.parameters(), <span class="num">1.0</span>)  <span class="cm"># gradient clip</span>
+        optimizer.<span class="fn">step</span>()            <span class="cm"># update weights</span>
+        total_loss += loss.<span class="fn">item</span>()
+    <span class="kw">return</span> total_loss / <span class="fn">len</span>(loader)
+
+<span class="cm"># ─── Instantiate and run ────────────────────────────────────</span>
+device = <span class="str">"cuda"</span> <span class="kw">if</span> torch.cuda.<span class="fn">is_available</span>() <span class="kw">else</span> <span class="str">"cpu"</span>
+model = <span class="cl">MLP</span>(input_dim=<span class="num">784</span>, hidden_dims=[<span class="num">512</span>, <span class="num">256</span>, <span class="num">128</span>], output_dim=<span class="num">10</span>).<span class="fn">to</span>(device)
+optimizer = optim.<span class="cl">AdamW</span>(model.parameters(), lr=<span class="num">3e-4</span>, weight_decay=<span class="num">1e-2</span>)
+scheduler = optim.lr_scheduler.<span class="cl">CosineAnnealingLR</span>(optimizer, T_max=<span class="num">50</span>)
+criterion = nn.<span class="cl">CrossEntropyLoss</span>()</code></pre>
+      </div>
+    </div>
+
+    <!-- ═══ CNNs ═══ -->
+    <div class="tab-panel" id="panel-cnn">
+      <h1 class="page-title">Convolutional Neural Networks</h1>
+      <p class="page-subtitle">Spatial pattern recognition through learned filters — the foundation of computer vision.</p>
+
+      <div class="two-col">
+        <div>
+          <h2 class="section-title">Core Concepts</h2>
+          <div class="math-block">
+            <div class="math-label">2D Convolution</div>
+            (I * K)[i,j] = Σₘ Σₙ I[i+m, j+n] · K[m,n]<br/><br/>
+            Output size = ⌊(N + 2P − F)/S⌋ + 1<br/>
+            N=input, P=padding, F=filter, S=stride
+          </div>
+          <div class="accordion">
+            <div class="accordion-item">
+              <button class="accordion-trigger">Filters / Kernels <span class="accordion-icon">▼</span></button>
+              <div class="accordion-content">Small weight matrices (e.g. 3×3, 5×5) that slide over the input, computing dot products. Each filter learns to detect a specific pattern — edges, textures, shapes. Stacking multiple filters creates channels (depth) in the feature map.</div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger">Pooling Layers <span class="accordion-icon">▼</span></button>
+              <div class="accordion-content">Max pooling keeps the strongest activation per region. Average pooling takes the mean. Both reduce spatial dimensions while retaining important features. Modern CNNs use global average pooling before the classifier head.</div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger">Receptive Field <span class="accordion-icon">▼</span></button>
+              <div class="accordion-content">The region of input space that a neuron "sees". Stacking 3×3 convolutions: 1 layer → 3×3, 2 layers → 5×5, 3 layers → 7×7. Deep CNNs build massive receptive fields from small kernels — efficient and powerful.</div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger">Feature Hierarchy <span class="accordion-icon">▼</span></button>
+              <div class="accordion-content">Layer 1: edges, gradients. Layer 2: textures, corners. Layer 3: object parts. Layer 4-5: entire objects, semantic concepts. This hierarchical representation is why CNNs transfer well across domains.</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h2 class="section-title">Architecture Milestones</h2>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">LeNet-5 (1998)</div><div class="tl-desc">First practical CNN — handwritten digit recognition. Established conv→pool→fc pattern.</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">AlexNet (2012)</div><div class="tl-desc">Sparked the DL revolution. ReLU, dropout, GPU training. ImageNet top-5: 15.3% error.</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">VGG-16 (2014)</div><div class="tl-desc">Deep, uniform 3×3 conv stacks. Simple and effective. Still popular for transfer learning.</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">ResNet (2015)</div><div class="tl-desc">Residual connections solved vanishing gradients. Enabled 152-layer networks. Skip connections = game changer.</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">EfficientNet (2019)</div><div class="tl-desc">Compound scaling of width, depth, resolution. SOTA accuracy with 8× fewer params than ResNet-50.</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">ConvNeXt (2022)</div><div class="tl-desc">Modernised ResNet design inspired by Transformers. Competitive with ViT on ImageNet.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">ResNet Skip Connection</h2>
+      <div class="math-block">
+        <div class="math-label">Residual Block</div>
+        y = F(x, {Wᵢ}) + x<br/><br/>
+        F(x) = Conv → BN → ReLU → Conv → BN<br/>
+        Output = F(x) + x  (identity shortcut)<br/>
+        Gradient: ∂L/∂x = ∂L/∂y · (∂F/∂x + 1) — always ≥ 1, preventing vanishing
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python · ResNet Block</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="kw">import</span> torch.nn <span class="kw">as</span> nn
+
+<span class="kw">class</span> <span class="cl">ResidualBlock</span>(nn.<span class="cl">Module</span>):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, channels, stride=<span class="num">1</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>()
+        self.conv1 = nn.<span class="cl">Conv2d</span>(channels, channels, <span class="num">3</span>, stride=stride, padding=<span class="num">1</span>, bias=<span class="kw">False</span>)
+        self.bn1   = nn.<span class="cl">BatchNorm2d</span>(channels)
+        self.conv2 = nn.<span class="cl">Conv2d</span>(channels, channels, <span class="num">3</span>, padding=<span class="num">1</span>, bias=<span class="kw">False</span>)
+        self.bn2   = nn.<span class="cl">BatchNorm2d</span>(channels)
+        self.relu  = nn.<span class="cl">ReLU</span>(inplace=<span class="kw">True</span>)
+        <span class="cm"># Shortcut if stride changes spatial dims</span>
+        self.shortcut = nn.<span class="cl">Sequential</span>(
+            nn.<span class="cl">Conv2d</span>(channels, channels, <span class="num">1</span>, stride=stride, bias=<span class="kw">False</span>),
+            nn.<span class="cl">BatchNorm2d</span>(channels)
+        ) <span class="kw">if</span> stride != <span class="num">1</span> <span class="kw">else</span> nn.<span class="cl">Identity</span>()
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x):
+        out = self.relu(self.bn1(self.conv1(x)))
+        out = self.bn2(self.conv2(out))
+        out += self.shortcut(x)   <span class="cm"># ← skip connection</span>
+        <span class="kw">return</span> self.relu(out)
+
+<span class="cm"># Transfer learning with pretrained ResNet</span>
+<span class="kw">import</span> torchvision.models <span class="kw">as</span> models
+backbone = models.<span class="fn">resnet50</span>(weights=<span class="str">"IMAGENET1K_V1"</span>)
+backbone.fc = nn.<span class="cl">Linear</span>(<span class="num">2048</span>, num_classes)   <span class="cm"># replace head</span>
+
+<span class="cm"># Freeze backbone, fine-tune head only</span>
+<span class="kw">for</span> p <span class="kw">in</span> backbone.parameters():
+    p.requires_grad = <span class="kw">False</span>
+<span class="kw">for</span> p <span class="kw">in</span> backbone.fc.parameters():
+    p.requires_grad = <span class="kw">True</span></code></pre>
+      </div>
+    </div>
+
+    <!-- ═══ RNN / LSTM ═══ -->
+    <div class="tab-panel" id="panel-rnn">
+      <h1 class="page-title">RNNs & LSTMs</h1>
+      <p class="page-subtitle">Modelling sequential dependencies — from simple recurrent nets to gated memory architectures.</p>
+
+      <div class="two-col">
+        <div>
+          <h2 class="section-title">Recurrent Networks</h2>
+          <div class="math-block">
+            <div class="math-label">Vanilla RNN</div>
+            hₜ = tanh(Wₕ·hₜ₋₁ + Wₓ·xₜ + b)<br/>
+            yₜ = Wᵧ·hₜ + bᵧ<br/><br/>
+            hₜ = hidden state at time t<br/>
+            xₜ = input at time t
+          </div>
+          <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Vanishing Gradient Problem</strong>In deep unrolled RNNs, gradients can shrink to ~0 over long sequences: ∂h₁₀₀/∂h₁ ≈ (∂hₜ/∂hₜ₋₁)¹⁰⁰ → 0 if |∂hₜ/∂hₜ₋₁| &lt; 1. LSTMs and GRUs solve this with gating.</div></div>
+          <h3 class="subsection-title">GRU (Gated Recurrent Unit)</h3>
+          <div class="math-block">
+            zₜ = σ(Wz·[hₜ₋₁, xₜ])   — update gate<br/>
+            rₜ = σ(Wr·[hₜ₋₁, xₜ])   — reset gate<br/>
+            h̃ₜ = tanh(W·[rₜ⊙hₜ₋₁, xₜ]) — candidate<br/>
+            hₜ = (1−zₜ)⊙hₜ₋₁ + zₜ⊙h̃ₜ
+          </div>
+        </div>
+        <div>
+          <h2 class="section-title">LSTM Architecture</h2>
+          <div class="math-block">
+            <div class="math-label">LSTM Gates</div>
+            fₜ = σ(Wf·[hₜ₋₁, xₜ] + bf)  — forget gate<br/>
+            iₜ = σ(Wi·[hₜ₋₁, xₜ] + bi)  — input gate<br/>
+            C̃ₜ = tanh(Wc·[hₜ₋₁, xₜ] + bc) — candidate<br/>
+            Cₜ = fₜ⊙Cₜ₋₁ + iₜ⊙C̃ₜ       — cell state<br/>
+            oₜ = σ(Wo·[hₜ₋₁, xₜ] + bo)  — output gate<br/>
+            hₜ = oₜ⊙tanh(Cₜ)
+          </div>
+          <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Cell State = Highway</strong>The cell state Cₜ runs along the top of the LSTM with only minor linear interactions. Gradients can flow through it almost unchanged over hundreds of steps — solving vanishing gradients.</div></div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python · Bidirectional LSTM</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="kw">import</span> torch
+<span class="kw">import</span> torch.nn <span class="kw">as</span> nn
+
+<span class="kw">class</span> <span class="cl">BiLSTMClassifier</span>(nn.<span class="cl">Module</span>):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, vocab_size, embed_dim, hidden_dim, num_classes, num_layers=<span class="num">2</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>()
+        self.embedding = nn.<span class="cl">Embedding</span>(vocab_size, embed_dim, padding_idx=<span class="num">0</span>)
+        self.lstm = nn.<span class="cl">LSTM</span>(
+            embed_dim, hidden_dim,
+            num_layers=num_layers,
+            batch_first=<span class="kw">True</span>,
+            bidirectional=<span class="kw">True</span>,   <span class="cm"># forward + backward</span>
+            dropout=<span class="num">0.3</span>
+        )
+        self.classifier = nn.<span class="cl">Sequential</span>(
+            nn.<span class="cl">Linear</span>(hidden_dim * <span class="num">2</span>, hidden_dim),  <span class="cm"># *2 for bidir</span>
+            nn.<span class="cl">ReLU</span>(),
+            nn.<span class="cl">Dropout</span>(<span class="num">0.3</span>),
+            nn.<span class="cl">Linear</span>(hidden_dim, num_classes)
+        )
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x, lengths):
+        emb = self.embedding(x)           <span class="cm"># (B, T, E)</span>
+        <span class="cm"># Pack for variable-length sequences</span>
+        packed = nn.utils.rnn.<span class="fn">pack_padded_sequence</span>(emb, lengths, batch_first=<span class="kw">True</span>, enforce_sorted=<span class="kw">False</span>)
+        out, (hn, _) = self.lstm(packed)
+        <span class="cm"># Concat last forward + backward hidden states</span>
+        last_hidden = torch.<span class="fn">cat</span>([hn[-<span class="num">2</span>], hn[-<span class="num">1</span>]], dim=<span class="num">1</span>)  <span class="cm"># (B, H*2)</span>
+        <span class="kw">return</span> self.classifier(last_hidden)</code></pre>
+      </div>
+    </div>
+
+    <!-- ═══ TRANSFORMERS ═══ -->
+    <div class="tab-panel" id="panel-transformers">
+      <h1 class="page-title">Transformers</h1>
+      <p class="page-subtitle">The architecture that redefined AI — self-attention, positional encoding, and the models built on top.</p>
+
+      <div class="two-col">
+        <div>
+          <h2 class="section-title">Self-Attention</h2>
+          <div class="math-block">
+            <div class="math-label">Scaled Dot-Product Attention</div>
+            Attention(Q,K,V) = softmax(QKᵀ / √dₖ) · V<br/><br/>
+            Q = XWᴼ, K = XWᴷ, V = XWᵛ<br/>
+            dₖ = key dimension (scale prevents small gradients)
+          </div>
+          <div class="math-block">
+            <div class="math-label">Multi-Head Attention</div>
+            MHA(Q,K,V) = Concat(head₁,...,headₕ)Wᴼ<br/>
+            headᵢ = Attention(QWᵢᴼ, KWᵢᴷ, VWᵢᵛ)<br/><br/>
+            Each head learns different relationship types
+          </div>
+          <div class="callout key"><div class="callout-icon">🔑</div><div><strong>Why Attention Works</strong>Unlike RNNs, attention computes relationships between ALL pairs of tokens in O(n²) — but fully in parallel. Long-range dependencies cost the same as short-range ones.</div></div>
+        </div>
+        <div>
+          <h2 class="section-title">Encoder-Decoder Structure</h2>
+          <ul class="step-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-content"><div class="step-title">Input Embedding + PE</div><div class="step-desc">Token IDs → embeddings. Add sinusoidal or learnable positional encoding to inject sequence order.</div></div></li>
+            <li class="step-item"><div class="step-num">2</div><div class="step-content"><div class="step-title">Encoder Block</div><div class="step-desc">Multi-Head Self-Attention → Add & Norm → Feed Forward → Add & Norm. Repeated N times.</div></div></li>
+            <li class="step-item"><div class="step-num">3</div><div class="step-content"><div class="step-title">Decoder Block</div><div class="step-desc">Masked Self-Attention → Cross-Attention (attends to encoder) → FFN. Generates one token at a time.</div></div></li>
+            <li class="step-item"><div class="step-num">4</div><div class="step-content"><div class="step-title">Output Projection</div><div class="step-desc">Linear + Softmax over vocabulary. At inference: greedy / beam search / nucleus sampling.</div></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 class="section-title">Popular Variants</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Model</th><th>Type</th><th>Params</th><th>Key Use</th><th>Innovation</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag blue">BERT</span></td><td>Encoder-only</td><td>110M–340M</td><td>Classification, NER, QA</td><td>Masked language modelling (MLM)</td></tr>
+            <tr><td><span class="tag green">GPT-4</span></td><td>Decoder-only</td><td>~1.8T</td><td>Text generation, chat</td><td>RLHF + MoE scaling</td></tr>
+            <tr><td><span class="tag cyan">T5</span></td><td>Encoder-Decoder</td><td>11B</td><td>Summarisation, translation</td><td>Text-to-text framing</td></tr>
+            <tr><td><span class="tag orange">ViT</span></td><td>Encoder-only</td><td>86M–632M</td><td>Image classification</td><td>Patch embeddings replace CNN</td></tr>
+            <tr><td><span class="tag pink">Llama 3</span></td><td>Decoder-only</td><td>8B–70B</td><td>Open-source LLM</td><td>GQA, RoPE, SwiGLU</td></tr>
+            <tr><td><span class="tag blue">Whisper</span></td><td>Encoder-Decoder</td><td>39M–1.5B</td><td>Speech recognition</td><td>Multitask audio transformer</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python · Self-Attention from Scratch</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="kw">import</span> torch
+<span class="kw">import</span> torch.nn <span class="kw">as</span> nn
+<span class="kw">import</span> torch.nn.functional <span class="kw">as</span> F
+<span class="kw">import</span> math
+
+<span class="kw">class</span> <span class="cl">MultiHeadAttention</span>(nn.<span class="cl">Module</span>):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, d_model, num_heads):
+        <span class="fn">super</span>().<span class="fn">__init__</span>()
+        <span class="fn">assert</span> d_model % num_heads == <span class="num">0</span>
+        self.d_k = d_model // num_heads
+        self.h   = num_heads
+        self.Wq  = nn.<span class="cl">Linear</span>(d_model, d_model)
+        self.Wk  = nn.<span class="cl">Linear</span>(d_model, d_model)
+        self.Wv  = nn.<span class="cl">Linear</span>(d_model, d_model)
+        self.Wo  = nn.<span class="cl">Linear</span>(d_model, d_model)
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, q, k, v, mask=<span class="kw">None</span>):
+        B, T, D = q.shape
+        Q = self.Wq(q).<span class="fn">view</span>(B, T, self.h, self.d_k).<span class="fn">transpose</span>(<span class="num">1</span>,<span class="num">2</span>)
+        K = self.Wk(k).<span class="fn">view</span>(B, -<span class="num">1</span>, self.h, self.d_k).<span class="fn">transpose</span>(<span class="num">1</span>,<span class="num">2</span>)
+        V = self.Wv(v).<span class="fn">view</span>(B, -<span class="num">1</span>, self.h, self.d_k).<span class="fn">transpose</span>(<span class="num">1</span>,<span class="num">2</span>)
+
+        <span class="cm"># Scaled dot-product attention</span>
+        scores = (Q <span class="op">@</span> K.<span class="fn">transpose</span>(-<span class="num">2</span>,-<span class="num">1</span>)) / math.<span class="fn">sqrt</span>(self.d_k)
+        <span class="kw">if</span> mask <span class="kw">is not None</span>:
+            scores = scores.<span class="fn">masked_fill</span>(mask == <span class="num">0</span>, <span class="num">-1e9</span>)
+        attn = F.<span class="fn">softmax</span>(scores, dim=-<span class="num">1</span>)
+        out  = (attn <span class="op">@</span> V).<span class="fn">transpose</span>(<span class="num">1</span>,<span class="num">2</span>).<span class="fn">reshape</span>(B, T, D)
+        <span class="kw">return</span> self.Wo(out), attn</code></pre>
+      </div>
+    </div>
+
+    <!-- ═══ GANs ═══ -->
+    <div class="tab-panel" id="panel-gans">
+      <h1 class="page-title">GANs & Generative Models</h1>
+      <p class="page-subtitle">Adversarial training, VAEs, and diffusion — teaching machines to create.</p>
+
+      <div class="two-col">
+        <div>
+          <h2 class="section-title">GAN Framework</h2>
+          <div class="math-block">
+            <div class="math-label">Minimax Objective</div>
+            min_G max_D V(D,G) =<br/>
+            E[log D(x)] + E[log(1 − D(G(z)))]<br/><br/>
+            D(x) → 1 for real, 0 for fake<br/>
+            G(z) → fool D into D(G(z)) → 1
+          </div>
+          <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Training Instability</strong>GANs suffer from mode collapse (G generates only a few modes) and vanishing gradients when D is too strong. Solutions: WGAN-GP, spectral norm, minibatch discrimination, progressive growing.</div></div>
+          <h3 class="subsection-title">GAN Variants</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Variant</th><th>Innovation</th></tr></thead>
+              <tbody>
+                <tr><td>DCGAN</td><td>Conv layers, batch norm — stable training</td></tr>
+                <tr><td>WGAN-GP</td><td>Wasserstein loss + gradient penalty</td></tr>
+                <tr><td>StyleGAN 3</td><td>Alias-free generation, style mixing</td></tr>
+                <tr><td>CycleGAN</td><td>Unpaired image translation</td></tr>
+                <tr><td>Pix2Pix</td><td>Paired image-to-image translation</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h2 class="section-title">VAE vs. GAN vs. Diffusion</h2>
+          <div class="info-card" style="margin-bottom:var(--space-4);">
+            <div class="info-card-icon">🧮</div>
+            <div class="info-card-title">VAE (Variational Autoencoder)</div>
+            <div class="info-card-desc">Encodes input to latent distribution N(μ,σ²). Maximises ELBO = reconstruction − KL(q‖p). Smooth latent space. Blurry outputs.</div>
+          </div>
+          <div class="info-card" style="margin-bottom:var(--space-4);">
+            <div class="info-card-icon">⚔️</div>
+            <div class="info-card-title">GAN</div>
+            <div class="info-card-desc">Generator vs. discriminator adversarial game. Sharp, photorealistic outputs. Hard to train, mode collapse risk.</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-icon">❄️</div>
+            <div class="info-card-title">Diffusion Models</div>
+            <div class="info-card-desc">Gradually add Gaussian noise to data, train a U-Net to predict and reverse the noise. State-of-the-art quality. Slower inference (many steps). Stable Diffusion, DALL-E 3, Imagen.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python · DCGAN Generator</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="kw">import</span> torch.nn <span class="kw">as</span> nn
+
+<span class="kw">class</span> <span class="cl">DCGANGenerator</span>(nn.<span class="cl">Module</span>):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, latent_dim=<span class="num">100</span>, channels=<span class="num">3</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>()
+        <span class="kw">def</span> <span class="fn">block</span>(in_c, out_c, stride=<span class="num">2</span>, padding=<span class="num">1</span>):
+            <span class="kw">return</span> [
+                nn.<span class="cl">ConvTranspose2d</span>(in_c, out_c, <span class="num">4</span>, stride, padding, bias=<span class="kw">False</span>),
+                nn.<span class="cl">BatchNorm2d</span>(out_c),
+                nn.<span class="cl">ReLU</span>(<span class="kw">True</span>)
+            ]
+        self.net = nn.<span class="cl">Sequential</span>(
+            <span class="cm"># 1×1 → 4×4</span>
+            nn.<span class="cl">ConvTranspose2d</span>(latent_dim, <span class="num">512</span>, <span class="num">4</span>, <span class="num">1</span>, <span class="num">0</span>, bias=<span class="kw">False</span>),
+            nn.<span class="cl">BatchNorm2d</span>(<span class="num">512</span>), nn.<span class="cl">ReLU</span>(<span class="kw">True</span>),
+            *<span class="fn">block</span>(<span class="num">512</span>, <span class="num">256</span>),  <span class="cm"># 8×8</span>
+            *<span class="fn">block</span>(<span class="num">256</span>, <span class="num">128</span>),  <span class="cm"># 16×16</span>
+            *<span class="fn">block</span>(<span class="num">128</span>, <span class="num">64</span>),   <span class="cm"># 32×32</span>
+            nn.<span class="cl">ConvTranspose2d</span>(<span class="num">64</span>, channels, <span class="num">4</span>, <span class="num">2</span>, <span class="num">1</span>, bias=<span class="kw">False</span>),
+            nn.<span class="cl">Tanh</span>()          <span class="cm"># 64×64, range [-1,1]</span>
+        )
+    <span class="kw">def</span> <span class="fn">forward</span>(self, z):
+        <span class="kw">return</span> self.net(z.<span class="fn">view</span>(-<span class="num">1</span>, z.shape[<span class="num">1</span>], <span class="num">1</span>, <span class="num">1</span>))</code></pre>
+      </div>
+    </div>
+
+    <!-- ═══ TRAINING ═══ -->
+    <div class="tab-panel" id="panel-training">
+      <h1 class="page-title">Training Deep Learning Models</h1>
+      <p class="page-subtitle">Optimisers, regularisation, hyperparameter tuning, and tricks that separate good models from great ones.</p>
+
+      <div class="two-col">
+        <div>
+          <h2 class="section-title">Optimisers</h2>
+          <div class="accordion">
+            <div class="accordion-item">
+              <button class="accordion-trigger">SGD with Momentum <span class="accordion-icon">▼</span></button>
+              <div class="accordion-content">vₜ = β·vₜ₋₁ + ∇L; θ ← θ − η·vₜ. Momentum β≈0.9 dampens oscillations and accelerates convergence. Still best for CNNs with careful LR scheduling. Nesterov variant: look-ahead gradient.</div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger">Adam (Adaptive Moments) <span class="accordion-icon">▼</span></button>
+              <div class="accordion-content">mₜ = β₁mₜ₋₁ + (1-β₁)g; vₜ = β₂vₜ₋₁ + (1-β₂)g². θ ← θ − η·m̂ₜ/√(v̂ₜ+ε). Defaults: β₁=0.9, β₂=0.999, ε=1e-8, η=3e-4. Robust default for most tasks.</div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger">AdamW (Weight Decay) <span class="accordion-icon">▼</span></button>
+              <div class="accordion-content">Decouples weight decay from gradient update. θ ← θ − η·(m̂/√v̂ + λθ). Preferred over Adam for transformers and LLMs. Use weight_decay=0.01-0.1.</div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger">Learning Rate Schedulers <span class="accordion-icon">▼</span></button>
+              <div class="accordion-content">Cosine Annealing: η oscillates from ηₘₐₓ to ηₘᵢₙ. Warmup + Cosine (transformers): linearly ramp LR for first N steps then cosine decay. OneCycleLR: super-convergence with very high max LR. ReduceLROnPlateau: adaptive decay on metric stagnation.</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h2 class="section-title">Regularisation Techniques</h2>
+          <div class="progress-row"><span class="progress-label">Dropout (p=0.5)</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:0%;background:#6c63ff;" data-target="82"></div></div><span class="progress-val">82%</span></div>
+          <div class="progress-row"><span class="progress-label">Batch Normalisation</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:0%;background:#00d4ff;" data-target="91"></div></div><span class="progress-val">91%</span></div>
+          <div class="progress-row"><span class="progress-label">Weight Decay (L2)</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:0%;background:#00e676;" data-target="78"></div></div><span class="progress-val">78%</span></div>
+          <div class="progress-row"><span class="progress-label">Data Augmentation</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:0%;background:#ff9800;" data-target="88"></div></div><span class="progress-val">88%</span></div>
+          <div class="progress-row"><span class="progress-label">Early Stopping</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:0%;background:#ff4081;" data-target="74"></div></div><span class="progress-val">74%</span></div>
+          <div class="progress-row"><span class="progress-label">Label Smoothing</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:0%;background:#ffeb3b;" data-target="70"></div></div><span class="progress-val">70%</span></div>
+          <p style="font-size:var(--text-xs);color:var(--color-text-faint);margin-top:var(--space-3);">Effectiveness score (higher = more commonly beneficial across task types)</p>
+
+          <h3 class="subsection-title" style="margin-top:var(--space-6);">Batch vs. Layer Normalisation</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Type</th><th>Normalises Over</th><th>Best For</th></tr></thead>
+              <tbody>
+                <tr><td>BatchNorm</td><td>Batch dimension</td><td>CNNs, large batches</td></tr>
+                <tr><td>LayerNorm</td><td>Feature dimension</td><td>Transformers, NLP, RNNs</td></tr>
+                <tr><td>GroupNorm</td><td>Groups of channels</td><td>Small batch sizes</td></tr>
+                <tr><td>RMSNorm</td><td>Feature dim (simpler)</td><td>Modern LLMs (Llama)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python · Mixed Precision + Gradient Scaling</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="kw">import</span> torch
+<span class="kw">from</span> torch.cuda.amp <span class="kw">import</span> autocast, GradScaler
+
+scaler = <span class="cl">GradScaler</span>()   <span class="cm"># handles FP16 loss scaling</span>
+
+<span class="kw">def</span> <span class="fn">train_step</span>(model, batch, optimizer, criterion):
+    X, y = batch
+    optimizer.<span class="fn">zero_grad</span>()
+
+    <span class="kw">with</span> <span class="fn">autocast</span>():                  <span class="cm"># FP16 forward pass</span>
+        logits = model(X)
+        loss   = criterion(logits, y)
+
+    scaler.<span class="fn">scale</span>(loss).<span class="fn">backward</span>()    <span class="cm"># scaled gradients</span>
+    scaler.<span class="fn">unscale_</span>(optimizer)         <span class="cm"># unscale before clip</span>
+    torch.nn.utils.<span class="fn">clip_grad_norm_</span>(model.parameters(), <span class="num">1.0</span>)
+    scaler.<span class="fn">step</span>(optimizer)             <span class="cm"># update weights</span>
+    scaler.<span class="fn">update</span>()                    <span class="cm"># adjust scale factor</span>
+    <span class="kw">return</span> loss.<span class="fn">item</span>()
+
+<span class="cm"># LR warmup + cosine decay (Transformers best practice)</span>
+<span class="kw">import</span> math
+
+<span class="kw">def</span> <span class="fn">get_lr</span>(step, d_model, warmup_steps):
+    <span class="kw">if</span> step == <span class="num">0</span>: <span class="kw">return</span> <span class="num">0.0</span>
+    scale = min(step ** -<span class="num">0.5</span>, step * warmup_steps ** -<span class="num">1.5</span>)
+    <span class="kw">return</span> d_model ** -<span class="num">0.5</span> * scale   <span class="cm"># original transformer formula</span></code></pre>
+      </div>
+    </div>
+
+    <!-- ═══ DEPLOYMENT ═══ -->
+    <div class="tab-panel" id="panel-deployment">
+      <h1 class="page-title">Deployment & MLOps</h1>
+      <p class="page-subtitle">Getting models from experiment to production — export, serve, containerise, and monitor.</p>
+
+      <div class="two-col">
+        <div>
+          <h2 class="section-title">Export Pipeline</h2>
+          <ul class="step-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-content"><div class="step-title">Train & Validate</div><div class="step-desc">Achieve target metrics. Save checkpoint with torch.save() or Hugging Face safetensors.</div></div></li>
+            <li class="step-item"><div class="step-num">2</div><div class="step-content"><div class="step-title">Export to ONNX</div><div class="step-desc">torch.onnx.export() converts the model to a framework-agnostic graph for cross-platform inference.</div></div></li>
+            <li class="step-item"><div class="step-num">3</div><div class="step-content"><div class="step-title">Optimise with TensorRT</div><div class="step-desc">trtexec or ONNX-TensorRT converts ONNX to a TensorRT engine. 3–10× faster on NVIDIA GPUs.</div></div></li>
+            <li class="step-item"><div class="step-num">4</div><div class="step-content"><div class="step-title">Serve via FastAPI</div><div class="step-desc">Wrap inference in a REST endpoint. Use ONNX Runtime for lightweight CPU/GPU serving.</div></div></li>
+            <li class="step-item"><div class="step-num">5</div><div class="step-content"><div class="step-title">Containerise</div><div class="step-desc">Docker image with model weights + FastAPI. Push to ECR / ACR / GCR and deploy to Kubernetes.</div></div></li>
+            <li class="step-item"><div class="step-num">6</div><div class="step-content"><div class="step-title">Monitor with MLflow</div><div class="step-desc">Track experiments, model versions, metrics drift. Set up alerts for data/concept drift.</div></div></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="section-title">Optimisation Techniques</h2>
+          <div class="card-grid" style="grid-template-columns:1fr;">
+            <div class="info-card"><div class="info-card-icon">✂️</div><div class="info-card-title">Quantisation (INT8/FP16)</div><div class="info-card-desc">Reduce precision of weights/activations. 2–4× memory reduction, 2–3× speedup with minimal accuracy loss. Post-training quantisation (PTQ) or QAT.</div></div>
+            <div class="info-card"><div class="info-card-icon">🪄</div><div class="info-card-title">Pruning</div><div class="info-card-desc">Remove low-magnitude weights (unstructured) or entire filters/heads (structured). 40–80% parameter reduction with retraining.</div></div>
+            <div class="info-card"><div class="info-card-icon">🎓</div><div class="info-card-title">Knowledge Distillation</div><div class="info-card-desc">Train small student to mimic large teacher's soft probability outputs. DistilBERT = 40% smaller, 60% faster, 97% of BERT's performance.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python · ONNX Export + FastAPI Server</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="kw">import</span> torch
+<span class="kw">import</span> onnxruntime <span class="kw">as</span> ort
+<span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI
+<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="cm"># ─── Export to ONNX ─────────────────────────────────────────</span>
+model.<span class="fn">eval</span>()
+dummy_input = torch.<span class="fn">randn</span>(<span class="num">1</span>, <span class="num">3</span>, <span class="num">224</span>, <span class="num">224</span>)
+torch.onnx.<span class="fn">export</span>(
+    model, dummy_input, <span class="str">"model.onnx"</span>,
+    opset_version=<span class="num">17</span>,
+    input_names=[<span class="str">"image"</span>], output_names=[<span class="str">"logits"</span>],
+    dynamic_axes={<span class="str">"image"</span>: {<span class="num">0</span>: <span class="str">"batch"</span>}}   <span class="cm"># variable batch size</span>
+)
+
+<span class="cm"># ─── ONNX Runtime Inference ─────────────────────────────────</span>
+sess_opts = ort.<span class="cl">SessionOptions</span>()
+sess_opts.graph_optimization_level = ort.GraphOptimizationLevel.<span class="cl">ORT_ENABLE_ALL</span>
+session = ort.<span class="cl">InferenceSession</span>(<span class="str">"model.onnx"</span>, sess_options=sess_opts,
+                                providers=[<span class="str">"CUDAExecutionProvider"</span>, <span class="str">"CPUExecutionProvider"</span>])
+
+<span class="cm"># ─── FastAPI endpoint ────────────────────────────────────────</span>
+app = <span class="cl">FastAPI</span>(title=<span class="str">"Deep Learning Model API"</span>)
+
+<span class="kw">class</span> <span class="cl">PredictRequest</span>(<span class="cl">BaseModel</span>):
+    image: list[list[list[list[float]]]]  <span class="cm"># NCHW float array</span>
+
+<span class="op">@</span>app.<span class="fn">post</span>(<span class="str">"/predict"</span>)
+<span class="kw">async def</span> <span class="fn">predict</span>(req: <span class="cl">PredictRequest</span>):
+    x = np.<span class="fn">array</span>(req.image, dtype=np.float32)
+    logits = session.<span class="fn">run</span>([<span class="str">"logits"</span>], {<span class="str">"image"</span>: x})[<span class="num">0</span>]
+    probs  = np.<span class="fn">exp</span>(logits) / np.<span class="fn">exp</span>(logits).<span class="fn">sum</span>(-<span class="num">1</span>, keepdims=<span class="kw">True</span>)
+    top_k  = np.<span class="fn">argsort</span>(probs[<span class="num">0</span>])[::-<span class="num">1</span>][:<span class="num">5</span>]
+    <span class="kw">return</span> {<span class="str">"top5_classes"</span>: top_k.<span class="fn">tolist</span>(), <span class="str">"probs"</span>: probs[<span class="num">0</span>][top_k].<span class="fn">tolist</span>()}</code></pre>
+      </div>
+    </div>
+
+    <!-- ═══ CODE LAB ═══ -->
+    <div class="tab-panel" id="panel-code">
+      <h1 class="page-title">Code Lab</h1>
+      <p class="page-subtitle">Complete, production-quality code examples for the most common deep learning tasks.</p>
+
+      <div class="inner-tabs">
+        <button class="inner-tab active" data-inner-tab="mnist">MNIST Classifier</button>
+        <button class="inner-tab" data-inner-tab="transfer">Transfer Learning</button>
+        <button class="inner-tab" data-inner-tab="bert">BERT Fine-tuning</button>
+        <button class="inner-tab" data-inner-tab="custom">Custom Dataset</button>
+      </div>
+
+      <div class="inner-panel active" id="inner-mnist">
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">Python · Complete MNIST Training</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre><code><span class="kw">import</span> torch
+<span class="kw">import</span> torch.nn <span class="kw">as</span> nn
+<span class="kw">import</span> torch.optim <span class="kw">as</span> optim
+<span class="kw">from</span> torchvision <span class="kw">import</span> datasets, transforms
+<span class="kw">from</span> torch.utils.data <span class="kw">import</span> DataLoader
+
+<span class="cm"># ─── Data ────────────────────────────────────────────────────</span>
+transform = transforms.<span class="cl">Compose</span>([
+    transforms.<span class="cl">ToTensor</span>(),
+    transforms.<span class="cl">Normalize</span>((<span class="num">0.1307</span>,), (<span class="num">0.3081</span>,))
+])
+train_ds = datasets.<span class="cl">MNIST</span>(<span class="str">"./data"</span>, train=<span class="kw">True</span>, download=<span class="kw">True</span>, transform=transform)
+test_ds  = datasets.<span class="cl">MNIST</span>(<span class="str">"./data"</span>, train=<span class="kw">False</span>, transform=transform)
+train_dl = <span class="cl">DataLoader</span>(train_ds, batch_size=<span class="num">128</span>, shuffle=<span class="kw">True</span>, num_workers=<span class="num">4</span>)
+test_dl  = <span class="cl">DataLoader</span>(test_ds,  batch_size=<span class="num">256</span>)
+
+<span class="cm"># ─── Model ────────────────────────────────────────────────────</span>
+<span class="kw">class</span> <span class="cl">ConvNet</span>(nn.<span class="cl">Module</span>):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="fn">super</span>().<span class="fn">__init__</span>()
+        self.features = nn.<span class="cl">Sequential</span>(
+            nn.<span class="cl">Conv2d</span>(<span class="num">1</span>, <span class="num">32</span>, <span class="num">3</span>, padding=<span class="num">1</span>), nn.<span class="cl">BatchNorm2d</span>(<span class="num">32</span>), nn.<span class="cl">ReLU</span>(),
+            nn.<span class="cl">Conv2d</span>(<span class="num">32</span>, <span class="num">64</span>, <span class="num">3</span>, padding=<span class="num">1</span>), nn.<span class="cl">BatchNorm2d</span>(<span class="num">64</span>), nn.<span class="cl">ReLU</span>(),
+            nn.<span class="cl">MaxPool2d</span>(<span class="num">2</span>),   <span class="cm"># 28→14</span>
+            nn.<span class="cl">Conv2d</span>(<span class="num">64</span>, <span class="num">128</span>, <span class="num">3</span>, padding=<span class="num">1</span>), nn.<span class="cl">BatchNorm2d</span>(<span class="num">128</span>), nn.<span class="cl">ReLU</span>(),
+            nn.<span class="cl">AdaptiveAvgPool2d</span>((<span class="num">4</span>, <span class="num">4</span>))
+        )
+        self.classifier = nn.<span class="cl">Sequential</span>(
+            nn.<span class="cl">Flatten</span>(),
+            nn.<span class="cl">Linear</span>(<span class="num">128</span>*<span class="num">4</span>*<span class="num">4</span>, <span class="num">256</span>), nn.<span class="cl">ReLU</span>(), nn.<span class="cl">Dropout</span>(<span class="num">0.5</span>),
+            nn.<span class="cl">Linear</span>(<span class="num">256</span>, <span class="num">10</span>)
+        )
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x): <span class="kw">return</span> self.classifier(self.features(x))
+
+device = <span class="str">"cuda"</span> <span class="kw">if</span> torch.cuda.<span class="fn">is_available</span>() <span class="kw">else</span> <span class="str">"cpu"</span>
+model = <span class="cl">ConvNet</span>().<span class="fn">to</span>(device)
+opt = optim.<span class="cl">AdamW</span>(model.parameters(), lr=<span class="num">1e-3</span>)
+sched = optim.lr_scheduler.<span class="cl">OneCycleLR</span>(opt, max_lr=<span class="num">1e-2</span>, steps_per_epoch=<span class="fn">len</span>(train_dl), epochs=<span class="num">10</span>)
+crit = nn.<span class="cl">CrossEntropyLoss</span>()
+
+<span class="cm"># ─── Train ────────────────────────────────────────────────────</span>
+<span class="kw">for</span> epoch <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>):
+    model.<span class="fn">train</span>()
+    <span class="kw">for</span> X, y <span class="kw">in</span> train_dl:
+        X, y = X.<span class="fn">to</span>(device), y.<span class="fn">to</span>(device)
+        opt.<span class="fn">zero_grad</span>()
+        loss = crit(model(X), y)
+        loss.<span class="fn">backward</span>()
+        opt.<span class="fn">step</span>(); sched.<span class="fn">step</span>()
+    model.<span class="fn">eval</span>()
+    correct = <span class="fn">sum</span>((model(X.<span class="fn">to</span>(device)).<span class="fn">argmax</span>(<span class="num">1</span>) == y.<span class="fn">to</span>(device)).<span class="fn">sum</span>().<span class="fn">item</span>() <span class="kw">for</span> X,y <span class="kw">in</span> test_dl)
+    <span class="fn">print</span>(<span class="str">f"Epoch {epoch+1}: acc={correct/len(test_ds)*100:.2f}%"</span>)</code></pre>
+        </div>
+      </div>
+
+      <div class="inner-panel" id="inner-transfer">
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">Python · Transfer Learning (EfficientNet)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre><code><span class="kw">import</span> torch
+<span class="kw">import</span> torchvision.models <span class="kw">as</span> models
+<span class="kw">from</span> torchvision <span class="kw">import</span> transforms, datasets
+<span class="kw">from</span> torch.utils.data <span class="kw">import</span> DataLoader
+<span class="kw">import</span> torch.nn <span class="kw">as</span> nn
+
+<span class="cm"># ─── Augmentation pipeline ────────────────────────────────────</span>
+train_tf = transforms.<span class="cl">Compose</span>([
+    transforms.<span class="cl">RandomResizedCrop</span>(<span class="num">224</span>),
+    transforms.<span class="cl">RandomHorizontalFlip</span>(),
+    transforms.<span class="cl">ColorJitter</span>(<span class="num">0.2</span>, <span class="num">0.2</span>, <span class="num">0.2</span>),
+    transforms.<span class="cl">ToTensor</span>(),
+    transforms.<span class="cl">Normalize</span>([<span class="num">0.485</span>, <span class="num">0.456</span>, <span class="num">0.406</span>], [<span class="num">0.229</span>, <span class="num">0.224</span>, <span class="num">0.225</span>])
+])
+
+<span class="cm"># ─── Load pretrained EfficientNet-B2 ─────────────────────────</span>
+backbone = models.<span class="fn">efficientnet_b2</span>(weights=<span class="str">"IMAGENET1K_V1"</span>)
+num_ftrs  = backbone.classifier[<span class="num">1</span>].in_features
+backbone.classifier = nn.<span class="cl">Sequential</span>(
+    nn.<span class="cl">Dropout</span>(<span class="num">0.4</span>),
+    nn.<span class="cl">Linear</span>(num_ftrs, num_classes)
+)
+
+<span class="cm"># Phase 1: train only head (frozen backbone)</span>
+<span class="kw">for</span> p <span class="kw">in</span> backbone.features.parameters(): p.requires_grad = <span class="kw">False</span>
+opt1 = torch.optim.<span class="cl">AdamW</span>(backbone.classifier.parameters(), lr=<span class="num">3e-3</span>)
+
+<span class="cm"># Phase 2: unfreeze and fine-tune all layers</span>
+<span class="kw">for</span> p <span class="kw">in</span> backbone.parameters(): p.requires_grad = <span class="kw">True</span>
+opt2 = torch.optim.<span class="cl">AdamW</span>(backbone.parameters(), lr=<span class="num">3e-5</span>)  <span class="cm"># low LR!</span></code></pre>
+        </div>
+      </div>
+
+      <div class="inner-panel" id="inner-bert">
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">Python · BERT Fine-tuning (Hugging Face)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre><code><span class="kw">from</span> transformers <span class="kw">import</span> AutoTokenizer, AutoModelForSequenceClassification
+<span class="kw">from</span> transformers <span class="kw">import</span> TrainingArguments, Trainer
+<span class="kw">from</span> datasets <span class="kw">import</span> load_dataset
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> accuracy_score, f1_score
+
+<span class="cm"># ─── Load model & tokeniser ───────────────────────────────────</span>
+model_name = <span class="str">"bert-base-uncased"</span>
+tokeniser  = <span class="cl">AutoTokenizer</span>.<span class="fn">from_pretrained</span>(model_name)
+model      = <span class="cl">AutoModelForSequenceClassification</span>.<span class="fn">from_pretrained</span>(model_name, num_labels=<span class="num">2</span>)
+
+<span class="cm"># ─── Tokenise dataset ─────────────────────────────────────────</span>
+dataset = <span class="fn">load_dataset</span>(<span class="str">"imdb"</span>)
+<span class="kw">def</span> <span class="fn">tokenise</span>(batch):
+    <span class="kw">return</span> tokeniser(batch[<span class="str">"text"</span>], truncation=<span class="kw">True</span>, max_length=<span class="num">512</span>, padding=<span class="str">"max_length"</span>)
+dataset = dataset.<span class="fn">map</span>(tokenise, batched=<span class="kw">True</span>)
+
+<span class="cm"># ─── Training ─────────────────────────────────────────────────</span>
+args = <span class="cl">TrainingArguments</span>(
+    output_dir=<span class="str">"./bert-imdb"</span>,
+    num_train_epochs=<span class="num">3</span>,
+    per_device_train_batch_size=<span class="num">16</span>,
+    learning_rate=<span class="num">2e-5</span>,            <span class="cm"># low LR for fine-tuning</span>
+    warmup_ratio=<span class="num">0.06</span>,
+    weight_decay=<span class="num">0.01</span>,
+    evaluation_strategy=<span class="str">"epoch"</span>,
+    fp16=<span class="kw">True</span>,                      <span class="cm"># mixed precision</span>
+    logging_steps=<span class="num">100</span>,
+)
+
+<span class="kw">def</span> <span class="fn">compute_metrics</span>(eval_pred):
+    logits, labels = eval_pred
+    preds = np.<span class="fn">argmax</span>(logits, axis=-<span class="num">1</span>)
+    <span class="kw">return</span> {<span class="str">"accuracy"</span>: <span class="fn">accuracy_score</span>(labels, preds), <span class="str">"f1"</span>: <span class="fn">f1_score</span>(labels, preds)}
+
+trainer = <span class="cl">Trainer</span>(model=model, args=args,
+                  train_dataset=dataset[<span class="str">"train"</span>], eval_dataset=dataset[<span class="str">"test"</span>],
+                  compute_metrics=compute_metrics)
+trainer.<span class="fn">train</span>()</code></pre>
+        </div>
+      </div>
+
+      <div class="inner-panel" id="inner-custom">
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">Python · Custom Dataset + Augmentation</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre><code><span class="kw">from</span> torch.utils.data <span class="kw">import</span> Dataset, DataLoader
+<span class="kw">from</span> torchvision <span class="kw">import</span> transforms
+<span class="kw">from</span> PIL <span class="kw">import</span> Image
+<span class="kw">import</span> pandas <span class="kw">as</span> pd, os
+
+<span class="kw">class</span> <span class="cl">ImageDataset</span>(<span class="cl">Dataset</span>):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, csv_path, img_dir, transform=<span class="kw">None</span>):
+        self.df        = pd.<span class="fn">read_csv</span>(csv_path)   <span class="cm"># columns: filename, label</span>
+        self.img_dir   = img_dir
+        self.transform = transform
+
+    <span class="kw">def</span> <span class="fn">__len__</span>(self): <span class="kw">return</span> <span class="fn">len</span>(self.df)
+
+    <span class="kw">def</span> <span class="fn">__getitem__</span>(self, idx):
+        row   = self.df.iloc[idx]
+        img   = <span class="cl">Image</span>.<span class="fn">open</span>(os.path.<span class="fn">join</span>(self.img_dir, row.filename)).<span class="fn">convert</span>(<span class="str">"RGB"</span>)
+        label = row.label
+        <span class="kw">if</span> self.transform: img = self.transform(img)
+        <span class="kw">return</span> img, label
+
+<span class="cm"># Heavy augmentation for training</span>
+train_transform = transforms.<span class="cl">Compose</span>([
+    transforms.<span class="cl">RandomResizedCrop</span>(<span class="num">224</span>, scale=(<span class="num">0.7</span>, <span class="num">1.0</span>)),
+    transforms.<span class="cl">RandomHorizontalFlip</span>(),
+    transforms.<span class="cl">RandomRotation</span>(<span class="num">15</span>),
+    transforms.<span class="cl">ColorJitter</span>(brightness=<span class="num">0.3</span>, contrast=<span class="num">0.3</span>),
+    transforms.<span class="cl">RandomGrayscale</span>(p=<span class="num">0.1</span>),
+    transforms.<span class="cl">ToTensor</span>(),
+    transforms.<span class="cl">Normalize</span>([<span class="num">0.485</span>, <span class="num">0.456</span>, <span class="num">0.406</span>], [<span class="num">0.229</span>, <span class="num">0.224</span>, <span class="num">0.225</span>])
+])
+
+ds     = <span class="cl">ImageDataset</span>(<span class="str">"train.csv"</span>, <span class="str">"./images"</span>, transform=train_transform)
+loader = <span class="cl">DataLoader</span>(ds, batch_size=<span class="num">32</span>, shuffle=<span class="kw">True</span>, num_workers=<span class="num">8</span>, pin_memory=<span class="kw">True</span>)</code></pre>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    Built for <a href="https://huggingface.co/spaces/AashishAIHub/DataScience" target="_blank">AashishAIHub / DataScience Space</a> · Deep Learning In-Depth Tutorial · 2026
+  </footer>
+</div>
+
+<script>
+// ─── Theme Toggle ──────────────────────────────────────────────────────────
+(function(){
+  const t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
+  let d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+  r.setAttribute('data-theme',d);
+  t&&t.addEventListener('click',()=>{
+    d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);
+    t.innerHTML=d==='dark'
+      ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+      :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  });
+})();
+
+// ─── Tab Navigation ────────────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const id=btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+id).classList.add('active');
+    // Trigger animations/canvases when tab shown
+    if(id==='neural-nets'){setTimeout(drawNN,100);setTimeout(drawActivations,150);}
+    if(id==='training'){setTimeout(animateBars,200);}
+  });
+});
+
+// ─── Inner Tabs ───────────────────────────────────────────────────────────
+document.querySelectorAll('.inner-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const parent=btn.closest('.tab-panel');
+    const id=btn.dataset.innerTab;
+    parent.querySelectorAll('.inner-tab').forEach(b=>b.classList.remove('active'));
+    parent.querySelectorAll('.inner-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    parent.querySelector('#inner-'+id)?.classList.add('active');
+  });
+});
+
+// ─── Accordion ────────────────────────────────────────────────────────────
+document.querySelectorAll('.accordion-trigger').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const content=btn.nextElementSibling;
+    const isOpen=btn.classList.contains('open');
+    btn.classList.toggle('open',!isOpen);
+    content.classList.toggle('open',!isOpen);
+  });
+});
+
+// ─── Copy Code ────────────────────────────────────────────────────────────
+function copyCode(btn){
+  const code=btn.closest('.code-block').querySelector('pre').innerText;
+  navigator.clipboard.writeText(code).then(()=>{
+    const orig=btn.textContent;btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent=orig,2000);
+  });
+}
+
+// ─── Neural Network Visualiser ────────────────────────────────────────────
+const nnLayers=[[4],[4],[3],[2]];
+let highlighted=null;
+
+function drawNN(){
+  const canvas=document.getElementById('nn-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  const isDark=document.documentElement.getAttribute('data-theme')!=='light';
+  ctx.clearRect(0,0,W,H);
+
+  const layerX=[80,200,320,400];
+  const nodes=nnLayers.map((l,li)=>{
+    const count=l[0]; const y0=(H-(count*60))/2;
+    return Array.from({length:count},(_,ni)=>({x:layerX[li],y:y0+ni*60+30,li,ni}));
+  });
+
+  // Draw connections
+  nodes.forEach((layer,li)=>{
+    if(li===nodes.length-1)return;
+    layer.forEach(src=>{
+      nodes[li+1].forEach(dst=>{
+        const isHL=highlighted&&(src.li===highlighted.li&&src.ni===highlighted.ni||dst.li===highlighted.li&&dst.ni===highlighted.ni);
+        const alpha=isHL?0.9:(highlighted?0.1:0.25);
+        const w=isHL?2:1;
+        ctx.beginPath();ctx.moveTo(src.x,src.y);ctx.lineTo(dst.x,dst.y);
+        ctx.strokeStyle=isDark?`rgba(108,99,255,${alpha})`:`rgba(82,73,224,${alpha})`;
+        ctx.lineWidth=w;ctx.stroke();
+      });
+    });
+  });
+
+  // Draw nodes
+  const colours=['#6c63ff','#6c63ff','#00d4ff','#00e676'];
+  const glows=['rgba(108,99,255,0.5)','rgba(108,99,255,0.5)','rgba(0,212,255,0.5)','rgba(0,230,118,0.5)'];
+  nodes.forEach((layer,li)=>{
+    layer.forEach(n=>{
+      const isHL=highlighted&&n.li===highlighted.li&&n.ni===highlighted.ni;
+      const r=isHL?18:14;
+      ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);
+      if(isHL){ctx.shadowColor=glows[li];ctx.shadowBlur=20;}
+      ctx.fillStyle=isHL?colours[li]:(isDark?'#1c1b19':'#ffffff');
+      ctx.fill();
+      ctx.strokeStyle=colours[li];ctx.lineWidth=isHL?2.5:1.5;ctx.stroke();
+      ctx.shadowBlur=0;
+    });
+  });
+
+  // Labels
+  ctx.fillStyle=isDark?'rgba(136,136,170,0.7)':'rgba(80,80,130,0.7)';
+  ctx.font='11px Inter';ctx.textAlign='center';
+  [['Input\n(4)','Hidden\n(4)','Hidden\n(3)','Output\n(2)']].flat().forEach((label,i)=>{
+    const lines=label.split('\n');
+    lines.forEach((ln,j)=>ctx.fillText(ln,layerX[i],H-28+j*14));
+  });
+}
+
+// Click on canvas
+document.getElementById('nn-canvas')?.addEventListener('click',function(e){
+  const rect=this.getBoundingClientRect();
+  const sx=this.width/rect.width,sy=this.height/rect.height;
+  const mx=(e.clientX-rect.left)*sx,my=(e.clientY-rect.top)*sy;
+  const layerX=[80,200,320,400];
+  let found=null;
+  nnLayers.forEach((l,li)=>{
+    const count=l[0];const y0=(360-(count*60))/2;
+    for(let ni=0;ni<count;ni++){
+      const nx=layerX[li],ny=y0+ni*60+30;
+      if(Math.hypot(mx-nx,my-ny)<18){found={li,ni};break;}
+    }
+  });
+  highlighted=found&&highlighted&&found.li===highlighted.li&&found.ni===highlighted.ni?null:found;
+  drawNN();
+});
+
+// ─── Activation Canvas ────────────────────────────────────────────────────
+function drawActivations(){
+  const canvas=document.getElementById('activation-canvas');
+  if(!canvas)return;
+  canvas.width=canvas.offsetWidth||900;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  const isDark=document.documentElement.getAttribute('data-theme')!=='light';
+  ctx.clearRect(0,0,W,H);
+
+  const fns=[
+    {name:'Sigmoid',fn:x=>1/(1+Math.exp(-x)),col:'#ff9800'},
+    {name:'Tanh',fn:x=>Math.tanh(x),col:'#6c63ff'},
+    {name:'ReLU',fn:x=>Math.max(0,x),col:'#00e676'},
+    {name:'Leaky ReLU',fn:x=>x>=0?x:0.1*x,col:'#00d4ff'},
+    {name:'GELU',fn:x=>0.5*x*(1+Math.tanh(Math.sqrt(2/Math.PI)*(x+0.044715*x**3))),col:'#ff4081'},
+  ];
+
+  const padL=40,padR=20,padT=20,padB=40;
+  const gW=W-padL-padR,gH=H-padT-padB;
+  const xRange=[-4,4],yRange=[-1.5,1.5];
+  function toX(v){return padL+(v-xRange[0])/(xRange[1]-xRange[0])*gW;}
+  function toY(v){return padT+(1-(v-yRange[0])/(yRange[1]-yRange[0]))*gH;}
+
+  // Axes
+  ctx.strokeStyle=isDark?'rgba(255,255,255,0.15)':'rgba(0,0,60,0.15)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(padL,toY(0));ctx.lineTo(W-padR,toY(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(toX(0),padT);ctx.lineTo(toX(0),H-padB);ctx.stroke();
+
+  // Grid
+  ctx.setLineDash([4,4]);ctx.strokeStyle=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,60,0.05)';
+  [-3,-2,-1,1,2,3].forEach(v=>{
+    ctx.beginPath();ctx.moveTo(toX(v),padT);ctx.lineTo(toX(v),H-padB);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(padL,toY(v));ctx.lineTo(W-padR,toY(v));ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  fns.forEach(f=>{
+    ctx.beginPath();
+    for(let px=0;px<=gW;px++){
+      const xv=xRange[0]+px/gW*(xRange[1]-xRange[0]);
+      const yv=f.fn(xv);
+      const cx=padL+px,cy=toY(Math.max(yRange[0],Math.min(yRange[1],yv)));
+      px===0?ctx.moveTo(cx,cy):ctx.lineTo(cx,cy);
+    }
+    ctx.strokeStyle=f.col;ctx.lineWidth=2.5;ctx.stroke();
+    // Legend
+    const li=fns.indexOf(f);
+    const lx=padL+li*(gW/fns.length)+gW/(fns.length*2);
+    ctx.fillStyle=f.col;ctx.font='bold 11px Inter';ctx.textAlign='center';
+    ctx.fillText(f.name,lx,H-8);
+  });
+}
+
+// ─── Progress Bars Animation ──────────────────────────────────────────────
+function animateBars(){
+  document.querySelectorAll('.progress-bar').forEach(bar=>{
+    const target=parseInt(bar.dataset.target||0);
+    bar.style.width=target+'%';
+  });
+}
+
+// Init canvases on load (overview doesn't have them, so safe)
+window.addEventListener('load',()=>{
+  // Draw NN when Neural Networks tab is first clicked
+  // Auto-trigger if we happen to land there
+  if(document.querySelector('#panel-neural-nets.active')){drawNN();drawActivations();}
+  if(document.querySelector('#panel-training.active')){animateBars();}
+});
+
+// Re-draw on theme change
+document.querySelector('[data-theme-toggle]')?.addEventListener('click',()=>{
+  setTimeout(()=>{
+    if(document.querySelector('#panel-neural-nets.active')){drawNN();drawActivations();}
+  },50);
+});
+</script>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>
