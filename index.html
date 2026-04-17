@@ -198,6 +198,24 @@
             border-color: #58a6ff;
             box-shadow: 0 8px 24px rgba(88,166,255,0.15);
         }
+
+        .python-card .badge {
+            background: rgba(249, 211, 70, 0.15);
+            color: #f9d346;
+        }
+
+        .python-card:hover {
+            border-color: #f9d346;
+        }
+
+        .devops-card .badge {
+            background: rgba(0, 120, 212, 0.15);
+            color: #0078d4;
+        }
+
+        .devops-card:hover {
+            border-color: #0078d4;
+        }
     </style>
 </head>
 
@@ -245,6 +263,32 @@
                 </div>
                 <div class="card-footer">
                     <span style="color: #58a6ff">Explore GenAI</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Python Masterclass -->
+            <a href="Python/index.html" class="card python-card">
+                <div>
+                    <span class="badge">🐍 Core Language</span>
+                    <h2>Python Masterclass</h2>
+                    <p>From essential syntax to advanced production engineering. Master OOP, decorators, asynchronous programming, NumPy, and performance optimization.</p>
+                </div>
+                <div class="card-footer">
+                    <span style="color: #f9d346">Learn Python</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Azure DevOps & MLOps -->
+            <a href="AzureDevops/index.html" class="card devops-card">
+                <div>
+                    <span class="badge">☁️ Infrastructure</span>
+                    <h2>Azure DevOps & MLOps</h2>
+                    <p>CI/CD pipelines, Docker, Kubernetes, Security, and MLOps on Azure. From Zero to Production with YAML pipelines and IaC.</p>
+                </div>
+                <div class="card-footer">
+                    <span style="color: #0078d4">Master DevOps</span>
                     <span class="arrow">→</span>
                 </div>
             </a>
