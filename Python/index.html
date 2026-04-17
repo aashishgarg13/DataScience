@@ -4,17 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompt Engineering Masterclass</title>
+    <title>Python for Data Science & AI | Complete Masterclass</title>
+    <meta name="description"
+        content="Comprehensive Python for Data Science & AI curriculum. Python Fundamentals, NumPy, Pandas, Matplotlib, Scikit-learn, PyTorch, TensorFlow, Production Python, and Performance Optimization.">
     <link rel="stylesheet" href="../shared/css/design-system.css">
     <link rel="stylesheet" href="../shared/css/components.css">
     <style>
         :root {
-            --pe-cyan: #00D9FF;
-            --pe-purple: #B07DFF;
-            --pe-green: #10A37F;
-            --pe-blue: #4285F4;
-            --color-primary: var(--pe-cyan);
-            --color-secondary: var(--pe-purple);
+            --python-blue: #3776AB;
+            --python-yellow: #FFD43B;
+            --color-primary: var(--python-blue);
+            --color-secondary: var(--python-yellow);
         }
 
         * {
@@ -28,6 +28,7 @@
             background: linear-gradient(135deg, #0a0f1e 0%, #1a1f3a 100%);
             color: #e0e6ed;
             line-height: 1.6;
+            min-height: 100vh;
         }
 
         .container {
@@ -36,6 +37,7 @@
             padding: 2rem;
         }
 
+        /* Header */
         header {
             text-align: center;
             margin-bottom: 3rem;
@@ -44,7 +46,7 @@
 
         header h1 {
             font-size: 3rem;
-            background: linear-gradient(135deg, var(--pe-cyan), var(--pe-purple));
+            background: linear-gradient(135deg, var(--python-blue), var(--python-yellow));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -54,6 +56,24 @@
         .subtitle {
             font-size: 1.2rem;
             color: #8892a6;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #8892a6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .back-home:hover {
+            color: var(--python-yellow);
+            text-decoration: none;
         }
 
         /* Dashboard */
@@ -74,7 +94,7 @@
 
         .card {
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 217, 255, 0.3);
+            border: 1px solid rgba(55, 118, 171, 0.3);
             border-radius: 16px;
             padding: 2rem;
             cursor: pointer;
@@ -90,7 +110,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--pe-cyan), var(--pe-purple));
+            background: linear-gradient(90deg, var(--python-blue), var(--python-yellow));
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
@@ -101,8 +121,8 @@
 
         .card:hover {
             transform: translateY(-8px);
-            border-color: var(--pe-cyan);
-            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.3);
+            border-color: var(--python-blue);
+            box-shadow: 0 20px 40px rgba(55, 118, 171, 0.3);
         }
 
         .card-icon {
@@ -111,8 +131,8 @@
         }
 
         .card h3 {
-            font-size: 1.5rem;
-            color: var(--pe-cyan);
+            font-size: 1.4rem;
+            color: var(--python-yellow);
             margin-bottom: 0.5rem;
         }
 
@@ -125,11 +145,11 @@
         .category-label {
             display: inline-block;
             padding: 0.25rem 0.75rem;
-            background: rgba(0, 217, 255, 0.2);
-            border: 1px solid var(--pe-cyan);
+            background: rgba(55, 118, 171, 0.2);
+            border: 1px solid var(--python-blue);
             border-radius: 12px;
             font-size: 0.75rem;
-            color: var(--pe-cyan);
+            color: var(--python-blue);
             font-weight: 600;
         }
 
@@ -156,8 +176,8 @@
         }
 
         .btn-back {
-            background: var(--pe-cyan);
-            color: #0a0f1e;
+            background: linear-gradient(135deg, var(--python-blue), var(--python-yellow));
+            color: #fff;
             border: none;
             padding: 0.75rem 1.5rem;
             border-radius: 8px;
@@ -169,7 +189,7 @@
         }
 
         .btn-back:hover {
-            background: #00b8d9;
+            opacity: 0.9;
             transform: translateX(-4px);
         }
 
@@ -196,17 +216,19 @@
             font-size: 1rem;
             border-bottom: 3px solid transparent;
             transition: all 0.3s;
+            position: relative;
         }
 
         .tab-btn.active {
-            color: var(--pe-cyan);
-            border-bottom-color: var(--pe-cyan);
+            color: var(--python-yellow);
+            border-bottom-color: var(--python-yellow);
         }
 
         .tab-btn:hover {
             color: #fff;
         }
 
+        /* Tab Content */
         .tab {
             display: none;
             animation: fadeIn 0.4s;
@@ -216,23 +238,22 @@
             display: block;
         }
 
-        /* Content Sections */
         .section {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             padding: 2rem;
             margin-bottom: 2rem;
         }
 
         .section h2 {
-            color: var(--pe-cyan);
+            color: var(--python-yellow);
             margin-bottom: 1.5rem;
             font-size: 1.8rem;
         }
 
         .section h3 {
-            color: var(--pe-purple);
+            color: var(--python-blue);
             margin: 1.5rem 0 1rem;
             font-size: 1.3rem;
         }
@@ -251,17 +272,17 @@
         td {
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         th {
-            background: rgba(0, 217, 255, 0.15);
-            color: var(--pe-cyan);
+            background: rgba(55, 118, 171, 0.3);
+            color: var(--python-yellow);
             font-weight: 600;
         }
 
         tr:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
         }
 
         /* Code Blocks */
@@ -279,10 +300,39 @@
             color: #ccc;
         }
 
+        /* Syntax Highlighting */
+        .keyword {
+            color: #ff7b72;
+        }
+
+        .string {
+            color: #a5d6ff;
+        }
+
+        .comment {
+            color: #8b949e;
+        }
+
+        .function {
+            color: #d2a8ff;
+        }
+
+        .number {
+            color: #79c0ff;
+        }
+
+        .class {
+            color: #ffa657;
+        }
+
+        .preprocessor {
+            color: #7ee787;
+        }
+
         /* Info Boxes */
         .info-box {
-            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(176, 125, 255, 0.1));
-            border-left: 4px solid var(--pe-cyan);
+            background: linear-gradient(135deg, rgba(55, 118, 171, 0.08), rgba(255, 212, 59, 0.08));
+            border-left: 4px solid var(--python-blue);
             border-radius: 8px;
             padding: 1.5rem;
             margin: 1.5rem 0;
@@ -290,7 +340,7 @@
 
         .box-title {
             font-weight: 700;
-            color: var(--pe-cyan);
+            color: var(--python-yellow);
             margin-bottom: 0.75rem;
             font-size: 1.1rem;
         }
@@ -302,11 +352,15 @@
 
         /* Interview Box */
         .interview-box {
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(163, 113, 247, 0.1));
-            border-left: 4px solid #ff6b35;
+            background: linear-gradient(135deg, rgba(55, 118, 171, 0.08), rgba(255, 212, 59, 0.05));
+            border-left: 4px solid var(--python-yellow);
             border-radius: 8px;
             padding: 1.5rem;
             margin: 1.5rem 0;
+        }
+
+        .interview-box strong {
+            color: var(--python-yellow);
         }
 
         /* Callouts */
@@ -318,18 +372,18 @@
         }
 
         .callout.tip {
-            background: rgba(46, 204, 113, 0.1);
+            background: rgba(46, 204, 113, 0.08);
             border-color: #2ecc71;
         }
 
         .callout.warning {
-            background: rgba(255, 193, 7, 0.1);
+            background: rgba(255, 193, 7, 0.08);
             border-color: #ffc107;
         }
 
         .callout.insight {
-            background: rgba(0, 217, 255, 0.1);
-            border-color: var(--pe-cyan);
+            background: rgba(55, 118, 171, 0.08);
+            border-color: var(--python-blue);
         }
 
         .callout-title {
@@ -346,21 +400,21 @@
         }
 
         .comparison-bad {
-            background: rgba(255, 60, 60, 0.1);
-            border: 1px solid rgba(255, 60, 60, 0.3);
+            background: rgba(255, 60, 60, 0.08);
+            border: 1px solid rgba(255, 60, 60, 0.25);
             border-radius: 8px;
             padding: 1.5rem;
         }
 
         .comparison-good {
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
+            background: rgba(0, 255, 136, 0.08);
+            border: 1px solid rgba(0, 255, 136, 0.25);
             border-radius: 8px;
             padding: 1.5rem;
         }
 
         strong {
-            color: var(--pe-cyan);
+            color: var(--python-yellow);
         }
 
         .hidden {
@@ -379,6 +433,10 @@
             .modules-grid {
                 grid-template-columns: 1fr;
             }
+
+            .container {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
@@ -386,10 +444,11 @@
 <body>
     <div class="container">
         <div class="dashboard active" id="dashboard">
+            <a href="../index.html" class="back-home">← Back to Main Dashboard</a>
             <header>
-                <h1>🧠 Prompt Engineering Masterclass</h1>
-                <p class="subtitle">From Fundamentals to Provider Mastery — Claude · Gemini · GPT · Advanced Techniques
-                </p>
+                <h1>🐍 Python for Data Science & AI</h1>
+                <p class="subtitle">From Fundamentals to Production — NumPy · Pandas · Scikit-learn · PyTorch ·
+                    TensorFlow · Performance Optimization</p>
             </header>
             <div class="modules-grid" id="modulesGrid"></div>
         </div>
