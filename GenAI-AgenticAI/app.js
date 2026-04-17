@@ -1,19 +1,23 @@
-// GenAI & Agentic AI Masterclass — Module Data
+// AI Engineer Masterclass — Module Data (based on AI Engineering Guidebook 2025)
 const modules = [
-    { id: 'llm-fundamentals', icon: '🧠', title: 'LLM Fundamentals', desc: 'Tokenization, attention, pre-training, inference parameters', category: 'Foundation', catClass: 'cat-foundation' },
-    { id: 'transformers', icon: '⚡', title: 'Transformer Architecture', desc: 'Self-attention math, multi-head attention, positional encoding', category: 'Foundation', catClass: 'cat-foundation' },
+    { id: 'llm-fundamentals', icon: '🧠', title: 'LLM Fundamentals', desc: 'Tokenization, attention, pre-training, 7 generation parameters, text generation strategies', category: 'Foundation', catClass: 'cat-foundation' },
+    { id: 'transformers', icon: '⚡', title: 'Transformer Architecture', desc: 'Self-attention math, multi-head attention, positional encoding, MoE vs dense', category: 'Foundation', catClass: 'cat-foundation' },
     { id: 'huggingface', icon: '🤗', title: 'Hugging Face Ecosystem', desc: 'Transformers library, Model Hub, Datasets, Spaces, PEFT', category: 'Core Tools', catClass: 'cat-core' },
-    { id: 'finetuning', icon: '🎯', title: 'Fine-Tuning & PEFT', desc: 'LoRA, QLoRA, Adapters, Instruction-tuning, HF Trainer', category: 'Core', catClass: 'cat-core' },
-    { id: 'rag', icon: '🔍', title: 'RAG Pipelines', desc: 'Chunking, embedding models, vector search, re-ranking', category: 'Core', catClass: 'cat-core' },
+    { id: 'finetuning', icon: '🎯', title: 'Fine-Tuning & PEFT', desc: 'LoRA, QLoRA, SFT vs RFT, GRPO reasoning LLMs, IFT dataset generation', category: 'Core', catClass: 'cat-core' },
+    { id: 'rag', icon: '🔍', title: 'RAG Pipelines', desc: 'Chunking, embedding models, vector search, re-ranking, HyDE, REFRAG, CAG, Agentic RAG', category: 'Core', catClass: 'cat-core' },
     { id: 'vectordb', icon: '🗄️', title: 'Vector Databases', desc: 'FAISS, Pinecone, ChromaDB, HNSW, IVF algorithms', category: 'Core', catClass: 'cat-core' },
-    { id: 'agents', icon: '🤖', title: 'AI Agents & Frameworks', desc: 'ReAct, LangChain, LangGraph, CrewAI, AutoGen', category: 'Agentic', catClass: 'cat-agent' },
-    { id: 'multiagent', icon: '🕸️', title: 'Multi-Agent Systems', desc: 'Orchestration, communication protocols, task decomposition', category: 'Agentic', catClass: 'cat-agent' },
-    { id: 'tools', icon: '🔧', title: 'Function Calling & Tools', desc: 'OpenAI function calling, tool schemas, MCP protocol', category: 'Agentic', catClass: 'cat-agent' },
+    { id: 'context-engineering', icon: '🧩', title: 'Context Engineering', desc: 'What to put in context, 6 context types for agents, manual RAG vs agentic context', category: 'Core', catClass: 'cat-core' },
+    { id: 'agents', icon: '🤖', title: 'AI Agents & Frameworks', desc: 'ReAct, LangChain, LangGraph, CrewAI, AutoGen, 5 levels of agentic AI, memory types', category: 'Agentic', catClass: 'cat-agent' },
+    { id: 'agentic-patterns', icon: '🔮', title: 'Agentic Design Patterns', desc: '5 design patterns, ReAct from scratch, 4 layers of agentic AI, 30 must-know terms', category: 'Agentic', catClass: 'cat-agent' },
+    { id: 'multiagent', icon: '🕸️', title: 'Multi-Agent Systems', desc: '7 patterns, orchestration, supervisor, peer-to-peer, A2A & AG-UI protocols', category: 'Agentic', catClass: 'cat-agent' },
+    { id: 'agent-protocols', icon: '📡', title: 'Agent Protocol Landscape', desc: 'MCP, A2A, AG-UI, Agent Protocol spec, comparison and when to use each', category: 'Agentic', catClass: 'cat-agent' },
+    { id: 'tools', icon: '🔧', title: 'Function Calling & Tools', desc: 'OpenAI function calling, tool schemas, MCP protocol, JSON prompting', category: 'Agentic', catClass: 'cat-agent' },
     { id: 'evaluation', icon: '📊', title: 'Evaluation & Benchmarks', desc: 'LLM-as-a-judge, RAGAS, BLEU/ROUGE, human eval', category: 'Production', catClass: 'cat-production' },
     { id: 'guardrails', icon: '🛡️', title: 'Guardrails & Safety', desc: 'Hallucination detection, content filtering, red-teaming', category: 'Production', catClass: 'cat-production' },
     { id: 'deployment', icon: '🚀', title: 'Deployment & Serving', desc: 'vLLM, TGI, Ollama, quantization (GPTQ/AWQ/GGUF)', category: 'Production', catClass: 'cat-production' },
     { id: 'production', icon: '⚙️', title: 'Production Patterns', desc: 'Caching, streaming, rate limiting, cost optimization', category: 'Production', catClass: 'cat-production' }
 ];
+
 
 const MODULE_CONTENT = {
     'llm-fundamentals': {
@@ -1850,6 +1854,370 @@ router = litellm.Router(
             </div>`
     }
 });
+
+// ─── NEW MODULES FROM AI ENGINEERING GUIDEBOOK 2025 ────────────────────────
+
+MODULE_CONTENT['context-engineering'] = {
+    concepts: `
+        <div class="section">
+            <h2>🧩 Context Engineering</h2>
+            <div class="info-box">
+                <div class="box-title">What is Context Engineering?</div>
+                <div class="box-content">Context Engineering is the discipline of <strong>deciding what information to include in an LLM's context window</strong> at inference time. It's the evolution beyond simple prompt engineering — instead of crafting the right words, you're architecting the right information flow into the model.</div>
+            </div>
+
+            <h3>Why Context Engineering Matters</h3>
+            <p>LLMs have no persistent memory between calls. Every token in the context window costs compute and money. The quality of an LLM's output is directly bounded by the quality of its context. <strong>Garbage in = garbage out</strong> — no matter how capable the model.</p>
+
+            <div class="callout insight">
+                <div class="callout-title">📖 Book Insight (AI Engineering Guidebook 2025)</div>
+                Context Engineering is described as "the art and science of filling the context window with exactly the right information — not too much, not too little — to enable the model to perform the task."
+            </div>
+
+            <h3>6 Types of Contexts for AI Agents</h3>
+            <table>
+                <tr><th>Context Type</th><th>What It Contains</th><th>Example</th></tr>
+                <tr><td><strong>Instructions</strong></td><td>System prompt — role, rules, output format</td><td>"You are a helpful assistant. Always respond in JSON."</td></tr>
+                <tr><td><strong>Memory</strong></td><td>Long-term facts about the user or world</td><td>User's name, preferences, past decisions</td></tr>
+                <tr><td><strong>History</strong></td><td>Recent conversation turns</td><td>Last 10 messages in the chat</td></tr>
+                <tr><td><strong>Retrieved Information</strong></td><td>Documents pulled from RAG / search</td><td>Top-3 relevant docs from vector DB</td></tr>
+                <tr><td><strong>Tool Results</strong></td><td>Outputs from previous tool calls</td><td>API response from a weather service</td></tr>
+                <tr><td><strong>Background Knowledge</strong></td><td>Domain facts injected at system level</td><td>Company product catalog, legal constraints</td></tr>
+            </table>
+
+            <h3>Manual RAG Pipeline vs Agentic Context Engineering</h3>
+            <div class="comparison">
+                <div class="comparison-bad">
+                    <strong>❌ Manual RAG</strong><br><br>
+                    Static retrieval — always pull top-k docs.<br>
+                    Fixed chunking strategy.<br>
+                    No awareness of conversation state.<br>
+                    Context filled mechanically.
+                </div>
+                <div class="comparison-good">
+                    <strong>✅ Agentic Context Engineering</strong><br><br>
+                    Dynamic — agent decides <em>what</em> to retrieve.<br>
+                    Adaptive chunking based on query type.<br>
+                    Tracks conversation history intelligently.<br>
+                    Context assembled based on task needs.
+                </div>
+            </div>
+
+            <h3>Context Window Management</h3>
+            <p>As context grows, three problems arise: <strong>(1) Lost in the middle</strong> — LLMs attend most to the start and end of context, ignoring the middle. <strong>(2) Cost</strong> — every token costs money. <strong>(3) Latency</strong> — processing longer context takes more time. Solutions: summarization of old history, selective retrieval, context compression with smaller models.</p>
+
+            <h3>Context Engineering for Claude</h3>
+            <p>Claude's unique skill is <strong>long-context recall</strong> (200K tokens). Claude's "skills" pattern separates tool use from context assembly. The model reads structured XML context blocks and applies different attention patterns per block type. Claude recommends placing the most important context <strong>last</strong> in the prompt for best recall.</p>
+        </div>`,
+    code: `
+        <div class="section">
+            <h2>💻 Context Engineering — Code Examples</h2>
+            <h3>Dynamic Context Assembly Pattern</h3>
+            <div class="code-block"><span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI
+<span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass
+<span class="keyword">from</span> typing <span class="keyword">import</span> List, Dict
+
+<span class="keyword">@dataclass</span>
+<span class="keyword">class</span> <span class="function">ContextBlock</span>:
+    type: str          <span class="comment"># 'instruction', 'memory', 'history', 'retrieved', 'tool_result'</span>
+    content: str
+    priority: int      <span class="comment"># Higher = kept if context limit hit</span>
+    token_count: int = 0
+
+<span class="keyword">class</span> <span class="function">ContextEngineer</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, max_tokens: int = <span class="number">8000</span>):
+        self.max_tokens = max_tokens
+        self.blocks: List[ContextBlock] = []
+
+    <span class="keyword">def</span> <span class="function">add_block</span>(self, block: ContextBlock):
+        self.blocks.append(block)
+
+    <span class="keyword">def</span> <span class="function">build_context</span>(self) -> List[Dict]:
+        <span class="comment"># Sort by priority, trim to fit token budget</span>
+        sorted_blocks = sorted(self.blocks, key=<span class="keyword">lambda</span> b: -b.priority)
+        used_tokens = <span class="number">0</span>
+        selected = []
+        <span class="keyword">for</span> block <span class="keyword">in</span> sorted_blocks:
+            <span class="keyword">if</span> used_tokens + block.token_count <= self.max_tokens:
+                selected.append(block)
+                used_tokens += block.token_count
+
+        <span class="comment"># Re-order: instructions first, history last</span>
+        instructions = [b <span class="keyword">for</span> b <span class="keyword">in</span> selected <span class="keyword">if</span> b.type == <span class="string">'instruction'</span>]
+        memory      = [b <span class="keyword">for</span> b <span class="keyword">in</span> selected <span class="keyword">if</span> b.type == <span class="string">'memory'</span>]
+        retrieved   = [b <span class="keyword">for</span> b <span class="keyword">in</span> selected <span class="keyword">if</span> b.type == <span class="string">'retrieved'</span>]
+        tool_res    = [b <span class="keyword">for</span> b <span class="keyword">in</span> selected <span class="keyword">if</span> b.type == <span class="string">'tool_result'</span>]
+        history     = [b <span class="keyword">for</span> b <span class="keyword">in</span> selected <span class="keyword">if</span> b.type == <span class="string">'history'</span>]
+
+        ordered = instructions + memory + retrieved + tool_res + history
+        messages = []
+        <span class="keyword">for</span> b <span class="keyword">in</span> ordered:
+            role = <span class="string">'system'</span> <span class="keyword">if</span> b.type == <span class="string">'instruction'</span> <span class="keyword">else</span> <span class="string">'user'</span>
+            messages.append({<span class="string">'role'</span>: role, <span class="string">'content'</span>: b.content})
+        <span class="keyword">return</span> messages
+
+<span class="comment"># Usage</span>
+ctx = ContextEngineer(max_tokens=<span class="number">6000</span>)
+ctx.add_block(ContextBlock(<span class="string">'instruction'</span>, <span class="string">'You are a helpful AI.'</span>, priority=<span class="number">100</span>, token_count=<span class="number">10</span>))
+ctx.add_block(ContextBlock(<span class="string">'retrieved'</span>, retrieved_docs, priority=<span class="number">80</span>, token_count=<span class="number">500</span>))
+ctx.add_block(ContextBlock(<span class="string">'history'</span>, chat_history, priority=<span class="number">60</span>, token_count=<span class="number">200</span>))
+messages = ctx.build_context()
+</div>
+        </div>`,
+    interview: `
+        <div class="section">
+            <h2>🎯 Context Engineering — Interview Questions</h2>
+            <div class="interview-box"><strong>Q1: What is context engineering and how does it differ from prompt engineering?</strong><p><strong>Answer:</strong> Prompt engineering focuses on crafting the right instructions/wording. Context engineering is broader — it's about deciding what information (memories, retrieved docs, tool results, history) to put into the context window, how to prioritize it when space is limited, and in what order. It's the systems-level discipline of managing an LLM's information diet at runtime.</p></div>
+            <div class="interview-box"><strong>Q2: What is the "lost in the middle" problem?</strong><p><strong>Answer:</strong> LLMs tend to attend most strongly to content at the very beginning and very end of their context window, while information in the middle gets relatively less attention. This means placing critical information in the middle of a long context leads to degraded performance. Mitigation: put the most important facts last, or use retrieval to place relevant chunks near the query.</p></div>
+            <div class="interview-box"><strong>Q3: Name the 6 types of context for AI agents.</strong><p><strong>Answer:</strong> (1) Instructions — system prompt with role and rules. (2) Memory — long-term facts about the user/world. (3) History — recent conversation. (4) Retrieved Information — documents from RAG. (5) Tool Results — outputs from function calls. (6) Background Knowledge — domain-specific injected facts. Each plays a different role in enabling the agent to reason correctly.</p></div>
+            <div class="interview-box"><strong>Q4: How do you handle context window limits in production agents?</strong><p><strong>Answer:</strong> (1) Summarize older history instead of including raw messages. (2) Use a context prioritization system — rank blocks by importance and trim lowest-priority first. (3) Compress retrieved documents with a small "compressor LLM" before adding to context. (4) Use structured memory stores that selectively load relevant facts, not everything. (5) Use streaming to process very long documents in chunks.</p></div>
+        </div>`
+};
+
+MODULE_CONTENT['agentic-patterns'] = {
+    concepts: `
+        <div class="section">
+            <h2>🔮 Agentic Design Patterns</h2>
+            <div class="info-box">
+                <div class="box-title">What are Agentic Design Patterns?</div>
+                <div class="box-content">Agentic design patterns are <strong>reusable architectural blueprints</strong> for building reliable AI agents. Just as software design patterns (Strategy, Observer, etc.) solved recurring OOP problems, agentic patterns solve recurring agent problems like reliability, delegation, and parallelism.</div>
+            </div>
+
+            <h3>5 Core Agentic AI Design Patterns</h3>
+            <table>
+                <tr><th>#</th><th>Pattern</th><th>Description</th><th>When to Use</th></tr>
+                <tr><td>1</td><td><strong>Reflection</strong></td><td>Agent critiques its own output, then revises it</td><td>When accuracy matters more than speed</td></tr>
+                <tr><td>2</td><td><strong>Tool Use</strong></td><td>Agent calls external tools (search, code, APIs)</td><td>When LLM alone can't solve the task</td></tr>
+                <tr><td>3</td><td><strong>Planning</strong></td><td>Agent generates a multi-step plan before acting</td><td>Complex tasks with many sub-steps</td></tr>
+                <tr><td>4</td><td><strong>Multi-Agent</strong></td><td>Multiple specialized agents collaborate via messages</td><td>Tasks requiring different expertise</td></tr>
+                <tr><td>5</td><td><strong>Memory</strong></td><td>Agent stores and retrieves past interactions</td><td>Long-running or personalized applications</td></tr>
+            </table>
+
+            <h3>5 Levels of Agentic AI Systems</h3>
+            <table>
+                <tr><th>Level</th><th>Name</th><th>Capability</th></tr>
+                <tr><td>0</td><td><strong>No AI</strong></td><td>Purely rule-based or human-driven</td></tr>
+                <tr><td>1</td><td><strong>AI-Assisted</strong></td><td>LLM suggests, human decides and executes</td></tr>
+                <tr><td>2</td><td><strong>AI Co-pilot</strong></td><td>LLM acts, but human approves each action</td></tr>
+                <tr><td>3</td><td><strong>AI Agent</strong></td><td>Autonomous execution within defined scope</td></tr>
+                <tr><td>4</td><td><strong>Agentic AI</strong></td><td>Multi-step autonomous operation, self-correcting</td></tr>
+                <tr><td>5</td><td><strong>AI Workforce</strong></td><td>Multiple agents, full autonomy over long horizons</td></tr>
+            </table>
+
+            <h3>4 Layers of Agentic AI Architecture</h3>
+            <p><strong>Layer 1 — Perception:</strong> Receiving inputs (text, images, tool results, sensor data). <strong>Layer 2 — Reasoning:</strong> The LLM processing context and deciding on actions. <strong>Layer 3 — Action:</strong> Executing tool calls, writing code, sending messages. <strong>Layer 4 — Memory:</strong> Storing results, updating knowledge, retrieving past context. This layered view clarifies where failures occur.</p>
+
+            <h3>ReAct Pattern — The Foundation of Modern Agents</h3>
+            <p>ReAct (Reasoning + Acting) is the dominant agentic loop: <strong>Thought → Action → Observation</strong>. The model writes a thought explaining its reasoning, selects an action (tool call), observes the result, then loops until done. This interleaving of reasoning and acting proved more reliable than pure chain-of-thought or pure action-only approaches.</p>
+            <div class="formula">Loop: [Thought] → [Action: tool(args)] → [Observation: result] → [Thought] → ... → [Final Answer]</div>
+
+            <h3>30 Must-Know Agentic AI Terms</h3>
+            <p>Key vocabulary every AI Engineer must know: <strong>Tool</strong> (callable function), <strong>Handoff</strong> (passing control between agents), <strong>Orchestrator</strong> (agent that delegates), <strong>Sub-agent</strong> (executes delegated tasks), <strong>Scratchpad</strong> (agent's working memory mid-task), <strong>Guardrails</strong> (safety constraints), <strong>Grounding</strong> (connecting outputs to real-world facts), <strong>Hallucination</strong> (false confident output), <strong>Context window</strong> (max tokens the model sees), <strong>Token budget</strong> (allocated tokens for a task), <strong>System prompt</strong> (persistent instructions), <strong>Function schema</strong> (JSON spec for tools), <strong>Streaming</strong> (incremental output), <strong>Interrupts</strong> (human-in-the-loop breakpoints)...</p>
+        </div>`,
+    code: `
+        <div class="section">
+            <h2>💻 Agentic Design Patterns — Code Examples</h2>
+            <h3>Reflection Pattern</h3>
+            <div class="code-block"><span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI
+client = OpenAI()
+
+<span class="keyword">def</span> <span class="function">agent_with_reflection</span>(task: str, max_rounds: int = <span class="number">3</span>) -> str:
+    <span class="comment"># Step 1: Generate initial response</span>
+    response = client.chat.completions.create(
+        model=<span class="string">"gpt-4o"</span>,
+        messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: task}]
+    ).choices[<span class="number">0</span>].message.content
+
+    <span class="keyword">for</span> _ <span class="keyword">in</span> range(max_rounds):
+        <span class="comment"># Step 2: Self-critique</span>
+        critique = client.chat.completions.create(
+            model=<span class="string">"gpt-4o"</span>,
+            messages=[
+                {<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: task},
+                {<span class="string">"role"</span>: <span class="string">"assistant"</span>, <span class="string">"content"</span>: response},
+                {<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Review your answer. What's wrong or missing? Be specific."</span>}
+            ]
+        ).choices[<span class="number">0</span>].message.content
+
+        <span class="keyword">if</span> <span class="string">"looks correct"</span> <span class="keyword">in</span> critique.lower() <span class="keyword">or</span> <span class="string">"no issues"</span> <span class="keyword">in</span> critique.lower():
+            <span class="keyword">break</span>
+
+        <span class="comment"># Step 3: Revise</span>
+        response = client.chat.completions.create(
+            model=<span class="string">"gpt-4o"</span>,
+            messages=[
+                {<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: task},
+                {<span class="string">"role"</span>: <span class="string">"assistant"</span>, <span class="string">"content"</span>: response},
+                {<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: f<span class="string">"Fix these issues: {critique}"</span>}
+            ]
+        ).choices[<span class="number">0</span>].message.content
+
+    <span class="keyword">return</span> response
+</div>
+            <h3>ReAct Pattern from Scratch</h3>
+            <div class="code-block"><span class="keyword">import</span> json, re
+<span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI
+
+client = OpenAI()
+
+TOOLS = {
+    <span class="string">"search"</span>: <span class="keyword">lambda</span> q: f<span class="string">"[Search result for '{q}': Paris is the capital of France]"</span>,
+    <span class="string">"calculate"</span>: <span class="keyword">lambda</span> expr: str(eval(expr))
+}
+
+SYSTEM = <span class="string">"""You are a ReAct agent. At each step output ONLY:
+Thought: your reasoning
+Action: {"tool": "search"|"calculate", "input": "..."}
+Or when done:
+Thought: I have the answer
+Final Answer: <your answer>"""</span>
+
+<span class="keyword">def</span> <span class="function">react_agent</span>(question: str, max_steps: int = <span class="number">5</span>) -> str:
+    messages = [
+        {<span class="string">"role"</span>: <span class="string">"system"</span>, <span class="string">"content"</span>: SYSTEM},
+        {<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: question}
+    ]
+    <span class="keyword">for</span> step <span class="keyword">in</span> range(max_steps):
+        response = client.chat.completions.create(
+            model=<span class="string">"gpt-4o"</span>, messages=messages
+        ).choices[<span class="number">0</span>].message.content
+        messages.append({<span class="string">"role"</span>: <span class="string">"assistant"</span>, <span class="string">"content"</span>: response})
+
+        <span class="keyword">if</span> <span class="string">"Final Answer:"</span> <span class="keyword">in</span> response:
+            <span class="keyword">return</span> response.split(<span class="string">"Final Answer:"</span>)[<span class="number">1</span>].strip()
+
+        action_match = re.search(r<span class="string">'Action:\s*(\{.*?\})'</span>, response, re.DOTALL)
+        <span class="keyword">if</span> action_match:
+            action = json.loads(action_match.group(<span class="number">1</span>))
+            observation = TOOLS[action[<span class="string">"tool"</span>]](action[<span class="string">"input"</span>])
+            messages.append({<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: f<span class="string">"Observation: {observation}"</span>})
+    <span class="keyword">return</span> <span class="string">"Max steps reached"</span>
+
+print(react_agent(<span class="string">"What is the capital of France and what is 15 * 23?"</span>))
+</div>
+        </div>`,
+    interview: `
+        <div class="section">
+            <h2>🎯 Agentic Design Patterns — Interview Questions</h2>
+            <div class="interview-box"><strong>Q1: What are the 5 agentic AI design patterns?</strong><p><strong>Answer:</strong> (1) Reflection — agent critiques and revises its own output. (2) Tool Use — agent calls external functions/APIs. (3) Planning — agent creates a multi-step plan before execution. (4) Multi-Agent — multiple agents collaborate, each specializing in different sub-tasks. (5) Memory — agent persists and retrieves information across interactions. These patterns are often combined: e.g., a planning agent that uses tools and reflects on results.</p></div>
+            <div class="interview-box"><strong>Q2: Explain the ReAct loop.</strong><p><strong>Answer:</strong> ReAct (Reasoning + Acting) interleaves thinking with tool use: (1) Thought — model reasons about what to do next. (2) Action — model calls a tool with specific arguments. (3) Observation — tool result is appended to context. This loop repeats until the model outputs "Final Answer." The key insight is that grounding reasoning in real tool observations prevents hallucination chains and enables multi-step problem solving.</p></div>
+            <div class="interview-box"><strong>Q3: What are the 5 levels of agentic AI systems?</strong><p><strong>Answer:</strong> Level 0: No AI. Level 1: AI-Assisted (suggests, human acts). Level 2: Co-pilot (AI acts, human approves). Level 3: AI Agent (autonomous in defined scope). Level 4: Agentic AI (multi-step autonomous, self-correcting). Level 5: AI Workforce (swarm of agents, long-horizon autonomy). Most production systems today are Level 2-3; Level 4-5 is emerging.</p></div>
+        </div>`
+};
+
+MODULE_CONTENT['agent-protocols'] = {
+    concepts: `
+        <div class="section">
+            <h2>📡 Agent Protocol Landscape</h2>
+            <div class="info-box">
+                <div class="box-title">Why Do Agent Protocols Matter?</div>
+                <div class="box-content">As AI agents move from single-LLM apps to interconnected systems, they need <strong>standardized communication protocols</strong>. Just like HTTP standardized web communication, agent protocols standardize how agents discover capabilities, delegate tasks, share context, and return results — enabling interoperability across vendors and frameworks.</div>
+            </div>
+
+            <h3>The 4 Key Protocols You Must Know</h3>
+            <table>
+                <tr><th>Protocol</th><th>Created By</th><th>Purpose</th><th>Layer</th></tr>
+                <tr><td><strong>MCP</strong> (Model Context Protocol)</td><td>Anthropic</td><td>Standardize how LLMs connect to tools & data sources</td><td>Tool/Data Layer</td></tr>
+                <tr><td><strong>A2A</strong> (Agent-to-Agent)</td><td>Google</td><td>Standardize how agents discover and delegate to other agents</td><td>Agent Communication Layer</td></tr>
+                <tr><td><strong>AG-UI</strong> (Agent-User Interaction)</td><td>CopilotKit</td><td>Standardize how agents communicate state to frontends</td><td>Presentation Layer</td></tr>
+                <tr><td><strong>Agent Protocol</strong></td><td>AI Engineer Foundation</td><td>OpenAPI spec for agent task management</td><td>Task Management Layer</td></tr>
+            </table>
+
+            <h3>MCP — Model Context Protocol (Deep Dive)</h3>
+            <p>MCP solves the N×M integration problem. Before MCP: each LLM app needed custom integrations to each tool/database. With MCP: each tool builds one MCP Server; each LLM app builds one MCP Client. They interoperate automatically.</p>
+            <table>
+                <tr><th>MCP Component</th><th>Role</th><th>Analogy</th></tr>
+                <tr><td><strong>MCP Host</strong></td><td>App running the LLM (Claude Desktop, Cursor, your app)</td><td>Web Browser</td></tr>
+                <tr><td><strong>MCP Client</strong></td><td>Protocol client inside the host</td><td>HTTP Client</td></tr>
+                <tr><td><strong>MCP Server</strong></td><td>Exposes tools, resources, prompts</td><td>Web Server</td></tr>
+            </table>
+            <p>MCP Servers expose 3 primitives: <strong>Tools</strong> (executable functions), <strong>Resources</strong> (read-only data), <strong>Prompts</strong> (reusable templates). Transport: stdio (local) or HTTP+SSE (remote).</p>
+
+            <h3>A2A — Agent-to-Agent Protocol (Google)</h3>
+            <p>A2A allows agents built by different vendors to collaborate. An agent publishes an <strong>Agent Card</strong> (JSON) describing its capabilities. Other agents discover it and delegate tasks using standardized request/response schemas. Key concepts: <strong>Task</strong> (unit of work), <strong>Artifact</strong> (output produced), <strong>Part</strong> (typed content: text, file, data). A2A is transport-agnostic (HTTP, gRPC, etc.).</p>
+
+            <h3>AG-UI — Agent-User Interaction Protocol</h3>
+            <p>AG-UI standardizes the real-time event stream between agents and frontend UIs. Instead of building custom WebSocket logic for every agent app, AG-UI defines: <strong>streaming text events</strong>, <strong>tool call events</strong>, <strong>state sync events</strong>, and <strong>lifecycle events</strong> (run_start, run_end). This means any AG-UI-compatible agent can power any AG-UI-compatible frontend.</p>
+
+            <h3>When to Use Which Protocol?</h3>
+            <div class="comparison">
+                <div class="comparison-good">
+                    <strong>Use MCP when:</strong><br>
+                    Connecting LLM to external tools, files, APIs, or databases. Building reusable tool servers that work with multiple LLM apps.
+                </div>
+                <div class="comparison-good">
+                    <strong>Use A2A when:</strong><br>
+                    Orchestrating multiple specialized agents from different teams/vendors. Delegating sub-tasks from one agent to another.
+                </div>
+            </div>
+        </div>`,
+    code: `
+        <div class="section">
+            <h2>💻 Agent Protocols — Code Examples</h2>
+            <h3>Building a Simple MCP Server (Python SDK)</h3>
+            <div class="code-block"><span class="preprocessor"># pip install mcp</span>
+<span class="keyword">from</span> mcp.server.fastmcp <span class="keyword">import</span> FastMCP
+<span class="keyword">import</span> httpx
+
+<span class="comment"># Create an MCP server</span>
+mcp = FastMCP(<span class="string">"Weather Server"</span>)
+
+<span class="keyword">@mcp.tool()</span>
+<span class="keyword">async def</span> <span class="function">get_weather</span>(city: str) -> str:
+    <span class="string">"""Get current weather for a city."""</span>
+    <span class="keyword">async with</span> httpx.AsyncClient() <span class="keyword">as</span> client:
+        resp = <span class="keyword">await</span> client.get(
+            f<span class="string">"https://wttr.in/{city}?format=3"</span>
+        )
+        <span class="keyword">return</span> resp.text
+
+<span class="keyword">@mcp.resource(</span><span class="string">"weather://cities"</span><span class="keyword">)</span>
+<span class="keyword">def</span> <span class="function">list_cities</span>() -> str:
+    <span class="string">"""List of supported cities."""</span>
+    <span class="keyword">return</span> <span class="string">"London, Paris, Tokyo, New York, Sydney"</span>
+
+<span class="keyword">@mcp.prompt()</span>
+<span class="keyword">def</span> <span class="function">weather_report_prompt</span>(city: str) -> str:
+    <span class="string">"""Generate a professional weather report."""</span>
+    <span class="keyword">return</span> f<span class="string">"Write a professional weather report for {city} in 3 sentences."</span>
+
+<span class="comment"># Run the server (stdio transport for local use)</span>
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    mcp.run()  <span class="comment"># Connects with Claude Desktop, Cursor, etc.</span>
+</div>
+            <h3>A2A Agent Card Example</h3>
+            <div class="code-block"><span class="comment"># Agent Card: JSON descriptor other agents discover</span>
+agent_card = {
+    <span class="string">"name"</span>: <span class="string">"CodeReviewAgent"</span>,
+    <span class="string">"description"</span>: <span class="string">"Reviews Python code for bugs, style, and security"</span>,
+    <span class="string">"version"</span>: <span class="string">"1.0"</span>,
+    <span class="string">"capabilities"</span>: {
+        <span class="string">"streaming"</span>: <span class="keyword">True</span>,
+        <span class="string">"pushNotifications"</span>: <span class="keyword">False</span>,
+    },
+    <span class="string">"skills"</span>: [
+        {
+            <span class="string">"id"</span>: <span class="string">"review_code"</span>,
+            <span class="string">"name"</span>: <span class="string">"Review Code"</span>,
+            <span class="string">"description"</span>: <span class="string">"Review Python code and return issues"</span>,
+            <span class="string">"inputModes"</span>: [<span class="string">"text"</span>],
+            <span class="string">"outputModes"</span>: [<span class="string">"text"</span>]
+        }
+    ],
+    <span class="string">"url"</span>: <span class="string">"https://myagent.example.com/a2a"</span>
+}
+</div>
+        </div>`,
+    interview: `
+        <div class="section">
+            <h2>🎯 Agent Protocol Landscape — Interview Questions</h2>
+            <div class="interview-box"><strong>Q1: What problem does MCP solve?</strong><p><strong>Answer:</strong> MCP solves the N×M integration problem. Before MCP, if you had N LLM applications and M tools/data sources, you needed N×M custom integrations. With MCP, each tool builds one MCP Server and each app builds one MCP Client — reducing to N+M integrations. It standardizes what tools expose (functions, data, templates) and how LLMs request them.</p></div>
+            <div class="interview-box"><strong>Q2: How does A2A differ from MCP?</strong><p><strong>Answer:</strong> MCP is about an LLM connecting to tools and data sources — it's a vertical protocol (LLM → tools). A2A is about agents communicating with other agents — it's a horizontal protocol (agent ↔ agent). You'd use MCP to give your agent access to a database, and A2A to have your orchestrator agent delegate a coding task to a specialized code-writing agent.</p></div>
+            <div class="interview-box"><strong>Q3: What is AG-UI and why does it matter?</strong><p><strong>Answer:</strong> AG-UI (Agent-User Interaction protocol) standardizes the streaming event protocol between AI agents and their frontend UIs. Without AG-UI, every agent app needs custom WebSocket or SSE logic for showing streaming responses, tool call status, and agent state in the UI. AG-UI defines a standard event schema so any compliant agent can power any compliant frontend — enabling a plugin-like ecosystem of agent UIs.</p></div>
+            <div class="interview-box"><strong>Q4: What are the 3 primitives exposed by an MCP Server?</strong><p><strong>Answer:</strong> (1) <strong>Tools</strong> — executable functions the LLM can call (like "search_web", "run_sql"). (2) <strong>Resources</strong> — read-only data the LLM can reference for context (like database schemas, file contents). (3) <strong>Prompts</strong> — reusable prompt templates the host app can offer to users. Each primitive serves a different role in the LLM's workflow.</p></div>
+        </div>`
+};
+
 // ─── Dashboard Render ───────────────────────────────────────────────────────
 function renderDashboard() {
     const grid = document.getElementById('modulesGrid');
