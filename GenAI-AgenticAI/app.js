@@ -51,20 +51,31 @@ const MODULE_CONTENT = {
                 <p><strong>Algorithms:</strong> BPE (GPT, LLaMA) — merges frequent byte pairs iteratively. WordPiece (BERT) — maximizes likelihood. SentencePiece/Unigram (T5) — statistical segmentation. Modern LLMs use vocabularies of 32K-128K tokens.</p>
 
                 <h3>3. Inference Parameters — Controlling Output</h3>
+                <p>Every generation from an LLM is shaped by parameters under the hood. Knowing how to tune these is critical for production AI engineering.</p>
                 <table>
-                    <tr><th>Parameter</th><th>What it controls</th><th>Range</th><th>When to change</th></tr>
-                    <tr><td><strong>Temperature</strong></td><td>Sharpens/flattens the probability distribution</td><td>0.0 – 2.0</td><td>0 for extraction/code, 0.7 for chat, 1.2+ for creative writing</td></tr>
-                    <tr><td><strong>Top-p (nucleus)</strong></td><td>Cumulative probability cutoff — only consider tokens within top-p mass</td><td>0.7 – 1.0</td><td>Use 0.9 as default; lower for focused, higher for diverse</td></tr>
-                    <tr><td><strong>Top-k</strong></td><td>Hard limit on candidate tokens</td><td>10 – 100</td><td>Rarely needed if using top-p; useful as safety net</td></tr>
-                    <tr><td><strong>Frequency penalty</strong></td><td>Penalizes repeated tokens proportionally</td><td>0.0 – 2.0</td><td>Increase to reduce repetitive output</td></tr>
-                    <tr><td><strong>Presence penalty</strong></td><td>Flat penalty for any repeated token</td><td>0.0 – 2.0</td><td>Increase to encourage topic diversity</td></tr>
-                    <tr><td><strong>Max tokens</strong></td><td>Generation length limit</td><td>1 – 128K</td><td>Set to expected output length + margin; never use -1 for safety</td></tr>
-                    <tr><td><strong>Stop sequences</strong></td><td>Strings that stop generation</td><td>Any text</td><td>Essential for structured output: stop at "}" for JSON</td></tr>
+                    <tr><th>Parameter</th><th>What it controls</th><th>Book Insight / Use Case</th></tr>
+                    <tr><td><strong>1. Max tokens</strong></td><td>Hard cap on generation length</td><td>Lower for speed/safety; Higher for summaries</td></tr>
+                    <tr><td><strong>2. Temperature</strong></td><td>Randomness/Creativity</td><td>~0 for deterministic QA; 0.7-1.0 for brainstorming</td></tr>
+                    <tr><td><strong>3. Top-k</strong></td><td>Limit sampling to top K tokens</td><td>K=5 forces the model to choose only from 5 most likely words</td></tr>
+                    <tr><td><strong>4. Top-p (nucleus)</strong></td><td>Limit to smallest set covering p% mass</td><td>P=0.9 is adaptive; handles coherence vs diversity better than K</td></tr>
+                    <tr><td><strong>5. Frequency penalty</strong></td><td>Discourage reusing frequent tokens</td><td>Set > 0 to stop the model from repeating itself in loops</td></tr>
+                    <tr><td><strong>6. Presence penalty</strong></td><td>Encourage new topics/tokens</td><td>Set > 0 to push the model towards broad exploration</td></tr>
+                    <tr><td><strong>7. Stop sequences</strong></td><td>Halts generation at specific tokens</td><td>Critical for structured JSON (stop at "}") or code blocks</td></tr>
+                    <tr><td><strong>Bonus: Min-p</strong></td><td>Dynamic probability threshold</td><td>Only keeps tokens at least X% as likely as the top token. Most robust for coherence.</td></tr>
                 </table>
                 <div class="callout warning">
                     <div class="callout-title">⚠️ Common Mistake</div>
                     <p>Don't combine temperature=0 with top_p=0.1 — they interact. Use <strong>either</strong> temperature OR top-p for sampling control, not both. OpenAI recommends changing one and leaving the other at default.</p>
                 </div>
+
+                <h3>4. 4 LLM Text Generation Strategies</h3>
+                <p>Decoding is the process of picking the next token. How we pick it determines the style of the output.</p>
+                <ul>
+                    <li><strong>Greedy Strategy:</strong> Always pick the single token with the highest probability. <em>Issue:</em> Often leads to repetitive, low-quality loops.</li>
+                    <li><strong>Multinomial Sampling:</strong> Sample from the probability distribution (controlled by temperature). <em>Benefit:</em> Much more creative and human-like.</li>
+                    <li><strong>Beam Search:</strong> Explores multiple parallel paths ("beams") and picks the sequence with the highest total probability. <em>Best for:</em> Translation and code where sequence-level correctness matters more than creativity.</li>
+                    <li><strong>Nucleus (Top-p) Sampling:</strong> Restricts sampling to a dynamic "nucleus" of tokens that sum to probability p. <em>Best for:</em> General purpose chat.</li>
+                </ul>
 
                 <h3>4. Context Window — The LLM's Working Memory</h3>
                 <p>The context window determines how many tokens the model can process in a single call (input + output combined).</p>
@@ -740,6 +751,26 @@ api.create_repo(<span class="string">"your-username/my-demo"</span>, repo_type=<
                 </table>
                 <h3>QLoRA — The Game Changer</h3>
                 <p>QLoRA (Dettmers et al., 2023) combines: (1) <strong>4-bit NF4 quantization</strong> of the base model, (2) <strong>double quantization</strong> to compress quantization constants, (3) <strong>paged optimizers</strong> to handle gradient spikes. Fine-tune a 65B model on a single 48GB GPU — impossible before QLoRA.</p>
+                 <h3>7 LLM Fine-tuning Techniques</h3>
+                <table>
+                    <tr><th>Technique</th><th>How It Works</th><th>Use Case</th></tr>
+                    <tr><td><strong>1. SFT</strong></td><td>Supervised Fine-Tuning on (Q, A) pairs</td><td>Instruction following</td></tr>
+                    <tr><td><strong>2. RLHF</strong></td><td>Reward model + PPO optimization</td><td>Human value alignment</td></tr>
+                    <tr><td><strong>3. DPO</strong></td><td>Directly optimize from preferences</td><td>Popular, stable alternative to RLHF</td></tr>
+                    <tr><td><strong>4. LoRA / QLoRA</strong></td><td>Low-rank adaptation</td><td>Efficient training on consumer GPUs</td></tr>
+                    <tr><td><strong>5. RFT</strong></td><td>Rejection Fine-Tuning</td><td>Self-improving by filtering best outputs</td></tr>
+                    <tr><td><strong>6. GRPO</strong></td><td>Group Relative Policy Optimization</td><td>The core of DeepSeek-R1; trains reasoning models without a separate value model</td></tr>
+                    <tr><td><strong>7. IFT</strong></td><td>Instruction Fine-Tuning</td><td>Bridge gap between base model and agent</td></tr>
+                </table>
+
+                <div class="callout insight">
+                    <div class="callout-title">📖 Book Insight: SFT vs RFT</div>
+                    <p><strong>SFT (Supervised Fine-Tuning)</strong> trains on fixed human-written data. <strong>RFT (Rejection Fine-Tuning)</strong> uses the model itself to generate multiple responses, filters them for correctness (e.g., using a code compiler or calculator), and then fine-tunes only on those verified correct samples. This allows models to self-improve beyond human capabilities in certain domains.</p>
+                </div>
+
+                <h3>Building a Reasoning LLM (GRPO)</h3>
+                <p>DeepSeek's <strong>GRPO</strong> (Group Relative Policy Optimization) is the new frontier. Instead of a separate reward model, you generate a group of outputs and rank them relative to each other (e.g., based on mathematical correctness or formatting). This forces the model to learn long chains of thought and "thinking" behavior.</p>
+
                 <h3>When to Fine-Tune vs RAG</h3>
                 <div class="comparison">
                     <div class="comparison-bad"><strong>Use RAG when:</strong> Knowledge changes frequently, facts need to be cited, domain data is large/dynamic. Lower cost, easier updates.</div>
@@ -781,6 +812,35 @@ trainer = SFTTrainer(
     args=SFTConfig(output_dir=<span class="string">"./llama-finetuned"</span>, num_train_epochs=<span class="number">2</span>)
 )
 trainer.train()</div>
+
+                <h3>Implementing LoRA From Scratch (Conceptual)</h3>
+                <div class="code-block"><span class="keyword">import</span> torch
+<span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn
+
+<span class="keyword">class</span> <span class="function">LoRALayer</span>(nn.Module):
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, W, rank=<span class="number">8</span>, alpha=<span class="number">16</span>):
+        super().__init__()
+        self.W = W  <span class="comment"># Original frozen weights (d x k)</span>
+        d, k = W.shape
+        <span class="comment"># Low-rank matrices A and B</span>
+        self.A = nn.Parameter(torch.randn(d, rank) / (rank**<span class="number">0.5</span>))
+        self.B = nn.Parameter(torch.zeros(rank, k))
+        self.scaling = alpha / rank
+
+    <span class="keyword">def</span> <span class="function">forward</span>(self, x):
+        <span class="comment"># Output = xW + (xAB) * scaling</span>
+        base_out = x @ self.W
+        lora_out = (x @ self.A @ self.B) * self.scaling
+        <span class="keyword">return</span> base_out + lora_out
+
+<span class="comment"># DeepSeek-R1 style GRPO loop (simplified)</span>
+<span class="keyword">def</span> <span class="function">grpo_step</span>(model, query, num_samples=<span class="number">8</span>):
+    outputs = model.generate(query, n=num_samples)
+    rewards = [compute_reward(o) <span class="keyword">for</span> o <span class="keyword">in</span> outputs]
+    <span class="comment"># Normalize rewards within the group</span>
+    adv = [(r - mean(rewards)) / std(rewards) <span class="keyword">for</span> r <span class="keyword">in</span> rewards]
+    loss = compute_ppo_loss(outputs, adv)
+    loss.backward()</div>
                 <h3>Merge LoRA Weights for Deployment</h3>
                 <div class="code-block"><span class="keyword">from</span> peft <span class="keyword">import</span> PeftModel
 
@@ -840,21 +900,29 @@ Object.assign(MODULE_CONTENT, {
                     <tr><td>all-MiniLM-L6-v2</td><td>384</td><td>256</td><td>Good</td><td>Free</td></tr>
                 </table>
 
-                <h3>4. Advanced RAG Techniques</h3>
+                <h3>4. 8 Modern RAG Architectures</h3>
                 <table>
-                    <tr><th>Technique</th><th>How It Works</th><th>When to Use</th></tr>
-                    <tr><td><strong>Hybrid Search</strong></td><td>BM25 (keyword) + vector via Reciprocal Rank Fusion</td><td>Queries mixing keywords + semantic intent</td></tr>
-                    <tr><td><strong>Re-ranking</strong></td><td>Cross-encoder re-scores top-N for precision</td><td>Always — retrieve 20, re-rank to 5</td></tr>
-                    <tr><td><strong>HyDE</strong></td><td>LLM generates hypothetical answer, embed that</td><td>Short queries that don't match doc vocab</td></tr>
-                    <tr><td><strong>Parent-child chunks</strong></td><td>Index small chunks, retrieve parent doc</td><td>When chunk boundaries lose context</td></tr>
-                    <tr><td><strong>Query decomposition</strong></td><td>Break complex query into sub-queries</td><td>Multi-part questions</td></tr>
-                    <tr><td><strong>Self-RAG</strong></td><td>Model decides whether to retrieve</td><td>When retrieval isn't always needed</td></tr>
+                    <tr><th>Architecture</th><th>How It Works</th><th>Advantage</th></tr>
+                    <tr><td><strong>Naive RAG</strong></td><td>Retrieve top-K, generate</td><td>Simplest, 70% accuracy</td></tr>
+                    <tr><td><strong>Advanced RAG</strong></td><td>Pre-retrieval (HyDE) + Post (Re-ranking)</td><td>Better precision, 85% accuracy</td></tr>
+                    <tr><td><strong>Self-RAG</strong></td><td>Agent decides <em>if</em> retrieval is needed</td><td>Reduces token cost / hallucinations</td></tr>
+                    <tr><td><strong>REFRAG</strong></td><td>Retrieve first, then Refine query and Retrieve again</td><td>Critical for multi-hop reasoning</td></tr>
+                    <tr><td><strong>CAG</strong> (Context Augmented Gen)</td><td>Pre-process docs into model KV cache</td><td>Ultra-low latency for fixed datasets</td></tr>
+                    <tr><td><strong>HyDE</strong></td><td>Embed hypothetical answer, not query</td><td>Handles vocabulary mismatch</td></tr>
+                    <tr><td><strong>Agentic RAG</strong></td><td>Agent uses search tool loop as needed</td><td>Most flexible but slowest</td></tr>
+                    <tr><td><strong>Knowledge Graph RAG</strong></td><td>Retrieve triple relations (GraphRAG)</td><td>Excellent for complex connections</td></tr>
                 </table>
 
-                <h3>5. Multi-Modal RAG</h3>
-                <p>Process images, tables, charts alongside text: (1) <strong>Vision models</strong> — use GPT-4o to caption images/charts, embed captions. (2) <strong>Table extraction</strong> — extract as structured data. (3) <strong>ColPali</strong> — directly embed PDF page screenshots without OCR.</p>
+                <h3>5. Traditional RAG vs HyDE</h3>
+                <div class="comparison">
+                    <div class="comparison-bad"><strong>Naive:</strong> Embed "How is company X doing?". Vector search searches for fragments of that query.</div>
+                    <div class="comparison-good"><strong>HyDE:</strong> LLM writes a <em>hypothetical</em> investor report for company X. We embed THAT report. Vector search finds similar *actual* reports.</div>
+                </div>
 
-                <h3>6. Evaluating RAG (RAGAS)</h3>
+                <h3>6. RAG vs Agentic RAG and AI Memory</h3>
+                <p>Standard RAG is a <strong>one-shot</strong> process. <strong>Agentic RAG</strong> allows an agent to decide how to search, what to search, and when to stop. Combined with <strong>AI Memory</strong> (persisting relevant facts across sessions), this creates systems that grow smarter with user interaction.</p>
+
+                <h3>7. Evaluating RAG (RAGAS)</h3>
                 <table>
                     <tr><th>Metric</th><th>Measures</th><th>Target</th></tr>
                     <tr><td><strong>Faithfulness</strong></td><td>Are claims supported by context?</td><td>0.9+</td></tr>
@@ -1061,14 +1129,27 @@ res = index.query(vector=query_emb, top_k=<span class="number">10</span>,
                 <h3>1. ReAct — The Foundation</h3>
                 <p>ReAct (Yao 2022): <strong>Thought</strong> > <strong>Action</strong> > <strong>Observation</strong> > repeat. The LLM reasons about what to do, calls a tool, sees the result, and continues until it has a final answer.</p>
 
-                <h3>2. Agent Architectures</h3>
+                <h3>2. Agent Architectures & Patterns</h3>
                 <table>
                     <tr><th>Architecture</th><th>How It Works</th><th>Best For</th></tr>
                     <tr><td><strong>ReAct Loop</strong></td><td>Fixed think-act-observe cycle</td><td>Simple tool-using tasks</td></tr>
                     <tr><td><strong>Plan-and-Execute</strong></td><td>Full plan first, then execute steps</td><td>Multi-step structured tasks</td></tr>
                     <tr><td><strong>State Machine (LangGraph)</strong></td><td>Directed graph with conditional edges</td><td>Complex workflows, branching</td></tr>
                     <tr><td><strong>Reflection</strong></td><td>Agent evaluates own output, retries</td><td>Quality-critical tasks</td></tr>
+                    <tr><td><strong>Self-Correction</strong></td><td>Agent detects syntax/logic errors via tools</td><td>Code generation agents</td></tr>
                 </table>
+
+                <h3>3. Advanced Prompting for Agents</h3>
+                <ul>
+                    <li><strong>JSON Prompting:</strong> Forcing the model to output *only* valid JSON. Essential for reliable tool calling and downstream processing. Strategy: Provide a schema and a "Stop Sequence" at "}".</li>
+                    <li><strong>Verbalized Sampling:</strong> Forcing the agent to "think out loud" before choosing a tool. Similar to Chain of Thought but explicitly for tool selection.</li>
+                    <li><strong>Few-shot Tooling:</strong> Providing 2-3 examples of correct tool usage in the prompt block. 10x more effective than instructions alone.</li>
+                </ul>
+
+                <div class="callout insight">
+                    <div class="callout-title">📖 Book Insight: 30 Must-Know Agentic Terms</div>
+                    <p>Key terms: <strong>Handoff</strong> (passing task to sub-agent), <strong>Orchestrator</strong> (supervisor agent), <strong>Part</strong> (typed data in A2A), <strong>Interrupt</strong> (Human-in-the-loop wait), <strong>Grounding</strong> (connecting to RAG/Tools), <strong>Hallucination guardrails</strong> (output filtering).</p>
+                </div>
 
                 <h3>3. Framework Comparison</h3>
                 <table>
