@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenAI & Agentic AI Masterclass | DataScience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface2: #21262d;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent2: #f78166;
+            --green: #3fb950;
+            --purple: #d2a8ff;
+            --orange: #ffa657;
+            --yellow: #e3b341;
+
+            /* categories */
+            --cat-foundation: #58a6ff;
+            --cat-core:       #3fb950;
+            --cat-agent:      #d2a8ff;
+            --cat-production: #ffa657;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* ── NAV ── */
+        nav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
+        nav a:hover { color: var(--text); }
+        nav .sep { color: var(--border); }
+        nav .brand {
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: linear-gradient(90deg, #58a6ff, #d2a8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        nav .nav-search {
+            margin-left: auto;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 14px;
+            color: var(--text);
+            font-size: 0.85rem;
+            width: 220px;
+            outline: none;
+        }
+        nav .nav-search:focus { border-color: var(--accent); }
+
+        /* ── HERO ── */
+        .hero {
+            text-align: center;
+            padding: 64px 32px 48px;
+            background: radial-gradient(ellipse at top, rgba(88,166,255,0.06) 0%, transparent 60%);
+        }
+        .hero h1 {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #58a6ff 0%, #d2a8ff 50%, #ffa657 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 14px;
+        }
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 28px;
+        }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        .hero-stat { text-align: center; }
+        .hero-stat .num { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+        .hero-stat .lbl { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* ── FILTER TABS ── */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            padding: 0 32px 28px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .filter-btn {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 18px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(88,166,255,0.1);
+        }
+
+        /* ── DASHBOARD GRID ── */
+        #dashboard {
+            display: none;
+            padding: 0 32px 60px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        #dashboard.active { display: block; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+            background: radial-gradient(ellipse at top left, rgba(88,166,255,0.06), transparent 70%);
+        }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+        .card:hover::before { opacity: 1; }
+
+        .card-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+        .cat-foundation .card-badge { background: rgba(88,166,255,0.15); color: var(--cat-foundation); }
+        .cat-foundation:hover { border-color: var(--cat-foundation); }
+        .cat-core .card-badge      { background: rgba(63,185,80,0.15);  color: var(--cat-core); }
+        .cat-core:hover            { border-color: var(--cat-core); }
+        .cat-agent .card-badge     { background: rgba(210,168,255,0.15); color: var(--cat-agent); }
+        .cat-agent:hover           { border-color: var(--cat-agent); }
+        .cat-production .card-badge{ background: rgba(255,166,87,0.15);  color: var(--cat-production); }
+        .cat-production:hover      { border-color: var(--cat-production); }
+
+        .card-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+        .card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 6px; }
+        .card p  { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+        .card-arrow {
+            position: absolute;
+            right: 18px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--border);
+            font-size: 1.2rem;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .card:hover .card-arrow { color: var(--text-muted); transform: translateY(-50%) translateX(4px); }
+
+        /* ── MODULE VIEW ── */
+        #modulesContainer { max-width: 1100px; margin: 0 auto; padding: 0 32px 60px; }
+        .module { display: none; }
+        .module.active { display: block; }
+
+        .btn-back {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: inherit;
+            margin-bottom: 28px;
+            transition: all 0.2s;
+        }
+        .btn-back:hover { border-color: var(--accent); color: var(--accent); }
+
+        .module header { margin-bottom: 28px; }
+        .module header h1 { font-size: 1.8rem; font-weight: 700; }
+        .module header .subtitle { color: var(--text-muted); margin-top: 6px; }
+
+        /* ── TABS ── */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 28px;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: inherit;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover { color: var(--text); }
+        .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .tab { display: none; }
+        .tab.active { display: block; }
+
+        /* ── CONTENT STYLES ── */
+        .section { max-width: 860px; }
+        .section h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 18px; color: var(--text); }
+        .section h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin: 24px 0 10px; }
+        .section p { color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
+        .section strong { color: var(--text); }
+        .section code { background: var(--surface2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); }
+
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.88rem; }
+        th { background: var(--surface2); color: var(--text-muted); text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); font-weight: 600; }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        td strong { color: var(--text); }
+
+        .info-box {
+            background: rgba(88,166,255,0.06);
+            border: 1px solid rgba(88,166,255,0.2);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 24px;
+        }
+        .box-title { font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+        .box-content { color: var(--text-muted); line-height: 1.6; }
+
+        .callout { border-radius: 8px; padding: 14px 18px; margin: 16px 0; }
+        .callout.tip { background: rgba(63,185,80,0.06); border-left: 3px solid var(--green); }
+        .callout.warning { background: rgba(255,166,87,0.06); border-left: 3px solid var(--orange); }
+        .callout.insight { background: rgba(210,168,255,0.06); border-left: 3px solid var(--purple); }
+        .callout-title { font-weight: 600; margin-bottom: 6px; }
+        .callout.tip .callout-title     { color: var(--green); }
+        .callout.warning .callout-title { color: var(--orange); }
+        .callout.insight .callout-title { color: var(--purple); }
+
+        .formula {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.92rem;
+            color: var(--yellow);
+            margin: 16px 0;
+            overflow-x: auto;
+        }
+
+        .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+        .comparison-bad  { background: rgba(248,81,73,0.06); border: 1px solid rgba(248,81,73,0.2); border-radius:8px; padding:14px; color:var(--text-muted); }
+        .comparison-good { background: rgba(63,185,80,0.06);  border: 1px solid rgba(63,185,80,0.2);  border-radius:8px; padding:14px; color:var(--text-muted); }
+
+        .code-block {
+            background: #010409;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.83rem;
+            line-height: 1.65;
+            overflow-x: auto;
+            margin: 16px 0;
+            white-space: pre-wrap;
+            color: #e6edf3;
+        }
+        .code-block .keyword  { color: #ff7b72; }
+        .code-block .string   { color: #a5d6ff; }
+        .code-block .comment  { color: #8b949e; font-style: italic; }
+        .code-block .function { color: #d2a8ff; }
+        .code-block .number   { color: #79c0ff; }
+        .code-block .preprocessor { color: #ffa657; }
+
+        .interview-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 14px;
+        }
+        .interview-box strong { color: var(--accent); display: block; margin-bottom: 8px; }
+        .interview-box p { color: var(--text-muted); line-height: 1.6; }
+
+        /* ── NO RESULTS ── */
+        .no-results {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-muted);
+            display: none;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 640px) {
+            nav { padding: 12px 16px; }
+            .hero { padding: 40px 16px 32px; }
+            .filter-bar { padding: 0 16px 20px; }
+            #dashboard, #modulesContainer { padding: 0 16px 40px; }
+            .comparison { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html">🏠 Home</a>
+    <span class="sep">›</span>
+    <span class="brand">GenAI &amp; Agentic AI</span>
+    <input class="nav-search" type="search" id="searchInput" placeholder="🔍 Search modules…" oninput="filterModules(this.value)">
+</nav>
+
+<div id="dashboard" class="active">
+    <div class="hero">
+        <h1>🤖 GenAI &amp; Agentic AI Masterclass</h1>
+        <p>From LLM fundamentals to production-ready agentic systems — complete theory, code, and interview prep.</p>
+        <div class="hero-stats">
+            <div class="hero-stat"><div class="num" id="statModules">13</div><div class="lbl">Modules</div></div>
+            <div class="hero-stat"><div class="num">3</div><div class="lbl">Tabs / Module</div></div>
+            <div class="hero-stat"><div class="num">∞</div><div class="lbl">Code Examples</div></div>
+        </div>
+    </div>
+
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="setFilter('All', this)">All</button>
+        <button class="filter-btn" onclick="setFilter('Foundation', this)">🧱 Foundation</button>
+        <button class="filter-btn" onclick="setFilter('Core Tools', this)">🛠 Core Tools</button>
+        <button class="filter-btn" onclick="setFilter('Core', this)">⚙️ Core</button>
+        <button class="filter-btn" onclick="setFilter('Agentic', this)">🤖 Agentic</button>
+        <button class="filter-btn" onclick="setFilter('Production', this)">🚀 Production</button>
+    </div>
+
+    <div style="max-width:1300px;margin:0 auto;padding:0 32px;">
+        <div class="grid" id="moduleGrid"></div>
+        <div class="no-results" id="noResults">No modules match your search.</div>
+    </div>
+</div>
+
+<div id="modulesContainer"></div>
+
+<script src="app.js"></script>
+<script>
+    let activeFilter = 'All';
+
+    function renderDashboard(query = '') {
+        const grid = document.getElementById('moduleGrid');
+        const noResults = document.getElementById('noResults');
+        const q = query.toLowerCase().trim();
+
+        const filtered = modules.filter(m => {
+            const matchFilter = activeFilter === 'All' || m.category === activeFilter;
+            const matchSearch = !q || m.title.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q) || m.category.toLowerCase().includes(q);
+            return matchFilter && matchSearch;
+        });
+
+        document.getElementById('statModules').textContent = modules.length;
+
+        if (filtered.length === 0) {
+            grid.innerHTML = '';
+            noResults.style.display = 'block';
+            return;
+        }
+        noResults.style.display = 'none';
+
+        grid.innerHTML = filtered.map(m => `
+            <div class="card ${m.catClass}" onclick="openModule('${m.id}')">
+                <span class="card-icon">${m.icon}</span>
+                <span class="card-badge">${m.category}</span>
+                <h3>${m.title}</h3>
+                <p>${m.desc}</p>
+                <span class="card-arrow">→</span>
+            </div>
+        `).join('');
+    }
+
+    function setFilter(cat, btn) {
+        activeFilter = cat;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderDashboard(document.getElementById('searchInput').value);
+    }
+
+    function filterModules(q) {
+        renderDashboard(q);
+    }
+
+    function openModule(id) {
+        const m = modules.find(x => x.id === id);
+        const c = MODULE_CONTENT[id] || {};
+
+        document.getElementById('dashboard').classList.remove('active');
+
+        const container = document.getElementById('modulesContainer');
+        container.innerHTML = `
+            <div class="module active" id="module-${id}">
+                <button class="btn-back" onclick="showDashboard()">← Back to Dashboard</button>
+                <header>
+                    <h1>${m.icon} ${m.title}</h1>
+                    <p class="subtitle">${m.desc}</p>
+                </header>
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab(event,'concepts-${id}','${id}')">📖 Key Concepts</button>
+                    <button class="tab-btn" onclick="switchTab(event,'code-${id}','${id}')">💻 Code Examples</button>
+                    <button class="tab-btn" onclick="switchTab(event,'interview-${id}','${id}')">🎯 Interview Questions</button>
+                </div>
+                <div id="concepts-${id}" class="tab active">${c.concepts || '<p style="color:var(--text-muted);padding:40px 0">Content coming soon.</p>'}</div>
+                <div id="code-${id}" class="tab">${c.code || '<p style="color:var(--text-muted);padding:40px 0">Code examples coming soon.</p>'}</div>
+                <div id="interview-${id}" class="tab">${c.interview || '<p style="color:var(--text-muted);padding:40px 0">Interview questions coming soon.</p>'}</div>
+            </div>`;
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showDashboard() {
+        document.getElementById('modulesContainer').innerHTML = '';
+        document.getElementById('dashboard').classList.add('active');
+    }
+
+    function switchTab(event, tabId, moduleId) {
+        const mod = document.getElementById('module-' + moduleId);
+        mod.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        mod.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    // Init
+    renderDashboard();
+</script>
+</body>
+</html>
