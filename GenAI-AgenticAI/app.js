@@ -1,21 +1,21 @@
-// AI Engineer Masterclass — Module Data (based on AI Engineering Guidebook 2025)
+// AI Engineer Masterclass — Module Data (Updated for AI Engineering Guidebook 2025 Edition)
 const modules = [
-    { id: 'llm-fundamentals', icon: '🧠', title: 'LLM Fundamentals', desc: 'Tokenization, attention, pre-training, 7 generation parameters, text generation strategies', category: 'Foundation', catClass: 'cat-foundation' },
-    { id: 'transformers', icon: '⚡', title: 'Transformer Architecture', desc: 'Self-attention math, multi-head attention, positional encoding, MoE vs dense', category: 'Foundation', catClass: 'cat-foundation' },
-    { id: 'huggingface', icon: '🤗', title: 'Hugging Face Ecosystem', desc: 'Transformers library, Model Hub, Datasets, Spaces, PEFT', category: 'Core Tools', catClass: 'cat-core' },
-    { id: 'finetuning', icon: '🎯', title: 'Fine-Tuning & PEFT', desc: 'LoRA, QLoRA, SFT vs RFT, GRPO reasoning LLMs, IFT dataset generation', category: 'Core', catClass: 'cat-core' },
-    { id: 'rag', icon: '🔍', title: 'RAG Pipelines', desc: 'Chunking, embedding models, vector search, re-ranking, HyDE, REFRAG, CAG, Agentic RAG', category: 'Core', catClass: 'cat-core' },
-    { id: 'vectordb', icon: '🗄️', title: 'Vector Databases', desc: 'FAISS, Pinecone, ChromaDB, HNSW, IVF algorithms', category: 'Core', catClass: 'cat-core' },
-    { id: 'context-engineering', icon: '🧩', title: 'Context Engineering', desc: 'What to put in context, 6 context types for agents, manual RAG vs agentic context', category: 'Core', catClass: 'cat-core' },
-    { id: 'agents', icon: '🤖', title: 'AI Agents & Frameworks', desc: 'ReAct, LangChain, LangGraph, CrewAI, AutoGen, 5 levels of agentic AI, memory types', category: 'Agentic', catClass: 'cat-agent' },
-    { id: 'agentic-patterns', icon: '🔮', title: 'Agentic Design Patterns', desc: '5 design patterns, ReAct from scratch, 4 layers of agentic AI, 30 must-know terms', category: 'Agentic', catClass: 'cat-agent' },
-    { id: 'multiagent', icon: '🕸️', title: 'Multi-Agent Systems', desc: '7 patterns, orchestration, supervisor, peer-to-peer, A2A & AG-UI protocols', category: 'Agentic', catClass: 'cat-agent' },
-    { id: 'agent-protocols', icon: '📡', title: 'Agent Protocol Landscape', desc: 'MCP, A2A, AG-UI, Agent Protocol spec, comparison and when to use each', category: 'Agentic', catClass: 'cat-agent' },
-    { id: 'tools', icon: '🔧', title: 'Function Calling & Tools', desc: 'OpenAI function calling, tool schemas, MCP protocol, JSON prompting', category: 'Agentic', catClass: 'cat-agent' },
-    { id: 'evaluation', icon: '📊', title: 'Evaluation & Benchmarks', desc: 'LLM-as-a-judge, RAGAS, BLEU/ROUGE, human eval', category: 'Production', catClass: 'cat-production' },
-    { id: 'guardrails', icon: '🛡️', title: 'Guardrails & Safety', desc: 'Hallucination detection, content filtering, red-teaming', category: 'Production', catClass: 'cat-production' },
-    { id: 'deployment', icon: '🚀', title: 'Deployment & Serving', desc: 'vLLM, TGI, Ollama, quantization (GPTQ/AWQ/GGUF)', category: 'Production', catClass: 'cat-production' },
-    { id: 'production', icon: '⚙️', title: 'Production Patterns', desc: 'Caching, streaming, rate limiting, cost optimization', category: 'Production', catClass: 'cat-production' }
+    { id: 'llm-fundamentals', icon: '🧠', title: 'LLM Fundamentals', desc: 'Decoding strategies (SLED, Contrastive), 3 distillation types, 4 local setups, 7 generation params', category: 'Foundation', catClass: 'cat-foundation' },
+    { id: 'transformers', icon: '⚡', title: 'Transformer Architecture', desc: 'KV Cache, GQA vs MQA, FlashAttention-3, RoPE, MoE routing patterns', category: 'Foundation', catClass: 'cat-foundation' },
+    { id: 'huggingface', icon: '🤗', title: 'Hugging Face Ecosystem', desc: 'Transformers, PEFT, TRL, Safetensors, Hub API, programmatic deployment', category: 'Core Tools', catClass: 'cat-core' },
+    { id: 'finetuning', icon: '🎯', title: 'Fine-Tuning & PEFT', desc: 'LoRA from scratch, QLoRA, SFT vs RFT, GRPO/DeepSeek-R1 logic, IFT generation', category: 'Core', catClass: 'cat-core' },
+    { id: 'rag', icon: '🔍', title: 'RAG Pipelines', desc: '8 architectures (HyDE, REFRAG, CAG), 5 chunking types, RAGAS, context recall', category: 'Core', catClass: 'cat-core' },
+    { id: 'vectordb', icon: '🗄️', title: 'Vector Databases', desc: 'HNSW levels, IVF-PQ, DiskANN, distance metrics, metadata filtering patterns', category: 'Core', catClass: 'cat-core' },
+    { id: 'context-engineering', icon: '🧩', title: 'Context Engineering', desc: '6 context types, context window management, Claude skills, dynamic assembly', category: 'Core', catClass: 'cat-core' },
+    { id: 'agents', icon: '🤖', title: 'AI Agents & Frameworks', desc: 'ReAct loops, 5 levels of autonomy, 4 layers of architecture, 8 multi-agent patterns', category: 'Agentic', catClass: 'cat-agent' },
+    { id: 'agentic-patterns', icon: '🔮', title: 'Agentic Design Patterns', desc: 'Reflection, Tool-use, Planning, Multi-agent, Memory, ReAct from scratch', category: 'Agentic', catClass: 'cat-agent' },
+    { id: 'multiagent', icon: '🕸️', title: 'Multi-Agent Systems', desc: '7 Patterns (Parallel, Router, Sequential, Hierarchical), swarm logic, orchestration', category: 'Agentic', catClass: 'cat-agent' },
+    { id: 'agent-protocols', icon: '📡', title: 'Agent Protocol Landscape', desc: 'Standardizing Agent-to-Tool (MCP), Agent-to-Agent (A2A), and Agent-to-User (AG-UI)', category: 'Agentic', catClass: 'cat-agent' },
+    { id: 'tools', icon: '🔧', title: 'Function Calling & Tools', desc: 'Tool schemas, JSON prompting, Verbalized Sampling, few-shot tool usage', category: 'Agentic', catClass: 'cat-agent' },
+    { id: 'evaluation', icon: '📊', title: 'Evaluation & Benchmarks', desc: 'LLM-as-a-judge, DeepEval, DeepSeek benchmarks, quality vs latency tradeoffs', category: 'Production', catClass: 'cat-production' },
+    { id: 'guardrails', icon: '🛡️', title: 'Guardrails & Safety', desc: 'Hallucination detection, LlamaGuard, NeMo, input/output filtering', category: 'Production', catClass: 'cat-production' },
+    { id: 'deployment', icon: '🚀', title: 'Deployment & Serving', desc: 'vLLM, TGI, PagedAttention, quantization (GGUF/EXL2), serving at scale', category: 'Production', catClass: 'cat-production' },
+    { id: 'production', icon: '⚙️', title: 'Production Patterns', desc: 'Observability, tracing, rate limiting, token cost optimization, caching', category: 'Production', catClass: 'cat-production' }
 ];
 
 
@@ -71,13 +71,36 @@ const MODULE_CONTENT = {
                 <h3>4. 4 LLM Text Generation Strategies</h3>
                 <p>Decoding is the process of picking the next token. How we pick it determines the style of the output.</p>
                 <ul>
-                    <li><strong>Greedy Strategy:</strong> Always pick the single token with the highest probability. <em>Issue:</em> Often leads to repetitive, low-quality loops.</li>
-                    <li><strong>Multinomial Sampling:</strong> Sample from the probability distribution (controlled by temperature). <em>Benefit:</em> Much more creative and human-like.</li>
-                    <li><strong>Beam Search:</strong> Explores multiple parallel paths ("beams") and picks the sequence with the highest total probability. <em>Best for:</em> Translation and code where sequence-level correctness matters more than creativity.</li>
-                    <li><strong>Nucleus (Top-p) Sampling:</strong> Restricts sampling to a dynamic "nucleus" of tokens that sum to probability p. <em>Best for:</em> General purpose chat.</li>
+                    <li><strong>Greedy Strategy:</strong> Navely chooses the word with the highest probability. <em>Issue:</em> Often leads to repetitive, low-quality loops.</li>
+                    <li><strong>Multinomial Sampling:</strong> Sample from the probability distribution available (controlled by temperature). <em>Benefit:</em> Much more creative and human-like.</li>
+                    <li><strong>Beam Search:</strong> Explores top-K partial sequences (beams) and keeps alternatives alive. <em>Best for:</em> Translation and code where sequence-level correctness matters most.</li>
+                    <li><strong>Contrastive Search:</strong> Balances fluency with diversity by penalizing continuations too similar to previous tokens. <em>Best for:</em> Long stories or creative writing to avoid loops.</li>
                 </ul>
 
-                <h3>4. Context Window — The LLM's Working Memory</h3>
+                <div class="callout insight">
+                    <div class="callout-title">🚀 Bonus: SLED (Self-Logits Evolution Decoding)</div>
+                    <p>Normally, models use only the final layer's logits. <strong>SLED</strong> looks at how logits evolve across ALL layers. It measures consensus across internal representations, producing more <strong>grounded and factual</strong> outputs without retraining or extra data.</p>
+                </div>
+
+                <h3>5. 3 Techniques to Train an LLM using another LLM</h3>
+                <p>LLMs don't just learn from raw text; they transfer knowledge between models (Distillation). Distillation happens at Pre-training (Llama 4 Scout) or Post-training (DeepSeek-R1 to Qwen).</p>
+                <table>
+                    <tr><th>Technique</th><th>How It Works</th><th>Advantage / Note</th></tr>
+                    <tr><td><strong>1. Soft-label Distillation</strong></td><td>Student matches the Teacher's entire probability distribution (softmax).</td><td>Maximum reasoning transfer; requires access to logits.</td></tr>
+                    <tr><td><strong>2. Hard-label Distillation</strong></td><td>Student matches only the final token choice (hard label) of the Teacher.</td><td>DeepSeek used this to distill R1 into smaller models.</td></tr>
+                    <tr><td><strong>3. Co-distillation</strong></td><td>Train Teacher and Student together from scratch; both predict concurrently.</td><td>Gemma 3 used this during both pre and post-training.</td></tr>
+                </table>
+
+                <h3>6. 4 Ways to Run LLMs Locally</h3>
+                <table>
+                    <tr><th>Tool</th><th>Best For</th><th>Setup Complexity</th></tr>
+                    <tr><td><strong>Ollama</strong></td><td>Simple CLI/Desktop usage; one-command 'run'.</td><td>Zero (Just install app)</td></tr>
+                    <tr><td><strong>LM Studio</strong></td><td>GUI for chatting with GGUF models; eject/load easily.</td><td>Zero (Desktop app)</td></tr>
+                    <tr><td><strong>vLLM</strong></td><td>High-performance serving and API hosting.</td><td>Low-Medium (pip install)</td></tr>
+                    <tr><td><strong>llama.cpp</strong></td><td>Extreme portability (C++), runs on Mac/CPU/Android.</td><td>Medium (compile or download bins)</td></tr>
+                </table>
+
+                <h3>7. Context Window — The LLM's Working Memory</h3>
                 <p>The context window determines how many tokens the model can process in a single call (input + output combined).</p>
                 <table>
                     <tr><th>Model</th><th>Context Window</th><th>Approx. Pages</th></tr>
@@ -915,14 +938,24 @@ Object.assign(MODULE_CONTENT, {
 
                 <h3>5. Traditional RAG vs HyDE</h3>
                 <div class="comparison">
-                    <div class="comparison-bad"><strong>Naive:</strong> Embed "How is company X doing?". Vector search searches for fragments of that query.</div>
-                    <div class="comparison-good"><strong>HyDE:</strong> LLM writes a <em>hypothetical</em> investor report for company X. We embed THAT report. Vector search finds similar *actual* reports.</div>
+                    <div class="box-bad"><strong>Naive:</strong> Embed "How is company X doing?". Vector search searches for fragments of that query.</div>
+                    <div class="box-good"><strong>HyDE:</strong> LLM writes a <em>hypothetical</em> investor report for company X. We embed THAT report. Vector search finds similar *actual* reports.</div>
                 </div>
 
-                <h3>6. RAG vs Agentic RAG and AI Memory</h3>
-                <p>Standard RAG is a <strong>one-shot</strong> process. <strong>Agentic RAG</strong> allows an agent to decide how to search, what to search, and when to stop. Combined with <strong>AI Memory</strong> (persisting relevant facts across sessions), this creates systems that grow smarter with user interaction.</p>
+                <h3>6. 5 Chunking Strategies for RAG</h3>
+                <table>
+                    <tr><th>Strategy</th><th>Description</th><th>Best For</th></tr>
+                    <tr><td><strong>1. Fixed-size</strong></td><td>Chunking by character/token count</td><td>Simple text, general usage</td></tr>
+                    <tr><td><strong>2. Recursive</strong></td><td>Split by paragraph, then sentence</td><td>Most documents (LangChain default)</td></tr>
+                    <tr><td><strong>3. Semantic</strong></td><td>Split where embedding distance jumps</td><td>Long books or unified narratives</td></tr>
+                    <tr><td><strong>4. Structural</strong></td><td>Split by HTML headings or PDF sections</td><td>Technical docs, manuals</td></tr>
+                    <tr><td><strong>5. Agentic</strong></td><td>LLM analyzes text and groups it</td><td>Highest accuracy, highest cost</td></tr>
+                </table>
 
-                <h3>7. Evaluating RAG (RAGAS)</h3>
+                <h3>7. RAG vs Agentic RAG and AI Memory</h3>
+                <p>Standard RAG is a <strong>one-shot</strong> process. <strong>Agentic RAG</strong> allows an agent to decide how to search, what to search, and when to stop. Combined with <strong>AI Memory</strong> (persisting relevant facts across sessions), this creates systems that grow smarter over time.</p>
+
+                <h3>8. Evaluating RAG (RAGAS)</h3>
                 <table>
                     <tr><th>Metric</th><th>Measures</th><th>Target</th></tr>
                     <tr><td><strong>Faithfulness</strong></td><td>Are claims supported by context?</td><td>0.9+</td></tr>
@@ -2298,6 +2331,310 @@ agent_card = {
             <div class="interview-box"><strong>Q4: What are the 3 primitives exposed by an MCP Server?</strong><p><strong>Answer:</strong> (1) <strong>Tools</strong> — executable functions the LLM can call (like "search_web", "run_sql"). (2) <strong>Resources</strong> — read-only data the LLM can reference for context (like database schemas, file contents). (3) <strong>Prompts</strong> — reusable prompt templates the host app can offer to users. Each primitive serves a different role in the LLM's workflow.</p></div>
         </div>`
 };
+
+Object.assign(MODULE_CONTENT, {
+    'prompt-engineering': {
+        concepts: `
+            <div class="section">
+                <h2>✍️ Prompting for Agents — Complete Deep Dive</h2>
+                <div class="info-box">
+                    <div class="box-title">⚡ Why Specialized Prompting?</div>
+                    <div class="box-content">Agentic AI requires different prompting strategies than simple chat. Instead of asking for a final answer, we prompt the model to <strong>reason, format data, and make decisions</strong>. The output must be perfectly parseable by our code.</div>
+                </div>
+
+                <h3>1. Three Prompting Techniques for Reasoning</h3>
+                <p>To improve an LLM's logical accuracy and ability to plan, use these three structural techniques:</p>
+                <table>
+                    <tr><th>Technique</th><th>How It Works</th><th>Best For</th></tr>
+                    <tr><td><strong>Chain of Thought (CoT)</strong></td><td>Adding "Think step by step" to the prompt, forcing the model to generate intermediate reasoning tokens before the final answer.</td><td>Math, logic, code, and agent planning.</td></tr>
+                    <tr><td><strong>Tree of Thoughts (ToT)</strong></td><td>Prompting the model to generate multiple possible paths, evaluate them, and perform search (BFS/DFS) across paths to find the optimal solution.</td><td>Complex multi-step reasoning where backtracking is needed.</td></tr>
+                    <tr><td><strong>Self-Consistency</strong></td><td>Prompting the model to generate N different CoT sequences, then taking the majority vote for the final answer.</td><td>Highly reliable fact extraction and math problems.</td></tr>
+                </table>
+
+                <h3>2. Verbalized Sampling (Agent "Thinking Out Loud")</h3>
+                <p>When an agent selects a tool to call, it can easily make a mistake if it just outputs the tool name directly. <strong>Verbalized Sampling</strong> requires the agent to explicitly output its reasoning process <em>before</em> outputting the tool call or action.</p>
+                <div class="callout tip">
+                    <div class="callout-title">💡 Why Verbalized Sampling Works</div>
+                    <p>Because LLMs generate tokens autoregressively (left-to-right), the tokens representing the "thought" become part of the context for generating the "tool call" tokens. The tool call intrinsically becomes more accurate because it's physically conditioned on a logical rationale.</p>
+                </div>
+
+                <h3>3. JSON Prompting for LLMs</h3>
+                <p>Agents and orchestrators need structured data (JSON), not conversational text. If the JSON is malformed, the application crashes.</p>
+                <ul>
+                    <li><strong>Define a Schema:</strong> Always provide a strict schema in the system prompt. "Output JSON matching this typescript interface: { ... }"</li>
+                    <li><strong>Use JSON Mode:</strong> Use <code>response_format: { type: "json_object" }</code> (OpenAI). The model is guaranteed to output valid JSON.</li>
+                    <li><strong>Stop Sequences:</strong> For older or open models, using <code>}</code> as a stop sequence guarantees no trailing text.</li>
+                    <li><strong>Pre-filling the Assistant:</strong> Append <code>{</code> to the end of your prompt so the model is forced to start generating JSON keys instantly without saying "Here is the JSON...".</li>
+                </ul>
+            </div>\`,
+        code: \`
+            <div class="section">
+                <h2>💻 Prompting for Agents — Code Examples</h2>
+
+                <h3>1. Verbalized Sampling Prompt Template</h3>
+                <div class="code-block"><span class="keyword">const</span> system_prompt = <span class="string">\`You are a sophisticated AI agent with access to tools.
+When given a task, you MUST use the following format:
+
+Thought: Consider what you need to do, step by step. Which tool is needed?
+Action: The name of the tool to use (e.g. "search_web", "calculate")
+Action Input: The arguments for the tool in valid JSON.
+
+You MUST articulate your Thought before your Action.\`</span></div>
+
+                <h3>2. Forcing JSON on Open Models</h3>
+                <div class="code-block"><span class="keyword">import</span> { pipeline } <span class="keyword">from</span> <span class="string">"@huggingface/transformers"</span>;
+
+<span class="comment">// Provide schema and force it to start with {</span>
+<span class="keyword">const</span> prompt = <span class="string">"Extract name and age. Return JSON: {\"name\": string, \"age\": number}\n\nText: John is 25.\nOutput:\n{"</span>;
+
+<span class="keyword">const</span> generator = <span class="keyword">await</span> pipeline(<span class="string">"text-generation"</span>, <span class="string">"meta-llama/Llama-3.2-1B-Instruct"</span>);
+<span class="keyword">const</span> out = <span class="keyword">await</span> generator(prompt, {
+    max_new_tokens: <span class="number">50</span>,
+    stop_strings: [<span class="string">"}"</span>] <span class="comment">// Stop generation exactly when JSON closes</span>
+});
+<span class="keyword">const</span> raw = <span class="string">"{"</span> + out[0].generated_text; <span class="comment">// Prepend the '{' that we forced</span>
+<span class="keyword">const</span> json = JSON.parse(raw);</div>
+            </div>\`,
+        interview: \`
+            <div class="section">
+                <h2>🎯 Prompt Engineering — Interview Questions</h2>
+                <div class="interview-box"><strong>Q1: Why does Chain of Thought work?</strong><p><strong>Answer:</strong> It provides additional computational steps (tokens) for the model to process logic. Since an LLM spends a fixed amount of computation per token, forcing it to generate a 50-token thought process before answering allocates 50x more computation to solving the problem than just answering immediately.</p></div>
+                <div class="interview-box"><strong>Q2: How is JSON Prompting different from OpenAI Function Calling?</strong><p><strong>Answer:</strong> JSON prompting is done via the text prompt and relies on the model's instruction following (good for open models). Function/Tool calling is a native API feature where the provider fine-tunes the model explicitly to output arguments matching a schema via constrained decoding, ensuring much higher reliability.</p></div>
+            </div>\`
+    },
+    'llm-optimization': {
+        concepts: \`
+            <div class="section">
+                <h2>🗜️ LLM Optimization — Complete Deep Dive</h2>
+                <div class="info-box">
+                    <div class="box-title">⚡ Why Optimization Matters</div>
+                    <div class="box-content">LLMs are massively compute- and memory-bound. A 70B parameter model in FP16 takes 140GB of VRAM just to load. Optimizing how models are compressed and how inference runs determines whether an application is economically viable.</div>
+                </div>
+
+                <h3>1. Model Compression</h3>
+                <p>Compression reduces the memory footprint and increases memory bandwidth, leading to faster token generation.</p>
+                <table>
+                    <tr><th>Technique</th><th>How It Works</th><th>Tradeoff</th></tr>
+                    <tr><td><strong>Quantization (PTQ)</strong></td><td>Convert parameters from FP16 (16-bit) to INT8 or INT4. Ex: GGUF, AWQ, GPTQ.</td><td>Slight accuracy loss, massive speed/memory gains.</td></tr>
+                    <tr><td><strong>Pruning</strong></td><td>Set near-zero weights to exactly zero, creating sparse matrices.</td><td>Requires specialized hardware for sparse acceleration.</td></tr>
+                    <tr><td><strong>Knowledge Distillation</strong></td><td>Train a smaller model (student) to match the probability distribution of a large model (teacher).</td><td>High upfront compute cost to train the student.</td></tr>
+                </table>
+
+                <h3>2. Regular ML Inference vs LLM Inference</h3>
+                <div class="comparison">
+                    <div class="comparison-bad"><strong>Regular ML (e.g., ResNet):</strong> One input → One forward pass → One output. Compute-bound (matrix multiplication speed is the bottleneck). Highly batchable.</div>
+                    <div class="comparison-good"><strong>LLM Inference:</strong> Autoregressive. One input → forward pass → 1 token → append token → forward pass → 1 token. Memory-bandwidth bound (reading huge weights from HBM to SRAM for every single token).</div>
+                </div>
+
+                <h3>3. KV Caching in LLMs</h3>
+                <p>During generation, each new token needs to pay attention to all past tokens. Recomputing the Key (K) and Value (V) matrices for all past tokens for every new token generation is <strong>O(N²)</strong> and terribly slow.</p>
+                <p><strong>KV Caching</strong> stores the K and V tensors for all past tokens in GPU memory. For the next step, only the Q, K, V for the <em>newest token</em> are computed, and attention is run against the cached past. This reduces computation to <strong>O(N)</strong> per step.</p>
+                <div class="callout warning">
+                    <div class="callout-title">⚠️ The KV Cache Bottleneck</div>
+                    <p>While KV caching solves the compute problem, it introduces a memory problem. A 100K context window across high batch sizes can cause the KV cache to consume more GPU RAM than the model weights themselves! This is why techniques like <strong>PagedAttention</strong> (vLLM) and <strong>GQA (Grouped Query Attention)</strong> were invented.</p>
+                </div>
+            </div>\`,
+        code: \`
+            <div class="section">
+                <h2>💻 LLM Optimization — Code Examples</h2>
+
+                <h3>1. GGUF Quantization via Llama.cpp</h3>
+                <div class="code-block"><span class="comment"># Convert HF model to 4-bit GGUF using llama.cpp</span>
+python llama.cpp/convert_hf_to_gguf.py models/Llama-3-8B \
+  --outfile models/llama3-8b.gguf \
+  --outtype q4_k_m
+
+<span class="comment"># Run highly optimized inference locally in C++</span>
+./llama.cpp/main -m models/llama3-8b.gguf -n 256 -p "Explain KV caching"</div>
+
+                <h3>2. AWQ Quantization in Python</h3>
+                <div class="code-block"><span class="keyword">from</span> awq <span class="keyword">import</span> AutoAWQForCausalLM
+<span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer
+
+model_path = <span class="string">"meta-llama/Llama-3-8B"</span>
+quant_path = <span class="string">"llama-3-8b-awq"</span>
+quant_config = { <span class="string">"zero_point"</span>: True, <span class="string">"q_group_size"</span>: 128, <span class="string">"w_bit"</span>: 4 }
+
+<span class="comment"># Quantize and save</span>
+model = AutoAWQForCausalLM.from_pretrained(model_path)
+tokenizer = AutoTokenizer.from_pretrained(model_path)
+model.quantize(tokenizer, quant_config=quant_config)
+model.save_quantized(quant_path)
+tokenizer.save_pretrained(quant_path)</div>
+            </div>\`,
+        interview: \`
+            <div class="section">
+                <h2>🎯 LLM Optimization — Interview Questions</h2>
+                <div class="interview-box"><strong>Q1: What is the difference between compute-bound and memory-bandwidth bound?</strong><p><strong>Answer:</strong> Compute-bound means the GPU spends all its time doing math (matrix multiplications). Memory-bandwidth bound means the math is easy, but the GPU spends all its time waiting for weights to be copied from High Bandwidth Memory (HBM) to on-chip SRAM. LLM prefill (reading the prompt) is compute-bound, but decoding (generating tokens one by one) is memory-bandwidth bound.</p></div>
+                <div class="interview-box"><strong>Q2: Assume you use vLLM. What is PagedAttention?</strong><p><strong>Answer:</strong> Normally, KV cache is pre-allocated continuously in GPU memory. Because output lengths are unknown, frameworks over-allocate memory, wasting up to 60%. PagedAttention divides the KV cache into small blocks (pages) and allocates them dynamically, like virtual memory in an OS. This allows near-zero waste and 2-4x higher concurrency (batching).</p></div>
+            </div>\`
+    },
+    'llm-observability': {
+        concepts: \`
+            <div class="section">
+                <h2>🔭 LLM Observability — Complete Deep Dive</h2>
+                <div class="info-box">
+                    <div class="box-title">⚡ Evaluation vs. Observability</div>
+                    <div class="box-content"><strong>Evaluation</strong> happens offline or asynchronously to check if a model meets a standard (metrics, RAGAS scores). <strong>Observability</strong> is runtime monitoring of production systems to understand exactly what the model did, how long it took, what tools it called, and how much it cost.</div>
+                </div>
+
+                <h3>1. Key Observability Metrics</h3>
+                <ul>
+                    <li><strong>Latency:</strong> Time-to-First-Token (TTFT), Tokens-Per-Second (TPS), Total request duration.</li>
+                    <li><strong>Cost & Usage:</strong> Token tracking (Prompt tokens vs Completion tokens), dollar cost calculation per provider.</li>
+                    <li><strong>Trace Visualization:</strong> For agents and chains, tracking the exact tree of execution. (User Prompt -> Retriever -> Tool Call 1 -> Tool Call 2 -> Final LLM Answer).</li>
+                    <li><strong>Quality/Feedback:</strong> Capturing user thumbs up/down, implicit feedback (copy-pasting the result).</li>
+                </ul>
+
+                <h3>2. Tracing Implementations</h3>
+                <p>Standard software uses APM (Datadog, New Relic) for tracing. LLMs require specialized APMs (Langfuse, LangSmith, Helicone, Opik) because the payload sizes are huge and the dependencies (prompts, tool results) are non-standard.</p>
+                <table>
+                    <tr><th>Platform</th><th>Best For</th></tr>
+                    <tr><td><strong>LangSmith</strong></td><td>Deep LangChain integration and easy local debugging.</td></tr>
+                    <tr><td><strong>Langfuse</strong></td><td>Open-source, framework-agnostic tracing with a great UI.</td></tr>
+                    <tr><td><strong>Helicone</strong></td><td>Proxy-based observability (just change the base URL, no SDK needed).</td></tr>
+                    <tr><td><strong>Opik (by Comet)</strong></td><td>Agent optimization and evaluation natively integrated with traces.</td></tr>
+                </table>
+            </div>\`,
+        code: \`
+            <div class="section">
+                <h2>💻 Observability — Code Examples</h2>
+
+                <h3>1. Langfuse Tracing with OpenAI</h3>
+                <div class="code-block"><span class="keyword">from</span> langfuse.openai <span class="keyword">import</span> OpenAI
+<span class="comment"># Drop-in replacement! Automatically traces all API calls.</span>
+
+client = OpenAI()
+
+response = client.chat.completions.create(
+    model=<span class="string">"gpt-4o"</span>,
+    messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Write a Python script."</span>}],
+    name=<span class="string">"script-generation"</span>, <span class="comment"># Optional trace grouping</span>
+    metadata={<span class="string">"user_id"</span>: <span class="string">"123"</span>, <span class="string">"env"</span>: <span class="string">"production"</span>}
+)</div>
+
+                <h3>2. LangSmith Tracing via Decorators</h3>
+                <div class="code-block"><span class="keyword">from</span> langsmith <span class="keyword">import</span> traceable
+<span class="keyword">from</span> openai <span class="keyword">import</span> Client
+
+client = Client()
+
+<span class="preprocessor">@traceable</span>(name=<span class="string">"RAG Pipeline"</span>)
+<span class="keyword">def</span> <span class="function">my_rag_agent</span>(query):
+    <span class="comment"># All LLM calls inside this function get nested inside the "RAG Pipeline" trace segment</span>
+    context = retrieve_docs(query)  <span class="comment"># Can add @traceable to this too</span>
+    
+    resp = client.chat.completions.create(
+        model=<span class="string">"gpt-4o"</span>,
+        messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">f"Context: {context}\nQuery: {query}"</span>}]
+    )
+    <span class="keyword">return</span> resp.choices[<span class="number">0</span>].message.content</div>
+            </div>\`,
+        interview: \`
+            <div class="section">
+                <h2>🎯 Observability — Interview Questions</h2>
+                <div class="interview-box"><strong>Q1: What is Time-To-First-Token (TTFT) and why does it matter?</strong><p><strong>Answer:</strong> TTFT measures the latency from the moment the user sends the request until the first token streams back to the client. In LLM applications, total end-to-end latency might be 5-10 seconds, which is unacceptable for UX. Streaming combined with low TTFT (&lt;1 second) creates the illusion of speed and keeps users engaged.</p></div>
+                <div class="interview-box"><strong>Q2: Why use a proxy like Helicone over an SDK like LangSmith?</strong><p><strong>Answer:</strong> A proxy requires ZERO code changes — you simply change the API base URL from <code>api.openai.com</code> to <code>oai.hconeai.com</code> and pass your proxy key in the header. It automatically logs all prompts, responses, costs, and latencies. However, an SDK (like Langfuse/LangSmith) is required if you want deep, nested trace trees for complex agents (e.g., seeing exactly which step in a 10-step LangGraph flow failed).</p></div>
+            </div>\`
+    },
+    'multiagent': {
+        concepts: \`
+            <div class="section">
+                <h2>🕸️ Multi-Agent Systems (MAS)</h2>
+                <div class="info-box">
+                    <div class="box-title">Why Multiple Agents?</div>
+                    <div class="box-content">Monolithic agents (one LLM with one giant prompt) are brittle. Specialized agents that collaborate reduce friction, improve accuracy, and enable parallel processing. MAS is about <strong>orchestration</strong> — how agents talk to each other to solve big tasks.</div>
+                </div>
+
+                <h3>7 Core Patterns of Multi-Agent Orchestration</h3>
+                <table>
+                    <tr><th>Pattern</th><th>How It Works</th><th>Best For</th></tr>
+                    <tr><td><strong>1. Parallel</strong></td><td>Tasks run concurrently across specialists (e.g., searcher + coder).</td><td>Reducing latency in complex pipelines.</td></tr>
+                    <tr><td><strong>2. Sequential</strong></td><td>Step-by-step handoff (e.g., Coder → Reviewer → Deployer).</td><td>ETL chains, code development, linear workflows.</td></tr>
+                    <tr><td><strong>3. Loop</strong></td><td>Continuous refinement until quality threshold is met.</td><td>Report generation, creative writing, proofreading.</td></tr>
+                    <tr><td><strong>4. Router</strong></td><td>Controller agent directs task to the right specialist.</td><td>Customer support (billing vs technical vs sales).</td></tr>
+                    <tr><td><strong>5. Aggregator</strong></td><td>Many agents form opinions; one central agent merges them.</td><td>Consensus voting, RAG retrieval fusion.</td></tr>
+                    <tr><td><strong>6. Network</strong></td><td>No hierarchy; agents communicate freely (peer-to-peer).</td><td>Simulations, games, collective brainstorming.</td></tr>
+                    <tr><td><strong>7. Hierarchical</strong></td><td>Planner/Manager agent delegates to workers and tracks progress.</td><td>Large enterprise projects with many sub-tasks.</td></tr>
+                </table>
+
+                <h3>A2A: The Protocol for Teamwork</h3>
+                <p><strong>Agent-to-Agent (A2A)</strong> protocol standardizes how these agents exchange context and instructions. Instead of sharing a global state, they exchange <strong>Agent Cards</strong> and <strong>Task Payloads</strong>. This allows an agent built in CrewAI to delegate a task to an agent built in LangGraph.</p>
+
+                <div class="callout tip">
+                    <div class="callout-title">💡 Minimizing Friction</div>
+                    <p>When picking a pattern, prioritize minimizing communication overhead. 10 agents isn't better than 2 if they duplicate work. The system should feel smarter than its individual parts.</p>
+                </div>
+            </div>\`,
+        code: \`
+            <div class="section">
+                <h2>💻 Multi-Agent — Code Examples</h2>
+                <h3>Simple Router Pattern with LiteLLM</h3>
+                <div class="code-block"><span class="keyword">from</span> litellm <span class="keyword">import</span> completion
+
+<span class="keyword">def</span> <span class="function">router_agent</span>(query):
+    <span class="comment"># Intent classification</span>
+    intent = completion(
+        model=<span class="string">"gpt-4o-mini"</span>,
+        messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: f<span class="string">"Classify: {query}. Labels: [CODING, FINANCE, GENERAL]"</span>}]
+    ).choices[0].message.content
+
+    <span class="keyword">if</span> <span class="string">"CODING"</span> <span class="keyword">in</span> intent:
+        <span class="keyword">return</span> coding_specialist(query)
+    <span class="keyword">elif</span> <span class="string">"FINANCE"</span> <span class="keyword">in</span> intent:
+        <span class="keyword">return</span> finance_specialist(query)
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> general_agent(query)</div>
+            </div>\`,
+        interview: \`
+            <div class="section">
+                <h2>🎯 Multi-Agent — Interview Questions</h2>
+                <div class="interview-box"><strong>Q1: Parallel vs Sequential orchestration?</strong><p><strong>Answer:</strong> Parallel is for independent tasks (data extraction + web search) to reduce latency. Sequential is for dependent tasks where step B needs output of step A (code writing then code review). Use parallel for scale, sequential for quality-controlled pipelines.</p></div>
+                <div class="interview-box"><strong>Q2: What is the Hierarchical pattern?</strong><p><strong>Answer:</strong> It mimics a corporate structure: a Manager/Planner agent receives the high-level goal, breaks it into sub-tasks, and delegates them to specialized Worker agents. The Manager tracks state and makes the final quality check. Best for complex, ambiguous projects.</p></div>
+            </div>\`
+    },
+    'tools': {
+        concepts: \`
+            <div class="section">
+                <h2>🔧 Function Calling & Tools</h2>
+                <div class="info-box">
+                    <div class="box-title">Tools: The Hands of the LLM</div>
+                    <div class="box-content">An LLM without tools is just a talker. Tools give LLMs <strong>agency</strong>. Function calling allows models to generate structured arguments for functions you've defined, enabling real-world actions like database queries, web searches, or code execution.</div>
+                </div>
+
+                <h3>1. The Function Calling Lifecycle</h3>
+                <p>1. <strong>Definition:</strong> Send tool schemas (JSON) to LLM. 2. <strong>Selection:</strong> LLM realizes it needs a tool and outputs <code>tool_calls</code>. 3. <strong>Execution:</strong> Your code runs the tool locally. 4. <strong>Feedback:</strong> Result is sent back to LLM. 5. <strong>Final Output:</strong> LLM uses result to answer user.</p>
+
+                <h3>2. JSON Prompting vs Native Tooling</h3>
+                <p><strong>JSON Prompting:</strong> Manually instructing the model to output JSON (used for open models). <strong>Native Tooling:</strong> Using provider APIs (OpenAI/Claude) which use <strong>constrained decoding</strong> for 99.9% reliability.</p>
+
+                <h3>3. Verbalized Sampling</h3>
+                <p>Forcing the agent to generate a "Thought:" block before the "Action:" block. This conditions the tool selection on a logical premise, significantly reducing errors in choosing the wrong tool or arguments.</p>
+            </div>\`,
+        code: \`
+            <div class="section">
+                <h2>💻 Tools — Code Examples</h2>
+                <h3>OpenAI Native Tool Call</h3>
+                <div class="code-block"><span class="keyword">tools</span> = [{
+    <span class="string">"type"</span>: <span class="string">"function"</span>,
+    <span class="string">"function"</span>: {
+        <span class="string">"name"</span>: <span class="string">"get_stock_price"</span>,
+        <span class="string">"parameters"</span>: {
+            <span class="string">"type"</span>: <span class="string">"object"</span>,
+            <span class="string">"properties"</span>: {<span class="string">"symbol"</span>: {<span class="string">"type"</span>: <span class="string">"string"</span>}}
+        }
+    }
+}]
+<span class="comment"># Pass this to chat.completions.create(..., tools=tools)</span></div>
+            </div>\`,
+        interview: \`
+            <div class="section">
+                <h2>🎯 Tools — Interview Questions</h2>
+                <div class="interview-box"><strong>Q1: Why use Verbalized Sampling in tool calling?</strong><p><strong>Answer:</strong> It forces the model to articulate a rationale *before* picking a tool. Since tokens are generated left-to-right, the tool selection becomes conditioned on the reasoning, which increases precision, especially when multiple similar tools exist.</p></div>
+            </div>\`
+    }
+});
+
 
 // ─── Dashboard Render ───────────────────────────────────────────────────────
 function renderDashboard() {

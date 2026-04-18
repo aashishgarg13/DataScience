@@ -2,3 +2,6 @@
 .DS_Store
 >__MACOSX/
 *.pdf
+.venv/
+node_modules/
+AI Engineering Guidebook.pdf
