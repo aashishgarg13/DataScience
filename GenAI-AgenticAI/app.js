@@ -2403,20 +2403,20 @@ Object.assign(MODULE_CONTENT, {
                     <li><strong>Stop Sequences:</strong> For older or open models, using <code>}</code> as a stop sequence guarantees no trailing text.</li>
                     <li><strong>Pre-filling the Assistant:</strong> Append <code>{</code> to the end of your prompt so the model is forced to start generating JSON keys instantly without saying "Here is the JSON...".</li>
                 </ul>
-            </div>\`,
-        code: \`
+            </div>`,
+        code: `
             <div class="section">
                 <h2>💻 Prompting for Agents — Code Examples</h2>
 
                 <h3>1. Verbalized Sampling Prompt Template</h3>
-                <div class="code-block"><span class="keyword">const</span> system_prompt = <span class="string">\`You are a sophisticated AI agent with access to tools.
+                <div class="code-block"><span class="keyword">const</span> system_prompt = <span class="string">`You are a sophisticated AI agent with access to tools.
 When given a task, you MUST use the following format:
 
 Thought: Consider what you need to do, step by step. Which tool is needed?
 Action: The name of the tool to use (e.g. "search_web", "calculate")
 Action Input: The arguments for the tool in valid JSON.
 
-You MUST articulate your Thought before your Action.\`</span></div>
+You MUST articulate your Thought before your Action.`</span></div>
 
                 <h3>2. Forcing JSON on Open Models</h3>
                 <div class="code-block"><span class="keyword">import</span> { pipeline } <span class="keyword">from</span> <span class="string">"@huggingface/transformers"</span>;
@@ -2431,16 +2431,16 @@ You MUST articulate your Thought before your Action.\`</span></div>
 });
 <span class="keyword">const</span> raw = <span class="string">"{"</span> + out[0].generated_text; <span class="comment">// Prepend the '{' that we forced</span>
 <span class="keyword">const</span> json = JSON.parse(raw);</div>
-            </div>\`,
-        interview: \`
+            </div>`,
+        interview: `
             <div class="section">
                 <h2>🎯 Prompt Engineering — Interview Questions</h2>
                 <div class="interview-box"><strong>Q1: Why does Chain of Thought work?</strong><p><strong>Answer:</strong> It provides additional computational steps (tokens) for the model to process logic. Since an LLM spends a fixed amount of computation per token, forcing it to generate a 50-token thought process before answering allocates 50x more computation to solving the problem than just answering immediately.</p></div>
                 <div class="interview-box"><strong>Q2: How is JSON Prompting different from OpenAI Function Calling?</strong><p><strong>Answer:</strong> JSON prompting is done via the text prompt and relies on the model's instruction following (good for open models). Function/Tool calling is a native API feature where the provider fine-tunes the model explicitly to output arguments matching a schema via constrained decoding, ensuring much higher reliability.</p></div>
-            </div>\`
+            </div>`
     },
     'llm-optimization': {
-        concepts: \`
+        concepts: `
             <div class="section">
                 <h2>🗜️ LLM Optimization — Complete Deep Dive</h2>
                 <div class="info-box">
@@ -2470,8 +2470,8 @@ You MUST articulate your Thought before your Action.\`</span></div>
                     <div class="callout-title">⚠️ The KV Cache Bottleneck</div>
                     <p>While KV caching solves the compute problem, it introduces a memory problem. A 100K context window across high batch sizes can cause the KV cache to consume more GPU RAM than the model weights themselves! This is why techniques like <strong>PagedAttention</strong> (vLLM) and <strong>GQA (Grouped Query Attention)</strong> were invented.</p>
                 </div>
-            </div>\`,
-        code: \`
+            </div>`,
+        code: `
             <div class="section">
                 <h2>💻 LLM Optimization — Code Examples</h2>
 
@@ -2498,16 +2498,16 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 model.quantize(tokenizer, quant_config=quant_config)
 model.save_quantized(quant_path)
 tokenizer.save_pretrained(quant_path)</div>
-            </div>\`,
-        interview: \`
+            </div>`,
+        interview: `
             <div class="section">
                 <h2>🎯 LLM Optimization — Interview Questions</h2>
                 <div class="interview-box"><strong>Q1: What is the difference between compute-bound and memory-bandwidth bound?</strong><p><strong>Answer:</strong> Compute-bound means the GPU spends all its time doing math (matrix multiplications). Memory-bandwidth bound means the math is easy, but the GPU spends all its time waiting for weights to be copied from High Bandwidth Memory (HBM) to on-chip SRAM. LLM prefill (reading the prompt) is compute-bound, but decoding (generating tokens one by one) is memory-bandwidth bound.</p></div>
                 <div class="interview-box"><strong>Q2: Assume you use vLLM. What is PagedAttention?</strong><p><strong>Answer:</strong> Normally, KV cache is pre-allocated continuously in GPU memory. Because output lengths are unknown, frameworks over-allocate memory, wasting up to 60%. PagedAttention divides the KV cache into small blocks (pages) and allocates them dynamically, like virtual memory in an OS. This allows near-zero waste and 2-4x higher concurrency (batching).</p></div>
-            </div>\`
+            </div>`
     },
     'llm-observability': {
-        concepts: \`
+        concepts: `
             <div class="section">
                 <h2>🔭 LLM Observability — Complete Deep Dive</h2>
                 <div class="info-box">
@@ -2532,8 +2532,8 @@ tokenizer.save_pretrained(quant_path)</div>
                     <tr><td><strong>Helicone</strong></td><td>Proxy-based observability (just change the base URL, no SDK needed).</td></tr>
                     <tr><td><strong>Opik (by Comet)</strong></td><td>Agent optimization and evaluation natively integrated with traces.</td></tr>
                 </table>
-            </div>\`,
-        code: \`
+            </div>`,
+        code: `
             <div class="section">
                 <h2>💻 Observability — Code Examples</h2>
 
@@ -2566,16 +2566,16 @@ client = Client()
         messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">f"Context: {context}\nQuery: {query}"</span>}]
     )
     <span class="keyword">return</span> resp.choices[<span class="number">0</span>].message.content</div>
-            </div>\`,
-        interview: \`
+            </div>`,
+        interview: `
             <div class="section">
                 <h2>🎯 Observability — Interview Questions</h2>
                 <div class="interview-box"><strong>Q1: What is Time-To-First-Token (TTFT) and why does it matter?</strong><p><strong>Answer:</strong> TTFT measures the latency from the moment the user sends the request until the first token streams back to the client. In LLM applications, total end-to-end latency might be 5-10 seconds, which is unacceptable for UX. Streaming combined with low TTFT (&lt;1 second) creates the illusion of speed and keeps users engaged.</p></div>
                 <div class="interview-box"><strong>Q2: Why use a proxy like Helicone over an SDK like LangSmith?</strong><p><strong>Answer:</strong> A proxy requires ZERO code changes — you simply change the API base URL from <code>api.openai.com</code> to <code>oai.hconeai.com</code> and pass your proxy key in the header. It automatically logs all prompts, responses, costs, and latencies. However, an SDK (like Langfuse/LangSmith) is required if you want deep, nested trace trees for complex agents (e.g., seeing exactly which step in a 10-step LangGraph flow failed).</p></div>
-            </div>\`
+            </div>`
     },
     'multiagent': {
-        concepts: \`
+        concepts: `
             <div class="section">
                 <h2>🕸️ Multi-Agent Systems (MAS)</h2>
                 <div class="info-box">
@@ -2602,8 +2602,8 @@ client = Client()
                     <div class="callout-title">💡 Minimizing Friction</div>
                     <p>When picking a pattern, prioritize minimizing communication overhead. 10 agents isn't better than 2 if they duplicate work. The system should feel smarter than its individual parts.</p>
                 </div>
-            </div>\`,
-        code: \`
+            </div>`,
+        code: `
             <div class="section">
                 <h2>💻 Multi-Agent — Code Examples</h2>
                 <h3>Simple Router Pattern with LiteLLM</h3>
@@ -2622,16 +2622,16 @@ client = Client()
         <span class="keyword">return</span> finance_specialist(query)
     <span class="keyword">else</span>:
         <span class="keyword">return</span> general_agent(query)</div>
-            </div>\`,
-        interview: \`
+            </div>`,
+        interview: `
             <div class="section">
                 <h2>🎯 Multi-Agent — Interview Questions</h2>
                 <div class="interview-box"><strong>Q1: Parallel vs Sequential orchestration?</strong><p><strong>Answer:</strong> Parallel is for independent tasks (data extraction + web search) to reduce latency. Sequential is for dependent tasks where step B needs output of step A (code writing then code review). Use parallel for scale, sequential for quality-controlled pipelines.</p></div>
                 <div class="interview-box"><strong>Q2: What is the Hierarchical pattern?</strong><p><strong>Answer:</strong> It mimics a corporate structure: a Manager/Planner agent receives the high-level goal, breaks it into sub-tasks, and delegates them to specialized Worker agents. The Manager tracks state and makes the final quality check. Best for complex, ambiguous projects.</p></div>
-            </div>\`
+            </div>`
     },
     'tools': {
-        concepts: \`
+        concepts: `
             <div class="section">
                 <h2>🔧 Function Calling & Tools</h2>
                 <div class="info-box">
@@ -2647,8 +2647,8 @@ client = Client()
 
                 <h3>3. Verbalized Sampling</h3>
                 <p>Forcing the agent to generate a "Thought:" block before the "Action:" block. This conditions the tool selection on a logical premise, significantly reducing errors in choosing the wrong tool or arguments.</p>
-            </div>\`,
-        code: \`
+            </div>`,
+        code: `
             <div class="section">
                 <h2>💻 Tools — Code Examples</h2>
                 <h3>OpenAI Native Tool Call</h3>
@@ -2663,12 +2663,12 @@ client = Client()
     }
 }]
 <span class="comment"># Pass this to chat.completions.create(..., tools=tools)</span></div>
-            </div>\`,
-        interview: \`
+            </div>`,
+        interview: `
             <div class="section">
                 <h2>🎯 Tools — Interview Questions</h2>
                 <div class="interview-box"><strong>Q1: Why use Verbalized Sampling in tool calling?</strong><p><strong>Answer:</strong> It forces the model to articulate a rationale *before* picking a tool. Since tokens are generated left-to-right, the tool selection becomes conditioned on the reasoning, which increases precision, especially when multiple similar tools exist.</p></div>
-            </div>\`
+            </div>`
     }
 });
 
