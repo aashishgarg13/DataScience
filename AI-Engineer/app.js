@@ -927,15 +927,15 @@ Object.assign(MODULE_CONTENT, {
                 <p><strong>Indexing phase (offline):</strong> (1) Load documents (PDF, HTML, Markdown, DB), (2) Chunk into segments (~500 tokens), (3) Embed each chunk with an embedding model, (4) Store vectors + metadata in a vector database.</p>
                 <p><strong>Query phase (online):</strong> (1) Embed user query with same model, (2) Retrieve top-k similar chunks via ANN search, (3) Inject chunks into LLM prompt as context, (4) LLM generates a grounded response with citations.</p>
 
-                <h3>2. Chunking Strategies — The Most Critical Design Decision</h3>
-                <table>
-                    <tr><th>Strategy</th><th>How It Works</th><th>Best For</th><th>Tradeoff</th></tr>
-                    <tr><td><strong>Fixed-size</strong></td><td>Split every N tokens</td><td>Generic text</td><td>May cut mid-sentence</td></tr>
-                    <tr><td><strong>Recursive character</strong></td><td>Split by paragraphs, sentences, words</td><td>Most documents</td><td>LangChain default; good balance</td></tr>
-                    <tr><td><strong>Semantic chunking</strong></td><td>Split where embedding similarity drops</td><td>Long documents</td><td>Groups related content; 10x slower</td></tr>
-                    <tr><td><strong>Document structure</strong></td><td>Parse by headings, sections, tables</td><td>PDFs, HTML, Markdown</td><td>Preserves context hierarchy</td></tr>
-                    <tr><td><strong>Agentic chunking</strong></td><td>LLM decides chunk boundaries</td><td>Highest quality</td><td>Expensive but best recall</td></tr>
-                </table>
+                <h3>2. The Evolution of RAG</h3>
+                <div class="comparison">
+                    <div class="box-bad"><strong>Stage 1: Naive RAG</strong> (Retreive > Stuff > Gen). Works for simple docs. Fails when query and doc use different words (vocabulary mismatch).</div>
+                    <div class="box-good"><strong>Stage 2: Advanced RAG</strong> (Rewrite > Retrieve > Re-rank). Uses HyDE to rewrite queries and a Re-ranker model to sort chunks by actual relevance before feeding LLM.</div>
+                </div>
+                <div class="callout insight">
+                    <div class="callout-title">💡 The "Library Librarian" Analogy</div>
+                    <p>Naive RAG is like a librarian who only looks at the <strong>index</strong> of a book. Advanced RAG is a librarian who <strong>skims the chapters</strong> to make sure they actually answer your question before handing you the book.</p>
+                </div>
                 <div class="callout tip">
                     <div class="callout-title">💡 Chunk Size Sweet Spot</div>
                     <p>256-512 tokens for OpenAI embeddings, 128-256 for smaller models. Use 50-100 token overlap. Test with your actual queries — measure retrieval recall, not just generation quality.</p>
@@ -1187,8 +1187,15 @@ res = index.query(vector=query_emb, top_k=<span class="number">10</span>,
                     <div class="box-content">An agent is an LLM + a <strong>reasoning loop</strong> + <strong>tools</strong>. It doesn't just respond — it plans, calls tools, observes results, and iterates. The agent paradigm turns LLMs from answer machines into action machines.</div>
                 </div>
 
-                <h3>1. ReAct — The Foundation</h3>
-                <p>ReAct (Yao 2022): <strong>Thought</strong> > <strong>Action</strong> > <strong>Observation</strong> > repeat. The LLM reasons about what to do, calls a tool, sees the result, and continues until it has a final answer.</p>
+                <h3>1. ReAct: The Brain's Operating System</h3>
+                <p>ReAct (Yao 2022) is the fundamental "Thinking Loop". It forces the LLM to output its internal state before action: <strong>Thought</strong> (Reasoning) > <strong>Action</strong> (Tool Call) > <strong>Observation</strong> (Result). This prevents "reflexive" hallucinations where the model answers before it has any data.</p>
+                
+                <div class="info-box">
+                    <div class="box-title">🔌 MCP: The USB Port for AI</div>
+                    <div class="box-content">
+                        <strong>Model Context Protocol (MCP)</strong> is the industry's attempt to standardize how agents talk to tools. Instead of rewriting tool-calling code for every model, MCP creates a universal "plug-and-play" interface where any model can use any database, API, or local file system seamlessly.
+                    </div>
+                </div>
 
                 <h3>2. Agent Architectures & Patterns</h3>
                 <table>
@@ -1799,14 +1806,18 @@ output = model.generate(inputs, max_new_tokens=<span class="number">100</span>)
                 </table>
 
                 <h3>3. vLLM — The Production Standard</h3>
-                <p><strong>PagedAttention</strong> (inspired by OS virtual memory): stores KV cache in non-contiguous memory pages. Traditional serving pre-allocates max KV cache — wasting 60-80% of GPU memory. PagedAttention allocates on demand: 3-24x higher throughput. <a href="https://arxiv.org/abs/2309.06180" target="_blank" style="color:var(--accent)">[Read the PagedAttention Paper]</a></p>
+                <p><strong>PagedAttention</strong>: Inspired by OS virtual memory. Traditional serving pre-allocates max VRAM for every request — an "empty seat" problem. PagedAttention allocates memory on-demand in blocks, allowing you to serve <strong>5-10x more users</strong> on the same hardware.</p>
                 
+                <div class="callout tip">
+                    <div class="callout-title">🚀 Scaling Insight</div>
+                    <p>In production, your biggest cost is not compute, but <strong>VRAM fragmentation</strong>. vLLM solves this at the architectural level, making it the industry go-to for high-throughput API endpoints.</p>
+                </div>
+
                 <div class="info-box">
-                    <div class="box-title">📘 Recommended Resources</div>
+                    <div class="box-title">📘 Professional Resources</div>
                     <ul style="margin-top:10px; color:var(--text-muted)">
-                        <li><a href="https://github.com/vllm-project/vllm" target="_blank" style="color:var(--accent)">vLLM Project Page</a> — High-throughput serving engine.</li>
-                        <li><a href="https://github.com/huggingface/text-generation-inference" target="_blank" style="color:var(--accent)">HF TGI Repository</a> — Production-ready LLM serving.</li>
-                        <li><a href="https://ollama.com" target="_blank" style="color:var(--accent)">Ollama Official Site</a> — Best for local development.</li>
+                        <li><a href="https://arxiv.org/abs/2309.06180" target="_blank" style="color:var(--accent)">PagedAttention Paper</a> — The math behind the efficiency.</li>
+                        <li><a href="https://github.com/vllm-project/vllm" target="_blank" style="color:var(--accent)">vLLM Project</a> — The current state-of-the-art serving engine.</li>
                     </ul>
                 </div>
 

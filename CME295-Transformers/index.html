@@ -73,6 +73,25 @@
             display: block;
         }
 
+        .stanford-note {
+            background: rgba(140, 21, 21, 0.15);
+            border-left: 4px solid #8c1515;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .stanford-note::before {
+            content: '🔍 STANFORD LECTURE NOTE';
+            font-size: 0.75em;
+            font-weight: 800;
+            color: #8c1515;
+            display: block;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -494,8 +513,7 @@
             "lecture-1": {
                 overview: `
                     <p>Before Large Language Models, computers needed a way to process human language reliably. This module covers the historic journey from basic NLP processing to the revolutionary architecture that powers modern AI.</p>
-                    <div class="callout insight">
-                        <div class="callout-title">The Paradigm Shift</div>
+                    <div class="stanford-note">
                         Historically, RNNs were the deep learning standard for text, but they processed data sequentially, leading to information loss over long sentences (vanishing gradients). The Transformer paper ("Attention Is All You Need", 2017) completely eliminated recurrent layers in favor of the <strong>Self-Attention Mechanism</strong>, allowing the model to look at the entire context simultaneously.
                     </div>
                 `,
