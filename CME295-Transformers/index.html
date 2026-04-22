@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CME 295: Transformers & Large Language Models</title>
+
+    <!-- MathJax 3.x -->
+    <script>
+        MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0f1419;
+            --surface: #1a1f2e;
+            --text: #e4e6eb;
+            --text-dim: #b0b7c3;
+            --cyan: #a371f7;      /* Themed to Purple for CME295 */
+            --orange: #00d4ff;    /* Themed to Cyan */
+            --green: #2ecc71;
+            --yellow: #ffaa00;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            border-bottom: 2px solid var(--cyan);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, var(--cyan), var(--orange));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1.1em;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(163, 113, 247, 0.1), rgba(0, 212, 255, 0.1));
+            border: 2px solid var(--cyan);
+            border-radius: 12px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(163, 113, 247, 0.2);
+            border-color: var(--orange);
+        }
+
+        .card-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            color: var(--cyan);
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: var(--text-dim);
+            font-size: 0.95em;
+        }
+
+        .category-label {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 12px;
+            background: rgba(163, 113, 247, 0.2);
+            border-radius: 20px;
+            font-size: 0.85em;
+            color: #d1b3ff;
+        }
+
+        .module {
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .btn-back {
+            display: inline-block;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: var(--cyan);
+            color: var(--bg);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--orange);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-bottom: 1px solid rgba(163, 113, 247, 0.2);
+            padding-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: var(--surface);
+            color: var(--text);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            background: rgba(163, 113, 247, 0.1);
+            border-color: var(--cyan);
+        }
+
+        .tab-btn.active {
+            background: var(--cyan);
+            color: var(--bg);
+            border-color: var(--cyan);
+        }
+
+        .tab {
+            display: none;
+        }
+
+        .tab.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid rgba(163, 113, 247, 0.2);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 0 20px rgba(163, 113, 247, 0.1);
+        }
+
+        h2 {
+            color: var(--cyan);
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: var(--orange);
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        h4 {
+            color: var(--green);
+            font-size: 1.1em;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(163, 113, 247, 0.1), rgba(0, 212, 255, 0.1));
+            border: 1px solid var(--cyan);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .box-title {
+            color: var(--orange);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .box-content {
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .formula {
+            background: rgba(163, 113, 247, 0.1);
+            border: 1px solid var(--cyan);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            line-height: 1.8;
+            color: #d1b3ff;
+            text-align: center;
+        }
+
+        .code-block {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.88em;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            color: #e6edf3;
+        }
+        
+        .code-title {
+            display: block;
+            background: #161b22;
+            color: #8b949e;
+            padding: 8px 16px;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid #30363d;
+            border-bottom: none;
+            font-size: 0.85em;
+            font-family: 'Fira Code', monospace;
+            margin-top: 20px;
+        }
+
+        .code-title+.code-block {
+            margin-top: 0;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .code-block .keyword { color: #ff7b72; }
+        .code-block .string { color: #a5d6ff; }
+        .code-block .comment { color: #8b949e; }
+        .code-block .function { color: #d2a8ff; }
+        .code-block .builtin { color: #79c0ff; }
+        .code-block .number { color: #79c0ff; }
+
+        .callout {
+            border-left: 4px solid;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .callout.tip {
+            border-left-color: var(--green);
+            background: rgba(46, 204, 113, 0.05);
+        }
+
+        .callout.warning {
+            border-left-color: var(--yellow);
+            background: rgba(255, 170, 0, 0.05);
+        }
+
+        .callout.insight {
+            border-left-color: var(--cyan);
+            background: rgba(163, 113, 247, 0.05);
+        }
+
+        .callout-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .list-item {
+            display: flex;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 12px;
+            background: rgba(163, 113, 247, 0.05);
+            border-left: 3px solid var(--cyan);
+            border-radius: 4px;
+        }
+
+        .list-num {
+            color: var(--orange);
+            font-weight: 700;
+            min-width: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid rgba(163, 113, 247, 0.2);
+        }
+
+        th {
+            background: rgba(163, 113, 247, 0.1);
+            color: var(--cyan);
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .tabs { flex-direction: column; }
+            .tab-btn { width: 100%; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- MAIN DASHBOARD -->
+        <div id="dashboard" class="dashboard active">
+            <header>
+                <h1>🧠 CME 295: Transformers & LLMs</h1>
+                <p class="subtitle">Complete Stanford Course Distillation | From NLP Basics to Agentic AI</p>
+                <div style="margin-top: 25px;">
+                    <a href="../index.html" class="btn-back">← Back to Masterclass</a>
+                </div>
+            </header>
+
+            <div style="text-align: center; margin-bottom: 40px;">
+                <p style="color: var(--text-dim); font-size: 1.1em; max-width: 800px; margin: 0 auto;">
+                    Master the architecture that powers modern AI. This comprehensive 9-module curriculum deeply covers NLP fundamentals,
+                    Transformer internals, advanced LLM tuning, reasoning architectures, and agentic workflows.
+                </p>
+            </div>
+
+            <div class="grid" id="modulesGrid"></div>
+        </div>
+
+        <!-- MODULES CONTAINER -->
+        <div id="modulesContainer"></div>
+    </div>
+
+    <script>
+        const modules = [
+            {
+                id: "lecture-1",
+                title: "The Foundation: NLP & Transformers",
+                icon: "📚",
+                category: "NLP Basics",
+                color: "#a371f7",
+                description: "Tokenization, Word2Vec, RNNs, and the Self-Attention Mechanism that started it all."
+            },
+            {
+                id: "lecture-2",
+                title: "Transformer Architectures",
+                icon: "🤖",
+                category: "Architecture",
+                color: "#00d4ff",
+                description: "Deep dive into MHA, GQA, RoPE, BERT, and GPT architectures."
+            },
+            {
+                id: "lecture-3",
+                title: "Inside Large Language Models",
+                icon: "🧠",
+                category: "LLM Internals",
+                color: "#ffaa00",
+                description: "Mixture of Experts, Decoding Strategies, Context Windows, and Prompting."
+            },
+            {
+                id: "lecture-4",
+                title: "Training & Tuning LLMs",
+                icon: "⚙️",
+                category: "Training",
+                color: "#2ecc71",
+                description: "From Pretraining on massive sets to SFT, LoRA, and memory-saving Quantization."
+            },
+            {
+                id: "lecture-5",
+                title: "Aligning LLMs (RLHF/DPO)",
+                icon: "⚖️",
+                category: "Alignment",
+                color: "#f771b6",
+                description: "Shaping AI behavior using RLHF, Reward Models, PPO, and DPO."
+            },
+            {
+                id: "lecture-6",
+                title: "Reasoning Models",
+                icon: "🤔",
+                category: "Advanced",
+                color: "#ff6b35",
+                description: "Test-time compute, System 2 Thinking (o1-style), and GRPO RL formulation."
+            },
+            {
+                id: "lecture-7",
+                title: "Agentic LLMs & RAG",
+                icon: "🕵️",
+                category: "Agents",
+                color: "#00c9a7",
+                description: "Augmenting models via Vector databases, Function Calling, and the ReAct loop."
+            },
+            {
+                id: "lecture-8",
+                title: "Evaluation & Benchmarks",
+                icon: "📊",
+                category: "Evaluation",
+                color: "#a371f7",
+                description: "How to objectively measure LLMs using exact benchmarks or LLM-as-a-Judge."
+            },
+            {
+                id: "lecture-9",
+                title: "Multimodality & Trends",
+                icon: "👁️",
+                category: "Frontier",
+                color: "#00d4ff",
+                description: "Vision Transformers (ViT), Diffusion models, and the expanding modalities."
+            }
+        ];
+
+        const MODULE_CONTENT = {
+            "lecture-1": {
+                overview: `
+                    <p>Before Large Language Models, computers needed a way to process human language reliably. This module covers the historic journey from basic NLP processing to the revolutionary architecture that powers modern AI.</p>
+                    <div class="callout insight">
+                        <div class="callout-title">The Paradigm Shift</div>
+                        Historically, RNNs were the deep learning standard for text, but they processed data sequentially, leading to information loss over long sentences (vanishing gradients). The Transformer paper ("Attention Is All You Need", 2017) completely eliminated recurrent layers in favor of the <strong>Self-Attention Mechanism</strong>, allowing the model to look at the entire context simultaneously.
+                    </div>
+                `,
+                concepts: `
+                    <h3>Fundamental NLP Components</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Tokenization:</strong> Breaking text into digestible chunks. BPE (Byte Pair Encoding) is standard, building common sub-words dynamically instead of mapping pure words, avoiding "Out of Vocabulary" errors.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Word Embeddings (Word2Vec):</strong> Converting words to continuous multi-dimensional vectors where distance indicates semantic similarity (e.g., King - Man + Woman = Queen).</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>The RNN Bottleneck:</strong> Recurrent networks pass state linearly. In long sentences (like translation), by the time it reaches the end, it has "forgotten" the beginning.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Self-Attention:</strong> The core. For every word in a sequence, the network dynamically computes how relevant every *other* word is relative to it, forming a rich contextual representation.</div>
+                    </div>
+                `,
+                math: `
+                    <h3>The Self-Attention Equation</h3>
+                    <p>The core mathematical breakthrough that allows parallel processing of context is the Scaled Dot-Product Attention equation.</p>
+                    <div class="formula">
+                        $$ \\text{Attention}(Q, K, V) = \\text{softmax}\\left( \\frac{QK^T}{\\sqrt{d_k}} \\right) V $$
+                    </div>
+                    <div style="text-align: left; max-width: 600px; margin: 0 auto; color: var(--text-dim);">
+                        <p><strong>Query (Q):</strong> What the current token is looking for.</p>
+                        <p><strong>Key (K):</strong> What other tokens offer.</p>
+                        <p><strong>Value (V):</strong> The actual information represented by the token.</p>
+                        <p><strong>$\\sqrt{d_k}$:</strong> A scaling factor to prevent gradients from disappearing during softmax.</p>
+                    </div>
+                `,
+                code: `
+                    <span class="code-title">📄 attention.py</span>
+                    <div class="code-block"><span class="keyword">import</span> torch
+<span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F
+<span class="keyword">import</span> math
+
+<span class="keyword">def</span> <span class="function">scaled_dot_product_attention</span>(Q, K, V, mask=<span class="keyword">None</span>):
+    <span class="string">"""
+    Compute 'Scaled Dot Product Attention'
+    """</span>
+    d_k = Q.size(-<span class="number">1</span>)
+    
+    <span class="comment"># 1. Compute dot product (scores)</span>
+    scores = torch.matmul(Q, K.transpose(-<span class="number">2</span>, -<span class="number">1</span>)) / math.sqrt(d_k)
+    
+    <span class="comment"># 2. Apply masking (essential for autoregressive generation)</span>
+    <span class="keyword">if</span> mask <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:
+        scores = scores.masked_fill(mask == <span class="number">0</span>, -<span class="number">1e9</span>)
+        
+    <span class="comment"># 3. Softmax to get probabilities/attention weights</span>
+    attention_weights = F.softmax(scores, dim=-<span class="number">1</span>)
+    
+    <span class="comment"># 4. Multiply by values</span>
+    output = torch.matmul(attention_weights, V)
+    
+    <span class="keyword">return</span> output, attention_weights</div>
+                `
+            },
+            "lecture-2": {
+                overview: `
+                    <p>The original Transformer architecture has been significantly optimized. This module explores how researchers modified Attention constraints to build faster, larger foundation models.</p>
+                    <div class="info-box">
+                        <div class="box-title">Evolution of the Transformer</div>
+                        <div class="box-content">
+                            While the original 2017 architecture contained both an <strong>Encoder</strong> and a <strong>Decoder</strong>, modern models generally specialize: BERT uses only the Encoder for classification/understanding, while GPT uses only the Decoder for generative text.
+                        </div>
+                    </div>
+                `,
+                concepts: `
+                    <h3>Architectural Optimizations</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Multi-Head Attention (MHA):</strong> Running the attention mechanism multiple times in parallel to capture different semantic relationships (e.g., one head looks for grammatical structure, another for emotional sentiment).</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Grouped-Query Attention (GQA):</strong> MHA is extremely memory intensive during generation due to the KV cache. GQA shares Key-Value pairs across multiple query heads to save VRAM.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>RoPE (Rotary Position Embeddings):</strong> Instead of adding an absolute sinusoidal position index to a word, RoPE mathematically rotates the token vector to encode its *relative* position, working far better for long contexts.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Flash Attention:</strong> A hardware-aware algorithm that prevents constantly loading/saving huge attention matrices to the GPU's slow HBM memory.</div>
+                    </div>
+                `
+            },
+            "lecture-3": {
+                overview: `
+                    <p>What makes an LLM "Large" and how do we extract the best performance out of it? This module rips open the generative engine inside models like GPT-4, Llama 3, and Claude.</p>
+                `,
+                concepts: `
+                    <h3>LLM Internals & Inference</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Mixture of Experts (MoE):</strong> Instead of a single massive FFN applied to every token, the model has multiple specialized sub-networks ("experts"). A router network selects the top 2 experts for each specific token. (Used by GPT-4 and Mixtral).</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Temperature & Sampling:</strong> LLMs output a probability distribution over the vocabulary. <code>Temperature=0.0</code> picks the absolute most likely token every time (greedy decoding, factual). <code>Temperature=0.8</code> introduces weighted randomness.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Few-Shot Prompting & In-Context Learning:</strong> LLMs can temporarily learn a new task simply by being shown 2-3 examples within the prompt. They don't change weights; they deduce the pattern dynamically.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Chain of Thought (CoT):</strong> Forcing the AI to explain its math/logic step-by-step prior to outputting an answer prevents it from jumping to incorrect sequential conclusions.</div>
+                    </div>
+                `,
+                math:`
+                    <h3>Sampling using Temperature</h3>
+                    <div class="formula">
+                        $$ p_i = \\frac{e^{z_i / T}}{\\sum_j e^{z_j / T}} $$
+                    </div>
+                    <p style="text-align: center; color: var(--text-dim);">
+                        Where $T$ is the temperature parameter. As $T \\to 0$, it becomes a deterministic $\\max$ operation.<br>
+                        As $T \\to \\infty$, the distribution becomes uniform across all possible tokens.
+                    </p>
+                `
+            },
+            "lecture-4": {
+                overview: `
+                    <p>How are these giant models built? The lifecycle of training a Foundation Model spans months and costs millions.</p>
+                `,
+                concepts: `
+                    <h3>The Tuning Lifecycle</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Pretraining:</strong> The bulk of the expense. The model reads terabytes of unstructured text (Common Crawl, Code, Books) and learns grammar, logic, and facts purely by objective: <em>Predict the next word</em>.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Supervised Finetuning (SFT):</strong> A pretrained model will just autocomplete text. SFT feeds the model tens of thousands of highly curated prompt/response datasets, forcing the model to adopt a "helpful assistant" persona.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>LoRA (Low-Rank Adaptation):</strong> Full-parameter finetuning is too expensive. LoRA freezes the original model weights and injects small, trainable "adapter" matrices into the attention layers, dropping GPU requirements from 8xA100s to a single consumer GPU.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Quantization:</strong> Truncating the mathematical precision of the weights from FP16 (16-bit Float) to INT4 (4-bit Integer), dramatically shrinking VRAM requirements so models can run locally without losing severe intelligence (e.g., GGUF, NF4 formats).</div>
+                    </div>
+                `
+            },
+            "lecture-5": {
+                overview: `
+                    <p>Even an SFT model might generate harmful, politically biased, or unsafe answers. Alignment refers to shaping the model's outputs to heavily mirror human preferences.</p>
+                `,
+                concepts: `
+                    <h3>Alignment Techniques</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>RLHF (Reinforcement Learning from Human Feedback):</strong> Traditional approach from ChatGPT (2022). Humans evaluate two model responses. A separate "Reward Model" learns what humans prefer. Then, the LLM is optimized using RL (PPO) against the Reward Model.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>PPO (Proximal Policy Optimization):</strong> A stable reinforcement learning algorithm that nudges the model parameters to achieve higher rewards while preventing the model from collapsing into a weird edge case to "game" the reward system explicitly.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>DPO (Direct Preference Optimization):</strong> (2023 Breakthrough). Bypasses the complex Reward Model entire. Uses mathematical equivalencies to update the LLM weights directly using the chosen/rejected pairwise data in a simple cross-entropy-like supervised training loop.</div>
+                    </div>
+                `
+            },
+            "lecture-6": {
+                overview: `
+                    <p>Generative modeling reaches its ceiling when answers require long planning steps. "Reasoning Models" (like DeepSeek R1 and OpenAI o1) use RL to develop an inner monologue.</p>
+                    <div class="callout tip">
+                        <div class="callout-title">System 1 vs System 2</div>
+                        Standard LLMs are "System 1" (instinctual, fast reflexes). Reasoning models unlock "System 2" (methodical, slow, deep thinking).
+                    </div>
+                `,
+                concepts: `
+                    <h3>Advanced Reasoning Dynamics</h3>
+                    <div class="callout insight">
+                        <p><strong>Test-Time Compute:</strong> The insight that giving a model more time to generate hidden "thinking tokens" drastically improves its output quality. Unlike parametric training, you can scale intelligence infinitely by simply letting the model think longer.</p>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Verifiable Rewards:</strong> Training models using massive RL loops where the only reward is "does this python code pass the test?" or "does this step arrive at the correct final math answer?", forcing it to develop its own organic strategy.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>GRPO (Group Relative Policy Optimization):</strong> Used efficiently by DeepSeek to optimize reasoning models without needing a secondary "critic" model holding up VRAM.</div>
+                    </div>
+                `
+            },
+            "lecture-7": {
+                overview: `
+                    <p>An LLM is just a brain locked in a vault. Agentic frameworks give it the ability to connect to databases, browse the web, and execute actions.</p>
+                `,
+                concepts: `
+                    <h3>Agent & Integration Paradigms</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>RAG (Retrieval-Augmented Generation):</strong> Connecting LLMs to private data. Documents are chunked, embedded via models into vectors, and stored in a Vector DB (like Pinecone). When a user queries, semantic search fetches the most relevant text and injects it into the LLM prompt.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Function Calling (Tool Use):</strong> Models finetuned to halt generation and return a strictly formatted JSON specifying an API name and extracted parameters (e.g., <code>{"name":"get_weather", "location":"Boston"}</code>).</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>The ReAct Pattern:</strong> A looping prompt structure. The LLM produces a <em>Thought</em> (analysis of goal) → outputs an <em>Action</em> (tool call) → receives an <em>Observation</em> (system result) → repeats until the goal is concluded.</div>
+                    </div>
+                `
+            },
+            "lecture-8": {
+                overview: `
+                    <p>Evaluating an LLM's intelligence is extremely complex since language is subjective. This module covers benchmarks and the transition to algorithmic judges.</p>
+                `,
+                concepts: `
+                    <h3>Evaluation Strategies</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>The Evaluation Crisis:</strong> Exact-match metrics like BLEU or ROUGE are dead — they punish an LLM if it uses a synonym or expands intelligently.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>LLM-as-a-Judge:</strong> Using a superior model (e.g., GPT-4o) with an explicit grading rubric to read and score responses from a smaller model.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Judge Biases:</strong> Judges suffer from Position Bias (favoring the first model), Verbosity Bias (assuming longer responses are smarter), and Self-Enhancement bias (liking its own answers).</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Key Benchmarks:</strong> MMLU (General multi-subject knowledge), GSM8K (Middle school math), HumanEval (Python coding).</div>
+                    </div>
+                `
+            },
+            "lecture-9": {
+                overview: `
+                    <p>The bleeding edge. The integration of image, audio, and generation models merging into singular foundation interfaces.</p>
+                `,
+                concepts: `
+                    <h3>Multimodality & Future Scope</h3>
+                    <div class="list-item">
+                        <div class="list-num">01</div>
+                        <div><strong>Vision Transformers (ViT):</strong> Proving that you don't need CNNs for computer vision. Images are sliced into visual "patches" which are flattened and fed linearly to standard Transformer Attention layers.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>Multimodal Models (VLMs):</strong> Models natively trained to accept interwoven text and image inputs (e.g., Claude 3.5 Sonnet, GPT-4o) to reason over diagrams and real-world photos.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Diffusion Convergence:</strong> Future generation where LLMs tightly couple with Diffusion backbones (like Stable Diffusion/Sora) for massive video generation conditioned entirely on LLM reasoning.</div>
+                    </div>
+                `
+            }
+        };
+
+        // --- Core Application Logic ---
+        function initDashboard() {
+            const grid = document.getElementById("modulesGrid");
+            const container = document.getElementById("modulesContainer");
+
+            modules.forEach((module, index) => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.style.borderColor = module.color;
+                card.onclick = () => switchTo(module.id + "-module");
+                card.innerHTML = `
+                    <div class="card-icon">${module.icon}</div>
+                    <h3>${module.title}</h3>
+                    <p>${module.description}</p>
+                    <span class="category-label" style="background: ${module.color}22; color: ${module.color};">${module.category}</span>
+                `;
+                grid.appendChild(card);
+
+                const moduleHTML = createModuleHTML(module);
+                container.innerHTML += moduleHTML;
+            });
+        }
+
+        function createModuleHTML(module) {
+            const content = MODULE_CONTENT[module.id] || {};
+            
+            return `
+                <div class="module" id="${module.id}-module">
+                    <button class="btn-back" onclick="switchTo('dashboard')">← Back to Dashboard</button>
+                    <header>
+                        <h1>${module.icon} ${module.title}</h1>
+                        <p class="subtitle">${module.description}</p>
+                    </header>
+
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab(event, '${module.id}-overview')">Overview</button>
+                        <button class="tab-btn" onclick="switchTab(event, '${module.id}-concepts')">Key Concepts</button>
+                        ${content.math ? `<button class="tab-btn" onclick="switchTab(event, '${module.id}-math')">Math & Theory</button>` : ''}
+                        ${content.applications ? `<button class="tab-btn" onclick="switchTab(event, '${module.id}-applications')">Applications</button>` : ''}
+                        ${content.code ? `<button class="tab-btn" onclick="switchTab(event, '${module.id}-code')">Code</button>` : ''}
+                    </div>
+
+                    <div id="${module.id}-overview" class="tab active">
+                        <div class="section">
+                            <h2>📖 Overview</h2>
+                            ${content.overview || '<p>Content in development.</p>'}
+                        </div>
+                    </div>
+
+                    <div id="${module.id}-concepts" class="tab">
+                        <div class="section">
+                            <h2>🎯 Key Concepts</h2>
+                            ${content.concepts || '<p>Content in development.</p>'}
+                        </div>
+                    </div>
+
+                    ${content.math ? `
+                    <div id="${module.id}-math" class="tab">
+                        <div class="section">
+                            <h2>📐 Math & Theory</h2>
+                            ${content.math}
+                        </div>
+                    </div>` : ''}
+
+                    ${content.applications ? `
+                    <div id="${module.id}-applications" class="tab">
+                        <div class="section">
+                            <h2>🌍 Applications</h2>
+                            ${content.applications}
+                        </div>
+                    </div>` : ''}
+
+                    ${content.code ? `
+                    <div id="${module.id}-code" class="tab">
+                        <div class="section">
+                            <h2>🐍 Implementation</h2>
+                            ${content.code}
+                        </div>
+                    </div>` : ''}
+                </div>
+            `;
+        }
+
+        function switchTo(target) {
+            document.querySelectorAll('.dashboard, .module').forEach(el => {
+                el.classList.remove('active');
+            });
+            const elem = document.getElementById(target);
+            if (elem) {
+                elem.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function switchTab(e, tabId) {
+            const module = e.target.closest('.module');
+            if (!module) return;
+
+            module.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            module.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+            const tab = document.getElementById(tabId);
+            if (tab) tab.classList.add('active');
+            e.target.classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([tab]).catch(function (err) { console.log('MathJax typeset:', err); });
+            }
+        }
+
+        // Initialize application
+        initDashboard();
+    </script>
+</body>
+</html>

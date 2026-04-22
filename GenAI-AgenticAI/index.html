@@ -376,94 +376,14 @@
 
 <div id="modulesContainer"></div>
 
-<script src="app.js"></script>
-<script>
-    let activeFilter = 'All';
-
-    function renderDashboard(query = '') {
-        const grid = document.getElementById('moduleGrid');
-        const noResults = document.getElementById('noResults');
-        const q = query.toLowerCase().trim();
-
-        const filtered = modules.filter(m => {
-            const matchFilter = activeFilter === 'All' || m.category === activeFilter;
-            const matchSearch = !q || m.title.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q) || m.category.toLowerCase().includes(q);
-            return matchFilter && matchSearch;
+    <script src="app.js"></script>
+    <script>
+        // Use a small wrapper to handle page-specific initialization if any
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof renderDashboard === 'function') {
+                renderDashboard();
+            }
         });
-
-        document.getElementById('statModules').textContent = modules.length;
-
-        if (filtered.length === 0) {
-            grid.innerHTML = '';
-            noResults.style.display = 'block';
-            return;
-        }
-        noResults.style.display = 'none';
-
-        grid.innerHTML = filtered.map(m => `
-            <div class="card ${m.catClass}" onclick="openModule('${m.id}')">
-                <span class="card-icon">${m.icon}</span>
-                <span class="card-badge">${m.category}</span>
-                <h3>${m.title}</h3>
-                <p>${m.desc}</p>
-                <span class="card-arrow">→</span>
-            </div>
-        `).join('');
-    }
-
-    function setFilter(cat, btn) {
-        activeFilter = cat;
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderDashboard(document.getElementById('searchInput').value);
-    }
-
-    function filterModules(q) {
-        renderDashboard(q);
-    }
-
-    function openModule(id) {
-        const m = modules.find(x => x.id === id);
-        const c = MODULE_CONTENT[id] || {};
-
-        document.getElementById('dashboard').classList.remove('active');
-
-        const container = document.getElementById('modulesContainer');
-        container.innerHTML = `
-            <div class="module active" id="module-${id}">
-                <button class="btn-back" onclick="showDashboard()">← Back to Dashboard</button>
-                <header>
-                    <h1>${m.icon} ${m.title}</h1>
-                    <p class="subtitle">${m.desc}</p>
-                </header>
-                <div class="tabs">
-                    <button class="tab-btn active" onclick="switchTab(event,'concepts-${id}','${id}')">📖 Key Concepts</button>
-                    <button class="tab-btn" onclick="switchTab(event,'code-${id}','${id}')">💻 Code Examples</button>
-                    <button class="tab-btn" onclick="switchTab(event,'interview-${id}','${id}')">🎯 Interview Questions</button>
-                </div>
-                <div id="concepts-${id}" class="tab active">${c.concepts || '<p style="color:var(--text-muted);padding:40px 0">Content coming soon.</p>'}</div>
-                <div id="code-${id}" class="tab">${c.code || '<p style="color:var(--text-muted);padding:40px 0">Code examples coming soon.</p>'}</div>
-                <div id="interview-${id}" class="tab">${c.interview || '<p style="color:var(--text-muted);padding:40px 0">Interview questions coming soon.</p>'}</div>
-            </div>`;
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function showDashboard() {
-        document.getElementById('modulesContainer').innerHTML = '';
-        document.getElementById('dashboard').classList.add('active');
-    }
-
-    function switchTab(event, tabId, moduleId) {
-        const mod = document.getElementById('module-' + moduleId);
-        mod.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        mod.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        event.target.classList.add('active');
-    }
-
-    // Init
-    renderDashboard();
-</script>
+    </script>
 </body>
 </html>
