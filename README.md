@@ -23,7 +23,7 @@ Visit our courses directly in your browser:
 - [⚙️ Feature Engineering Guide](https://aashishgarg13.github.io/DataScience/feature-engineering/index.html)
 - [🤔 Prompt Engineering Guide](https://aashishgarg13.github.io/DataScience/prompt-engineering-guide/index.html) - Interactive AI prompting course
 - [🧠 Claude Prompt Engineering Guide](https://aashishgarg13.github.io/DataScience/Claude%20Prompt%20Engineering%20Course/index.html) - In-depth guide for Anthropic's Claude models
-- [🤖 AI Engineer Masterclass](https://aashishgarg13.github.io/DataScience/GenAI-AgenticAI/index.html) - GenAI, RAG, and Agents
+- [🤖 AI Engineer Masterclass](https://aashishgarg13.github.io/DataScience/AI-Engineer/index.html) - GenAI, RAG, and Agents
 - [🎓 CME 295: Transformers](https://aashishgarg13.github.io/DataScience/CME295-Transformers/index.html) - Stanford Course Distillation
 
 ## 🔗 Prompt Engineering Resources
@@ -99,7 +99,7 @@ Essential resources for mastering AI prompt engineering:
   - Prompt Versioning & Safety Guardrails
 
 ### 🤖 AI Engineer Masterclass
-- **Location:** `GenAI-AgenticAI/`
+- **Location:** `AI-Engineer/`
 - **Features:**
   - GenAI Fundamentals (SLED, Contrastive Decoding)
   - Context Engineering & RAG
