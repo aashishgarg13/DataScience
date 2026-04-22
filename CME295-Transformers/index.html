@@ -503,19 +503,19 @@
                     <h3>Fundamental NLP Components</h3>
                     <div class="list-item">
                         <div class="list-num">01</div>
-                        <div><strong>Tokenization:</strong> Breaking text into digestible chunks. BPE (Byte Pair Encoding) is standard, building common sub-words dynamically instead of mapping pure words, avoiding "Out of Vocabulary" errors.</div>
+                        <div><strong>Tokenization & BPE:</strong> Transition from word-level to sub-word level. Byte Pair Encoding (BPE) uses a frequency-based merge strategy to build a vocabulary. This solves the "Out of Vocabulary" problem and allows the model to handle morphologically rich languages by breaking words into meaningful prefixes/suffixes.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">02</div>
-                        <div><strong>Word Embeddings (Word2Vec):</strong> Converting words to continuous multi-dimensional vectors where distance indicates semantic similarity (e.g., King - Man + Woman = Queen).</div>
+                        <div><strong>Word2Vec & Vector Spaces:</strong> Word embeddings map tokens into a high-dimensional continuous space (e.g., 512 dimensions). These vectors capture semantic relationships via dot products; tokens with similar meanings are geometrically close.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">03</div>
-                        <div><strong>The RNN Bottleneck:</strong> Recurrent networks pass state linearly. In long sentences (like translation), by the time it reaches the end, it has "forgotten" the beginning.</div>
+                        <div><strong>The RNN Vanishing Gradient:</strong> Recurrent architectures (LSTMs, GRUs) process tokens sequentially. For long sequences, the gradient signals diminish, meaning the model "forgets" initial context (long-range dependencies). Transformers solve this by processing all tokens simultaneously.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">04</div>
-                        <div><strong>Self-Attention:</strong> The core. For every word in a sequence, the network dynamically computes how relevant every *other* word is relative to it, forming a rich contextual representation.</div>
+                        <div><strong>Self-Attention Mechanism:</strong> The breakthrough. Instead of fixed weights, the model computes dynamic weights for each token pair. It maps an input into Query (Q), Key (K), and Value (V) projections, enabling the model to "attend" to precisely the right context regardless of distance.</div>
                     </div>
                 `,
                 math: `
@@ -573,19 +573,19 @@
                     <h3>Architectural Optimizations</h3>
                     <div class="list-item">
                         <div class="list-num">01</div>
-                        <div><strong>Multi-Head Attention (MHA):</strong> Running the attention mechanism multiple times in parallel to capture different semantic relationships (e.g., one head looks for grammatical structure, another for emotional sentiment).</div>
+                        <div><strong>Multi-Head Attention (MHA):</strong> By projecting Q, K, and V into multiple lower-dimensional "heads," the model can attend to information from different representation subspaces simultaneously. One head might focus on syntax, while another focuses on sentiment.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">02</div>
-                        <div><strong>Grouped-Query Attention (GQA):</strong> MHA is extremely memory intensive during generation due to the KV cache. GQA shares Key-Value pairs across multiple query heads to save VRAM.</div>
+                        <div><strong>KV Cache & GQA:</strong> Autoregressive generation requires re-calculating attention for every new token. Storing K and V vectors (KV Cache) is memory intensive. Grouped-Query Attention (GQA) uses a many-to-one mapping for K/V pairs to Queries, drastically reducing memory bandwidth requirements in production.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">03</div>
-                        <div><strong>RoPE (Rotary Position Embeddings):</strong> Instead of adding an absolute sinusoidal position index to a word, RoPE mathematically rotates the token vector to encode its *relative* position, working far better for long contexts.</div>
+                        <div><strong>RoPE (Rotary Position Embeddings):</strong> Absolute positional encodings (sinusoidal) fail at extrapolation. RoPE applies a rotation to the Query and Key vectors in the complex plane, encoding *relative* distance between tokens. This allows models to handle much longer context windows than they were trained on.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">04</div>
-                        <div><strong>Flash Attention:</strong> A hardware-aware algorithm that prevents constantly loading/saving huge attention matrices to the GPU's slow HBM memory.</div>
+                        <div><strong>Normalization (LayerNorm vs RMSNorm):</strong> Llama models utilize RMSNorm (Root Mean Square Layer Normalization) which is computationally cheaper than standard LayerNorm as it avoids calculating the mean and variance, focusing only on the scaling factor.</div>
                     </div>
                 `
             },
@@ -597,7 +597,15 @@
                     <h3>LLM Internals & Inference</h3>
                     <div class="list-item">
                         <div class="list-num">01</div>
-                        <div><strong>Mixture of Experts (MoE):</strong> Instead of a single massive FFN applied to every token, the model has multiple specialized sub-networks ("experts"). A router network selects the top 2 experts for each specific token. (Used by GPT-4 and Mixtral).</div>
+                        <div><strong>Mixture of Experts (MoE):</strong> Scaling model capacity without scaling compute. For each token, a "Router" network selects only a top-K (usually 2) specialized Feed-Forward networks ("Experts") to process the token. This allows models like Mixtral 8x7B to have the knowledge of a large model with the speed of a small one.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">02</div>
+                        <div><strong>KV Cache Management:</strong> During inference, the memory bottleneck is the Key-Value cache. Optimization techniques like PagedAttention (vLLM) allocate memory for the cache in blocks (like OS virtual memory), eliminating fragmentation and increasing throughput by 20x.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>Continuous Batching:</strong> Unlike static batching where the user must wait for all requests in a batch to finish, continuous batching allows new requests to be added to the running batch as soon as any request generates a "Stop" token.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">02</div>
@@ -628,22 +636,22 @@
                     <p>How are these giant models built? The lifecycle of training a Foundation Model spans months and costs millions.</p>
                 `,
                 concepts: `
-                    <h3>The Tuning Lifecycle</h3>
+                    <h3>Pretraining & Scaling Deep Dive</h3>
                     <div class="list-item">
                         <div class="list-num">01</div>
-                        <div><strong>Pretraining:</strong> The bulk of the expense. The model reads terabytes of unstructured text (Common Crawl, Code, Books) and learns grammar, logic, and facts purely by objective: <em>Predict the next word</em>.</div>
+                        <div><strong>Scaling Laws (Chinchilla):</strong> DeepMind's research proved that model performance depends on both the number of parameters (N) and the amount of training data (D). For a given compute budget, N and D should be scaled proportionally. A common target for modern models is ~20 tokens per parameter for compute-optimal training.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">02</div>
-                        <div><strong>Supervised Finetuning (SFT):</strong> A pretrained model will just autocomplete text. SFT feeds the model tens of thousands of highly curated prompt/response datasets, forcing the model to adopt a "helpful assistant" persona.</div>
+                        <div><strong>Data Mixing & Quality:</strong> The "garbage in, garbage out" rule applies. Models are trained on a mixture of Web Text (Common Crawl), Code (GitHub), and high-quality Books. Effective deduplication (MinHash, LSH) and quality filtering (using small classifiers) are as important as the model architecture itself.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">03</div>
-                        <div><strong>LoRA (Low-Rank Adaptation):</strong> Full-parameter finetuning is too expensive. LoRA freezes the original model weights and injects small, trainable "adapter" matrices into the attention layers, dropping GPU requirements from 8xA100s to a single consumer GPU.</div>
+                        <div><strong>Learning Rate Schedules:</strong> Foundation models usually use AdamW with a Cosine Learning Rate decay and a linear warmup period to maintain training stability across billions of parameters.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">04</div>
-                        <div><strong>Quantization:</strong> Truncating the mathematical precision of the weights from FP16 (16-bit Float) to INT4 (4-bit Integer), dramatically shrinking VRAM requirements so models can run locally without losing severe intelligence (e.g., GGUF, NF4 formats).</div>
+                        <div><strong>Compute Hardware:</strong> Training a 70B model requires thousands of synchronized H100 GPUs using Parallelism strategies (Tensor, Pipeline, and Data Parallelism) to split the model across hundreds of nodes.</div>
                     </div>
                 `
             },
@@ -652,18 +660,22 @@
                     <p>Even an SFT model might generate harmful, politically biased, or unsafe answers. Alignment refers to shaping the model's outputs to heavily mirror human preferences.</p>
                 `,
                 concepts: `
-                    <h3>Alignment Techniques</h3>
+                    <h3>Fine-Tuning & Alignment</h3>
                     <div class="list-item">
                         <div class="list-num">01</div>
-                        <div><strong>RLHF (Reinforcement Learning from Human Feedback):</strong> Traditional approach from ChatGPT (2022). Humans evaluate two model responses. A separate "Reward Model" learns what humans prefer. Then, the LLM is optimized using RL (PPO) against the Reward Model.</div>
+                        <div><strong>SFT (Supervised Fine-Tuning):</strong> Converting a "next-token predictor" into a "helpful assistant." The model is trained on (Prompt, Completion) pairs. This stage teaches the model the "Instruction Following" format and the appropriate tone for interaction.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">02</div>
-                        <div><strong>PPO (Proximal Policy Optimization):</strong> A stable reinforcement learning algorithm that nudges the model parameters to achieve higher rewards while preventing the model from collapsing into a weird edge case to "game" the reward system explicitly.</div>
+                        <div><strong>PEFT (Parameter-Efficient Fine-Tuning):</strong> Techniques like LoRA (Low-Rank Adaptation) freeze the base weights and only train a small subset of "delta" weights. This reduces the VRAM requirement by 100x and allows multiple specialized models to share the same base weights in memory.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">03</div>
-                        <div><strong>DPO (Direct Preference Optimization):</strong> (2023 Breakthrough). Bypasses the complex Reward Model entire. Uses mathematical equivalencies to update the LLM weights directly using the chosen/rejected pairwise data in a simple cross-entropy-like supervised training loop.</div>
+                        <div><strong>Alignment (RLHF & DPO):</strong> Aligning model behavior with human values. (1) **RLHF** uses a Reward Model to train a Policy via PPO. (2) **DPO** (Direct Preference Optimization) is a mathematically elegant alternative that treats preference data as a supervised learning problem, avoiding the need for a separate reward model.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">04</div>
+                        <div><strong>Catastrophic Forgetting:</strong> A major challenge in fine-tuning where a model loses its general knowledge (pretraining facts) while learning a specific task. Mitigation strategies includes lower learning rates and mixing in pretraining data during the fine-tuning phase.</div>
                     </div>
                 `
             },
@@ -676,17 +688,18 @@
                     </div>
                 `,
                 concepts: `
-                    <h3>Advanced Reasoning Dynamics</h3>
-                    <div class="callout insight">
-                        <p><strong>Test-Time Compute:</strong> The insight that giving a model more time to generate hidden "thinking tokens" drastically improves its output quality. Unlike parametric training, you can scale intelligence infinitely by simply letting the model think longer.</p>
-                    </div>
+                    <h3>Logic, Math & Verification</h3>
                     <div class="list-item">
                         <div class="list-num">01</div>
-                        <div><strong>Verifiable Rewards:</strong> Training models using massive RL loops where the only reward is "does this python code pass the test?" or "does this step arrive at the correct final math answer?", forcing it to develop its own organic strategy.</div>
+                        <div><strong>Reasoning Trajectories:</strong> In "Chain of Thought" reasoning, the model generates an internal monologue to solve problems. New "Reasoning Models" (like o1/R1) are trained explicitly to spend more "test-time compute" to arrive at the correct answer by exploring multiple logical paths.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">02</div>
-                        <div><strong>GRPO (Group Relative Policy Optimization):</strong> Used efficiently by DeepSeek to optimize reasoning models without needing a secondary "critic" model holding up VRAM.</div>
+                        <div><strong>Verifiable Rewards (RL on Math/Code):</strong> Unlike subjective chat data, math and code have ground-truth answers. Reinforcement Learning can optimize a model purely on output verification (does it pass the test cases?), allowing the model to "learn to think" without human-labeled reasoning paths.</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">03</div>
+                        <div><strong>AlphaCode & Strawberry Logic:</strong> Strategies for searching through potential solution spaces. The model generates many candidates, verifies them, and uses the correct ones to further tune its internal policy. This moves LLMs from "System 1" (instinctive) to "System 2" (deliberative) thinking.</div>
                     </div>
                 `
             },
@@ -715,22 +728,18 @@
                     <p>Evaluating an LLM's intelligence is extremely complex since language is subjective. This module covers benchmarks and the transition to algorithmic judges.</p>
                 `,
                 concepts: `
-                    <h3>Evaluation Strategies</h3>
+                    <h3>Benchmarks & Human Calibration</h3>
                     <div class="list-item">
                         <div class="list-num">01</div>
-                        <div><strong>The Evaluation Crisis:</strong> Exact-match metrics like BLEU or ROUGE are dead — they punish an LLM if it uses a synonym or expands intelligently.</div>
+                        <div><strong>The Benchmark Saturation:</strong> Models are getting so good at standard tests (MMLU, GSM8K) that researchers are moving toward "live" leaderboards like Chatbot Arena (LMSYS), where models are ranked via Elo systems based on blind human voting on real-world prompts.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">02</div>
-                        <div><strong>LLM-as-a-Judge:</strong> Using a superior model (e.g., GPT-4o) with an explicit grading rubric to read and score responses from a smaller model.</div>
+                        <div><strong>Model Contamination:</strong> A critical issue where benchmark questions are accidentally included in the model's pretraining data (the model "memorizes" the test). Modern evals use private, fresh, or dynamically generated datasets to prevent this.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">03</div>
-                        <div><strong>Judge Biases:</strong> Judges suffer from Position Bias (favoring the first model), Verbosity Bias (assuming longer responses are smarter), and Self-Enhancement bias (liking its own answers).</div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-num">04</div>
-                        <div><strong>Key Benchmarks:</strong> MMLU (General multi-subject knowledge), GSM8K (Middle school math), HumanEval (Python coding).</div>
+                        <div><strong>Eval-as-a-Service:</strong> Tools like DeepEval or RAGAS focus on specific metrics for agents, such as Hallucination Rate, Factuality, and Context Adherence, rather than just general conversational quality.</div>
                     </div>
                 `
             },
@@ -739,18 +748,18 @@
                     <p>The bleeding edge. The integration of image, audio, and generation models merging into singular foundation interfaces.</p>
                 `,
                 concepts: `
-                    <h3>Multimodality & Future Scope</h3>
+                    <h3>The Multi-Senses Architecture</h3>
                     <div class="list-item">
                         <div class="list-num">01</div>
-                        <div><strong>Vision Transformers (ViT):</strong> Proving that you don't need CNNs for computer vision. Images are sliced into visual "patches" which are flattened and fed linearly to standard Transformer Attention layers.</div>
+                        <div><strong>Vision Transformers (ViT):</strong> "An Image is worth 16x16 words." Transformers process images by slicing them into patches, flattening them into tokens, and applying the exact same attention architecture used for text. This unified architecture is why LLMs are becoming natively multi-modal.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">02</div>
-                        <div><strong>Multimodal Models (VLMs):</strong> Models natively trained to accept interwoven text and image inputs (e.g., Claude 3.5 Sonnet, GPT-4o) to reason over diagrams and real-world photos.</div>
+                        <div><strong>Contrastive Learning (CLIP):</strong> Training an image encoder and text encoder to output similar vectors for the same concept (e.g., a photo of a cat and the word "cat"). This creates the bridge between visual and verbal latent spaces.</div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">03</div>
-                        <div><strong>Diffusion Convergence:</strong> Future generation where LLMs tightly couple with Diffusion backbones (like Stable Diffusion/Sora) for massive video generation conditioned entirely on LLM reasoning.</div>
+                        <div><strong>Autoregressive Vision:</strong> Future state where models generate pixels token-by-token (just like text) or use latent diffusion bridges to generate extremely consistent high-definition visual narratives.</div>
                     </div>
                 `
             }
