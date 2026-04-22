@@ -833,19 +833,91 @@
                     </div>
                     <div class="list-item">
                         <div class="list-num">03</div>
-                        <div><strong>Continuous Batching:</strong> Unlike static batching where the user must wait for all requests in a batch to finish, continuous batching allows new requests to be added to the running batch as soon as any request generates a "Stop" token.</div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-num">02</div>
-                        <div><strong>Temperature & Sampling:</strong> LLMs output a probability distribution over the vocabulary. <code>Temperature=0.0</code> picks the absolute most likely token every time (greedy decoding, factual). <code>Temperature=0.8</code> introduces weighted randomness.</div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-num">03</div>
-                        <div><strong>Few-Shot Prompting & In-Context Learning:</strong> LLMs can temporarily learn a new task simply by being shown 2-3 examples within the prompt. They don't change weights; they deduce the pattern dynamically.</div>
+                        <div>
+                            <strong>Continuous Batching:</strong> Dynamic request handling in production.
+                            
+                            <div class="visual-demo" style="margin-top: 15px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border: 1px solid var(--green);">
+                                <h4 style="color: var(--green); margin-bottom: 10px; font-size: 0.85em;">Static vs. Continuous Batching</h4>
+                                <svg viewBox="0 0 400 120" style="width: 100%; height: auto;">
+                                    <!-- Static -->
+                                    <text x="20" y="20" fill="var(--text-dim)" font-size="10">Static (Wait for all)</text>
+                                    <rect x="25" y="30" width="100" height="20" fill="rgba(231, 76, 60, 0.3)" stroke="#e74c3c" />
+                                    <text x="35" y="44" fill="var(--text)" font-size="9">Req A, B, C...</text>
+                                    
+                                    <!-- Continuous -->
+                                    <text x="220" y="20" fill="var(--green)" font-size="10">Continuous (Fill voids)</text>
+                                    <rect x="225" y="30" width="60" height="20" fill="var(--green)" opacity="0.3" stroke="var(--green)" />
+                                    <text x="230" y="44" fill="var(--text)" font-size="9">Req A (End)</text>
+                                    <rect x="290" y="30" width="60" height="20" fill="var(--cyan)" opacity="0.3" stroke="var(--cyan)" />
+                                    <text x="295" y="44" fill="var(--text)" font-size="9">Req D (New)</text>
+                                    <path d="M 285 55 L 290 30" stroke="var(--green)" stroke-dasharray="2" marker-end="url(#arrow-green)" />
+                                </svg>
+                                <p style="font-size: 0.75em; color: var(--text-dim);">Continuous batching injects new requests into the batch as soon as others finish, maximizing GPU utilization.</p>
+                            </div>
+                        </div>
                     </div>
                     <div class="list-item">
                         <div class="list-num">04</div>
-                        <div><strong>Chain of Thought (CoT):</strong> Forcing the AI to explain its math/logic step-by-step prior to outputting an answer prevents it from jumping to incorrect sequential conclusions.</div>
+                        <div>
+                            <strong>Temperature & Sampling:</strong> Probability sharpening.
+                            
+                            <div class="visual-demo" style="margin-top: 15px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border: 1px solid var(--orange);">
+                                <h4 style="color: var(--orange); margin-bottom: 10px; font-size: 0.85em;">Effect of Temperature (T)</h4>
+                                <svg viewBox="0 0 400 100" style="width: 100%; height: auto;">
+                                    <!-- T=0.1 -->
+                                    <text x="20" y="20" fill="var(--text-dim)" font-size="10">T=0.1 (Factual)</text>
+                                    <path d="M 25 80 L 40 20 L 55 80" stroke="var(--orange)" stroke-width="2" fill="none" />
+                                    <text x="35" y="95" fill="var(--orange)" font-size="9">Sharp Peak</text>
+                                    
+                                    <!-- T=1.0 -->
+                                    <text x="160" y="20" fill="var(--text-dim)" font-size="10">T=1.0 (Balanced)</text>
+                                    <path d="M 165 80 Q 200 40 235 80" stroke="var(--cyan)" stroke-width="2" fill="none" />
+                                    
+                                    <!-- T=2.0 -->
+                                    <text x="300" y="20" fill="var(--text-dim)" font-size="10">T=2.0 (Creative)</text>
+                                    <path d="M 305 75 Q 350 70 395 75" stroke="#e74c3c" stroke-width="2" fill="none" />
+                                    <text x="315" y="95" fill="#e74c3c" font-size="9">Uniform/Flat</text>
+                                </svg>
+                                <p style="font-size: 0.75em; color: var(--text-dim);">Low temperature concentrates probability on the top token; high temperature distributes it across many options.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">05</div>
+                        <div>
+                            <strong>Few-Shot Prompting:</strong> In-context learning via demonstration.
+                            
+                            <div class="visual-demo" style="margin-top: 15px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border: 1px solid var(--cyan);">
+                                <h4 style="color: var(--cyan); margin-bottom: 10px; font-size: 0.85em;">Few-Shot Prompt Structure</h4>
+                                <svg viewBox="0 0 400 100" style="width: 100%; height: auto;">
+                                    <rect x="20" y="10" width="360" height="80" rx="4" fill="var(--surface)" stroke="var(--cyan)" />
+                                    <text x="30" y="30" fill="var(--text)" font-size="10">Input: Dog -> Output: Animal</text>
+                                    <text x="30" y="50" fill="var(--text)" font-size="10">Input: Car -> Output: Transport</text>
+                                    <line x1="30" y1="60" x2="370" y2="60" stroke="var(--cyan)" opacity="0.3" />
+                                    <text x="30" y="80" fill="var(--orange)" font-size="10" font-weight="bold">Input: Apple -> Output: [Model Predicts...]</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-num">06</div>
+                        <div>
+                            <strong>Chain of Thought (CoT):</strong> Step-by-step logic exploration.
+                            
+                            <div class="visual-demo" style="margin-top: 15px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border: 1px solid var(--yellow);">
+                                <h4 style="color: var(--yellow); margin-bottom: 10px; font-size: 0.85em;">Reasoning Search Tree</h4>
+                                <svg viewBox="0 0 400 120" style="width: 100%; height: auto;">
+                                    <circle cx="200" cy="20" r="10" fill="var(--cyan)" />
+                                    <path d="M 195 30 L 150 60" stroke="var(--yellow)" />
+                                    <path d="M 205 30 L 250 60" stroke="var(--yellow)" />
+                                    <circle cx="150" cy="70" r="10" fill="var(--surface)" stroke="var(--yellow)" />
+                                    <circle cx="250" cy="70" r="10" fill="var(--green)" />
+                                    <path d="M 250 80 L 250 100" stroke="var(--green)" marker-end="url(#arrow-green)" />
+                                    <text x="210" y="115" fill="var(--green)" font-size="10">Optimal Logic Path Found</text>
+                                </svg>
+                                <p style="font-size: 0.75em; color: var(--text-dim);">The model explores paths (thoughts), rejects bad ones, and follows the correct logical chain.</p>
+                            </div>
+                        </div>
                     </div>
                 `,
                 math:`
