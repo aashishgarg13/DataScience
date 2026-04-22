@@ -2409,14 +2409,14 @@ Object.assign(MODULE_CONTENT, {
                 <h2>💻 Prompting for Agents — Code Examples</h2>
 
                 <h3>1. Verbalized Sampling Prompt Template</h3>
-                <div class="code-block"><span class="keyword">const</span> system_prompt = <span class="string">`You are a sophisticated AI agent with access to tools.
+                <div class="code-block"><span class="keyword">const</span> system_prompt = <span class="string">\`You are a sophisticated AI agent with access to tools.
 When given a task, you MUST use the following format:
 
 Thought: Consider what you need to do, step by step. Which tool is needed?
 Action: The name of the tool to use (e.g. "search_web", "calculate")
 Action Input: The arguments for the tool in valid JSON.
 
-You MUST articulate your Thought before your Action.`</span></div>
+You MUST articulate your Thought before your Action.\`</span></div>
 
                 <h3>2. Forcing JSON on Open Models</h3>
                 <div class="code-block"><span class="keyword">import</span> { pipeline } <span class="keyword">from</span> <span class="string">"@huggingface/transformers"</span>;
